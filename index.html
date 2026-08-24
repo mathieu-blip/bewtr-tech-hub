@@ -231,7 +231,8 @@
   #pdfbox .pdf-wrap{width:100%;max-width:1000px;height:94%;background:#fff;border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
   #pdfbox .pdf-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}
   #pdfbox .pdf-title{font-weight:600;font-size:14px}
-  #pdfbox .pdf-close{margin-left:auto;border:none;background:var(--orange-soft);color:var(--orange);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:15px}
+  #pdfbox .pdf-open{margin-left:auto;border:none;background:#eef1f4;color:var(--ink-soft);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:15px}
+  #pdfbox .pdf-close{border:none;background:var(--orange-soft);color:var(--orange);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:15px}
   #pdfbox iframe{flex:1;width:100%;border:0;background:#fff}
 
   #imgbox{display:none;position:fixed;inset:0;z-index:2000;background:rgba(15,20,30,.9);align-items:center;justify-content:center;padding:16px}
@@ -612,6 +613,7 @@ const I18N = {
     "schema.elec":"Schéma électrique",
     "schema.none":"Non disponible pour ce produit",
     "schema.back":"Catégories",
+    "pdf.open":"Ouvrir dans un nouvel onglet",
     "schema.exploded":"Pièces détachées",
     "schema.measures":"Mesures produits",
     "schema.tech":"Fiches techniques (dimensions)",
@@ -711,6 +713,7 @@ const I18N = {
     "schema.elec":"Electrical schema",
     "schema.none":"Not available for this product",
     "schema.back":"Categories",
+    "pdf.open":"Open in a new tab",
     "schema.exploded":"Spare parts",
     "schema.measures":"Product measurements",
     "schema.tech":"Technical sheets (dimensions)",
@@ -810,6 +813,7 @@ const I18N = {
     "schema.elec":"Elektroschema",
     "schema.none":"Für dieses Produkt nicht verfügbar",
     "schema.back":"Kategorien",
+    "pdf.open":"In neuem Tab öffnen",
     "schema.exploded":"Ersatzteile",
     "schema.measures":"Produktmessungen",
     "schema.tech":"Technische Datenblätter (Maße)",
@@ -972,16 +976,45 @@ function showProducts(cat){
     else openPdf(SCHEMAS[t.dataset.p][t.dataset.cat], t.dataset.p+' — '+label);
   }));
 }
+// phones have no PDF engine for iframes, so a data: URI there just renders a blank frame.
+// a blob URL can be handed to the browser's own viewer instead, and it beats a 400 KB src attribute anyway.
+var _pdfBlobs={};
+function pdfUrl(uri){
+  if(_pdfBlobs[uri]) return _pdfBlobs[uri];
+  var url=uri;
+  try{
+    var bin=atob(uri.slice(uri.indexOf(',')+1)), buf=new Uint8Array(bin.length);
+    for(var i=0;i<bin.length;i++) buf[i]=bin.charCodeAt(i);
+    url=URL.createObjectURL(new Blob([buf],{type:'application/pdf'}));
+  }catch(e){}
+  _pdfBlobs[uri]=url;
+  return url;
+}
+function pdfInline(){
+  if(typeof navigator.pdfViewerEnabled==='boolean') return navigator.pdfViewerEnabled;
+  return !!(navigator.mimeTypes&&navigator.mimeTypes['application/pdf']);
+}
 function openPdf(uri,title){
+  if(!uri) return;
+  var url=pdfUrl(uri);
+  if(!pdfInline()){
+    if(window.open(url,'_blank')) return;
+    var a=document.createElement('a');
+    a.href=url; a.target='_blank'; a.rel='noopener'; a.download=(title||'schema').replace(/[\\/:*?"<>|]/g,'-')+'.pdf';
+    document.body.appendChild(a); a.click(); a.remove();
+    return;
+  }
   let lb=document.getElementById('pdfbox');
   if(!lb){lb=document.createElement('div');lb.id='pdfbox';
-    lb.innerHTML='<div class="pdf-wrap"><div class="pdf-bar"><span class="pdf-title"></span><button class="pdf-close">✕</button></div><iframe title="schema"></iframe></div>';
+    lb.innerHTML='<div class="pdf-wrap"><div class="pdf-bar"><span class="pdf-title"></span><button class="pdf-open">↗</button><button class="pdf-close">✕</button></div><iframe title="schema"></iframe></div>';
     document.body.appendChild(lb);
     lb.addEventListener('click',e=>{if(e.target===lb){lb.style.display='none';lb.querySelector('iframe').src='about:blank';unlockScroll();waterSplash(e.clientX,e.clientY);}});
     lb.querySelector('.pdf-close').addEventListener('click',(e)=>{lb.style.display='none';lb.querySelector('iframe').src='about:blank';unlockScroll();waterSplash(e.clientX,e.clientY);});
   }
+  var ob=lb.querySelector('.pdf-open');
+  ob.title=I18N[lang]['pdf.open']||''; ob.onclick=function(){ window.open(url,'_blank'); };
   lb.querySelector('.pdf-title').textContent=title||'';
-  lb.querySelector('iframe').src=uri;
+  lb.querySelector('iframe').src=url;
   lockScroll();lb.style.display='flex';
 }
 
