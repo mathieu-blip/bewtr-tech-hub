@@ -18,6 +18,8 @@
   a{color:var(--orange);text-decoration:none}
   a:hover{text-decoration:underline}
   .shell{display:grid;grid-template-columns:264px 1fr;min-height:100vh}
+  /* grid items default to min-width:auto, which lets wide content stretch the page past the viewport */
+  .shell>*{min-width:0}
   aside{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;background:#fff;border-right:1px solid var(--line);padding:26px 18px;}
   .brand{display:flex;align-items:center;gap:10px;margin-bottom:6px}
   .brand .logo{font-weight:800;font-size:22px;letter-spacing:.5px;color:var(--orange)}
