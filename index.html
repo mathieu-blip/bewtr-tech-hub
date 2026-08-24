@@ -153,10 +153,9 @@
   .sec-head .num.sym{font-size:16px}
   @media(max-width:880px){
     .shell{grid-template-columns:1fr}
-    aside{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line);padding:20px 18px}
-    nav{display:grid;grid-template-columns:1fr 1fr;gap:4px}
-    nav a{font-size:15px;padding:12px 12px}
-    .nav-label,.nav-group{grid-column:1/-1}
+    aside{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line);padding:16px 18px 12px}
+    aside nav{display:none}
+    .brand-sub{margin-bottom:0}
     .home-grid{grid-template-columns:1fr 1fr}
     body{font-size:17px}
     .small{font-size:14.5px}
@@ -186,7 +185,6 @@
     .pill{min-width:44%}
     .pill .val{font-size:18px}
     .kv{gap:8px}
-    nav a{font-size:15.5px}
     .set-seg button{padding:7px 13px;font-size:13px}
     .brand .logo{font-size:24px}
     .brand-sub{margin-bottom:14px}
@@ -1154,6 +1152,15 @@ function doSearch(){ var q=(document.getElementById('gq').value||'').trim().toLo
 function openSearch(){ var m=document.getElementById('searchbox'); m.style.display='flex'; var q=document.getElementById('gq'); q.value=''; q.placeholder=(I18N[lang]['search.ph']||''); doSearch(); setTimeout(function(){q.focus();},30); }
 function closeSearch(){ document.getElementById('searchbox').style.display='none'; }
 // tab router
+// jump straight to the section body: no smooth scroll through the header on the way
+function jumpTo(id){
+  var he=document.documentElement, prev=he.style.scrollBehavior;
+  he.style.scrollBehavior='auto';
+  var y=0, sec=(id==='home')?null:document.getElementById(id);
+  if(sec) y=Math.max(0, sec.getBoundingClientRect().top+(window.pageYOffset||he.scrollTop||0)-10);
+  window.scrollTo(0,y);
+  setTimeout(function(){ he.style.scrollBehavior=prev||''; },0);
+}
 var SECT_IDS=['home','overview','beconnect','install','settings','maintenance','safety','troubleshoot','experience','tutorials','schemas','glossary','gaps'];
 function showTab(hash){
   var id=(hash||'#home').replace('#','');
@@ -1162,7 +1169,7 @@ function showTab(hash){
   document.querySelectorAll('#nav a').forEach(function(a){ a.classList.toggle('active', a.getAttribute('href')==='#'+id); });
   var cp=document.getElementById('catPanel'); if(cp) cp.classList.remove('open');
   try{ if(history&&history.replaceState) history.replaceState(null,'','#'+id); }catch(e){}
-  try{ window.scrollTo(0,0); }catch(e){}
+  try{ jumpTo(id); }catch(e){}
 }
 document.addEventListener('click',function(e){
   var a=e.target.closest?e.target.closest('a[href^="#"]'):null; if(!a) return;
@@ -1179,6 +1186,10 @@ renderCatMenu();
 renderMachines();
 applyFontScale();
 showTab(location.hash);
+// once loading finishes the browser scrolls to the URL fragment on its own; put the tab back where we want it
+var _userScrolled=false;
+['wheel','touchmove','keydown'].forEach(function(ev){ window.addEventListener(ev,function(){_userScrolled=true;},{passive:true,once:true}); });
+window.addEventListener('load',function(){ setTimeout(function(){ if(!_userScrolled) showTab(location.hash); },0); });
 document.getElementById('openSearch').addEventListener('click',openSearch);
 document.getElementById('closeSearch').addEventListener('click',closeSearch);
 document.getElementById('gq').addEventListener('input',doSearch);
