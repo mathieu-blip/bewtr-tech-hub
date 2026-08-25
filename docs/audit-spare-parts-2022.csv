@@ -1,0 +1,294 @@
+﻿ref,sku_bw,designation,machines_db,machines_hub,present_hub,fournisseur,ref_fournisseur,prix_catalogue
+604022,non,U2 Tap Twin Port 285 mm Mounting Gasket 35 mm,BAR1,,NON,Borg&Overström,604022,AS*
+701157,non,Carb level probe,BOX 30; BOX 30E,,NON,Borg&Overström,701157,AS*
+720023,non,Temp probe,BOX 30; BOX 30E,,NON,Borg&Overström,720023,AS*
+810327,non,RECIRCULATION PUMP 230V,BOX 80,,NON,Blupura,810327,AS*
+BW-0012,oui,AiR System,AQTiV COMBI; AQTiV COMBI H; AQTiV ONE,,NON,BE WTR,BW-0012,AS*
+BW-0159,oui,PRO1 - PCB Control Board,,,NON,Borg&Overström,701052,72.5
+BW-0160,oui,PRO1 - Cup Stand,Tap PRO1 black; Tap PRO1 steel,PRO1,oui,Borg&Overström,701409,95
+BW-0161,oui,PRO1 - Connection cable,,,NON,Borg&Overström,607135,20
+BW-0162,oui,PRO1 - Connection box side,BOX PRO1 2021,PRO1,oui,Borg&Overström,702087,39
+BW-0163,oui,PRO1 - Solenoids control board -A,BOX PRO1 2021,PRO1,oui,Borg&Overström,637106,255
+BW-0164,oui,PRO1 - PCB Control board - A,BOX PRO1 2021,PRO1,oui,Borg&Overström,637107,195
+BW-0165,oui,Fan 30 - A,BOX BAR1 2021; BOX PRO1 2021,PRO1; BOX 30 (2021),oui,Borg&Overström,637408,43
+BW-0166,oui,Solenoids 30E - A,BOX PRO1 2021,PRO1,oui,Borg&Overström,701525,270
+BW-0167,oui,Controller 30 - A,BOX BAR1 2021; BOX PRO1 2021,PRO1; BOX 30 (2021),oui,Borg&Overström,637326,185
+BW-0168,oui,Pump - A,BOX BAR1 2021; BOX PRO1 2021,PRO1; BOX 30 (2021),oui,Borg&Overström,637425,485
+BW-0169,oui,Flow regulator 30 - A,BOX BAR1 2021; BOX PRO1 2021,PRO1; BOX 30 (2021),oui,Borg&Overström,461358,56
+BW-0170,oui,Fan 30 - B,BOX 30; BOX 30E,BOX 30E; BOX 30,oui,Borg&Overström,700085,35
+BW-0171,oui,Pump 30 - B,BOX 30; BOX 30E,BOX 30E; BOX 30,oui,Borg&Overström,701537,225
+BW-0172,oui,8mm PRV,BOX 30; BOX 30E,BOX 30E; BOX 30,oui,Borg&Overström,701076,13
+BW-0173,oui,Flow compensator 8mm,BOX 30; BOX 30E,BOX 30E; BOX 30,oui,Borg&Overström,701263,32
+BW-0174,oui,PCB Control board 30 - B,BOX 30,BOX 30,oui,Borg&Overström,720148,154
+BW-0175,oui,"Inlet solenoids 3/4"" BSP",BOX 30E,BOX 30E,oui,Borg&Overström,701094,35
+BW-0176,oui,Solenoids 30E - B,BOX 30E,BOX 30E,oui,Borg&Overström,701515,72
+BW-0177,oui,BAR1 Tap outlet,BAR1,BAR1,oui,Borg&Overström,604032,105
+BW-0178,oui,BAR1 BE WTR label set,BAR1,BAR1,oui,Borg&Overström,701148,9
+BW-0179,oui,PRO2 Solenoids,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,173241,22
+BW-0180,oui,PRO2 Cold thermostat,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,173264,19
+BW-0181,oui,PRO2 Fan,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,174351,25
+BW-0182,oui,PRO2 Tank circulation pump,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,175363,30
+BW-0183,oui,Immersion pump,BOX 150; BOX 80,BOX 80; BOX 150,oui,Blupura,810320,21
+BW-0184,oui,Pump 100L/h,BOX 80,BOX 80,oui,Blupura,130049,121
+BW-0185,oui,Flow compensator 8mm,BAR2 Double portion control; BAR2 touchless,BAR2 Double; BAR2 Touchless,oui,Blupura,140194,30
+BW-0186,oui,Cold thermostat - ice bank,BOX 150; BOX 80,BOX 80; BOX 150,oui,Blupura,150031,24
+BW-0187,oui,Level controller,BOX 15; BOX 150; BOX 80,BOX 80; BOX 150; BOX 15,oui,Blupura,150385,89
+BW-0188,oui,Motor for pump 200L/h,BOX 150,BOX 150,oui,Blupura,130005A,152
+BW-0189,oui,Fan 200x200,BOX 150,BOX 150,oui,Blupura,750066,55
+BW-0190,oui,UV Lamp,BAR2 Double portion control; BAR2 touchless,BAR2 Double; BAR2 Touchless,oui,Blupura,150068,6
+BW-0191,oui,Fan 120x120,BOX 15,BOX 15,oui,Blupura,120232,42
+BW-0192,oui,BOX 15 - Pump,BOX 15,BOX 15,oui,Blupura,130053,264
+BW-0193,oui,Flow compensator 6mm,BOX 15,BOX 15,oui,Blupura,140092,29
+BW-0194,oui,Cold thermostat - 15,BOX 15,BOX 15,oui,Blupura,150525,22
+BW-0195,oui,Fan 120x120x38,BOX 80,BOX 80,oui,Blupura,750243,40
+BW-0275,oui,PRO1 - outlet metal,Tap PRO1 steel,PRO1,oui,Borg&Overström,701443,30
+BW-0276,oui,PRO1 - outlet black,Tap PRO1 black,PRO1,oui,Borg&Overström,701453,30
+BW-0277,oui,PRO1 - touch panel - A,Tap PRO1 black; Tap PRO1 steel,PRO1,oui,Borg&Overström,720215,149
+BW-0278,oui,PRO1 - Laminar flow outlet,Tap PRO1 black; Tap PRO1 steel,PRO1,oui,Borg&Overström,700092,7.5
+BW-0279,oui,Power supply 12V 30 - A,BOX PRO1 2021,PRO1,oui,Borg&Overström,637417,93
+BW-0280,oui,PRO1 touch panel 30E - B,,,NON,Borg&Overström,701012,145
+BW-0281,oui,Left panel 30 - B,BOX 30; BOX 30E,BOX 30E; BOX 30,oui,Borg&Overström,720113,33
+BW-0282,oui,Right panel 30 - B,BOX 30; BOX 30E,BOX 30E; BOX 30,oui,Borg&Overström,720117,33
+BW-0283,oui,Top panel 30 - B,BOX 30; BOX 30E,BOX 30E; BOX 30,oui,Borg&Overström,700721,27
+BW-0284,oui,Front panel 30 - B,BOX 30; BOX 30E,BOX 30E; BOX 30,oui,Borg&Overström,720045,115
+BW-0285,oui,BAR1 Core,BAR1,BAR1,oui,Borg&Overström,604606,315
+BW-0286,oui,BAR1 outlet spacer,BAR1,BAR1,oui,Borg&Overström,604010,7
+BW-0287,oui,Carbonator bowl 1L - 80,,BOX 80,oui,Blupura,130009,132
+BW-0288,oui,Carbonator bowl 1L,BOX 150; BOX 80,BOX 150,oui,Blupura,130008,160
+BW-0289,oui,BAR2 - Cover nozzle,BAR2 Double portion control; BAR2 touchless,BAR2 Double; BAR2 Touchless,oui,Blupura,750230,52
+BW-0290,oui,BAR2 - Main board,BAR2 Double portion control; BAR2 touchless,BAR2 Double; BAR2 Touchless,oui,Blupura,150576,93
+BW-0291,oui,ELV 2 in 6 - out 8,,,NON,Blupura,150551,47.5
+BW-0292,oui,BAR2 - Volumetric counter,BAR2 Double portion control; BAR2 touchless,BAR2 Double; BAR2 Touchless,oui,Blupura,150388,49
+BW-0293,oui,BAR2 - Transformator,BAR2 Double portion control; BAR2 touchless,BAR2 Double; BAR2 Touchless,oui,Blupura,150016,39
+BW-0294,oui,BAR2 - Touch free push buttons,,,NON,Blupura,810620,95
+BW-0295,oui,BAR2 - Drip tray,BAR2 Double portion control; BAR2 touchless,BAR2 Double; BAR2 Touchless,oui,Blupura,750309,90
+BW-0296,oui,PRO2 front panel white,PRO2 white,PRO2,oui,Borg&Overström,120801,41
+BW-0297,oui,PRO2 Upper front panel,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,120803,41
+BW-0298,oui,PRO2 110V/240V Main board,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,171260,83
+BW-0299,oui,PRO2 LED Display PCB,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,171264,56
+BW-0300,oui,PRO2 Touch dispense screen PCB,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,171265,56
+BW-0301,oui,PRO2 Power adapter 230V/24VDC 1.5A (Type A),PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,174391,40
+BW-0302,oui,PRO2 chilled - ambient - sparkling touch screen control panel,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,191005,199
+BW-0342,oui,AQTiV ONE - Drip tray grid,AQTiV ONE,,NON,Superinox,?,AS*
+BW-0343,oui,Fixation set AQTiV ONE,AQTiV ONE,,NON,Superinox,?,AS*
+BW-0344,oui,Fixation set AQTiV COMBI,AQTiV COMBI; AQTiV COMBI H,,NON,Superinox,?,AS*
+BW-0345,oui,Gearbox,AQTiV COMBI; AQTiV COMBI H; AQTiV ONE,,NON,Superinox,R040044S-022,AS*
+BW-0346,oui,Gearbox nozzle,AQTiV COMBI; AQTiV COMBI H; AQTiV ONE,,NON,Superinox,?,AS*
+BW-0347,oui,Gearbox aerator,AQTiV COMBI; AQTiV COMBI H; AQTiV ONE,,NON,Superinox,?,AS*
+BW-0348,oui,NBR O-ring,AQTiV COMBI; AQTiV COMBI H,,NON,Neoperl,55121110000,AS*
+BW-0349,oui,Honeycomb plastic aerator with O-ring,AQTiV COMBI; AQTiV COMBI H,,NON,Superinox,R014010S-000,AS*
+BW-0366,oui,PCB Control board 30E - B,BOX 30E,BOX 30E,oui,Borg&Overström,720260,169
+BW-0367,oui,BAR2 – Button switch,BAR2 Double portion control,BAR2 Double,oui,Blupura,810439,AS*
+BW-0368,oui,BAR2 – Counter gasket,BAR2 Double portion control; BAR2 touchless,BAR2 Double; BAR2 Touchless,oui,Blupura,140564,AS*
+BW-0369,oui,BAR2 – Fixing plate,BAR2 Double portion control; BAR2 touchless,BAR2 Double; BAR2 Touchless,oui,Blupura,111012,AS*
+BW-0370,oui,BAR2 – Fixing nut 1 ½” G,BAR2 Double portion control; BAR2 touchless,BAR2 Double; BAR2 Touchless,oui,Blupura,130200,AS*
+BW-0371,oui,BAR2 – Power cable EU,BAR2 Double portion control,BAR2 Double,oui,Blupura,150074,AS*
+BW-0372,oui,BAR2 - Driptray drain connection,BAR2 Double portion control; BAR2 touchless,BAR2 Double; BAR2 Touchless,oui,Blupura,140366,AS*
+BW-0373,oui,BAR2 – Front glass,BAR2 Double portion control; BAR2 touchless,BAR2 Double; BAR2 Touchless,oui,Blupura,140816,AS*
+BW-0374,oui,BAR2 – Bottle guides,BAR2 Double portion control; BAR2 touchless,BAR2 Double; BAR2 Touchless,oui,Blupura,110375,AS*
+BW-0375,oui,BAR2 – Spring breaker,BAR2 Double portion control; BAR2 touchless,BAR2 Double; BAR2 Touchless,oui,Blupura,110445,AS*
+BW-0376,oui,BAR2 – UVC out,BAR2 Double portion control,BAR2 Double,oui,Blupura,810618,AS*
+BW-0377,oui,BAR2 – SPRK button 7mm,BAR2 Double portion control,BAR2 Double,oui,Blupura,810697,AS*
+BW-0378,oui,BAR2 – STLL button 7mm,BAR2 Double portion control,BAR2 Double,oui,Blupura,810698,AS*
+BW-0379,oui,BAR2 -  STLL button 10mm,BAR2 Double portion control,BAR2 Double,oui,Blupura,810696,AS*
+BW-0380,oui,BAR2 – SPRK button 10mm,BAR2 Double portion control,BAR2 Double,oui,Blupura,810695,AS*
+BW-0381,oui,BAR2 – Solenoid valve,BAR2 Double portion control; BAR2 touchless,BAR2 Double; BAR2 Touchless,oui,Blupura,150356,AS*
+BW-0382,oui,BAR2 – Cap ring nut,BAR2 Double portion control; BAR2 touchless,BAR2 Double; BAR2 Touchless,oui,Blupura,110274,AS*
+BW-0383,oui,BAR2 – LED holder,BAR2 Double portion control; BAR2 touchless,BAR2 Double; BAR2 Touchless,oui,Blupura,140251,AS*
+BW-0384,oui,BAR2 – Exit valves bracket,BAR2 Double portion control; BAR2 touchless,BAR2 Double; BAR2 Touchless,oui,Blupura,111011,AS*
+BW-0385,oui,Flow compensator 8mm,BAR2 Double portion control,BAR2 Double,oui,Blupura,140194,AS*
+BW-0386,oui,BAR2 – Rear casing,BAR2 Double portion control; BAR2 touchless,BAR2 Double; BAR2 Touchless,oui,Blupura,110974,AS*
+BW-0387,oui,BAR2 -  LED feeder,BAR2 Double portion control; BAR2 touchless,BAR2 Double; BAR2 Touchless,oui,Blupura,810134,AS*
+BW-0388,oui,BAR2 – Die-cut evilene protection,BAR2 Double portion control,BAR2 Double,oui,Blupura,160674,AS*
+BW-0389,oui,BAR2 – UV LED control board,BAR2 Double portion control,BAR2 Double,oui,Blupura,150708,AS*
+BW-0390,oui,BAR2 – UV board support bracket,BAR2 Double portion control,BAR2 Double,oui,Blupura,111420,AS*
+BW-0391,oui,Screwless cable tie,BAR2 Double portion control; BAR2 touchless; BOX 150,BOX 150; BAR2 Double; BAR2 Touchless,oui,Blupura,150011,AS*
+BW-0396,oui,BAR2 - Touchfree button,,,NON,Blupura,150146,AS*
+BW-0397,oui,BAR2 - STLL touchfree,BAR2 touchless,BAR2 Touchless,oui,Blupura,810602,AS*
+BW-0398,oui,BAR2 - SPRK touchfree,BAR2 touchless,BAR2 Touchless,oui,Blupura,810601,AS*
+BW-0399,oui,BAR2 - Front glass (touchless),,,NON,Blupura,140846,AS*
+BW-0400,oui,BAR2 - Nut cover nozzle,BAR2 touchless,BAR2 Touchless,oui,Blupura,110274,AS*
+BW-0401,oui,BAR2 - Rear carter (touchless),,,NON,Blupura,111110,AS*
+BW-0402,oui,BAR2 - Solenoid bracket,,,NON,Blupura,111137,AS*
+BW-0403,oui,BAR2 - Inverter UV,,,NON,Blupura,150205,AS*
+BW-0404,oui,BAR2 - Touchfree button switch,BAR2 touchless,BAR2 Touchless,oui,Blupura,150250,AS*
+BW-0405,oui,BAR2 - Touchfree sensor,BAR2 touchless,BAR2 Touchless,oui,Blupura,150788,AS*
+BW-0406,oui,BAR2 - BTG protection,BAR2 touchless,BAR2 Touchless,oui,Blupura,160674,AS*
+BW-0408,oui,BAR2 - Transformer,,,NON,Blupura,150071,AS*
+BW-0409,oui,BAR2 - Inverter 3UV,BAR2 touchless,BAR2 Touchless,oui,Blupura,150204,AS*
+BW-0416,oui,Bracket for Immersion Pump,BOX 150; BOX 80,BOX 80; BOX 150,oui,Blupura,110264,AS*
+BW-0417,oui,Motor for pump 100L/h,BOX 80,BOX 80,oui,Blupura,130048A,AS*
+BW-0418,oui,Carbonator bracket,BOX 150; BOX 80,BOX 80; BOX 150,oui,Blupura,110103,AS*
+BW-0419,oui,Cover box 80,BOX 80,BOX 80,oui,Blupura,110138,AS*
+BW-0420,oui,Casing box 80,BOX 80,BOX 80,oui,Blupura,110137,AS*
+BW-0421,oui,Foot pvc,BOX 80,BOX 80,oui,Blupura,140118,AS*
+BW-0422,oui,Front panel,BOX 80,BOX 80,oui,Blupura,810646,AS*
+BW-0423,oui,Power cord,BOX 80,BOX 80,oui,Blupura,150087,AS*
+BW-0424,oui,Bulkhead 8 mm,BOX 80,BOX 80,oui,Blupura,140099,AS*
+BW-0425,oui,Iec socket,BOX 80,BOX 80,oui,Blupura,150094,AS*
+BW-0426,oui,General power switch,BOX 80,BOX 80,oui,Blupura,150072,AS*
+BW-0427,oui,Plastic plug,BOX 150; BOX 80,BOX 80; BOX 150,oui,Blupura,150051,AS*
+BW-0428,oui,Spring type cable grand,BOX 150; BOX 80,BOX 80; BOX 150,oui,Blupura,150052,AS*
+BW-0429,oui,Ice bank overflow kit,BOX 150; BOX 80,BOX 80; BOX 150,oui,Blupura,750019,AS*
+BW-0430,oui,BOX 15 - Base,BOX 15,BOX 15,oui,Blupura,140511,AS*
+BW-0431,oui,BOX 15 - Front paneL,BOX 15,BOX 15,oui,Blupura,810645,AS*
+BW-0432,oui,Bulkhead 1/4 mm,BOX 15,BOX 15,oui,Blupura,140296,AS*
+BW-0433,oui,BOX 15 - Bore cap,BOX 15,BOX 15,oui,Blupura,140845,AS*
+BW-0434,oui,BOX 15 - Main support,BOX 15,BOX 15,oui,Blupura,140512,AS*
+BW-0435,oui,BOX 15 - Left panel,BOX 15,BOX 15,oui,Blupura,140561,AS*
+BW-0436,oui,BOX 15 - Top cover,BOX 15,BOX 15,oui,Blupura,110954,AS*
+BW-0437,oui,BOX 15 - Tank support,BOX 15,BOX 15,oui,Blupura,140528,AS*
+BW-0438,oui,BOX 15 - Back panel,BOX 15,BOX 15,oui,Blupura,140521,AS*
+BW-0439,oui,Power switch,BOX 15; BOX 150,BOX 150; BOX 15,oui,Blupura,150157,AS*
+BW-0440,oui,BOX 15 - Right panel,BOX 15,BOX 15,oui,Blupura,140562,AS*
+BW-0441,oui,BOX 150 - Thermostat bracket,BOX 150,BOX 150,oui,Blupura,110048,AS*
+BW-0442,oui,BOX 150 - Small cover,BOX 150,BOX 150,oui,Blupura,110053,AS*
+BW-0443,oui,BOX 150 - Inlet water pressure reducer,BOX 150,BOX 150,oui,Blupura,800042,AS*
+BW-0444,oui,BOX 150 - Interm plate,BOX 150,BOX 150,oui,Blupura,110040,AS*
+BW-0445,oui,BOX 150 - Large cover,BOX 150,BOX 150,oui,Blupura,110052,AS*
+BW-0446,oui,BOX 150 - Condenser,BOX 150,BOX 150,oui,Blupura,120014,AS*
+BW-0447,oui,BOX 150 - Rear panel,BOX 150,BOX 150,oui,Blupura,110051,AS*
+BW-0448,oui,BOX 150 - Condenser support,BOX 150,BOX 150,oui,Blupura,110044,AS*
+BW-0449,oui,BOX 150 - Compressor,BOX 150,BOX 150,oui,Blupura,120001,AS*
+BW-0450,oui,BOX 150 - Bracket,BOX 150,BOX 150,oui,Blupura,110020,AS*
+BW-0451,oui,Brass pump 200L/h,BOX 150,BOX 150,oui,Blupura,130006,135
+BW-0452,oui,BOX 150 - Bracket for valve,BOX 150,BOX 150,oui,Blupura,110015A,AS*
+BW-0453,oui,BOX 150 - Carbonator bowl bracket,BOX 150,BOX 150,oui,Blupura,110013,AS*
+BW-0454,oui,BOX 150 - SS dual coil,BOX 150,BOX 150,oui,Blupura,120032,AS*
+BW-0455,oui,BOX 150 - Evaporator,BOX 150,BOX 150,oui,Blupura,120033,AS*
+BW-0456,oui,BOX 150 - Tank cooler,BOX 150,BOX 150,oui,Blupura,140004,AS*
+BW-0457,oui,EC150 Power cable,BOX 150,BOX 150,oui,Blupura,150082,AS*
+BW-0458,oui,BOX 150 - Base,BOX 150,BOX 150,oui,Blupura,110037,AS*
+BW-0459,oui,BOX 150 - Inox shell,BOX 150,BOX 150,oui,Blupura,110049,AS*
+BW-0461,oui,"Straight adaptor, 3/8 x 1/4 BSP",BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,462313,AS*
+BW-0462,oui,"Reducer, 3/8 -5/16",BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,462374,AS*
+BW-0463,oui,5/16 LLDPE tube,BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,462014,AS*
+BW-0464,oui,1/4  LLDPE tube,BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,462013,AS*
+BW-0465,oui,BOX 30 - Can wrap insulation - A,BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,635512,AS*
+BW-0466,oui,"Single check valve, 1/4",BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,462668,AS*
+BW-0467,oui,3/8 LLDPE tube,BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,462012,AS*
+BW-0468,oui,"Bulkhead connector, 1/4",BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,462325,AS*
+BW-0469,oui,BOX 30 - Lid - A,BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,632032,AS*
+BW-0470,oui,BOX 30 - Flow control - A,BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,637325,AS*
+BW-0471,oui,"Stem adaptator, 3/8 OD x 1/4 BSP",BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,462364,AS*
+BW-0472,oui,"Equal Tee, 1/4",BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,462318,AS*
+BW-0473,oui,"Stem Elbow, 3/8-1/4",BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,462359,AS*
+BW-0475,oui,"Single check valve, 5/16",BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,462667,AS*
+BW-0476,oui,Equal elbow 5/16,BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,462376,AS*
+BW-0477,oui,Reducing elbow 3/8 x 1/4,BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,462327,AS*
+BW-0478,oui,"Equal Elbow 3/8""",BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,462362,AS*
+BW-0479,oui,BOX 30 - Swan Neck Faucet Connection Harness -A,BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,172180,AS*
+BW-0480,oui,"Stem Elbow, 3/8-1/4",BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,462369,AS*
+BW-0481,oui,"Reducing Straight Connector, 5/16-1/4",BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,462874,AS*
+BW-0482,oui,"Stem elbow, 5/16-5/16",BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,462384,AS*
+BW-0483,oui,"Stem elbow, 1/4-1/4",BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,462368,AS*
+BW-0484,oui,"Stem Elbow, 3/8-3/8",BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,462371,AS*
+BW-0485,oui,BOX 30 Front wrap - A,BOX BAR1 2021; BOX PRO1 2021,BOX 30 (2021),oui,Borg&Overström,632031,AS*
+BW-0493,oui,PRO2 - Top cover panel,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,123187,AS*
+BW-0494,oui,PRO2 - Pressure release valve for carbonation tank,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,134612,AS*
+BW-0495,oui,PRO2 - Single check valve,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,132445,AS*
+BW-0496,oui,PRO2 - Grit filter,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,194121,AS*
+BW-0497,oui,PRO2 - 2-port drainage outlet,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,131426,AS*
+BW-0498,oui,PRO2 - Electric rocker switch,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,174321,AS*
+BW-0499,oui,PRO2 - IEC Fused socket,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,172163,AS*
+BW-0500,oui,PRO2 - Pump 35L/h 24VDC,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,174372,280
+BW-0501,oui,PRO2 - Left Side Panel inc handle,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,121850,AS*
+BW-0502,oui,PRO2 - Compressor,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,174313,AS*
+BW-0503,oui,PRO2 - Main PCB Case Assembly,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,171268,AS*
+BW-0504,oui,PRO2 - Faucet 4 Outlets,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,133514,AS*
+BW-0505,oui,PRO2 - Faucet Shroud,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,183246,AS*
+BW-0506,oui,PRO2 - Front panel Black,PRO2 black,PRO2,oui,Borg&Overström,120802,AS*
+BW-0507,oui,PRO2 - Drip Tray Set without drainage black,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,125840,AS*
+BW-0508,oui,PRO2 - Touch Icon Illumination Diffuser,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,171269,AS*
+BW-0509,oui,PRO2 - LED PCB Wiring Loom,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,172223,AS*
+BW-0510,oui,PRO2 - Right Side Panel inc handle,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,121851,AS*
+BW-0511,oui,PRO2 - CO2 Single Gauge Regulator with elbow,PRO2 black; PRO2 white,PRO2,oui,Borg&Overström,193220,AS*
+BW-0635,oui,AQTiV flow compensator,AQTiV COMBI; AQTiV COMBI H; AQTiV ONE,,NON,Superinox,R040096-030,AS*
+BW-0646,oui,PRO1 - Refrigeration probe - A,BOX BAR1 2021; BOX PRO1 2021,PRO1; BOX 30 (2021),oui,Borg&Overström,720023,43
+BW-0647,oui,PRO1 - Level probe - A,BOX BAR1 2021; BOX PRO1 2021,PRO1; BOX 30 (2021),oui,Borg&Overström,637327,
+BW-0783,oui,PRO2 - Loom solenoids Rev2,PRO2.1,,NON,Borg&Overström,702539,AS*
+BW-0973,oui,Gearbox - Handle (x10),AQTiV COMBI; AQTiV COMBI H; AQTiV ONE,,NON,,P040039 + P036001,
+BW-0974,oui,Gearbox - Hat without handle (x5),AQTiV COMBI; AQTiV COMBI H; AQTiV ONE,,NON,,P040038,
+BW-0975,oui,Gearbox - Lever (x10),AQTiV COMBI; AQTiV COMBI H; AQTiV ONE,,NON,, P040035 + P040040,
+BW-0987,oui,Stainless-steel tank,(absent DB),BOX 20,oui,,,
+BW-0988,oui,Axial fan 120x120x25,(absent DB),BOX 20,oui,,,
+BW-0989,oui,Condenser,(absent DB),BOX 20,oui,,,
+BW-0990,oui,Solenoid valve (per schema),(absent DB),BOX 20,oui,,,
+BW-0991,oui,Thermostat Ranco K50 P1127.0,(absent DB),BOX 20,oui,,,
+BW-0992,oui,Solenoid-valve bracket,(absent DB),BOX 20,oui,,,
+BW-0993,oui,Tank support bracket,(absent DB),BOX 20,oui,,,
+BW-0994,oui,"Outer casing / cabinet, black",(absent DB),BOX 20,oui,,,
+BW-0995,oui,Base frame,(absent DB),BOX 20,oui,,,
+BW-0996,oui,Pump bracket,(absent DB),BOX 20,oui,,,
+BW-0997,oui,Tank insulation,(absent DB),BOX 20,oui,,,
+BW-0998,oui,Compressor LG TS36NATG (R600a),(absent DB),BOX 20,oui,,,
+BW-0999,oui,Carbonator control board + time-out (level I),(absent DB),BOX 20; BOX 80 I,oui,,,
+BW-1000,oui,Primary wiring harness,(absent DB),BOX 20,oui,,,
+BW-1001,oui,Front panel,(absent DB),BOX 20,oui,,,
+BW-1002,oui,Wiring harness,(absent DB),BOX 20,oui,,,
+BW-1003,oui,Booster pump,(absent DB),BOX 20,oui,,,
+BW-1004,oui,"Expansion compensator, tube Ø8",(absent DB),BOX 20; BOX 80 I; BOX 120 I,oui,,,
+BW-1005,oui,Rubber cable grommet,(absent DB),BOX 20,oui,,,
+BW-1006,oui,"End plug, Ø6 Lokring",(absent DB),BOX 20,oui,,,
+BW-1007,oui,"Label/sticker kit, chiller-carbonator (2 undercounter +)",(absent DB),BOX 20,oui,,,
+BW-1008,oui,Refrigerant gas R600a,(absent DB),BOX 20,oui,,,
+BW-1009,oui,Aluminium rivet 4x10,(absent DB),BOX 20,oui,,,
+BW-1010,oui,Nylon bag 55+20+20x1,(absent DB),BOX 20; BOX 80 I; BOX 120 I,oui,,,
+BW-1011,oui,Packaging - tray,(absent DB),BOX 20,oui,,,
+BW-1012,oui,Faston male terminal cover,(absent DB),BOX 20,oui,,,
+BW-1013,oui,Faston male terminal,(absent DB),BOX 20,oui,,,
+BW-1014,oui,Time-delay fuse 3.15 A,(absent DB),BOX 20,oui,,,
+BW-1015,oui,Power inlet socket with fuse,(absent DB),BOX 20; BOX 80 I; BOX 120 I,oui,,,
+BW-1016,oui,Power supply cord (unit standard equipment),(absent DB),BOX 20; BOX 80 I; BOX 120 I,oui,,,
+BW-1017,oui,Carbonator sensor/probe cable,(absent DB),BOX 20,oui,,,
+BW-1018,oui,"Aluminium anti-condensation tape, H75",(absent DB),BOX 20,oui,,,
+BW-1019,oui,"Anti-vibration pad, compressor",(absent DB),BOX 20; BOX 80 I; BOX 120 I,oui,,,
+BW-1020,oui,"Foot, black 8mm",(absent DB),BOX 20,oui,,,
+BW-1021,oui,"Sheet metal 8/10 (0.8mm), black, 1250x2195",(absent DB),BOX 20,oui,,,
+BW-1022,oui,"Filter drier, complete",(absent DB),BOX 20,oui,,,
+BW-1023,oui,Brazed charging valve,(absent DB),BOX 20; BOX 80 I; BOX 120 I,oui,,,
+BW-1024,oui,Packaging - cap,(absent DB),BOX 20,oui,,,
+BW-1025,oui,Condenser,(absent DB),BOX 80 I,oui,,,
+BW-1026,oui,Fan 119x119x38,(absent DB),BOX 80 I; BOX 120 I,oui,,,
+BW-1027,oui,Motor Sisme Plus,(absent DB),BOX 80 I; BOX 120 I,oui,,,
+BW-1028,oui,Pump 150 L/h,(absent DB),BOX 80 I,oui,,,
+BW-1029,oui,"Filter drier, complete",(absent DB),BOX 80 I; BOX 120 I,oui,,,
+BW-1030,oui,Carbonator,(absent DB),BOX 80 I,oui,,,
+BW-1031,oui,Capillary tube,(absent DB),BOX 80 I; BOX 120 I,oui,,,
+BW-1032,oui,Agitator / stirrer MIR A,(absent DB),BOX 80 I,oui,,,
+BW-1033,oui,Agitator bracket,(absent DB),BOX 80 I,oui,,,
+BW-1034,oui,Electronic-board bracket,(absent DB),BOX 80 I; BOX 120 I,oui,,,
+BW-1035,oui,Thermostat Ranco K50-H2005/001,(absent DB),BOX 80 I; BOX 120 I,oui,,,
+BW-1036,oui,"Tank, complete",(absent DB),BOX 80 I,oui,,,
+BW-1037,oui,Stainless-steel base,(absent DB),BOX 80 I,oui,,,
+BW-1038,oui,Stainless-steel top cover / lid,(absent DB),BOX 80 I,oui,,,
+BW-1039,oui,"Stainless-steel side panel, right",(absent DB),BOX 80 I,oui,,,
+BW-1040,oui,"Stainless-steel side panel, left",(absent DB),BOX 80 I,oui,,,
+BW-1041,oui,Motor bracket,(absent DB),BOX 80 I,oui,,,
+BW-1042,oui,Wiring harness,(absent DB),BOX 80 I; BOX 120 I,oui,,,
+BW-1043,oui,"Evaporator, complete",(absent DB),BOX 80 I,oui,,,
+BW-1044,oui,Earth / ground wiring harness,(absent DB),BOX 80 I; BOX 120 I,oui,,,
+BW-1045,oui,"Cooling coil, complete",(absent DB),BOX 80 I,oui,,,
+BW-1046,oui,Coil spacer,(absent DB),BOX 80 I; BOX 120 I,oui,,,
+BW-1047,oui,Square threaded insert,(absent DB),BOX 80 I; BOX 120 I,oui,,,
+BW-1048,oui,"Earth / ground rivet, 4-way",(absent DB),BOX 80 I; BOX 120 I,oui,,,
+BW-1049,oui,Time-delay fuse 5 A,(absent DB),BOX 80 I,oui,,,
+BW-1050,oui,Illuminated double-pole switch I/O,(absent DB),BOX 80 I; BOX 120 I,oui,,,
+BW-1051,oui,"Rubber foot Ø30, steel M6x1",(absent DB),BOX 80 I; BOX 120 I,oui,,,
+BW-1052,oui,Condenser,(absent DB),BOX 120 I,oui,,,
+BW-1053,oui,Pump 200 L/h,(absent DB),BOX 120 I,oui,,,
+BW-1054,oui,Carbonator,(absent DB),BOX 120 I,oui,,,
+BW-1055,oui,Agitator bracket,(absent DB),BOX 120 I,oui,,,
+BW-1056,oui,Electronic control board - LIV-IBM6,(absent DB),BOX 120 I,oui,,,
+BW-1057,oui,"Tank, complete",(absent DB),BOX 120 I,oui,,,
+BW-1058,oui,Stainless-steel base,(absent DB),BOX 120 I,oui,,,
+BW-1059,oui,Stainless-steel top cover / lid,(absent DB),BOX 120 I,oui,,,
+BW-1060,oui,"Stainless-steel side panel, right",(absent DB),BOX 120 I,oui,,,
+BW-1061,oui,"Stainless-steel side panel, left",(absent DB),BOX 120 I,oui,,,
+BW-1062,oui,Motor bracket,(absent DB),BOX 120 I,oui,,,
+BW-1063,oui,"Evaporator, complete",(absent DB),BOX 120 I,oui,,,
+BW-1064,oui,"Cooling coil, complete",(absent DB),BOX 120 I,oui,,,
+BW-1065,oui,Rubber cable grommet Ø23,(absent DB),BOX 120 I,oui,,,
+BW-1066,oui,Time-delay fuse 10 A,(absent DB),BOX 120 I,oui,,,
+BW-1067,oui,Reopenable cable tie (for panel hole),(absent DB),BOX 120 I,oui,,,
+BW-1068,oui,Flow regulator,(absent DB),BOX 80 I; BOX 120 I,oui,,,
