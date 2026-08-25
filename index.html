@@ -1475,21 +1475,15 @@ function fbSubmit(e){
   fbHideDiag();
   document.getElementById('fbAlt').classList.add('hidden');
 
-  fbSend(p, false)
+  /* Un seul envoi, dont la reponse est lue.
+     Il y avait ici un repli en no-cors : quand la reponse etait illisible, on
+     rejouait la requete et on affichait un succes sans preuve. Il affichait
+     « c'est envoye » alors que rien n'arrivait dans le classeur, ce qui est le
+     pire resultat possible pour un formulaire de retours : le retour est perdu
+     et personne ne le sait. Tant qu'un envoi n'est pas confirme par le
+     serveur, il est traite comme un echec. */
+  fbSend(p)
     .then(function(){ fbSetStatus(''); fbShowDone(); })
-    .catch(function(err){
-      /* Un blocage CORS se presente comme un TypeError : la requete est bien
-         partie et Apps Script l'a traitee, mais la reponse est illisible car la
-         redirection interne de Google revient sans en-tetes CORS. On la rejoue
-         en no-cors pour que le retour arrive quand meme.
-         Volontairement limite au TypeError : un 404, un 403 ou une page de
-         connexion doivent rester des erreurs franches, pas un faux succes. */
-      if(!err || err.name !== 'TypeError') throw err;
-      return fbSend(p, true).then(function(){
-        fbSetStatus(''); fbShowDone();
-        try{ console.info('[feedback] envoye en mode no-cors : reponse non lisible'); }catch(e){}
-      });
-    })
     .catch(function(err){
       fbSetStatus(d['fb.err.net'], true);
       fbShowDiag(err);
@@ -1512,27 +1506,24 @@ function fbQuery(payload){
 }
 
 /**
- * Un envoi, en GET avec les donnees dans l'URL.
+ * Un envoi, en GET avec les donnees dans l'URL. La reponse est lue : un envoi
+ * n'est reussi que si le serveur confirme l'avoir enregistre.
  *
  * Apps Script repond par une redirection interne. Une redirection abandonne le
  * corps d'un POST en route — la requete arrive vide et doPost n'a rien a ecrire
  * — alors qu'elle conserve les parametres d'URL intacts. D'ou le GET.
  *
  * Aucun en-tete personnalise : pas de pre-vol CORS a negocier.
- * En mode no-cors la reponse est opaque par conception : seule la bonne remise
- * de la requete est verifiable, mais les donnees, elles, sont bien arrivees.
  */
-function fbSend(payload, noCors){
+function fbSend(payload){
   var ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
   var timer = setTimeout(function(){ if(ctrl) ctrl.abort(); }, 20000);
   var url = FEEDBACK_ENDPOINT + (FEEDBACK_ENDPOINT.indexOf('?') < 0 ? '?' : '&') + fbQuery(payload);
   var opts = {method: 'GET', redirect: 'follow'};
-  if(noCors) opts.mode = 'no-cors';
   if(ctrl) opts.signal = ctrl.signal;
 
   return fetch(url, opts).then(function(r){
     clearTimeout(timer);
-    if(noCors) return {opaque: true};
     if(!r.ok) throw new Error('HTTP ' + r.status);
     return r.text().then(function(txt){
       var res = null; try{ res = JSON.parse(txt); }catch(e){}
