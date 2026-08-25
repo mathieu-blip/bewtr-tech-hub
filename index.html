@@ -1475,34 +1475,61 @@ function fbSubmit(e){
   fbHideDiag();
   document.getElementById('fbAlt').classList.add('hidden');
 
-  var ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
-  var timer = setTimeout(function(){ if(ctrl) ctrl.abort(); }, 20000);
-  var opts = {
-    method: 'POST',
-    /* text/plain : évite le pré-vol CORS, qu'Apps Script ne sait pas traiter */
-    headers: {'Content-Type': 'text/plain;charset=utf-8'},
-    body: JSON.stringify(p)
-  };
-  if(ctrl) opts.signal = ctrl.signal;
-
-  fetch(FEEDBACK_ENDPOINT, opts)
-    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.text(); })
-    .then(function(txt){
-      var res = null; try{ res = JSON.parse(txt); }catch(err){}
-      /* exiger un {ok:true} franc : une page de connexion HTML renvoyee en 200
-         ne doit jamais passer pour un envoi reussi */
-      if(!res || res.ok !== true) throw new Error(res && res.error ? res.error : 'reponse inattendue du serveur');
-      fbSetStatus(''); fbShowDone();
+  fbPost(p, false)
+    .then(function(){ fbSetStatus(''); fbShowDone(); })
+    .catch(function(err){
+      /* Un blocage CORS se presente comme un TypeError : la requete est bien
+         partie et Apps Script l'a traitee, mais la reponse est illisible car la
+         redirection interne de Google revient sans en-tetes CORS. On la rejoue
+         en no-cors pour que le retour arrive quand meme.
+         Volontairement limite au TypeError : un 404, un 403 ou une page de
+         connexion doivent rester des erreurs franches, pas un faux succes. */
+      if(!err || err.name !== 'TypeError') throw err;
+      return fbPost(p, true).then(function(){
+        fbSetStatus(''); fbShowDone();
+        try{ console.info('[feedback] envoye en mode no-cors : reponse non lisible'); }catch(e){}
+      });
     })
     .catch(function(err){
       fbSetStatus(d['fb.err.net'], true);
       fbShowDiag(err);
       fbArmMailto(p);
     })
-    .then(function(){
-      clearTimeout(timer);
-      fbBusy = false; btn.disabled = false;
+    .then(function(){ fbBusy = false; btn.disabled = false; });
+}
+
+/**
+ * Un envoi. En mode no-cors la reponse est opaque par conception : on ne peut
+ * pas la lire, seule la bonne remise de la requete est verifiable.
+ */
+function fbPost(payload, noCors){
+  var ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+  var timer = setTimeout(function(){ if(ctrl) ctrl.abort(); }, 20000);
+  var opts = {
+    method: 'POST',
+    /* text/plain : evite le pre-vol CORS, qu'Apps Script ne sait pas traiter,
+       et reste autorise en no-cors */
+    headers: {'Content-Type': 'text/plain;charset=utf-8'},
+    body: JSON.stringify(payload)
+  };
+  if(noCors) opts.mode = 'no-cors';
+  if(ctrl) opts.signal = ctrl.signal;
+
+  return fetch(FEEDBACK_ENDPOINT, opts).then(function(r){
+    clearTimeout(timer);
+    if(noCors) return {opaque: true};
+    if(!r.ok) throw new Error('HTTP ' + r.status);
+    return r.text().then(function(txt){
+      var res = null; try{ res = JSON.parse(txt); }catch(e){}
+      /* exiger un {ok:true} franc : une page de connexion HTML renvoyee en 200
+         ne doit jamais passer pour un envoi reussi */
+      if(!res || res.ok !== true) throw new Error(res && res.error ? res.error : 'reponse inattendue du serveur');
+      return res;
     });
+  }, function(err){
+    clearTimeout(timer);
+    throw err;
+  });
 }
 
 (function(){
