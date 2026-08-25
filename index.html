@@ -347,6 +347,7 @@
   .fb-status{font-size:13px;color:var(--ink-soft)}
   .fb-status.err{color:var(--red);font-weight:600}
   .fb-alt{font-size:13px}
+  .fb-diag{margin-top:12px;font-size:12px;line-height:1.5;color:var(--ink-soft);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;word-break:break-all;background:#fafbfc;border:1px solid var(--line);border-radius:9px;padding:9px 11px}
   .fb-done{text-align:center;padding:22px 10px}
   .fb-done .fb-tick{width:54px;height:54px;border-radius:50%;background:var(--green);color:#fff;font-size:26px;display:grid;place-items:center;margin:0 auto 14px}
   .fb-done h3{font-size:18px;margin-bottom:6px}
@@ -566,6 +567,7 @@
             <span class="fb-status" id="fbStatus" role="status" aria-live="polite"></span>
             <a class="fb-alt hidden" id="fbAlt" href="#" data-i18n="fb.mailto"></a>
           </div>
+          <div class="fb-diag hidden" id="fbDiag"></div>
         </form>
         <div class="card fb-card fb-done hidden" id="fbDone">
           <div class="fb-tick">✓</div>
@@ -1425,6 +1427,18 @@ function fbArmMailto(p){
   alt.classList.remove('hidden');
 }
 
+function fbShowDiag(err){
+  var el = document.getElementById('fbDiag');
+  var reason = err && err.name === 'AbortError'
+    ? 'timeout (20 s, aucune reponse)'
+    : ((err && err.name ? err.name : 'Error') + ': ' + (err && err.message ? err.message : String(err)));
+  var host = '';
+  try{ host = new URL(FEEDBACK_ENDPOINT).pathname.split('/').slice(0,3).join('/'); }catch(e){}
+  el.textContent = 'diag — ' + reason + (host ? '  |  ' + host : '') + '  |  ' + (navigator.onLine ? 'en ligne' : 'hors ligne');
+  el.classList.remove('hidden');
+}
+function fbHideDiag(){ document.getElementById('fbDiag').classList.add('hidden'); }
+
 function fbShowDone(){
   document.getElementById('fbForm').classList.add('hidden');
   document.getElementById('fbDone').classList.remove('hidden');
@@ -1437,7 +1451,7 @@ function fbReset(){
   document.getElementById('fbMachine').value = '';
   var alt = document.getElementById('fbAlt');
   delete alt.dataset.armed; alt.classList.add('hidden');
-  fbSetStatus('');
+  fbSetStatus(''); fbHideDiag();
   document.getElementById('fbDone').classList.add('hidden');
   form.classList.remove('hidden');
   document.getElementById('fbMsg').focus();
@@ -1458,6 +1472,7 @@ function fbSubmit(e){
 
   var btn = document.getElementById('fbSend');
   fbBusy = true; btn.disabled = true; fbSetStatus(d['fb.sending'], false);
+  fbHideDiag();
   document.getElementById('fbAlt').classList.add('hidden');
 
   var ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
@@ -1474,11 +1489,14 @@ function fbSubmit(e){
     .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.text(); })
     .then(function(txt){
       var res = null; try{ res = JSON.parse(txt); }catch(err){}
-      if(res && res.ok === false) throw new Error(res.error || 'rejected');
+      /* exiger un {ok:true} franc : une page de connexion HTML renvoyee en 200
+         ne doit jamais passer pour un envoi reussi */
+      if(!res || res.ok !== true) throw new Error(res && res.error ? res.error : 'reponse inattendue du serveur');
       fbSetStatus(''); fbShowDone();
     })
-    .catch(function(){
+    .catch(function(err){
       fbSetStatus(d['fb.err.net'], true);
+      fbShowDiag(err);
       fbArmMailto(p);
     })
     .then(function(){
