@@ -23,22 +23,47 @@ var HEADERS = ['Date', 'Type', 'Section', 'Machine', 'Message',
 
 /* ------------------------------------------------------------- POINTS D'ENTREE */
 
+/**
+ * Le guide envoie en GET, donnees dans l'URL.
+ *
+ * Apps Script repond par une redirection interne, et une redirection abandonne
+ * le corps d'un POST en route : doPost recevait une requete vide. Les
+ * parametres d'URL, eux, traversent la redirection intacts.
+ *
+ * Sans parametre, repond l'etat du service : c'est le test a faire dans un
+ * navigateur pour verifier que le deploiement est vivant.
+ */
+function doGet(e) {
+  if (!e || !e.parameter || !e.parameter.message) {
+    return json_({ ok: true, service: 'bewtr-feedback' });
+  }
+  return record_(e.parameter);
+}
+
+/** Conserve pour compatibilite : accepte encore un POST en JSON. */
 function doPost(e) {
+  try {
+    if (!e || !e.postData || !e.postData.contents) throw new Error('empty body');
+    return record_(JSON.parse(e.postData.contents));
+  } catch (err) {
+    return json_({ ok: false, error: String(err && err.message || err) });
+  }
+}
+
+/** Ecrit une ligne. `recorded` distingue un envoi enregistre d'un simple accuse. */
+function record_(d) {
   var lock = LockService.getScriptLock();
   try {
     // evite que deux envois simultanes s'ecrasent sur la meme ligne
     lock.waitLock(30000);
 
-    if (!e || !e.postData || !e.postData.contents) throw new Error('empty body');
-    var d = JSON.parse(e.postData.contents);
-
     if (SHARED_TOKEN && d.token !== SHARED_TOKEN) throw new Error('bad token');
 
-    var message = trim_(d.message, 4000);
+    var message = trim_(d.message, 2000);
     if (!message) throw new Error('empty message');
 
     getSheet_().appendRow([
-      d.sentAt ? new Date(d.sentAt) : new Date(),
+      parseDate_(d.sentAt),
       d.kind === 'suggestion' ? 'Suggestion' : 'Bug',
       safe_(trim_(d.areaLabel, 120)),
       safe_(trim_(d.machine, 60)),
@@ -53,7 +78,7 @@ function doPost(e) {
     ]);
 
     notify_(d, message);
-    return json_({ ok: true });
+    return json_({ ok: true, recorded: true });
 
   } catch (err) {
     return json_({ ok: false, error: String(err && err.message || err) });
@@ -62,9 +87,11 @@ function doPost(e) {
   }
 }
 
-/** Permet de verifier dans un navigateur que le deploiement repond. */
-function doGet() {
-  return json_({ ok: true, service: 'bewtr-feedback' });
+/** Une date d'envoi illisible ne doit pas faire perdre le retour. */
+function parseDate_(v) {
+  if (!v) return new Date();
+  var d = new Date(v);
+  return isNaN(d.getTime()) ? new Date() : d;
 }
 
 /* ------------------------------------------------------------------ OUTILS */

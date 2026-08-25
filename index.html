@@ -548,7 +548,7 @@
           </div>
           <div class="fb-row">
             <label class="fb-lbl" for="fbMsg" data-i18n="fb.msg"></label>
-            <textarea class="fb-in" id="fbMsg" rows="6" maxlength="4000"></textarea>
+            <textarea class="fb-in" id="fbMsg" rows="6" maxlength="2000"></textarea>
             <span class="fb-help" data-i18n="fb.msg.help"></span>
           </div>
           <div class="fb-grid">
@@ -1405,7 +1405,7 @@ function fbPayload(){
     lang: lang,
     page: location.href,
     screen: (window.screen ? screen.width+'x'+screen.height : '') ,
-    userAgent: navigator.userAgent || ''
+    userAgent: (navigator.userAgent || '').slice(0, 200)
   };
 }
 
@@ -1475,7 +1475,7 @@ function fbSubmit(e){
   fbHideDiag();
   document.getElementById('fbAlt').classList.add('hidden');
 
-  fbPost(p, false)
+  fbSend(p, false)
     .then(function(){ fbSetStatus(''); fbShowDone(); })
     .catch(function(err){
       /* Un blocage CORS se presente comme un TypeError : la requete est bien
@@ -1485,7 +1485,7 @@ function fbSubmit(e){
          Volontairement limite au TypeError : un 404, un 403 ou une page de
          connexion doivent rester des erreurs franches, pas un faux succes. */
       if(!err || err.name !== 'TypeError') throw err;
-      return fbPost(p, true).then(function(){
+      return fbSend(p, true).then(function(){
         fbSetStatus(''); fbShowDone();
         try{ console.info('[feedback] envoye en mode no-cors : reponse non lisible'); }catch(e){}
       });
@@ -1498,24 +1498,39 @@ function fbSubmit(e){
     .then(function(){ fbBusy = false; btn.disabled = false; });
 }
 
+/* Les champs transportes, dans l'ordre. */
+var FB_FIELDS = ['sentAt','kind','area','areaLabel','machine','message',
+                 'name','email','lang','page','screen','userAgent','token'];
+
+function fbQuery(payload){
+  var parts = [];
+  for(var i = 0; i < FB_FIELDS.length; i++){
+    var k = FB_FIELDS[i], v = payload[k];
+    if(v) parts.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
+  }
+  return parts.join('&');
+}
+
 /**
- * Un envoi. En mode no-cors la reponse est opaque par conception : on ne peut
- * pas la lire, seule la bonne remise de la requete est verifiable.
+ * Un envoi, en GET avec les donnees dans l'URL.
+ *
+ * Apps Script repond par une redirection interne. Une redirection abandonne le
+ * corps d'un POST en route — la requete arrive vide et doPost n'a rien a ecrire
+ * — alors qu'elle conserve les parametres d'URL intacts. D'ou le GET.
+ *
+ * Aucun en-tete personnalise : pas de pre-vol CORS a negocier.
+ * En mode no-cors la reponse est opaque par conception : seule la bonne remise
+ * de la requete est verifiable, mais les donnees, elles, sont bien arrivees.
  */
-function fbPost(payload, noCors){
+function fbSend(payload, noCors){
   var ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
   var timer = setTimeout(function(){ if(ctrl) ctrl.abort(); }, 20000);
-  var opts = {
-    method: 'POST',
-    /* text/plain : evite le pre-vol CORS, qu'Apps Script ne sait pas traiter,
-       et reste autorise en no-cors */
-    headers: {'Content-Type': 'text/plain;charset=utf-8'},
-    body: JSON.stringify(payload)
-  };
+  var url = FEEDBACK_ENDPOINT + (FEEDBACK_ENDPOINT.indexOf('?') < 0 ? '?' : '&') + fbQuery(payload);
+  var opts = {method: 'GET', redirect: 'follow'};
   if(noCors) opts.mode = 'no-cors';
   if(ctrl) opts.signal = ctrl.signal;
 
-  return fetch(FEEDBACK_ENDPOINT, opts).then(function(r){
+  return fetch(url, opts).then(function(r){
     clearTimeout(timer);
     if(noCors) return {opaque: true};
     if(!r.ok) throw new Error('HTTP ' + r.status);
@@ -1524,6 +1539,7 @@ function fbPost(payload, noCors){
       /* exiger un {ok:true} franc : une page de connexion HTML renvoyee en 200
          ne doit jamais passer pour un envoi reussi */
       if(!res || res.ok !== true) throw new Error(res && res.error ? res.error : 'reponse inattendue du serveur');
+      if(res.recorded !== true) throw new Error('recu mais non enregistre');
       return res;
     });
   }, function(err){
