@@ -324,6 +324,44 @@
   .sr-item:hover{background:var(--orange-soft)}
   .sr-item .sr-ic{color:var(--orange)}
   .sr-item .sr-sub{margin-left:auto;font-size:11px;color:var(--ink-soft)}
+  /* ===== Signaler / suggerer ===== */
+  .fb-card{max-width:720px}
+  .fb-row{display:flex;flex-direction:column;gap:7px;margin-bottom:18px}
+  .fb-row:last-child{margin-bottom:0}
+  .fb-lbl{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--ink-soft);font-weight:700}
+  .fb-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+  .fb-in{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:12px;font-size:14px;font-family:inherit;color:var(--ink);background:#fff;line-height:1.5}
+  .fb-in:focus{outline:2px solid var(--orange);border-color:transparent}
+  textarea.fb-in{resize:vertical;min-height:130px}
+  select.fb-in{appearance:none;-webkit-appearance:none;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,#8b97a5 50%),linear-gradient(135deg,#8b97a5 50%,transparent 50%);background-position:calc(100% - 18px) 51%,calc(100% - 13px) 51%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:38px}
+  .fb-help{font-size:12px;color:var(--ink-soft)}
+  .fb-seg{display:flex;gap:10px;flex-wrap:wrap}
+  .fb-seg button{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fff;padding:11px 17px;border-radius:12px;font-size:14px;font-weight:600;color:var(--ink-soft);cursor:pointer;transition:.15s;font-family:inherit}
+  .fb-seg button:hover{border-color:var(--orange);color:var(--orange)}
+  .fb-seg button.on{background:var(--orange);border-color:var(--orange);color:#fff}
+  .fb-seg .fb-k-ic{font-size:15px;line-height:1}
+  .fb-hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+  .fb-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+  .fb-send{border:none;background:var(--orange);color:#fff;font-family:inherit;font-size:14.5px;font-weight:700;padding:13px 26px;border-radius:12px;cursor:pointer;transition:.15s}
+  .fb-send:hover{filter:brightness(1.06)}
+  .fb-send[disabled]{opacity:.55;cursor:default;filter:none}
+  .fb-status{font-size:13px;color:var(--ink-soft)}
+  .fb-status.err{color:var(--red);font-weight:600}
+  .fb-alt{font-size:13px}
+  .fb-diag{margin-top:12px;font-size:12px;line-height:1.5;color:var(--ink-soft);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;word-break:break-all;background:#fafbfc;border:1px solid var(--line);border-radius:9px;padding:9px 11px}
+  .fb-done{text-align:center;padding:22px 10px}
+  .fb-done .fb-tick{width:54px;height:54px;border-radius:50%;background:var(--green);color:#fff;font-size:26px;display:grid;place-items:center;margin:0 auto 14px}
+  .fb-done h3{font-size:18px;margin-bottom:6px}
+  .fb-done p{color:var(--ink-soft);font-size:14px;max-width:420px;margin:0 auto 18px}
+  .fb-again{border:1px solid var(--line);background:#fff;color:var(--ink-soft);font-family:inherit;font-size:14px;font-weight:600;padding:11px 20px;border-radius:12px;cursor:pointer;transition:.15s}
+  .fb-again:hover{border-color:var(--orange);color:var(--orange)}
+  @media(max-width:600px){
+    .fb-grid{grid-template-columns:1fr;gap:0}
+    .fb-grid .fb-row{margin-bottom:18px}
+    .fb-in{font-size:16px}
+    .fb-send,.fb-again{width:100%;text-align:center}
+    .fb-actions{gap:12px}
+  }
 </style>
 </head>
 <body>
@@ -348,6 +386,8 @@
       <a href="#schemas"><span class="ic">▦</span> <span data-i18n="nav.schemas"></span></a>
       <a href="#glossary"><span class="ic">▩</span> <span data-i18n="nav.glossary"></span></a>
       <a href="#gaps"><span class="ic">☑</span> <span data-i18n="nav.gaps"></span></a>
+      <div class="nav-label">&nbsp;</div>
+      <a href="#feedback"><span class="ic">✎</span> <span data-i18n="nav.feedback"></span></a>
     </nav>
   </aside>
 
@@ -386,6 +426,7 @@
           <a class="home-card" href="#safety"><span class="hc-ic">✚</span><b data-i18n="nav.safety"></b></a>
           <a class="home-card" href="#experience"><span class="hc-ic">☺</span><b data-i18n="nav.experience"></b></a>
           <a class="home-card" href="#tutorials"><span class="hc-ic">▶</span><b data-i18n="nav.tutorials"></b></a>
+          <a class="home-card" href="#feedback"><span class="hc-ic">✎</span><b data-i18n="nav.feedback"></b></a>
         </div>
         <div class="ov-home">
         <div class="sec-head"><span class="num">1</span><h2 data-i18n="s1.t"></h2></div>
@@ -485,6 +526,57 @@
         <p class="sec-sub" data-i18n="s12.sub"></p>
         <div data-i18n="s12.body"></div>
       </section>
+      <section id="feedback">
+        <div class="sec-head"><span class="num sym">✎</span><h2 data-i18n="fb.t"></h2></div>
+        <p class="sec-sub" data-i18n="fb.sub"></p>
+        <form class="card fb-card" id="fbForm" novalidate autocomplete="on">
+          <div class="fb-row">
+            <span class="fb-lbl" data-i18n="fb.kind"></span>
+            <div class="fb-seg" id="fbKind">
+              <button type="button" data-k="bug" class="on"><span class="fb-k-ic">⚠</span><span data-i18n="fb.kind.bug"></span></button>
+              <button type="button" data-k="suggestion"><span class="fb-k-ic">✦</span><span data-i18n="fb.kind.suggestion"></span></button>
+            </div>
+          </div>
+          <div class="fb-grid">
+            <div class="fb-row">
+              <label class="fb-lbl" for="fbArea" data-i18n="fb.area"></label>
+              <select class="fb-in" id="fbArea"></select>
+            </div>
+            <div class="fb-row">
+              <label class="fb-lbl" for="fbMachine" data-i18n="fb.machine"></label>
+              <select class="fb-in" id="fbMachine"></select>
+            </div>
+          </div>
+          <div class="fb-row">
+            <label class="fb-lbl" for="fbMsg" data-i18n="fb.msg"></label>
+            <textarea class="fb-in" id="fbMsg" rows="6" maxlength="2000"></textarea>
+            <span class="fb-help" data-i18n="fb.msg.help"></span>
+          </div>
+          <div class="fb-grid">
+            <div class="fb-row">
+              <label class="fb-lbl" for="fbName" data-i18n="fb.name"></label>
+              <input class="fb-in" id="fbName" type="text" maxlength="120" autocomplete="name">
+            </div>
+            <div class="fb-row">
+              <label class="fb-lbl" for="fbMail" data-i18n="fb.mail"></label>
+              <input class="fb-in" id="fbMail" type="email" maxlength="160" autocomplete="email">
+            </div>
+          </div>
+          <input class="fb-hp" id="fbCompany" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div class="fb-actions">
+            <button class="fb-send" id="fbSend" type="submit" data-i18n="fb.send"></button>
+            <span class="fb-status" id="fbStatus" role="status" aria-live="polite"></span>
+            <a class="fb-alt hidden" id="fbAlt" href="#" data-i18n="fb.mailto"></a>
+          </div>
+          <div class="fb-diag hidden" id="fbDiag"></div>
+        </form>
+        <div class="card fb-card fb-done hidden" id="fbDone">
+          <div class="fb-tick">✓</div>
+          <h3 data-i18n="fb.done.t"></h3>
+          <p data-i18n="fb.done.d"></p>
+          <button class="fb-again" id="fbAgain" type="button" data-i18n="fb.again"></button>
+        </div>
+      </section>
     </div>
 
     <footer>
@@ -503,6 +595,18 @@
 </div>
 
 <script>
+/* ============ CONFIG — COLLECTE DES RETOURS =========================
+   Colle ici l'URL /exec de ton Google Apps Script (voir FEEDBACK-SETUP.md).
+   Tant que cette valeur est vide, l'onglet « Signaler / suggérer » affiche
+   un message d'erreur au lieu d'envoyer.
+   ------------------------------------------------------------------ */
+const FEEDBACK_ENDPOINT = "https://script.google.com/a/macros/bewtr.com/s/AKfycbx24BqqWL2IFCr4mz8p_qcjF_qDFu_G0L3V0Tor8bqiiWmZHMxsE5plJgmNSwMrueti/exec";
+/* Doit être identique à SHARED_TOKEN dans le script Apps Script.
+   Laisse les deux vides pour désactiver la vérification. */
+const FEEDBACK_TOKEN = "";
+/* Adresse de repli proposée si l'envoi échoue ("" = pas de repli). */
+const FEEDBACK_MAILTO = "";
+
 /* ============ TUTORIALS (links are language-neutral) ============ */
 const tutorials = [
   {cat:"install", g:{fr:"Systèmes",en:"Systems",de:"Systeme"}, t:{fr:"AQTiV Combi",en:"AQTiV Combi",de:"AQTiV Combi"}, type:"pdf", url:{fr:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQB_4xQsZ9uUQpEXbxgTKpDxAU3ZkKCyIo4MhXwXDKTw6io?e=iHx2iz",en:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQC5BVn7bIvqQIMqcdEu2vFjAXRuEZj6y9Vix2MQbNbvqy0?e=j9gxij",de:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQBDP6PA2kzaQYSUrgTS6QhNASJvOd18jrpnmrx-ddoOIIA?e=weALcp"}},
@@ -648,6 +752,32 @@ const I18N = {
     "s3.layoutcap":`<div><b>Home</b><span>1 · BOX 20 Home<br>2 · Be Connect<br>3 · Bouteille CO₂<br>4 · Poubelle (option)</span></div><div><b>Office</b><span>1 · BOX 30 (kit ventilation)<br>2 · Be Connect<br>3 · Bouteille CO₂</span></div><div><b>HoReCa</b><span>1 · BOX 80<br>2 · Be Connect<br>3 · Bouteille CO₂</span></div><div><b>HoReCa XL</b><span>1 · BOX 150 (largeur 80 cm)<br>2 · Be Connect<br>3 · Bouteille CO₂</span></div>`,
     "s10.t":"Glossaire & repères produits","s10.sub":"Le vocabulaire BE WTR décodé — à lire avant votre première installation.",
     "s10.body":`<div class="grid two"><div class="card"><h4>Gammes & modèles</h4><ul class="small"><li><b>AQTiV Combi / Combi H</b> — tap col-de-cygne ; Combi = aussi eau tempérée / chaude non filtrée</li><li><b>AQTiV One / One S</b> — tap compact, plate + pétillante</li><li><b>AQTiV Tower</b> — colonne tout-en-un (BOX + gaz intégrés)</li><li><b>BAR 1 / BAR 2</b> — taps type bar ; BAR 2 = doses / portions programmables</li><li><b>PRO 2 / PRO 3</b> — unités pro ; PRO 2 = chiller intégré, sans perçage</li><li><b>BOX 20 / 30 / 80 / 150</b> — unité de froid (chiller / carbonateur), taille selon l'usage (Home → HoReCa XL)</li></ul></div><div class="card"><h4>Pièces & termes techniques</h4><ul class="small"><li><b>Be Connect</b> — tête de filtre connectée (IoT) : filtre l'eau, détecte fuite / CO₂, alimente la webapp client</li><li><b>BOX / carbonateur</b> — refroidit l'eau et la gazéifie (carbonatation)</li><li><b>Gearbox</b> — mécanisme des <b>AQTiV tap</b> qui distribue l'eau plate et pétillante ; pièce d'usure (joints, piston)</li><li><b>Compensateur (BW-0158)</b> — restricteur qui règle le débit en jet laminaire (2,2 L/min)</li><li><b>Détendeur / réducteur de pression</b> — ramène la pression réseau à 3 Bar</li><li><b>Bac à glace (ice bank)</b> — réserve de froid dans la BOX ; niveau « min »</li><li><b>Kit Mullex</b> — kit poubelle pour le B2C</li><li><b>Python</b> — gaine de tubes entre la Box et le tap, pour les recirculations</li><li><b>Service / Intervention (Case)</b> — Service = maintenance ; Intervention = réparation / dépannage (terminologie carte & app)</li><li><b>EcoSmart</b> — réglage éco / énergie de l'unité</li></ul></div></div>`,
+    "nav.feedback":"Signaler / suggérer",
+    "fb.t":"Signaler un bug ou une suggestion",
+    "fb.sub":"Une erreur dans le guide, une info manquante, une idée d'amélioration ? Envoyez-la ici : chaque retour est enregistré et relu par l'équipe.",
+    "fb.kind":"Type de retour",
+    "fb.kind.bug":"Bug / erreur",
+    "fb.kind.suggestion":"Suggestion",
+    "fb.area":"Section concernée",
+    "fb.area.none":"Non précisée",
+    "fb.machine":"Machine concernée",
+    "fb.machine.none":"Aucune / non précisée",
+    "fb.msg":"Votre retour",
+    "fb.msg.ph.bug":"Décrivez ce qui ne va pas : où vous l'avez vu, ce que vous attendiez, ce qui s'est passé.",
+    "fb.msg.ph.suggestion":"Décrivez votre idée : ce qui manque et en quoi cela vous aiderait sur le terrain.",
+    "fb.msg.help":"Plus c'est précis, plus c'est corrigé vite.",
+    "fb.name":"Votre nom (optionnel)",
+    "fb.mail":"Email (optionnel, pour vous répondre)",
+    "fb.send":"Envoyer le retour",
+    "fb.sending":"Envoi en cours…",
+    "fb.err.msg":"Merci d'écrire votre retour avant de l'envoyer.",
+    "fb.err.mail":"Cette adresse email semble incorrecte.",
+    "fb.err.net":"Envoi impossible. Vérifiez votre connexion, puis réessayez.",
+    "fb.err.cfg":"Le formulaire n'est pas encore relié à la base de retours. Prévenez l'administrateur du guide.",
+    "fb.mailto":"Envoyer par email à la place",
+    "fb.done.t":"Merci, c'est envoyé\u00a0!",
+    "fb.done.d":"Votre retour est enregistré. L'équipe le relit et l'intègre dans une prochaine mise à jour du guide.",
+    "fb.again":"Envoyer un autre retour",
   },
   en:{"nav.home":"Home","machine.t":"Which machine do you have?","machine.sub":"Select your model to open all its documentation.","machine.taps":"Taps","machine.disc":"phased off","chip.water":"Water line","chip.elec":"Elec","chip.parts":"Parts","chip.tech":"Datasheet","chip.maint":"Maintenance","chip.bec":"BeConnect","chip.tuto":"Tutorials","search.global":"Search the whole guide…","search.ph":"Keyword, ref (BW-…), symptom…","search.hint":"Type at least 2 characters.","search.none":"No results.","search.g.sec":"Sections","search.g.part":"Spare parts","search.g.tuto":"Tutorials","goto.parts":"Open exploded views & parts","goto.install":"Watch the installation video tutorials","goto.maintenance":"Watch the maintenance video tutorials","goto.troubleshoot":"Watch the troubleshooting video tutorials","nav.g.tutos":"Tutorials","nav.g.form":"Training","home.t":"What do you need?","home.sub":"Pick a category — all content is organised by task.",
     "brand.sub":"Technician Guide","nav.start":"Get started","nav.overview":"System overview","nav.beconnect":"Be Connect (IoT)",
@@ -749,6 +879,32 @@ const I18N = {
     "s3.layoutcap":`<div><b>Home</b><span>1 · BOX 20 Home<br>2 · Be Connect<br>3 · Gas cylinder<br>4 · Trash (option)</span></div><div><b>Office</b><span>1 · BOX 30 (ventilation kit)<br>2 · Be Connect<br>3 · Gas cylinder</span></div><div><b>HoReCa</b><span>1 · BOX 80<br>2 · Be Connect<br>3 · Gas cylinder</span></div><div><b>HoReCa XL</b><span>1 · BOX 150 (80 cm width)<br>2 · Be Connect<br>3 · Gas cylinder</span></div>`,
     "s10.t":"Glossary & product reference","s10.sub":"BE WTR vocabulary decoded — read before your first installation.",
     "s10.body":`<div class="grid two"><div class="card"><h4>Ranges & models</h4><ul class="small"><li><b>AQTiV Combi / Combi H</b> — gooseneck tap; Combi = also ambient / warm non-filtered water</li><li><b>AQTiV One / One S</b> — compact tap, still + sparkling</li><li><b>AQTiV Tower</b> — all-in-one column (BOX + gas integrated)</li><li><b>BAR 1 / BAR 2</b> — bar-style taps; BAR 2 = programmable doses / portions</li><li><b>PRO 2 / PRO 3</b> — pro units; PRO 2 = integrated chiller, no drilling</li><li><b>BOX 20 / 30 / 80 / 150</b> — cooling unit (chiller / carbonator), sized to the use case (Home → HoReCa XL)</li></ul></div><div class="card"><h4>Parts & technical terms</h4><ul class="small"><li><b>Be Connect</b> — connected filter head (IoT): filters water, senses leak / CO₂, feeds the client webapp</li><li><b>BOX / carbonator</b> — cools the water and carbonates it</li><li><b>Gearbox</b> — mechanism of the <b>AQTiV taps</b> dispensing still & sparkling water; wear part (seals, piston)</li><li><b>Compensator (BW-0158)</b> — restrictor that sets the laminar flow (2.2 L/min)</li><li><b>Pressure reducer / regulator</b> — brings mains pressure down to 3 Bar</li><li><b>Ice bank</b> — cold reserve inside the BOX; level "min"</li><li><b>Kit Mullex</b> — bin kit for B2C</li><li><b>Python</b> — the tubing run between the Box and the tap, for recirculation setups</li><li><b>Service / Intervention (Case)</b> — Service = maintenance; Intervention = repair / troubleshooting (map & app terminology)</li><li><b>EcoSmart</b> — eco / power setting on the unit</li></ul></div></div>`,
+    "nav.feedback":"Report / suggest",
+    "fb.t":"Report a bug or a suggestion",
+    "fb.sub":"An error in the guide, missing information, an idea to improve it? Send it here: every report is recorded and reviewed by the team.",
+    "fb.kind":"Type of report",
+    "fb.kind.bug":"Bug / error",
+    "fb.kind.suggestion":"Suggestion",
+    "fb.area":"Section concerned",
+    "fb.area.none":"Not specified",
+    "fb.machine":"Machine concerned",
+    "fb.machine.none":"None / not specified",
+    "fb.msg":"Your report",
+    "fb.msg.ph.bug":"Describe what is wrong: where you saw it, what you expected, what happened.",
+    "fb.msg.ph.suggestion":"Describe your idea: what is missing and how it would help you in the field.",
+    "fb.msg.help":"The more specific, the faster it gets fixed.",
+    "fb.name":"Your name (optional)",
+    "fb.mail":"Email (optional, so we can reply)",
+    "fb.send":"Send report",
+    "fb.sending":"Sending…",
+    "fb.err.msg":"Please write your report before sending it.",
+    "fb.err.mail":"This email address looks incorrect.",
+    "fb.err.net":"Could not send. Check your connection, then try again.",
+    "fb.err.cfg":"The form is not connected to the feedback database yet. Please tell the guide administrator.",
+    "fb.mailto":"Send by email instead",
+    "fb.done.t":"Thank you, it has been sent!",
+    "fb.done.d":"Your report is recorded. The team reviews it and folds it into a future update of the guide.",
+    "fb.again":"Send another report",
   },
   de:{"nav.home":"Start","machine.t":"Welche Maschine haben Sie?","machine.sub":"Wählen Sie Ihr Modell für die gesamte Dokumentation.","machine.taps":"Taps","machine.disc":"eingestellt","chip.water":"Wasserlinie","chip.elec":"Elektrik","chip.parts":"Teile","chip.tech":"Datenblatt","chip.maint":"Wartung","chip.bec":"BeConnect","chip.tuto":"Tutorials","search.global":"Im ganzen Leitfaden suchen…","search.ph":"Stichwort, Referenz (BW-…), Symptom…","search.hint":"Mind. 2 Zeichen eingeben.","search.none":"Keine Treffer.","search.g.sec":"Bereiche","search.g.part":"Ersatzteile","search.g.tuto":"Tutorials","goto.parts":"Explosionszeichnungen & Teile öffnen","goto.install":"Installations-Videotutorials ansehen","goto.maintenance":"Wartungs-Videotutorials ansehen","goto.troubleshoot":"Störungs-Videotutorials ansehen","nav.g.tutos":"Tutorials","nav.g.form":"Schulung","home.t":"Was möchten Sie tun?","home.sub":"Wählen Sie eine Kategorie — alles ist nach Aufgabe geordnet.",
     "brand.sub":"Techniker-Leitfaden","nav.start":"Loslegen","nav.overview":"Systemübersicht","nav.beconnect":"Be Connect (IoT)",
@@ -850,6 +1006,32 @@ const I18N = {
     "s3.layoutcap":`<div><b>Home</b><span>1 · BOX 20 Home<br>2 · Be Connect<br>3 · CO₂-Flasche<br>4 · Mülleimer (Option)</span></div><div><b>Office</b><span>1 · BOX 30 (Belüftungskit)<br>2 · Be Connect<br>3 · CO₂-Flasche</span></div><div><b>HoReCa</b><span>1 · BOX 80<br>2 · Be Connect<br>3 · CO₂-Flasche</span></div><div><b>HoReCa XL</b><span>1 · BOX 150 (80 cm Breite)<br>2 · Be Connect<br>3 · CO₂-Flasche</span></div>`,
     "s10.t":"Glossar & Produktreferenz","s10.sub":"BE WTR-Vokabular entschlüsselt — vor Ihrer ersten Installation lesen.",
     "s10.body":`<div class="grid two"><div class="card"><h4>Baureihen & Modelle</h4><ul class="small"><li><b>AQTiV Combi / Combi H</b> — Schwanenhals-Zapfhahn; Combi = auch temperiertes / warmes ungefiltertes Wasser</li><li><b>AQTiV One / One S</b> — kompakter Zapfhahn, still + Sprudel</li><li><b>AQTiV Tower</b> — All-in-One-Säule (BOX + Gas integriert)</li><li><b>BAR 1 / BAR 2</b> — Bar-Zapfhähne; BAR 2 = programmierbare Dosen / Portionen</li><li><b>PRO 2 / PRO 3</b> — Profi-Einheiten; PRO 2 = integrierter Chiller, ohne Bohrung</li><li><b>BOX 20 / 30 / 80 / 150</b> — Kühleinheit (Chiller / Karbonator), Größe je Anwendung (Home → HoReCa XL)</li></ul></div><div class="card"><h4>Teile & Fachbegriffe</h4><ul class="small"><li><b>Be Connect</b> — vernetzter Filterkopf (IoT): filtert Wasser, erkennt Leck / CO₂, versorgt die Kunden-Webapp</li><li><b>BOX / Karbonator</b> — kühlt das Wasser und versetzt es mit Kohlensäure</li><li><b>Gearbox</b> — Mechanismus der <b>AQTiV-Zapfhähne</b>, gibt Still- & Sprudelwasser aus; Verschleißteil (Dichtungen, Kolben)</li><li><b>Kompensator (BW-0158)</b> — Drossel, die den laminaren Durchfluss einstellt (2,2 L/min)</li><li><b>Druckminderer / Regler</b> — reduziert den Leitungsdruck auf 3 Bar</li><li><b>Eisbank</b> — Kältereserve in der BOX; Niveau „min"</li><li><b>Kit Mullex</b> — Mülleimer-Kit für B2C</li><li><b>Python</b> — die Schlauchstrecke zwischen Box und Zapfhahn, für Rezirkulationen</li><li><b>Service / Intervention (Case)</b> — Service = Wartung; Intervention = Reparatur / Fehlerbehebung (Karten- & App-Terminologie)</li><li><b>EcoSmart</b> — Eco-/Energieeinstellung der Einheit</li></ul></div></div>`,
+    "nav.feedback":"Melden / vorschlagen",
+    "fb.t":"Fehler oder Vorschlag melden",
+    "fb.sub":"Ein Fehler im Leitfaden, eine fehlende Information, eine Idee zur Verbesserung? Hier senden: Jede Meldung wird gespeichert und vom Team gelesen.",
+    "fb.kind":"Art der Meldung",
+    "fb.kind.bug":"Fehler",
+    "fb.kind.suggestion":"Vorschlag",
+    "fb.area":"Betroffener Bereich",
+    "fb.area.none":"Nicht angegeben",
+    "fb.machine":"Betroffene Maschine",
+    "fb.machine.none":"Keine / nicht angegeben",
+    "fb.msg":"Ihre Meldung",
+    "fb.msg.ph.bug":"Beschreiben Sie das Problem: wo Sie es gesehen haben, was Sie erwartet haben, was passiert ist.",
+    "fb.msg.ph.suggestion":"Beschreiben Sie Ihre Idee: was fehlt und wie es Ihnen vor Ort helfen würde.",
+    "fb.msg.help":"Je genauer, desto schneller wird es behoben.",
+    "fb.name":"Ihr Name (optional)",
+    "fb.mail":"E-Mail (optional, für eine Antwort)",
+    "fb.send":"Meldung senden",
+    "fb.sending":"Wird gesendet…",
+    "fb.err.msg":"Bitte schreiben Sie Ihre Meldung, bevor Sie sie senden.",
+    "fb.err.mail":"Diese E-Mail-Adresse scheint nicht korrekt zu sein.",
+    "fb.err.net":"Senden nicht möglich. Prüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+    "fb.err.cfg":"Das Formular ist noch nicht mit der Feedback-Datenbank verbunden. Bitte informieren Sie den Administrator.",
+    "fb.mailto":"Stattdessen per E-Mail senden",
+    "fb.done.t":"Danke, gesendet!",
+    "fb.done.d":"Ihre Meldung ist gespeichert. Das Team prüft sie und berücksichtigt sie in einem künftigen Update des Leitfadens.",
+    "fb.again":"Weitere Meldung senden",
   }
 };
 
@@ -926,7 +1108,7 @@ function setLang(l){
   renderSchemas();
   renderResources();
   renderCatMenu();
-  renderMachines(); _sidx=null;
+  renderMachines(); renderFeedback(); _sidx=null;
 }
 
 document.querySelectorAll("#lang button").forEach(b=> b.addEventListener("click", ()=> setLang(b.dataset.lang)));
@@ -1196,6 +1378,226 @@ function renderMachines(){ var root=document.getElementById('machinePicker'); if
     else if(a==='maint') showTab('#maintenance');
     else if(a==='bec') showTab('#beconnect');
     else if(a==='tuto'){ if(b.dataset.u) openDoc(decodeURIComponent(b.dataset.u), (b.dataset.n?decodeURIComponent(b.dataset.n)+' — ':'')+dd['chip.tuto']); } }); }); }
+/* ============ SIGNALER / SUGGÉRER ============ */
+var fbKind = 'bug', fbBusy = false;
+
+/* Sections proposées dans le menu « Section concernée » : on réutilise les
+   libellés déjà traduits de la barre de navigation. */
+var FB_AREAS = ['home','install','maintenance','troubleshoot','tutorials','settings',
+                'experience','safety','beconnect','schemas','glossary','gaps'];
+
+function fbAreaLabel(id){
+  var a = document.querySelector('#nav a[href="#'+id+'"]');
+  if(!a) return id;
+  /* le libellé seul, sans le pictogramme .ic qui le précède */
+  var t = a.querySelector('[data-i18n]');
+  return (t ? t.textContent : a.textContent).trim();
+}
+
+function renderFeedback(){
+  var form = document.getElementById('fbForm');
+  if(!form) return;
+  var d = I18N[lang];
+
+  var area = document.getElementById('fbArea'), keptArea = area.value;
+  area.innerHTML = '<option value="">'+d['fb.area.none']+'</option>' +
+    FB_AREAS.map(function(id){ return '<option value="'+id+'">'+fbAreaLabel(id)+'</option>'; }).join('');
+  area.value = keptArea;
+
+  var mach = document.getElementById('fbMachine'), keptMach = mach.value;
+  var names = [];
+  ['box','tap'].forEach(function(g){ (MACHINES[g]||[]).forEach(function(m){ names.push(m.n); }); });
+  mach.innerHTML = '<option value="">'+d['fb.machine.none']+'</option>' +
+    names.map(function(n){ return '<option value="'+n+'">'+n+'</option>'; }).join('');
+  mach.value = keptMach;
+
+  document.getElementById('fbMsg').placeholder = d['fb.msg.ph.'+fbKind] || '';
+
+  var alt = document.getElementById('fbAlt');
+  alt.classList.toggle('hidden', !FEEDBACK_MAILTO || !alt.dataset.armed);
+}
+
+function fbSetStatus(msg, isErr){
+  var s = document.getElementById('fbStatus');
+  s.textContent = msg || '';
+  s.classList.toggle('err', !!isErr);
+}
+
+function fbPayload(){
+  var area = document.getElementById('fbArea');
+  return {
+    token: FEEDBACK_TOKEN,
+    sentAt: new Date().toISOString(),
+    kind: fbKind,
+    area: area.value,
+    areaLabel: area.value ? fbAreaLabel(area.value) : '',
+    machine: document.getElementById('fbMachine').value,
+    message: document.getElementById('fbMsg').value.trim(),
+    name: document.getElementById('fbName').value.trim(),
+    email: document.getElementById('fbMail').value.trim(),
+    lang: lang,
+    page: location.href,
+    screen: (window.screen ? screen.width+'x'+screen.height : '') ,
+    userAgent: (navigator.userAgent || '').slice(0, 200)
+  };
+}
+
+/* Repli e-mail : proposé seulement si l'envoi automatique a échoué. */
+function fbArmMailto(p){
+  var alt = document.getElementById('fbAlt');
+  if(!FEEDBACK_MAILTO){ alt.classList.add('hidden'); return; }
+  var body = [
+    I18N[lang]['fb.kind']+': '+I18N[lang]['fb.kind.'+p.kind],
+    I18N[lang]['fb.area']+': '+(p.areaLabel||'-'),
+    I18N[lang]['fb.machine']+': '+(p.machine||'-'),
+    I18N[lang]['fb.name']+': '+(p.name||'-'),
+    '', p.message, '', p.page, p.userAgent
+  ].join('\n');
+  alt.href = 'mailto:'+FEEDBACK_MAILTO
+           + '?subject='+encodeURIComponent('[BE WTR Guide] '+I18N[lang]['fb.kind.'+p.kind])
+           + '&body='+encodeURIComponent(body);
+  alt.dataset.armed = '1';
+  alt.classList.remove('hidden');
+}
+
+function fbShowDiag(err){
+  var el = document.getElementById('fbDiag');
+  var reason = err && err.name === 'AbortError'
+    ? 'timeout (20 s, aucune reponse)'
+    : ((err && err.name ? err.name : 'Error') + ': ' + (err && err.message ? err.message : String(err)));
+  var host = '';
+  try{ host = new URL(FEEDBACK_ENDPOINT).pathname.split('/').slice(0,3).join('/'); }catch(e){}
+  el.textContent = 'diag — ' + reason + (host ? '  |  ' + host : '') + '  |  ' + (navigator.onLine ? 'en ligne' : 'hors ligne');
+  el.classList.remove('hidden');
+}
+function fbHideDiag(){ document.getElementById('fbDiag').classList.add('hidden'); }
+
+function fbShowDone(){
+  document.getElementById('fbForm').classList.add('hidden');
+  document.getElementById('fbDone').classList.remove('hidden');
+}
+
+function fbReset(){
+  var form = document.getElementById('fbForm');
+  document.getElementById('fbMsg').value = '';
+  document.getElementById('fbArea').value = '';
+  document.getElementById('fbMachine').value = '';
+  var alt = document.getElementById('fbAlt');
+  delete alt.dataset.armed; alt.classList.add('hidden');
+  fbSetStatus(''); fbHideDiag();
+  document.getElementById('fbDone').classList.add('hidden');
+  form.classList.remove('hidden');
+  document.getElementById('fbMsg').focus();
+}
+
+function fbSubmit(e){
+  e.preventDefault();
+  if(fbBusy) return;
+  var d = I18N[lang], p = fbPayload();
+
+  if(!p.message){ fbSetStatus(d['fb.err.msg'], true); document.getElementById('fbMsg').focus(); return; }
+  if(p.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(p.email)){
+    fbSetStatus(d['fb.err.mail'], true); document.getElementById('fbMail').focus(); return;
+  }
+  /* piège à robots : rempli => on fait comme si tout allait bien */
+  if(document.getElementById('fbCompany').value){ fbShowDone(); return; }
+  if(!FEEDBACK_ENDPOINT){ fbSetStatus(d['fb.err.cfg'], true); fbArmMailto(p); return; }
+
+  var btn = document.getElementById('fbSend');
+  fbBusy = true; btn.disabled = true; fbSetStatus(d['fb.sending'], false);
+  fbHideDiag();
+  document.getElementById('fbAlt').classList.add('hidden');
+
+  fbSend(p, false)
+    .then(function(){ fbSetStatus(''); fbShowDone(); })
+    .catch(function(err){
+      /* Un blocage CORS se presente comme un TypeError : la requete est bien
+         partie et Apps Script l'a traitee, mais la reponse est illisible car la
+         redirection interne de Google revient sans en-tetes CORS. On la rejoue
+         en no-cors pour que le retour arrive quand meme.
+         Volontairement limite au TypeError : un 404, un 403 ou une page de
+         connexion doivent rester des erreurs franches, pas un faux succes. */
+      if(!err || err.name !== 'TypeError') throw err;
+      return fbSend(p, true).then(function(){
+        fbSetStatus(''); fbShowDone();
+        try{ console.info('[feedback] envoye en mode no-cors : reponse non lisible'); }catch(e){}
+      });
+    })
+    .catch(function(err){
+      fbSetStatus(d['fb.err.net'], true);
+      fbShowDiag(err);
+      fbArmMailto(p);
+    })
+    .then(function(){ fbBusy = false; btn.disabled = false; });
+}
+
+/* Les champs transportes, dans l'ordre. */
+var FB_FIELDS = ['sentAt','kind','area','areaLabel','machine','message',
+                 'name','email','lang','page','screen','userAgent','token'];
+
+function fbQuery(payload){
+  var parts = [];
+  for(var i = 0; i < FB_FIELDS.length; i++){
+    var k = FB_FIELDS[i], v = payload[k];
+    if(v) parts.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
+  }
+  return parts.join('&');
+}
+
+/**
+ * Un envoi, en GET avec les donnees dans l'URL.
+ *
+ * Apps Script repond par une redirection interne. Une redirection abandonne le
+ * corps d'un POST en route — la requete arrive vide et doPost n'a rien a ecrire
+ * — alors qu'elle conserve les parametres d'URL intacts. D'ou le GET.
+ *
+ * Aucun en-tete personnalise : pas de pre-vol CORS a negocier.
+ * En mode no-cors la reponse est opaque par conception : seule la bonne remise
+ * de la requete est verifiable, mais les donnees, elles, sont bien arrivees.
+ */
+function fbSend(payload, noCors){
+  var ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+  var timer = setTimeout(function(){ if(ctrl) ctrl.abort(); }, 20000);
+  var url = FEEDBACK_ENDPOINT + (FEEDBACK_ENDPOINT.indexOf('?') < 0 ? '?' : '&') + fbQuery(payload);
+  var opts = {method: 'GET', redirect: 'follow'};
+  if(noCors) opts.mode = 'no-cors';
+  if(ctrl) opts.signal = ctrl.signal;
+
+  return fetch(url, opts).then(function(r){
+    clearTimeout(timer);
+    if(noCors) return {opaque: true};
+    if(!r.ok) throw new Error('HTTP ' + r.status);
+    return r.text().then(function(txt){
+      var res = null; try{ res = JSON.parse(txt); }catch(e){}
+      /* exiger un {ok:true} franc : une page de connexion HTML renvoyee en 200
+         ne doit jamais passer pour un envoi reussi */
+      if(!res || res.ok !== true) throw new Error(res && res.error ? res.error : 'reponse inattendue du serveur');
+      if(res.recorded !== true) throw new Error('recu mais non enregistre');
+      return res;
+    });
+  }, function(err){
+    clearTimeout(timer);
+    throw err;
+  });
+}
+
+(function(){
+  var form = document.getElementById('fbForm');
+  if(!form) return;
+  form.addEventListener('submit', fbSubmit);
+  document.getElementById('fbAgain').addEventListener('click', fbReset);
+  document.querySelectorAll('#fbKind button').forEach(function(b){
+    b.addEventListener('click', function(){
+      fbKind = b.dataset.k;
+      document.querySelectorAll('#fbKind button').forEach(function(x){ x.classList.toggle('on', x === b); });
+      document.getElementById('fbMsg').placeholder = I18N[lang]['fb.msg.ph.'+fbKind] || '';
+    });
+  });
+  document.getElementById('fbMsg').addEventListener('input', function(){
+    if(document.getElementById('fbStatus').classList.contains('err')) fbSetStatus('');
+  });
+})();
+
 // ---- global search ----
 var _sidx=null;
 function buildSearchIndex(){ var idx=[];
@@ -1229,7 +1631,7 @@ function jumpTo(id){
   window.scrollTo(0,y);
   setTimeout(function(){ he.style.scrollBehavior=prev||''; },0);
 }
-var SECT_IDS=['home','overview','beconnect','install','settings','maintenance','safety','troubleshoot','experience','tutorials','schemas','glossary','gaps'];
+var SECT_IDS=['home','overview','beconnect','install','settings','maintenance','safety','troubleshoot','experience','tutorials','schemas','glossary','gaps','feedback'];
 function showTab(hash){
   var id=(hash||'#home').replace('#','');
   if(SECT_IDS.indexOf(id)<0) id='home';
@@ -1252,6 +1654,7 @@ renderSchemas();
 renderResources();
 renderCatMenu();
 renderMachines();
+renderFeedback();
 applyFontScale();
 showTab(location.hash);
 // once loading finishes the browser scrolls to the URL fragment on its own; put the tab back where we want it
