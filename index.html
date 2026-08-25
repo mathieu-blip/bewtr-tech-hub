@@ -153,6 +153,19 @@
   .legend .ln{flex:none;width:23px;height:23px;border-radius:6px;background:var(--orange-soft);color:var(--orange);font-weight:700;font-size:12px;display:grid;place-items:center;margin-top:1px}
   .legend b{font-weight:600}
   .sec-head .num.sym{font-size:16px}
+  /* « Signaler / suggérer » reste accessible sans faire defiler la barre laterale :
+     margin-top:auto le pose en bas quand il reste de la place, position:sticky le
+     garde visible quand la liste est plus haute que l'ecran. */
+  .nav-pin{position:sticky;bottom:0;margin-top:auto;background:#fff;border-top:1px solid var(--line);padding:12px 0 2px}
+  .nav-fb{background:var(--orange-soft);color:var(--orange);font-weight:600}
+  .nav-fb:hover{background:var(--orange);color:#fff}
+  /* Sous 880px la barre laterale est masquee et remplacee par le menu ☰ : ces
+     regles sont donc reservees au bureau, sinon #nav rouvrirait le menu cache. */
+  @media(min-width:881px){
+    aside{display:flex;flex-direction:column}
+    #nav{display:flex;flex-direction:column;flex:1 1 auto;min-height:0}
+    #nav > *{flex:none}
+  }
   @media(max-width:880px){
     .shell{grid-template-columns:1fr}
     aside{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line);padding:16px 18px 12px}
@@ -385,8 +398,9 @@
       <a href="#schemas"><span class="ic">▦</span> <span data-i18n="nav.schemas"></span></a>
       <a href="#glossary"><span class="ic">▩</span> <span data-i18n="nav.glossary"></span></a>
       <a href="#gaps"><span class="ic">☑</span> <span data-i18n="nav.gaps"></span></a>
-      <div class="nav-label">&nbsp;</div>
-      <a href="#feedback"><span class="ic">✎</span> <span data-i18n="nav.feedback"></span></a>
+      <div class="nav-pin">
+        <a class="nav-fb" href="#feedback"><span class="ic">✎</span> <span data-i18n="nav.feedback"></span></a>
+      </div>
     </nav>
   </aside>
 
