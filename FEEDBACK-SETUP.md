@@ -69,6 +69,20 @@ L'URL `/exec`, elle, ne change pas.
 
 ---
 
+## Comment les retours voyagent
+
+Le guide envoie en **GET**, avec les données dans l'URL, et c'est `doGet` qui écrit la ligne.
+
+Ce n'est pas un choix esthétique. Apps Script répond par une redirection interne, et une redirection **abandonne le corps d'une requête POST** en route : `doPost` recevait une requête vide et n'avait rien à écrire. Les paramètres d'URL, eux, traversent la redirection intacts.
+
+Conséquence pratique : le message est plafonné à **2000 caractères**, pour que l'URL reste sous les limites de Google. Le champ du formulaire applique la même limite, donc rien n'est tronqué en silence — ce qui est tapé est ce qui part.
+
+`doPost` reste accepté pour compatibilité, mais n'est plus la voie normale.
+
+Si la réponse est illisible à cause du CORS, le guide rejoue l'envoi une fois en `no-cors` : la ligne est bien écrite, seul l'accusé de réception est perdu.
+
+---
+
 ## Ce qui arrive dans le classeur
 
 Une ligne par retour, douze colonnes :
@@ -94,5 +108,5 @@ retours. Un filtre sur `Nouveau` donne la liste de ce qui reste à traiter.
 |---|---|
 | « Le formulaire n'est pas encore relié… » | `FEEDBACK_ENDPOINT` est resté vide dans `index.html`. |
 | « Envoi impossible. Vérifiez votre connexion… » | URL incorrecte, déploiement non public (**Qui a accès** ≠ *Tout le monde*), ou technicien réellement hors réseau. |
-| Envoi accepté mais aucune ligne | Le déploiement pointe une ancienne version du script — redéployer en *Nouvelle version*. |
+| Envoi accepté mais aucune ligne | Le déploiement pointe une ancienne version du script — redéployer en *Nouvelle version*. C'est la cause la plus fréquente : modifier le `.gs` ne suffit pas. |
 | `{"ok":false,"error":"bad token"}` | `FEEDBACK_TOKEN` et `SHARED_TOKEN` diffèrent. |
