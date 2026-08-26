@@ -156,15 +156,19 @@
   /* « Signaler / suggérer » reste accessible sans faire defiler la barre laterale :
      margin-top:auto le pose en bas quand il reste de la place, position:sticky le
      garde visible quand la liste est plus haute que l'ecran. */
-  .nav-pin{position:sticky;bottom:0;margin-top:auto;background:#fff;border-top:1px solid var(--line);padding:12px 0 2px}
+  .nav-pin{background:#fff;border-top:1px solid var(--line);padding:12px 0 2px}
   .nav-fb{background:var(--orange-soft);color:var(--orange);font-weight:600}
   .nav-fb:hover{background:var(--orange);color:#fff}
   /* Sous 880px la barre laterale est masquee et remplacee par le menu ☰ : ces
      regles sont donc reservees au bureau, sinon #nav rouvrirait le menu cache. */
   @media(min-width:881px){
-    aside{display:flex;flex-direction:column}
+    /* Seule la liste des liens defile ; le bloc epingle est hors de cette zone,
+       il occupe donc sa propre place et ne peut jamais recouvrir la derniere
+       entree — ce qu'un simple position:sticky ne garantissait pas. */
+    aside{display:flex;flex-direction:column;overflow:hidden}
     #nav{display:flex;flex-direction:column;flex:1 1 auto;min-height:0}
-    #nav > *{flex:none}
+    .nav-list{flex:1 1 auto;overflow-y:auto;min-height:0}
+    .nav-pin{flex:none}
   }
   @media(max-width:880px){
     .shell{grid-template-columns:1fr}
@@ -499,6 +503,7 @@
     <div class="brand"><span class="logo">BE WTR<span class="tm">™</span></span></div>
     <p class="brand-sub" data-i18n="brand.sub"></p>
     <nav id="nav">
+      <div class="nav-list">
       <a href="#home" class="active"><span class="ic">⌂</span> <span data-i18n="nav.home"></span></a>
       <div class="nav-group" data-i18n="nav.g.tutos"></div>
       <a href="#install"><span class="ic">╤</span> <span data-i18n="nav.install"></span></a>
@@ -515,6 +520,7 @@
       <a href="#schemas"><span class="ic">▦</span> <span data-i18n="nav.schemas"></span></a>
       <a href="#glossary"><span class="ic">▩</span> <span data-i18n="nav.glossary"></span></a>
       <a href="#gaps"><span class="ic">☑</span> <span data-i18n="nav.gaps"></span></a>
+      </div>
       <div class="nav-pin">
         <a class="nav-fb" href="#feedback"><span class="ic">✎</span> <span data-i18n="nav.feedback"></span></a>
       </div>
