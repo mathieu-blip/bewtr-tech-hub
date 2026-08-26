@@ -11,7 +11,7 @@ traduction à venir »), pour que le technicien sache ce qu'il lit.
 | Fiche | FR | EN | DE |
 |---|:--:|:--:|:--:|
 | AQTiV One *(fiche produit, 2 p.)* | ✅ | ✅ | ✅ |
-| AQTiV One Home *(fiche technique, 8 p., rév. 08/25)* | ✅ | ⚠️ | ✅ |
+| AQTiV One Home *(fiche technique, 8 p.)* | ✅ 08/25 | ✅ 08/26 | ✅ 08/25 |
 | AQTiV One S | ✅ | ❌ | ❌ |
 | AQTiV Combi Home | ✅ | ❌ | ❌ |
 | AQTiV Duo | ✅ | ❌ | ❌ |
@@ -20,33 +20,32 @@ traduction à venir »), pour que le technicien sache ce qu'il lit.
 | PRO 2 | ✅ | ❌ | ❌ |
 | PRO 3 | ✅ | ❌ | ❌ |
 
-Les versions EN et DE manquantes existent pour la plupart sur SharePoint, dans
+L'AQTiV One Home est complet dans les trois langues. Les autres versions EN et
+DE manquantes existent pour la plupart sur SharePoint, dans
 `Technical/05 Aftersales/Techs/16 New Procedures/Technical sheets/{FR,EN,DE}` :
 BAR 1, BAR 2, PRO2, PRO3, AQTiV COMBI HOME et AQTiV Duo y sont dans les trois
 langues. Il suffit de les fournir pour compléter le tableau — c'est une
 insertion de données, le code n'a plus à bouger.
 
-## ⚠️ Deux défauts dans les fichiers source
+## ✅ Corrigé — la fiche technique AQTiV ONE 20 « EN »
 
-### 1. La fiche technique AQTiV ONE 20 « EN » est à moitié en français
+La première version anglaise n'avait que ses titres traduits : le tableau de la
+page 1 était resté en français (`Hauteur de distribution`, `Eau fraîche, plate
+et gazeuse filtrée`, `Technologie AQTiV`, `Trou à percer`, et tout le
+paragraphe). La révision **08/26** corrige l'ensemble — plus une seule chaîne
+française dans les 8 pages, vérifié — et ajoute la seconde phrase du paragraphe
+AQTiV, que les versions EN et DE précédentes omettaient.
 
-Seuls les titres ont été traduits. Le corps du tableau de la page 1 est resté
-en français :
+Les cotes concordent avec les versions FR et DE (`H: 521, W: 110, D: 185` face à
+`L/P` en français et `B/T` en allemand, `H: 288 or 126`, `Ø 35`).
 
-| Champ | Fichier EN actuel | Devrait être |
-|---|---|---|
-| en-tête de ligne | `Hauteur de distribution (mm)` | Dispensing height (mm) |
-| en-tête de ligne | `Eau` | Water |
-| valeur | `Eau fraîche, plate et gazeuse filtrée` | Filtered fresh, still and sparkling water |
-| en-tête de ligne | `Technologie AQTiV` | AQTiV Technology |
-| paragraphe | *tout le texte AQTiV, en français* | voir la fiche produit AQTiV One EN |
-| en-tête de ligne | `Trou à percer (mm)` | Drilling hole (mm) |
+À noter : l'anglais est désormais en révision 08/26, le français et l'allemand
+restent en 08/25. Si la mise à jour ne portait que sur la traduction, rien à
+faire ; sinon, les deux autres langues sont à repasser.
 
-La version DE du même document, elle, est correctement traduite. Le fichier a
-été publié tel quel dans le hub : un technicien anglophone y verra encore du
-français sur la page 1.
+## ⚠️ Un défaut restant dans les fichiers source
 
-### 2. La fiche AQTiV ONE S porte le mauvais titre en page 2
+### La fiche AQTiV ONE S porte le mauvais titre en page 2
 
 Le bandeau de la page 2 annonce **AQTiV ONE HOME** alors que le document est
 celui de l'AQTiV ONE S (page 1 : « AQTiV ONE S », H: 422 mm). Vraisemblablement
