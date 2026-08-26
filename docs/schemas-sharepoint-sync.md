@@ -57,6 +57,34 @@ Si un jeu de plans spécifique au BOX 45 arrive un jour sur SharePoint, il
 suffit de réintégrer ses images dans `SCHEMAS` et de retirer son entrée de
 `SCHEMA_ALIAS`.
 
+## Clés techniques et libellés affichés
+
+Les clés de `SCHEMAS`, `SPAREPARTS` et `EXPLODED` reprennent le nom des
+fichiers source, où le suffixe est collé au numéro : `BOX 30B`, `BAR2 Double`,
+`PRO2`, `BOX 80 ITBD`. Le sélecteur de machine, lui, affiche depuis toujours la
+forme espacée — « BOX 30 B », « BOX 80 I », « BAR 2 Double » — et c'est elle
+qui fait foi à l'écran.
+
+`PRODUCT_LABEL` fait le pont : les clés ne bougent pas (elles servent aux
+lookups et aux ancres de la recherche globale), seul l'affichage est normalisé.
+Une clé absente de la table est déjà bien orthographiée.
+
+| Clé | Affiché |
+|---|---|
+| `BOX 30B` | BOX 30 B |
+| `BOX 30E` | BOX 30 E |
+| `BOX 80 ITBD` | BOX 80 I |
+| `BAR1` | BAR 1 |
+| `BAR2 Touchless` | BAR 2 Touchless |
+| `BAR2 Double` | BAR 2 Double |
+| `PRO1` | PRO 1 |
+| `PRO2` | PRO 2 |
+
+La table couvre les tuiles (schémas, vues éclatées, fiches techniques), les
+titres des visionneuses et le sous-libellé des résultats de recherche. Les
+désignations de pièces dans `SPAREPARTS` (« PRO2 - Cup Stand », etc.) viennent
+du catalogue fournisseur et sont laissées telles quelles.
+
 ## Schéma électrique — `04 Electrical schema`
 
 | Dossier SharePoint | Fichier | Octets | Clé hub |
