@@ -18,7 +18,7 @@ octet aux fichiers publiés dans le hub.
 | `BW-0074 BOX 30` | `BW-0074 BOX 30 water line schema.pdf` | 205 153 | BOX 30 |
 | `BW-0067 BOX 30B` | `BOX 30 45 Fizz Schema Flusso.pdf` | 304 248 | BOX 30B |
 | `BW-0072E BOX 30E` | `BW-0072E BOX 30E water line schema.pdf` | 221 990 | BOX 30E |
-| `BW-0552 BOX 45` | `BOX 30 45 Fizz Schema Flusso.pdf` | 304 248 | BOX 45 |
+| `BW-0552 BOX 45` | `BOX 30 45 Fizz Schema Flusso.pdf` | 304 248 | BOX 45 *(alias BOX 30B)* |
 | `BW-0004 BOX 15` | `BW-0004 BOX 15 water line schema.pdf` | 271 295 | BOX 15 |
 | `BW-0001 BOX 80` | `BW-0001 BOX 80 water line schema.pdf` | 218 586 | BOX 80 |
 | `BW-0006 BOX 150` | `BW-0006 BOX 150 water line schema.pdf` | 196 032 | BOX 150 |
@@ -29,6 +29,61 @@ octet aux fichiers publiés dans le hub.
 
 12 produits sur 12. Aucune ligne d'eau n'existe côté SharePoint pour le
 BOX 80 ITBD — la tuile correspondante reste donc absente du hub.
+
+## Le BOX 45 partage les plans du BOX 30B
+
+Blupura ne publie pas de plans propres au BOX 45 : un seul jeu couvre le
+BOX 30 Fizz et le BOX 45, d'où les noms de fichiers `BOX 30 45 Fizz Schema
+Flusso.pdf` et `BOX 30 45 Fizz Schema Elettrico.pdf`. Le plan de ligne d'eau
+déposé dans `BW-0552 BOX 45` est d'ailleurs identique à celui du BOX 30B, au
+même sha256 et aux mêmes 304 248 octets.
+
+Dans `index.html`, le BOX 45 pointe donc sur les documents du BOX 30B plutôt
+que d'en porter une seconde copie :
+
+```js
+SCHEMAS['BOX 45'] = { water: SCHEMAS['BOX 30B'].water, elec: SCHEMAS['BOX 30B'].elec };
+var SCHEMA_ALIAS = { 'BOX 45': 'BOX 30B' };
+```
+
+La tuile reste libellée « BOX 45 » — c'est la machine que le technicien
+cherche — mais la visionneuse affiche « BOX 30B » en titre, pour qu'il sache
+quel plan il consulte. Deux conséquences :
+
+- le BOX 45 gagne un schéma électrique, qu'il n'avait pas jusqu'ici ;
+- la duplication des images disparaît (~190 Ko de base64 en moins).
+
+Si un jeu de plans spécifique au BOX 45 arrive un jour sur SharePoint, il
+suffit de réintégrer ses images dans `SCHEMAS` et de retirer son entrée de
+`SCHEMA_ALIAS`.
+
+## Clés techniques et libellés affichés
+
+Les clés de `SCHEMAS`, `SPAREPARTS` et `EXPLODED` reprennent le nom des
+fichiers source, où le suffixe est collé au numéro : `BOX 30B`, `BAR2 Double`,
+`PRO2`, `BOX 80 ITBD`. Le sélecteur de machine, lui, affiche depuis toujours la
+forme espacée — « BOX 30 B », « BOX 80 I », « BAR 2 Double » — et c'est elle
+qui fait foi à l'écran.
+
+`PRODUCT_LABEL` fait le pont : les clés ne bougent pas (elles servent aux
+lookups et aux ancres de la recherche globale), seul l'affichage est normalisé.
+Une clé absente de la table est déjà bien orthographiée.
+
+| Clé | Affiché |
+|---|---|
+| `BOX 30B` | BOX 30 B |
+| `BOX 30E` | BOX 30 E |
+| `BOX 80 ITBD` | BOX 80 I |
+| `BAR1` | BAR 1 |
+| `BAR2 Touchless` | BAR 2 Touchless |
+| `BAR2 Double` | BAR 2 Double |
+| `PRO1` | PRO 1 |
+| `PRO2` | PRO 2 |
+
+La table couvre les tuiles (schémas, vues éclatées, fiches techniques), les
+titres des visionneuses et le sous-libellé des résultats de recherche. Les
+désignations de pièces dans `SPAREPARTS` (« PRO2 - Cup Stand », etc.) viennent
+du catalogue fournisseur et sont laissées telles quelles.
 
 ## Schéma électrique — `04 Electrical schema`
 
@@ -46,11 +101,12 @@ BOX 80 ITBD — la tuile correspondante reste donc absente du hub.
 | `BW-0069 BAR2 Touchless` | `BW-0069 BAR2 Touchless.pdf` | 167 932 | BAR2 Touchless |
 | `BW-0136 BAR2 Double portion control` | `BW-0136 BAR2 Double portion control.pdf` | 120 053 | BAR2 Double |
 | `BW-0271 PRO2` | `BW-0271 PRO2 electrical schema.pdf` | 84 069 | PRO2 |
-| `BW-0552 BOX 45` | *(dossier vide)* | 0 | — |
+| `BW-0552 BOX 45` | *(dossier vide — voir BOX 30B)* | 0 | BOX 45 *(alias BOX 30B)* |
 
-12 produits sur 13. Le dossier `BW-0552 BOX 45` est vide côté SharePoint :
-tant qu'un schéma n'y est pas déposé, le BOX 45 n'apparaît pas dans la
-catégorie « Schéma électrique ».
+13 produits sur 13, via l'alias décrit ci-dessous. Le dossier
+`BW-0552 BOX 45` est vide côté SharePoint, mais le schéma du BOX 30B
+(`BOX 30 45 Fizz Schema Elettrico.pdf`) couvre les deux machines : il est donc
+servi pour le BOX 45 aussi.
 
 ## Publication dans le hub : aperçu seul
 
