@@ -204,6 +204,7 @@ de détail.
    note de réparation, lieu de restockage, ajout/retrait de pièces.
 3. **Pièces à commander** — toutes les pièces en attente, agrégées par
    référence interne, avec les claims concernés. Pas de prix à ce niveau.
+   Une pièce quitte cette liste dès que le bon de commande est enregistré.
 4. **Bulletin de commande** (`order`) — un bloc par fournisseur. On décoche
    ce qu'on ne commande pas, on exporte **un classeur Excel par
    fournisseur**, puis « Enregistrer la commande ».
@@ -246,7 +247,7 @@ avec le rôle `anon`, celui du navigateur :
 | `parts_catalog('order')` | 182 pièces tarifées *(149 avant Blupura 2024)* |
 | `hub_scope()` / `hub_require()` | refusées — fonctions internes |
 | Dépôt anonyme d'un claim | crée le claim et sa pièce, rejette une réf inventée |
-| Case « Commandée » | la ligne sort du bulletin, décocher la ramène |
+| Case « Commandée » d'un ticket | la ligne sort du bulletin, décocher la ramène |
 
 ### Deux durcissements après analyse
 
@@ -266,6 +267,27 @@ Les avertissements restants (« SECURITY DEFINER exécutable par anon »,
 précisément ainsi que le hub fonctionne sans compte utilisateur. Les tables
 sont fermées, et chaque fonction vérifie la phrase avant de rendre quoi que
 ce soit.
+
+### Annuler une commande
+
+Il n'y a pas de bouton : un bon enregistré est une pièce comptable, pas un
+brouillon. Pour effacer un essai, passer par l'éditeur SQL de Supabase.
+
+```sql
+begin;
+delete from public.orders where code = 'CMD-00001';
+-- si le bon avait basculé des claims en « Spare part ordered »,
+-- les remettre à la main :
+update public.claims set status = 'Spare part to order' where id = 46;
+-- rendre le numéro au compteur (uniquement si c'est le dernier bon)
+select setval('public.order_code_seq', 1, false);
+commit;
+```
+
+La suppression du bon suffit à libérer les lignes : `claim_parts.order_id`
+est en `on delete set null`, les pièces repartent donc d'elles-mêmes dans
+« Pièces à commander ». Le statut du claim, lui, ne se rembobine pas tout
+seul — `order_create` l'a écrit, rien ne le relit.
 
 ---
 
@@ -352,15 +374,19 @@ Concrètement : un claim en « Réparé et remis en stock » garde ses pièces
 dans l'onglet **Pièces à commander** tant qu'on ne les a pas cochées. Un
 claim en renvoi fournisseur aussi.
 
-La case existe à deux endroits, sur la même donnée :
+Deux gestes cochent une ligne :
 
-| Où | Effet |
+| Quoi | Effet |
 |---|---|
-| **Pièces à commander**, une case par référence | Coche **tous les tickets** qui demandent cette pièce, d'un coup. C'est le geste normal après avoir passé la commande. |
-| **Panneau de détail d'un ticket**, une case par pièce | Ne touche que cette ligne. Sert à corriger, ou à traiter un ticket isolément. |
+| **Enregistrer le bon de commande** | Coche toutes les lignes retenues, d'un coup. C'est le geste normal : la liste des pièces à commander se vide d'elle-même. |
+| **Panneau de détail d'un ticket**, une case par pièce | Ne touche que cette ligne. Sert à corriger, ou à sortir une pièce de la liste sans passer de bon (reprise sur stock, commande faite ailleurs). |
+
+L'onglet **Pièces à commander** n'a volontairement pas de case : cocher là
+revenait à marquer commandé sans trace de commande, alors que
+l'enregistrement du bon fait le même travail en laissant un `CMD-`.
 
 Une pièce partie sur un **bon de commande** enregistré est cochée
-automatiquement et n'est pas décochable ici : c'est le bon qui fait foi.
+automatiquement et n'est pas décochable : c'est le bon qui fait foi.
 Décocher laisserait croire qu'elle est à recommander.
 
 Demande `docs/supabase/07-piece-commandee.sql`.
