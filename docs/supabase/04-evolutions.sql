@@ -16,7 +16,13 @@ alter table public.parts add column if not exists supplier_ref_legacy text;
 -- Le nom seul (« Blupura ») n'est pas une information commerciale : il est
 -- écrit sur la machine. La référence de commande et le prix, eux, restent
 -- réservés à la phrase « order ».
-create or replace function public.parts_catalog(p_pass text)
+-- parts_catalog gagne une colonne de sortie : Postgres refuse un simple
+-- « create or replace » quand le type de retour change, il faut la supprimer
+-- d'abord. Qui dit drop dit perte des droits : le grant est réémis plus bas,
+-- sans quoi le hub ne pourrait plus lire le catalogue.
+drop function if exists public.parts_catalog(text);
+
+create function public.parts_catalog(p_pass text)
 returns table (ref text, name text, machines text[], supplier text,
                supplier_ref text, supplier_desc text, price numeric,
                currency text, discount numeric, supplier_ref_legacy text)
@@ -66,6 +72,7 @@ begin
   return v_part;
 end $$;
 
+grant execute on function public.parts_catalog(text) to anon, authenticated;
 grant execute on function public.part_set_price(text, text, numeric, text, text)
   to anon, authenticated;
 
