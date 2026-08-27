@@ -531,6 +531,8 @@
   .cl-chosen .row .r{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;color:var(--orange);font-weight:700}
   .cl-chosen .row .n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
   .cl-chosen .row input{width:64px;padding:4px 7px;border:1px solid var(--line);border-radius:7px;font:inherit;font-size:12.5px;text-align:center}
+  .cl-chosen .row .cl-chk{font-size:11.5px;gap:5px;flex:none}
+  .cl-chosen .row .cl-chk input{width:14px;height:14px}
   .cl-chosen .row .del{border:none;background:transparent;color:var(--ink-soft);cursor:pointer;font-size:16px;line-height:1;padding:0 3px}
   .cl-chosen .row .del:hover{color:var(--red)}
 
@@ -932,6 +934,7 @@
               <select id="clPFSupplier"></select>
             </div>
             <div id="clParts"></div>
+            <div class="cl-ok" id="clPartsMsg"></div>
           </div>
 
           <!-- bulletin de commande — second niveau de phrase de passe -->
@@ -2192,7 +2195,7 @@ const CL_I18N = {
     "d.addpart":"Ajouter une pièce","d.ordered":"commandée","d.none":"Aucune pièce demandée.",
     "parts.sub":"Toutes les pièces demandées et pas encore commandées, avec leur référence interne BE WTR. Les références fournisseur et les prix sont dans le bulletin de commande.",
     "parts.none":"Aucune pièce en attente de commande.",
-    "parts.qty":"Qté","parts.claims":"Claims concernés",
+    "parts.ordered":"Commandée","parts.ordered.help":"Cocher marque la pièce commandée sur tous les tickets qui la demandent.","parts.ordered.done":"Commandée : %s","parts.qty":"Qté","parts.claims":"Claims concernés",
     "order.gate.t":"Bulletin de commande","order.gate.sub":"Cette zone expose les références fournisseur et les prix d'achat. Saisissez la phrase de passe commande.",
     "order.sub":"Un bloc par fournisseur. Cochez ce que vous commandez, exportez le classeur Excel, puis enregistrez la commande — les claims concernés passent automatiquement en « pièce commandée ».",
     "order.none":"Rien à commander pour le moment.",
@@ -2229,7 +2232,7 @@ const CL_I18N = {
     "d.addpart":"Add a part","d.ordered":"ordered","d.none":"No parts requested.",
     "parts.sub":"Every part requested and not yet ordered, with its BE WTR internal reference. Supplier references and prices live in the order form.",
     "parts.none":"No parts waiting to be ordered.",
-    "parts.qty":"Qty","parts.claims":"Related claims",
+    "parts.ordered":"Ordered","parts.ordered.help":"Ticking marks the part ordered on every ticket that asks for it.","parts.ordered.done":"Ordered: %s","parts.qty":"Qty","parts.claims":"Related claims",
     "order.gate.t":"Order form","order.gate.sub":"This area exposes supplier references and purchase prices. Enter the order passphrase.",
     "order.sub":"One block per supplier. Tick what you are ordering, export the Excel workbook, then save the order — the related claims switch to “spare part ordered” automatically.",
     "order.none":"Nothing to order right now.",
@@ -2266,7 +2269,7 @@ const CL_I18N = {
     "d.addpart":"Teil hinzufügen","d.ordered":"bestellt","d.none":"Keine Teile angefordert.",
     "parts.sub":"Alle angeforderten und noch nicht bestellten Teile mit ihrer internen BE-WTR-Nummer. Lieferantennummern und Preise stehen im Bestellbeleg.",
     "parts.none":"Keine Teile zur Bestellung offen.",
-    "parts.qty":"Menge","parts.claims":"Zugehörige Claims",
+    "parts.ordered":"Bestellt","parts.ordered.help":"Markiert das Teil auf allen Tickets als bestellt.","parts.ordered.done":"Bestellt: %s","parts.qty":"Menge","parts.claims":"Zugehörige Claims",
     "order.gate.t":"Bestellbeleg","order.gate.sub":"Dieser Bereich zeigt Lieferantennummern und Einkaufspreise. Bestell-Passphrase eingeben.",
     "order.sub":"Ein Block je Lieferant. Zeilen ankreuzen, Excel-Mappe exportieren, dann Bestellung speichern — die zugehörigen Claims wechseln automatisch auf „Ersatzteil bestellt“.",
     "order.none":"Derzeit nichts zu bestellen.",
@@ -2759,7 +2762,7 @@ function clRenderKpis(){
   // plus les claims clos alors que la liste « à commander » les écarte.
   const c = clState.claims.filter(x => !clState.country || x.country === clState.country);
   const open = c.filter(x => !clIsArchived(x));
-  const partsWaiting = open.filter(x => !clIsSupplierReturn(x)).reduce((n, x) =>
+  const partsWaiting = c.reduce((n, x) =>
     n + (x.parts || []).filter(p => !p.ordered).reduce((m, p) => m + (p.qty || 0), 0), 0);
   const sup = open.filter(clIsSupplierReturn);
   const toQualify = open.filter(x => !clIsSupplierReturn(x) && !clHasParts(x));
@@ -2869,8 +2872,10 @@ function clOpenDetail(id){
         '<div class="row"><span class="r">'+clEsc(p.ref || "—")+'</span>'
         + '<span class="n">'+clEsc(p.name || p.free_text || "")+'</span>'
         + '<span class="muted small">×'+p.qty+'</span>'
-        + (p.ordered
-            ? '<span class="cl-badge parts">'+clT("d.ordered")+'</span>'
+        + '<label class="cl-chk" title="'+clEsc(clT("parts.ordered.help"))+'">'
+        +   '<input type="checkbox" data-ord-one="'+p.id+'"'+(p.ordered ? " checked" : "")+'>'
+        +   '<span>'+clT("parts.ordered")+'</span></label>'
+        + (p.ordered ? ''
             : '<button class="del" type="button" data-del="'+p.id+'" title="×">×</button>')
         + '</div>').join("") + '</div>'
     : '<p class="muted small">'+clT("d.none")+'</p>';
@@ -2972,6 +2977,23 @@ function clOpenDetail(id){
       bt.onclick = function(){ clAttachPart(c, sugg[Number(bt.dataset.g)].ref); };
     });
   } else { sg.innerHTML = ""; }
+
+  // cocher / décocher une pièce précise de ce ticket
+  document.getElementById("clDetailBody").querySelectorAll("[data-ord-one]").forEach(cb => {
+    cb.onchange = async function(){
+      const msg = document.getElementById("clDetailMsg");
+      cb.disabled = true;
+      try {
+        await clRpc("claim_parts_set_ordered", { p_pass: clState.pass,
+          p_ids: [Number(cb.dataset.ordOne)], p_ordered: cb.checked });
+        await clRefreshAll();
+        clOpenDetail(id);
+      } catch(err){
+        cb.checked = !cb.checked; cb.disabled = false;
+        if(msg) msg.textContent = clT("f.err", err.message);
+      }
+    };
+  });
 
   // retrait d'une pièce pas encore commandée
   document.getElementById("clDetailBody").querySelectorAll("[data-del]").forEach(b => {
@@ -3109,12 +3131,16 @@ function clRenderParts(){
   const f = clState.partsFilter;
   clState.claims.forEach(c => (c.parts || []).forEach(p => {
     if(p.ordered) return;
-    if(clIsArchived(c) || clIsSupplierReturn(c)) return;   // clos ou parti : plus rien à commander
+    // Une machine réparée avec une pièce prise en stock laisse une pièce à
+    // recommander : ce n'est pas l'état du claim qui décide, c'est la case
+    // « commandée » de la ligne.
     if(clState.country && c.country !== clState.country) return;
     if(f.supplier && clPartSupplier(p.ref) !== f.supplier) return;
     const key = p.ref || ("free:" + (p.free_text || ""));
-    const e = agg[key] = agg[key] || { ref:p.ref, name:p.name || p.free_text, qty:0, claims:[] };
+    const e = agg[key] = agg[key] || { ref:p.ref, name:p.name || p.free_text,
+                                       qty:0, claims:[], ids:[] };
     e.qty += p.qty || 0;
+    e.ids.push(p.id);
     if(!e.claims.includes(c.code)) e.claims.push(c.code);
   }));
   const list = Object.values(agg).sort((a,b) => String(a.ref||"").localeCompare(String(b.ref||"")));
@@ -3132,14 +3158,47 @@ function clRenderParts(){
     return;
   }
   host.innerHTML = '<div class="cl-wrap-x"><table class="cl-table"><thead><tr>'
+    + '<th title="'+clEsc(clT("parts.ordered.help"))+'">'+clT("parts.ordered")+'</th>'
     + '<th>'+clT("o.internal")+'</th><th>'+clT("o.desig")+'</th>'
     + '<th>'+clT("parts.qty")+'</th><th>'+clT("parts.claims")+'</th></tr></thead><tbody>'
-    + list.map(e => '<tr style="cursor:default">'
+    + list.map((e, i) => '<tr style="cursor:default">'
+        + '<td><input type="checkbox" data-ord="'+i+'" title="'
+        +   clEsc(clT("parts.ordered.help"))+'"></td>'
         + '<td class="code" style="color:var(--orange);font-weight:700">'+clEsc(e.ref || "—")+'</td>'
         + '<td>'+clEsc(e.name || "—")+'</td>'
         + '<td><b>'+e.qty+'</b></td>'
         + '<td class="code">'+clEsc(e.claims.join(", "))+'</td></tr>').join("")
     + '</tbody></table></div>';
+
+  // cocher une pièce coche toutes les lignes qui la demandent
+  host.querySelectorAll("[data-ord]").forEach(function(cb){
+    cb.onchange = function(){
+      cb.disabled = true;
+      clSetOrdered(list[Number(cb.dataset.ord)], true, cb);
+    };
+  });
+}
+
+/**
+ * Marque des lignes comme commandées, sans passer par un bon.
+ * Sert à reconstituer le stock : la machine est réparée, la pièce reste à
+ * racheter, et une fois rachetée elle sort de la liste.
+ */
+async function clSetOrdered(entry, ordered, cb){
+  const msg = document.getElementById("clPartsMsg");
+  try {
+    await clRpc("claim_parts_set_ordered",
+      { p_pass: clState.pass, p_ids: entry.ids, p_ordered: !!ordered });
+    await clRefreshAll();
+    // écrit après le re-rendu : clRenderParts réécrit le tableau au-dessus
+    if(msg) msg.textContent = clT("parts.ordered.done",
+      (entry.ref || "") + " — " + entry.claims.length + " "
+      + clT(entry.claims.length === 1 ? "h.line" : "h.lines"));
+    if(clState.orderPass){ await clLoadOrder(); clRenderOrder(); }
+  } catch(err){
+    if(cb){ cb.checked = !ordered; cb.disabled = false; }
+    if(msg) msg.textContent = clT("f.err", err.message);
+  }
 }
 
 /* ------------------------------------------ bulletin de commande (order) */
