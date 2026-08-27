@@ -422,6 +422,19 @@
   /* nav a{display:flex} l'emporte sur la feuille UA : sans ceci, l'attribut
      hidden ne masque pas le lien et l'onglet apparaîtrait avant déverrouillage. */
   nav a[hidden]{display:none}
+  .cl-chk{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-soft);cursor:pointer;white-space:nowrap}
+  .cl-chk input{accent-color:var(--orange);width:15px;height:15px;cursor:pointer}
+  .cl-sugg{margin-top:10px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+  .cl-sugg .lbl{font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-soft);font-weight:700}
+  .cl-sugg button{border:1px dashed var(--orange);background:var(--orange-soft);color:var(--orange);
+    font:inherit;font-size:12.5px;font-weight:600;padding:5px 11px;border-radius:999px;cursor:pointer;white-space:nowrap}
+  .cl-sugg button:hover{background:var(--orange);color:#fff;border-style:solid}
+  .cl-sugg button .r{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;opacity:.75;margin-right:5px}
+  .cl-price-in{width:88px;padding:4px 7px;border:1px solid var(--line);border-radius:7px;font:inherit;
+    font-size:12.5px;text-align:right;background:#fff;color:var(--ink)}
+  .cl-price-in:focus{outline:none;border-color:var(--orange)}
+  .cl-price-in.empty{border-color:#e3b96a;background:#fffaf0}
+  .cl-arch{opacity:.62}
   .spare-table .sp-act{width:1%;white-space:nowrap;text-align:right}
   .sp-ticket{border:1px solid var(--line);background:#fff;color:var(--ink-soft);font:inherit;font-size:11.5px;
     font-weight:700;padding:4px 10px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:.15s}
@@ -806,6 +819,9 @@
               <select id="clFStatus"></select>
               <select id="clFCountry"></select>
               <select id="clFProduct"></select>
+              <select id="clFSupplier"></select>
+              <label class="cl-chk"><input type="checkbox" id="clShowArchived">
+                <span data-cl-i18n="filter.archived"></span></label>
               <button class="cl-btn ghost sm" id="clRefresh" data-cl-i18n="filter.refresh"></button>
             </div>
             <div id="clBoard"></div>
@@ -821,6 +837,7 @@
               <div>
                 <label class="cl-lbl" for="clnDesc" data-cl-i18n="f.desc"></label>
                 <textarea class="cl-in" id="clnDesc" rows="5" maxlength="4000"></textarea>
+                <div class="cl-sugg" id="clnSugg" hidden></div>
               </div>
               <div class="two">
                 <div>
@@ -885,6 +902,10 @@
           <!-- pièces à commander (réf interne, sans prix) -->
           <div id="clViewParts" hidden>
             <p class="sec-sub" style="margin-left:0" data-cl-i18n="parts.sub"></p>
+            <div class="cl-filters">
+              <select id="clPFCountry"></select>
+              <select id="clPFSupplier"></select>
+            </div>
             <div id="clParts"></div>
           </div>
 
@@ -2141,7 +2162,8 @@ const CL_I18N = {
     "o.ref":"Réf. fournisseur","o.internal":"Réf. interne","o.desig":"Désignation","o.qty":"Qté",
     "o.unit":"Prix unitaire","o.total":"Total","o.claim":"Claim","o.sum":"Total commande",
     "h.none":"Aucune commande enregistrée.","h.on":"le","h.line":"ligne","h.lines":"lignes",
-    "spare.ticket":"Ticket","of.allcountry":"Tous les pays","of.allsupplier":"Tous les fournisseurs","of.none":"Aucune ligne ne correspond aux filtres.",
+    "spare.ticket":"Ticket","filter.archived":"Voir les archivés","filter.allsupplier":"Tous les fournisseurs","f.sugg":"Suggestions","f.parts.hint":"Choisissez d'abord un produit pour ne voir que ses pièces.","d.archive":"Archiver le ticket","o.editprice":"Prix modifiable — enregistré pour les prochaines commandes","o.priced":"Prix enregistré pour %s.","o.pricelocal":"Prix appliqué à cette commande, mais pas enregistré : %s","kpi.archived":"Archivés",
+    "of.allcountry":"Tous les pays","of.allsupplier":"Tous les fournisseurs","of.none":"Aucune ligne ne correspond aux filtres.",
     "err.load":"Chargement impossible : %s"
   },
   en:{
@@ -2176,7 +2198,8 @@ const CL_I18N = {
     "o.ref":"Supplier ref.","o.internal":"Internal ref.","o.desig":"Designation","o.qty":"Qty",
     "o.unit":"Unit price","o.total":"Total","o.claim":"Claim","o.sum":"Order total",
     "h.none":"No order recorded yet.","h.on":"on","h.line":"line","h.lines":"lines",
-    "spare.ticket":"Ticket","of.allcountry":"All countries","of.allsupplier":"All suppliers","of.none":"No line matches the filters.",
+    "spare.ticket":"Ticket","filter.archived":"Show archived","filter.allsupplier":"All suppliers","f.sugg":"Suggestions","f.parts.hint":"Pick a product first to narrow the list to its parts.","d.archive":"Archive ticket","o.editprice":"Editable price — saved for future orders","o.priced":"Price saved for %s.","o.pricelocal":"Price applied to this order but not saved: %s","kpi.archived":"Archived",
+    "of.allcountry":"All countries","of.allsupplier":"All suppliers","of.none":"No line matches the filters.",
     "err.load":"Could not load: %s"
   },
   de:{
@@ -2211,7 +2234,8 @@ const CL_I18N = {
     "o.ref":"Lieferantennr.","o.internal":"Interne Nr.","o.desig":"Bezeichnung","o.qty":"Menge",
     "o.unit":"Einzelpreis","o.total":"Summe","o.claim":"Claim","o.sum":"Bestellsumme",
     "h.none":"Noch keine Bestellung erfasst.","h.on":"am","h.line":"Zeile","h.lines":"Zeilen",
-    "spare.ticket":"Ticket","of.allcountry":"Alle Länder","of.allsupplier":"Alle Lieferanten","of.none":"Keine Zeile entspricht den Filtern.",
+    "spare.ticket":"Ticket","filter.archived":"Archivierte anzeigen","filter.allsupplier":"Alle Lieferanten","f.sugg":"Vorschläge","f.parts.hint":"Zuerst ein Produkt wählen, um nur dessen Teile zu sehen.","d.archive":"Ticket archivieren","o.editprice":"Preis änderbar — für künftige Bestellungen gespeichert","o.priced":"Preis für %s gespeichert.","o.pricelocal":"Preis für diese Bestellung übernommen, aber nicht gespeichert: %s","kpi.archived":"Archiviert",
+    "of.allcountry":"Alle Länder","of.allsupplier":"Alle Lieferanten","of.none":"Keine Zeile entspricht den Filtern.",
     "err.load":"Laden fehlgeschlagen: %s"
   }
 };
@@ -2226,7 +2250,8 @@ function clT(k, a){
 const clState = {
   pass:"", orderPass:"", view:"board",
   claims:[], parts:[], pending:[], orders:[],
-  orderFilter:{country:"",supplier:""}, histFilter:{country:"",supplier:""}, prefill:null,
+  orderFilter:{country:"",supplier:""}, histFilter:{country:"",supplier:""},
+  partsFilter:{country:"",supplier:""}, orderUnchecked:{}, prefill:null,
   newParts:[], loaded:false
 };
 
@@ -2353,6 +2378,129 @@ function clDownload(blob, filename){
   setTimeout(()=>URL.revokeObjectURL(url), 4000);
 }
 
+/* ---------------------------------------------- suggestion de pièces
+   Les descriptions arrivent en français ou en allemand, les pièces sont
+   nommées en anglais. Une simple recherche de sous-chaîne ne trouverait
+   donc rien : ce lexique fait le pont, terme métier par terme métier. */
+const CL_LEX = {
+  "fan":["ventilateur","ventilo","ventilation","lüfter","ventilateurs"],
+  "pump":["pompe","pompes","pumpe","booster"],
+  "probe":["sonde","sondes","fühler","capteur"],
+  "sensor":["capteur","détecteur","sensor","sonde"],
+  "board":["carte","carte électronique","platine","karte","pcb","électronique"],
+  "control":["contrôle","controle","commande"],
+  "solenoid":["électrovanne","electrovanne","elv","solénoïde","magnetventil","vanne"],
+  "valve":["vanne","valve","clapet","ventil","robinet"],
+  "thermostat":["thermostat","thermostats"],
+  "compressor":["compresseur","kompressor","groupe froid"],
+  "condenser":["condenseur","kondensator"],
+  "evaporator":["évaporateur","evaporateur","verdampfer"],
+  "carbonator":["gazeur","gasateur","carbonateur","gasator","cuve co2","bol"],
+  "gasket":["joint","joints","dichtung"],
+  "o-ring":["joint torique","o-ring"],
+  "tube":["tuyau","tube","durite","schlauch","tuyauterie"],
+  "filter":["filtre","filter"],
+  "drier":["déshydrateur","deshydrateur","filtre déshydrateur"],
+  "tank":["cuve","réservoir","reservoir","tank","bac"],
+  "tap":["robinet","bec","tap","hahn"],
+  "faucet":["robinet","bec verseur"],
+  "button":["bouton","boutons","touche","taste","tactile","poussoir"],
+  "touch":["tactile","touch","écran tactile"],
+  "panel":["panneau","façade","facade","carrosserie","paroi","blende","capot"],
+  "glass":["verre","vitre","glas","vitrage"],
+  "drip tray":["ramasse-goutte","ramasse goutte","bac d'égouttage","égouttoir","récupérateur"],
+  "agitator":["agitateur","mélangeur","brasseur","rührwerk"],
+  "motor":["moteur","motor"],
+  "fuse":["fusible","sicherung"],
+  "cord":["cordon","câble d'alimentation","cable alimentation","kabel"],
+  "cable":["câble","cable","kabel","faisceau"],
+  "wiring":["faisceau","câblage","cablage","harnais"],
+  "switch":["interrupteur","bouton marche","schalter"],
+  "regulator":["régulateur","regulateur","détendeur","detendeur"],
+  "compensator":["compensateur","limiteur de débit"],
+  "flow":["débit","debit","flux","écoulement"],
+  "lamp":["lampe","ampoule","uv","lampe uv"],
+  "handle":["poignée","poignee","griff","levier"],
+  "gearbox":["gearbox","boîtier","cartouche","mécanisme"],
+  "bracket":["support","étrier","equerre","halterung","staffa"],
+  "foot":["pied","pieds","patin"],
+  "cover":["couvercle","capot","cache","deckel"],
+  "grid":["grille","gitter"],
+  "counter":["compteur","volumétrique","volumetrique"],
+  "transformer":["transformateur","transfo","trafo"],
+  "aerator":["aérateur","aerateur","mousseur"],
+  "nozzle":["buse","gicleur","embout","düse"],
+  "coil":["serpentin","spirale","batterie"],
+  "level":["niveau","level","niveaux"],
+  "gas":["gaz","gas","co2","réfrigérant","refrigerant"],
+  "power":["alimentation","puissance","secteur","courant"],
+  "supply":["alimentation"],
+  "display":["afficheur","écran","ecran","display"],
+  "seal":["joint","étanchéité","etancheite"],
+  "spring":["ressort","feder"],
+  "casing":["carrosserie","carter","habillage","boîtier"],
+  "base":["base","socle","embase"],
+  "cup":["gobelet","tasse"],
+  "insulation":["isolation","isolant"],
+  "grommet":["passe-fil","passefil","œillet"],
+  "rivet":["rivet","rivets"],
+  "clip":["clip","attache","collier"],
+  "bag":["sac","sachet"],
+  "packaging":["emballage","carton"],
+  "socket":["prise","douille","steckdose"],
+  "capillary":["capillaire"]
+};
+
+/* mots trop courants pour porter du sens dans une description de panne */
+const CL_STOP = new Set(["pour","avec","dans","plus","sans","cette","cette","tout","tous","très","tres",
+  "elle","être","etre","fait","faire","panne","machine","client","merci","bien","pas","the","and","with",
+  "not","for","box","bar","pro","une","des","les","est","que","qui","sur","par","aux","son","ses","mais"]);
+
+/** Normalise : minuscules, sans accents, ponctuation en espaces. */
+function clNorm(s){
+  return String(s || "").toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+/**
+ * Propose des pièces à partir du texte libre d'un claim.
+ * Score : un terme du lexique reconnu vaut plus qu'un mot brut, et une
+ * pièce de la machine concernée passe devant une pièce d'une autre machine.
+ */
+function clSuggestParts(text, product, limit){
+  const t = " " + clNorm(text) + " ";
+  if(t.length < 6) return [];
+
+  // termes anglais déduits du texte, via le lexique
+  const hints = [];
+  Object.keys(CL_LEX).forEach(function(en){
+    const hit = clNorm(en).split(" ").every(w => t.includes(" " + w)) ||
+                CL_LEX[en].some(fr => t.includes(" " + clNorm(fr) + " ") ||
+                                      t.includes(" " + clNorm(fr)));
+    if(hit) hints.push(en);
+  });
+  // mots du texte assez longs pour être discriminants
+  const words = t.split(" ").filter(w => w.length > 3 && !CL_STOP.has(w));
+
+  const machine = product ? String(product).toUpperCase() : null;
+  const scored = clState.parts.map(function(p){
+    const n = " " + clNorm(p.name) + " ";
+    let sc = 0;
+    hints.forEach(function(h){
+      if(clNorm(h).split(" ").every(w => n.includes(" " + w))) sc += 10;
+    });
+    words.forEach(function(w){ if(n.includes(" " + w)) sc += 3; });
+    if(!sc) return null;
+    if(machine && (p.machines || []).some(m => m.toUpperCase() === machine)) sc += 6;
+    else if(machine) sc -= 2;
+    return { p: p, sc: sc };
+  }).filter(Boolean);
+
+  scored.sort((a, b) => b.sc - a.sc || a.p.ref.localeCompare(b.p.ref));
+  return scored.slice(0, limit || 5).map(x => x.p);
+}
+
 /* ------------------------------------------------------- présentation */
 const CL_STATUS = [
   { k:"New (to repair)",       c:"#c4c4c4" },
@@ -2370,6 +2518,27 @@ const CL_DECISIONS = ["TBD (to be defined)","Spare parts used","Set up modificat
 const CL_RESTOCK = ["(CH) GENEVE","(CH) LAUSANNE","(CH) ZURICH","(CH) Central stock","(BIN) For spare parts"];
 const CL_COUNTRIES = ["Switzerland","France","UK","Spain","Sweden","Denmark","Finland","Singapore","Canada",
   "United Arab Emirates"];
+
+/* Un claim dans l'un de ces statuts est clos : il sort du tableau
+   par défaut, sans être supprimé. */
+const CL_DONE = ["Repaired and restocked", "Spare Parts (Bin)"];
+function clIsArchived(c){ return CL_DONE.includes(c.status); }
+
+/** Le fournisseur d'une pièce, via le catalogue chargé. */
+function clPartSupplier(ref){
+  if(!ref) return null;
+  const p = clState.parts.find(x => x.ref === ref);
+  return (p && p.supplier) || null;
+}
+/** Les fournisseurs distincts concernés par un claim. */
+function clClaimSuppliers(c){
+  const out = [];
+  (c.parts || []).forEach(function(x){
+    const s = clPartSupplier(x.ref);
+    if(s && !out.includes(s)) out.push(s);
+  });
+  return out;
+}
 
 function clStatusColor(s){
   const f = CL_STATUS.find(x => x.k === s);
@@ -2420,16 +2589,17 @@ function clRenderKpis(){
   const c = clState.claims;
   const partsWaiting = c.reduce((n, x) =>
     n + (x.parts || []).filter(p => !p.ordered).reduce((m, p) => m + (p.qty || 0), 0), 0);
+  const open = c.filter(x => !clIsArchived(x));
   const kpis = [
-    { n:c.length, l:clT("kpi.total") },
+    { n:open.length, l:clT("kpi.total") },
     { n:c.filter(x => x.status === "New (to repair)").length, l:clT("kpi.new") },
     { n:partsWaiting, l:clT("kpi.order") },
     { n:c.filter(x => x.status === "At supplier").length, l:clT("kpi.supplier") },
-    { n:c.filter(x => x.under_warranty === true).length, l:clT("kpi.warranty") }
+    { n:c.filter(clIsArchived).length, l:clT("kpi.archived") }
   ];
   document.getElementById("clKpis").innerHTML = kpis.map(k =>
     '<div class="cl-kpi"><div class="n">'+k.n+'</div><div class="l">'+clEsc(k.l)+'</div></div>').join("");
-  document.getElementById("clCountBoard").textContent = c.length;
+  document.getElementById("clCountBoard").textContent = open.length;
   document.getElementById("clCountParts").textContent = partsWaiting;
 }
 
@@ -2438,10 +2608,16 @@ function clFiltered(){
   const st = document.getElementById("clFStatus").value;
   const co = document.getElementById("clFCountry").value;
   const pr = document.getElementById("clFProduct").value;
+  const su = document.getElementById("clFSupplier").value;
+  const arch = document.getElementById("clShowArchived").checked;
   return clState.claims.filter(c => {
+    // un claim clos ne remonte que si on demande explicitement les archivés,
+    // ou si on filtre justement sur son statut
+    if(!arch && clIsArchived(c) && st !== c.status) return false;
     if(st && c.status  !== st) return false;
     if(co && c.country !== co) return false;
     if(pr && c.product !== pr) return false;
+    if(su && !clClaimSuppliers(c).includes(su)) return false;
     if(!q) return true;
     return [c.code, c.title, c.description, c.serial_number, c.technician_name, c.company, c.product]
       .some(v => v && String(v).toLowerCase().includes(q));
@@ -2550,6 +2726,8 @@ function clOpenDetail(id){
     +   '<div><label class="cl-lbl">'+clT("d.repair")+'</label>'
     +     '<textarea class="cl-in" name="repair_notes" rows="3">'+clEsc(c.repair_notes || "")+'</textarea></div>'
     +   '<div><button class="cl-btn" type="submit">'+clT("d.save")+'</button> '
+    +     (clIsArchived(c) ? '' :
+          '<button class="cl-btn ghost" type="button" id="clArchive">'+clT("d.archive")+'</button> ')
     +     '<span class="cl-ok" id="clDetailMsg"></span></div>'
     + '</form>';
 
@@ -2573,6 +2751,17 @@ function clOpenDetail(id){
     };
   });
 
+  const arch = document.getElementById("clArchive");
+  if(arch) arch.onclick = async function(){
+    const msg = document.getElementById("clDetailMsg");
+    try {
+      await clRpc("claim_update", { p_pass: clState.pass, p_id: c.id,
+                                    p:{ status: "Repaired and restocked" } });
+      box.classList.remove("open");
+      await clRefreshAll();
+    } catch(err){ msg.textContent = clT("f.err", err.message); }
+  };
+
   document.getElementById("clDetailForm").onsubmit = async e => {
     e.preventDefault();
     const f = e.target, msg = document.getElementById("clDetailMsg");
@@ -2594,14 +2783,14 @@ function clPartResults(q, host, onPick, product){
   if(q.length < 2){ host.innerHTML = ""; return; }
   let list = clState.parts.filter(p =>
     p.ref.toLowerCase().includes(q) || (p.name || "").toLowerCase().includes(q));
-  // les pièces de la machine du ticket remontent en tête
+
+  // Une machine choisie restreint la liste à ses pièces : c'est ce qui évite
+  // de commander la pompe d'un autre modèle. Si le filtre ne laisse rien, on
+  // retombe sur le catalogue entier plutôt que sur un écran vide.
   if(product){
     const m = String(product).replace(/^BW-\d+\s*/, "").trim().toUpperCase();
-    list.sort((a,b) => {
-      const am = (a.machines||[]).some(x => x.toUpperCase() === m) ? 0 : 1;
-      const bm = (b.machines||[]).some(x => x.toUpperCase() === m) ? 0 : 1;
-      return am - bm;
-    });
+    const own = list.filter(p => (p.machines || []).some(x => x.toUpperCase() === m));
+    if(own.length) list = own;
   }
   host.innerHTML = list.slice(0, 40).map((p, i) =>
     '<button type="button" data-i="'+i+'"><span class="r">'+clEsc(p.ref)+'</span>'
@@ -2626,7 +2815,33 @@ function clRenderNewForm(){
   }
   clRenderNewParts();
   clUpdateWarrantyHint();
+  clRenderSuggestions();
 }
+
+/** Propose des pièces d'après ce que le technicien vient de décrire. */
+function clRenderSuggestions(){
+  const host = document.getElementById("clnSugg");
+  if(!host) return;
+  const txt  = (document.getElementById("clnTitle").value || "") + " " +
+               (document.getElementById("clnDesc").value  || "");
+  const prod = document.getElementById("clnProduct").value;
+  const list = clSuggestParts(txt, prod, 5)
+    .filter(p => !clState.newParts.some(x => x.ref === p.ref));
+
+  if(!list.length){ host.hidden = true; host.innerHTML = ""; return; }
+  host.hidden = false;
+  host.innerHTML = '<span class="lbl">' + clEsc(clT("f.sugg")) + '</span>'
+    + list.map((p, i) => '<button type="button" data-s="' + i + '">'
+        + '<span class="r">' + clEsc(p.ref) + '</span>' + clEsc(p.name) + '</button>').join("");
+  host.querySelectorAll("button").forEach(function(b){
+    b.onclick = function(){
+      const p = list[Number(b.dataset.s)];
+      clState.newParts.push({ ref: p.ref, name: p.name, qty: 1 });
+      clRenderNewParts(); clRenderSuggestions();
+    };
+  });
+}
+
 function clRenderNewParts(){
   const host = document.getElementById("clnPartSel");
   host.innerHTML = clState.newParts.map((p, i) =>
@@ -2659,8 +2874,12 @@ function clUpdateWarrantyHint(){
 /* ------------------------------------------- pièces à commander (interne) */
 function clRenderParts(){
   const agg = {};
+  const f = clState.partsFilter;
   clState.claims.forEach(c => (c.parts || []).forEach(p => {
     if(p.ordered) return;
+    if(clIsArchived(c)) return;                       // un claim clos ne commande plus
+    if(f.country && c.country !== f.country) return;
+    if(f.supplier && clPartSupplier(p.ref) !== f.supplier) return;
     const key = p.ref || ("free:" + (p.free_text || ""));
     const e = agg[key] = agg[key] || { ref:p.ref, name:p.name || p.free_text, qty:0, claims:[] };
     e.qty += p.qty || 0;
@@ -2668,7 +2887,21 @@ function clRenderParts(){
   }));
   const list = Object.values(agg).sort((a,b) => String(a.ref||"").localeCompare(String(b.ref||"")));
   const host = document.getElementById("clParts");
-  if(!list.length){ host.innerHTML = '<div class="cl-empty">'+clT("parts.none")+'</div>'; return; }
+
+  const openClaims = clState.claims.filter(c => !clIsArchived(c));
+  const waiting = openClaims.filter(c => (c.parts||[]).some(x => !x.ordered));
+  clFillSelect(document.getElementById("clPFCountry"),
+    Array.from(new Set(waiting.map(c => c.country).filter(Boolean))).sort(),
+    clT("of.allcountry"), f.country);
+  clFillSelect(document.getElementById("clPFSupplier"),
+    Array.from(new Set(waiting.flatMap(c => clClaimSuppliers(c)))).sort(),
+    clT("of.allsupplier"), f.supplier);
+
+  if(!list.length){
+    const any = openClaims.some(c => (c.parts||[]).some(x => !x.ordered));
+    host.innerHTML = '<div class="cl-empty">'+clT(any ? "of.none" : "parts.none")+'</div>';
+    return;
+  }
   host.innerHTML = '<div class="cl-wrap-x"><table class="cl-table"><thead><tr>'
     + '<th>'+clT("o.internal")+'</th><th>'+clT("o.desig")+'</th>'
     + '<th>'+clT("parts.qty")+'</th><th>'+clT("parts.claims")+'</th></tr></thead><tbody>'
@@ -2692,6 +2925,7 @@ function clGroupPending(){
 /** Remplit un select en conservant la valeur choisie si elle existe encore. */
 function clFillSelect(el, values, allLabel, current){
   if(!el) return;
+  el.hidden = !values.length;
   el.innerHTML = '<option value="">' + clEsc(allLabel) + '</option>'
     + values.map(v => '<option value="' + clEsc(v) + '">' + clEsc(v) + '</option>').join("");
   el.value = values.includes(current) ? current : "";
@@ -2732,8 +2966,9 @@ function clRenderOrder(){
     const noRef = lines.filter(l => !l.supplier_ref).length;
     const body = lines.map(l => {
       const u = clNet(l);
+      const on = !clState.orderUnchecked[l.line_id];
       return '<tr style="cursor:default">'
-        + '<td><input type="checkbox" checked data-line="'+l.line_id+'" data-sup="'+clEsc(s)+'"></td>'
+        + '<td><input type="checkbox"'+(on ? ' checked' : '')+' data-line="'+l.line_id+'" data-sup="'+clEsc(s)+'"></td>'
         + '<td class="code">'+(l.supplier_ref
             ? '<b>'+clEsc(l.supplier_ref)+'</b>'
             : '<span class="cl-noref">'+clT("order.noref")+'</span>')+'</td>'
@@ -2741,8 +2976,11 @@ function clRenderOrder(){
         + '<td>'+clEsc(l.name || l.free_text || "—")
             + (l.supplier_desc ? '<br><span class="muted small">'+clEsc(l.supplier_desc)+'</span>' : '')+'</td>'
         + '<td><b>'+l.qty+'</b></td>'
-        + '<td>'+(u == null ? '<span class="cl-noref">'+clT("order.noprice")+'</span>' : clMoney(u, cur))+'</td>'
-        + '<td>'+(u == null ? "—" : clMoney(u * l.qty, cur))+'</td>'
+        + '<td><input class="cl-price-in'+(u == null ? ' empty' : '')+'" type="number" min="0" step="0.01"'
+        +     ' value="'+(u == null ? '' : u)+'" data-price="'+l.line_id+'"'
+        +     ' title="'+clEsc(clT("o.editprice"))+'"'
+        +     ' placeholder="'+clEsc(clT("order.noprice"))+'"></td>'
+        + '<td data-total="'+l.line_id+'">'+(u == null ? "—" : clMoney(u * l.qty, cur))+'</td>'
         + '<td class="code">'+clEsc(l.claim_code)+'</td></tr>';
     }).join("");
     return '<div class="cl-sup" data-sup="'+clEsc(s)+'">'
@@ -2763,6 +3001,59 @@ function clRenderOrder(){
 
   host.querySelectorAll("[data-xlsx]").forEach(b => b.onclick = () => clExportSupplier(b.dataset.xlsx));
   host.querySelectorAll("[data-save]").forEach(b => b.onclick = () => clSaveOrder(b.dataset.save, b));
+
+  // Mémoriser les lignes décochées : sans ça, le moindre re-rendu (une saisie
+  // de prix, par exemple) recocherait tout ce que l'acheteur vient d'écarter.
+  host.querySelectorAll("[data-line]").forEach(function(cb){
+    cb.onchange = function(){
+      if(cb.checked) delete clState.orderUnchecked[cb.dataset.line];
+      else clState.orderUnchecked[cb.dataset.line] = true;
+    };
+  });
+
+  host.querySelectorAll("[data-price]").forEach(function(inp){
+    // sans ça, cliquer dans le champ pose le curseur et la frappe s'ajoute
+    // au montant en place : corriger 24 en 30 donnerait 2430
+    inp.onfocus  = function(){ inp.select(); };
+    inp.onchange = function(){ clSetPrice(Number(inp.dataset.price), inp.value); };
+  });
+}
+
+/**
+ * Prix saisi à la main dans le bulletin. Il est appliqué tout de suite à la
+ * commande en cours, puis enregistré au catalogue pour les fois suivantes.
+ * Un prix tapé ici est un prix net : la remise contractuelle ne s'y ajoute pas.
+ */
+async function clSetPrice(lineId, raw){
+  const line = clState.pending.find(l => l.line_id === lineId);
+  if(!line) return;
+  const v = String(raw).trim();
+  const price = v === "" ? null : Number(v);
+  if(price !== null && (!isFinite(price) || price < 0)) return;
+
+  line.price = price;
+  line.discount = 0;
+  if(price !== null && !line.currency){
+    const same = clState.pending.find(l => l.supplier === line.supplier && l.currency);
+    line.currency = same ? same.currency : "EUR";
+  }
+
+  // Le message doit être cherché APRÈS le re-rendu : celui-ci remplace le bloc
+  // fournisseur, et écrire dans l'ancien nœud ne s'afficherait nulle part.
+  clRenderOrder();
+  const msg = document.querySelector('[data-msg="' + CSS.escape(line.supplier) + '"]');
+  if(price === null || !line.part_ref) return;
+
+  try {
+    await clRpc("part_set_price", { p_pass: clState.orderPass, p_ref: line.part_ref,
+                                    p_price: price, p_currency: line.currency });
+    // le catalogue en mémoire suit, pour que l'onglet le reflète sans rechargement
+    const cp = clState.parts.find(x => x.ref === line.part_ref);
+    if(cp){ cp.price = price; cp.discount = 0; cp.currency = line.currency; }
+    if(msg) msg.textContent = clT("o.priced", line.part_ref);
+  } catch(err){
+    if(msg) msg.textContent = clT("o.pricelocal", err.message);
+  }
 }
 
 function clSelectedLines(sup){
@@ -2874,6 +3165,16 @@ function clFillFilters(){
   keep(document.getElementById("clFStatus"),  uniq("status"),  clT("filter.allstatus"));
   keep(document.getElementById("clFCountry"), uniq("country"), clT("filter.allcountry"));
   keep(document.getElementById("clFProduct"), uniq("product"), clT("filter.allproduct"));
+
+  // Le fournisseur d'un claim se déduit de ses pièces. Tant que le catalogue
+  // ne le renvoie pas (script 04 non exécuté), la liste est vide et le filtre
+  // se masque de lui-même plutôt que d'afficher un menu inutile.
+  const sups = Array.from(new Set(clState.claims.flatMap(clClaimSuppliers))).sort();
+  const sel = document.getElementById("clFSupplier"), cur = sel.value;
+  sel.hidden = !sups.length;
+  sel.innerHTML = '<option value="">' + clEsc(clT("filter.allsupplier")) + '</option>'
+    + sups.map(v => '<option value="' + clEsc(v) + '">' + clEsc(v) + '</option>').join("");
+  if(sups.includes(cur)) sel.value = cur;
 }
 
 function clApplyI18n(){
@@ -2955,9 +3256,21 @@ function clInit(){
        if(x[1] === "orderFilter") clRenderOrder(); else clRenderHistory();
      });
    });
-  ["clSearch","clFStatus","clFCountry","clFProduct"].forEach(id => {
+  ["clSearch","clFStatus","clFCountry","clFProduct","clFSupplier","clShowArchived"].forEach(id => {
     document.getElementById(id).addEventListener("input", clRenderBoard);
   });
+
+  [["clPFCountry","country"],["clPFSupplier","supplier"]].forEach(function(x){
+    document.getElementById(x[0]).addEventListener("change", function(){
+      clState.partsFilter[x[1]] = this.value;
+      clRenderParts();
+    });
+  });
+
+  // la suggestion suit ce que le technicien écrit
+  ["clnTitle","clnDesc"].forEach(id =>
+    document.getElementById(id).addEventListener("input", clRenderSuggestions));
+  document.getElementById("clnProduct").addEventListener("change", clRenderSuggestions);
 
   document.getElementById("clBoard").addEventListener("click", e => {
     const tr = e.target.closest("tr[data-id]"); if(tr) clOpenDetail(Number(tr.dataset.id));
@@ -2971,7 +3284,7 @@ function clInit(){
   q.addEventListener("input", () => clPartResults(q.value, res, p => {
     const has = clState.newParts.find(x => x.ref === p.ref);
     if(has) has.qty += 1; else clState.newParts.push({ ref:p.ref, name:p.name, qty:1 });
-    q.value = ""; res.innerHTML = ""; clRenderNewParts();
+    q.value = ""; res.innerHTML = ""; clRenderNewParts(); clRenderSuggestions();
   }, document.getElementById("clnProduct").value));
 
   ["clnInstall","clnClaim"].forEach(id =>
@@ -3000,7 +3313,7 @@ function clInit(){
       e.target.reset();
       clState.newParts = [];
       document.getElementById("clnClaim").value = new Date().toISOString().slice(0,10);
-      clRenderNewParts(); clUpdateWarrantyHint();
+      clRenderNewParts(); clUpdateWarrantyHint(); clRenderSuggestions();
       await clRefreshAll();
     } catch(err){ msg.textContent = clT("f.err", err.message); }
     finally { btn.disabled = false; }
