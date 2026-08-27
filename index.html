@@ -2191,7 +2191,8 @@ const CL_I18N = {
     "war.hint":"Garantie = moins de 730 jours entre l'installation et le claim.",
     "col.code":"Réf.","col.title":"Objet","col.product":"Produit","col.serial":"N° série","col.country":"Pays",
     "col.tech":"Technicien","col.date":"Date claim","col.warranty":"Garantie","col.parts":"Pièces",
-    "d.status":"Statut","d.decision":"Décision","d.repair":"Note de réparation","d.repairdate":"Date de réparation",
+    "d.status":"Statut","d.repair":"Note de réparation","d.repairdate":"Date de réparation",
+    "d.edit":"Corriger","d.editcancel":"Annuler",
     "d.restock":"Lieu de restockage","d.save":"Enregistrer","d.saved":"Enregistré.","d.parts":"Pièces demandées",
     "d.addpart":"Ajouter une pièce","d.ordered":"commandée","d.none":"Aucune pièce demandée.",
     "parts.sub":"Toutes les pièces demandées et pas encore commandées, avec leur référence interne BE WTR. Une pièce quitte cette liste dès que le bon de commande est enregistré. Les références fournisseur et les prix sont dans le bulletin de commande.",
@@ -2228,7 +2229,8 @@ const CL_I18N = {
     "war.hint":"Warranty = less than 730 days between installation and claim.",
     "col.code":"Ref.","col.title":"Subject","col.product":"Product","col.serial":"Serial","col.country":"Country",
     "col.tech":"Technician","col.date":"Claim date","col.warranty":"Warranty","col.parts":"Parts",
-    "d.status":"Status","d.decision":"Decision","d.repair":"Repair note","d.repairdate":"Repair date",
+    "d.status":"Status","d.repair":"Repair note","d.repairdate":"Repair date",
+    "d.edit":"Fix","d.editcancel":"Cancel",
     "d.restock":"Restocking location","d.save":"Save","d.saved":"Saved.","d.parts":"Parts requested",
     "d.addpart":"Add a part","d.ordered":"ordered","d.none":"No parts requested.",
     "parts.sub":"Every part requested and not yet ordered, with its BE WTR internal reference. A part leaves this list as soon as the order is saved. Supplier references and prices live in the order form.",
@@ -2265,7 +2267,8 @@ const CL_I18N = {
     "war.hint":"Garantie = weniger als 730 Tage zwischen Installation und Claim.",
     "col.code":"Nr.","col.title":"Betreff","col.product":"Produkt","col.serial":"Seriennr.","col.country":"Land",
     "col.tech":"Techniker","col.date":"Claim-Datum","col.warranty":"Garantie","col.parts":"Teile",
-    "d.status":"Status","d.decision":"Entscheidung","d.repair":"Reparaturnotiz","d.repairdate":"Reparaturdatum",
+    "d.status":"Status","d.repair":"Reparaturnotiz","d.repairdate":"Reparaturdatum",
+    "d.edit":"Korrigieren","d.editcancel":"Abbrechen",
     "d.restock":"Einlagerungsort","d.save":"Speichern","d.saved":"Gespeichert.","d.parts":"Angeforderte Teile",
     "d.addpart":"Teil hinzufügen","d.ordered":"bestellt","d.none":"Keine Teile angefordert.",
     "parts.sub":"Alle angeforderten und noch nicht bestellten Teile mit ihrer internen BE-WTR-Nummer. Ein Teil verlässt diese Liste, sobald die Bestellung gespeichert ist. Lieferantennummern und Preise stehen im Bestellbeleg.",
@@ -2586,17 +2589,22 @@ const CL_STATUS = [
   { k:"Spare part to order",   c:"#df2f4a" },
   { k:"Spare part ordered",    c:"#579bfc" },
   { k:"In progress (repair)",  c:"#fdab3d" },
-  { k:"Needs to go back to supplier", c:"#225091" },
   { k:"Need to go back to Switzerland", c:"#007eb5" },
   { k:"Stuck",                 c:"#ff6d3b" },
   { k:"Repaired and restocked",c:"#00c875" },
   { k:"Spare Parts (Bin)",     c:"#7e3b8a" }
 ];
 
-/* « At supplier » a été renommé. Tant que 06-statut-renvoi-fournisseur.sql
-   n'est pas passé, des claims le portent encore : il reste donc traduit et
-   rangé au bon endroit, sans être proposé à la saisie. */
+/* Statuts portés par des claims mais retirés de la saisie. Ils restent
+   traduits, colorés et groupés — simplement plus proposés au choix :
+   « At supplier » a été renommé, et « Needs to go back to supplier »
+   s'obtient par le bouton « Envoyer au fournisseur », pas par la liste. */
 const CL_STATUS_LEGACY = "At supplier";
+const CL_STATUS_OFF = [
+  { k:"Needs to go back to supplier", c:"#225091" },
+  { k:CL_STATUS_LEGACY,               c:"#225091" }
+];
+const CL_STATUS_ALL = CL_STATUS.concat(CL_STATUS_OFF);
 
 const CL_TR = {
   fr:{
@@ -2650,8 +2658,9 @@ function clStatusLabel(v){
   const d = CL_TR[lang];
   return (d && d[v]) || v;
 }
-const CL_DECISIONS = ["TBD (to be defined)","Spare parts used","Set up modification","Box repaired by supplier",
-  "Back to the supplier","Machine sent to BE WTR CH","Credit note","Dismantling","R&D","Open question"];
+/* La liste « décision » a été retirée des tickets : elle doublonnait le
+   statut sans rien décider. La colonne reste en base et les valeurs
+   reprises de Monday restent traduites, mais plus rien ne les saisit. */
 const CL_RESTOCK = ["(CH) GENEVE","(CH) LAUSANNE","(CH) ZURICH","(CH) Central stock","(BIN) For spare parts"];
 const CL_COUNTRIES = ["Switzerland","France","UK","Spain","Sweden","Denmark","Finland","Singapore","Canada",
   "United Arab Emirates"];
@@ -2711,8 +2720,7 @@ function clClaimSuppliers(c){
 }
 
 function clStatusColor(s){
-  if(s === CL_STATUS_LEGACY) return "#225091";
-  const f = CL_STATUS.find(x => x.k === s);
+  const f = CL_STATUS_ALL.find(x => x.k === s);
   return f ? f.c : "#c4c4c4";
 }
 function clEsc(v){
@@ -2822,7 +2830,7 @@ function clRenderBoard(){
     return;
   }
   // groupé par statut, comme les groupes du board Monday
-  const order = CL_STATUS.map(s => s.k);
+  const order = CL_STATUS_ALL.map(s => s.k);
   const groups = {};
   rows.forEach(c => (groups[c.status] = groups[c.status] || []).push(c));
   const keys = Object.keys(groups).sort((a,b) => {
@@ -2861,7 +2869,92 @@ function clRenderBoard(){
 }
 
 /* -------------------------------------------------------- panneau détail */
-function clOpenDetail(id){
+
+/** Statuts proposés à la saisie, plus celui du claim s'il n'y est plus. */
+function clStatusChoices(cur){
+  const list = CL_STATUS.map(s => s.k);
+  return list.includes(cur) || !cur ? list : list.concat([cur]);
+}
+
+/** Le bloc d'identité en lecture : ce que le technicien a déclaré. */
+function clDetailIdentity(c){
+  return '<h3>'+clEsc(c.title)+'</h3>'
+    + '<p class="muted small code">'+clEsc(c.code)
+    +   ' <button class="cl-btn ghost sm" type="button" id="clEdit">'+clT("d.edit")+'</button></p>'
+    + (c.description ? '<div class="card" style="white-space:pre-wrap;font-size:13.5px">'+clEsc(c.description)+'</div>' : '')
+    + '<dl class="cl-kv">'
+    + '<dt>'+clT("f.product")+'</dt><dd>'+clEsc(c.product || "—")+'</dd>'
+    + '<dt>'+clT("f.serial")+'</dt><dd>'+clEsc(c.serial_number || "—")+'</dd>'
+    + '<dt>'+clT("f.country")+'</dt><dd>'+clEsc(c.country || "—")+'</dd>'
+    + '<dt>'+clT("f.tech")+'</dt><dd>'+clEsc(c.technician_name || "—")
+        + (c.technician_email ? ' · <a href="mailto:'+clEsc(c.technician_email)+'">'+clEsc(c.technician_email)+'</a>' : '')+'</dd>'
+    + '<dt>'+clT("f.company")+'</dt><dd>'+clEsc(c.company || "—")+'</dd>'
+    + '<dt>'+clT("f.install")+'</dt><dd>'+clDate(c.install_date)+'</dd>'
+    + '<dt>'+clT("f.claimdate")+'</dt><dd>'+clDate(c.claim_date)+'</dd>'
+    + '<dt>'+clT("f.units")+'</dt><dd>'+(c.units_impacted == null ? "—" : c.units_impacted)+'</dd>'
+    + '<dt>'+clT("d.status")+'</dt><dd>'+clEsc(clStatusLabel(c.status))+'</dd>'
+    + '<dt>'+clT("col.warranty")+'</dt><dd>'
+        + (c.under_warranty === true ? '<span class="cl-badge war">'+clT("war.yes")+'</span>'
+          : c.under_warranty === false ? '<span class="cl-badge nowar">'+clT("war.no")+'</span>'
+          : '<span class="muted">'+clT("war.unknown")+'</span>')+'</dd>'
+    + '</dl>';
+}
+
+/**
+ * Le même bloc, ouvert à la correction. Un ticket mal rempli — mauvaise
+ * machine, série oubliée, pays absent — se rattrape ici plutôt qu'en SQL.
+ * Les champs de suivi (statut, réparation) restent dans le formulaire du
+ * bas : ce sont deux gestes différents, décrire et suivre.
+ */
+function clDetailEditForm(c){
+  const machines = Array.from(new Set(clState.parts.flatMap(p => p.machines || []))).sort();
+  // La reprise Monday a laissé des produits hors catalogue (« PRO2 White ») :
+  // les garder en option évite qu'ouvrir la correction les efface.
+  if(c.product && !machines.includes(c.product)) machines.unshift(c.product);
+  const sel = (list, cur) => '<option value=""></option>' + list.map(v =>
+    '<option value="'+clEsc(v)+'"'+(v === cur ? " selected" : "")+'>'+clEsc(v)+'</option>').join("");
+  const d = v => clEsc(String(v || "").slice(0, 10));
+  return '<p class="muted small code">'+clEsc(c.code)+'</p>'
+    + '<form class="cl-form" id="clEditForm">'
+    +   '<div><label class="cl-lbl">'+clT("f.title")+' <span class="cl-req">*</span></label>'
+    +     '<input class="cl-in" name="title" maxlength="300" value="'+clEsc(c.title)+'"></div>'
+    +   '<div><label class="cl-lbl">'+clT("f.desc")+'</label>'
+    +     '<textarea class="cl-in" name="description" rows="5" maxlength="4000">'+clEsc(c.description || "")+'</textarea></div>'
+    +   '<div class="two">'
+    +     '<div><label class="cl-lbl">'+clT("f.product")+'</label>'
+    +       '<select class="cl-in" name="product">'+sel(machines, c.product)+'</select></div>'
+    +     '<div><label class="cl-lbl">'+clT("f.serial")+'</label>'
+    +       '<input class="cl-in" name="serial_number" maxlength="80" value="'+clEsc(c.serial_number || "")+'"></div>'
+    +   '</div>'
+    +   '<div class="two">'
+    +     '<div><label class="cl-lbl">'+clT("f.install")+'</label>'
+    +       '<input class="cl-in" type="date" name="install_date" value="'+d(c.install_date)+'"></div>'
+    +     '<div><label class="cl-lbl">'+clT("f.claimdate")+'</label>'
+    +       '<input class="cl-in" type="date" name="claim_date" value="'+d(c.claim_date)+'"></div>'
+    +   '</div>'
+    +   '<div id="clEditWarranty"></div>'
+    +   '<div class="two">'
+    +     '<div><label class="cl-lbl">'+clT("f.country")+'</label>'
+    +       '<select class="cl-in" name="country">'+sel(CL_COUNTRIES, c.country)+'</select></div>'
+    +     '<div><label class="cl-lbl">'+clT("f.units")+'</label>'
+    +       '<input class="cl-in" type="number" min="1" step="1" name="units_impacted" value="'
+    +       clEsc(c.units_impacted == null ? "" : c.units_impacted)+'"></div>'
+    +   '</div>'
+    +   '<div class="two">'
+    +     '<div><label class="cl-lbl">'+clT("f.tech")+'</label>'
+    +       '<input class="cl-in" name="technician_name" maxlength="120" value="'+clEsc(c.technician_name || "")+'"></div>'
+    +     '<div><label class="cl-lbl">'+clT("f.mail")+'</label>'
+    +       '<input class="cl-in" type="email" name="technician_email" maxlength="160" value="'+clEsc(c.technician_email || "")+'"></div>'
+    +   '</div>'
+    +   '<div><label class="cl-lbl">'+clT("f.company")+'</label>'
+    +     '<input class="cl-in" name="company" maxlength="160" value="'+clEsc(c.company || "")+'"></div>'
+    +   '<div><button class="cl-btn" type="submit">'+clT("d.save")+'</button> '
+    +     '<button class="cl-btn ghost" type="button" id="clEditCancel">'+clT("d.editcancel")+'</button> '
+    +     '<span class="cl-ok" id="clEditMsg"></span></div>'
+    + '</form>';
+}
+
+function clOpenDetail(id, edit){
   const c = clState.claims.find(x => x.id === id);
   if(!c) return;
   // la valeur envoyée reste l'anglais canonique, seul le libellé est traduit
@@ -2881,27 +2974,13 @@ function clOpenDetail(id){
         + '</div>').join("") + '</div>'
     : '<p class="muted small">'+clT("d.none")+'</p>';
 
-  document.getElementById("clDetailBody").innerHTML =
-      '<button class="x" type="button" id="clClose">×</button>'
-    + '<h3>'+clEsc(c.title)+'</h3>'
-    + '<p class="muted small code">'+clEsc(c.code)+'</p>'
-    + (c.description ? '<div class="card" style="white-space:pre-wrap;font-size:13.5px">'+clEsc(c.description)+'</div>' : '')
-    + '<dl class="cl-kv">'
-    + '<dt>'+clT("f.product")+'</dt><dd>'+clEsc(c.product || "—")+'</dd>'
-    + '<dt>'+clT("f.serial")+'</dt><dd>'+clEsc(c.serial_number || "—")+'</dd>'
-    + '<dt>'+clT("f.country")+'</dt><dd>'+clEsc(c.country || "—")+'</dd>'
-    + '<dt>'+clT("f.tech")+'</dt><dd>'+clEsc(c.technician_name || "—")
-        + (c.technician_email ? ' · <a href="mailto:'+clEsc(c.technician_email)+'">'+clEsc(c.technician_email)+'</a>' : '')+'</dd>'
-    + '<dt>'+clT("f.company")+'</dt><dd>'+clEsc(c.company || "—")+'</dd>'
-    + '<dt>'+clT("f.install")+'</dt><dd>'+clDate(c.install_date)+'</dd>'
-    + '<dt>'+clT("f.claimdate")+'</dt><dd>'+clDate(c.claim_date)+'</dd>'
-    + '<dt>'+clT("f.units")+'</dt><dd>'+(c.units_impacted == null ? "—" : c.units_impacted)+'</dd>'
-    + '<dt>'+clT("d.status")+'</dt><dd>'+clEsc(clStatusLabel(c.status))+'</dd>'
-    + '<dt>'+clT("col.warranty")+'</dt><dd>'
-        + (c.under_warranty === true ? '<span class="cl-badge war">'+clT("war.yes")+'</span>'
-          : c.under_warranty === false ? '<span class="cl-badge nowar">'+clT("war.no")+'</span>'
-          : '<span class="muted">'+clT("war.unknown")+'</span>')+'</dd>'
-    + '</dl>'
+  // En correction, le panneau ne montre que la fiche : décrire le ticket et
+  // suivre sa réparation sont deux gestes, et deux formulaires côte à côte
+  // laisseraient croire qu'un seul « Enregistrer » vaut pour les deux.
+  document.getElementById("clDetailBody").innerHTML = edit
+    ? '<button class="x" type="button" id="clClose">×</button>' + clDetailEditForm(c)
+    : '<button class="x" type="button" id="clClose">×</button>'
+    + clDetailIdentity(c)
     + '<h4>'+clT("d.parts")
     +   (clSpareKey(c.product)
           ? ' <button class="cl-btn ghost sm" type="button" id="clDetailExploded">'
@@ -2916,18 +2995,16 @@ function clOpenDetail(id){
     +   '<div class="two">'
     +     '<div><label class="cl-lbl">'+clT("d.status")+'</label>'
     +       '<select class="cl-in" name="status">'
-    +       opt(CL_STATUS.map(s=>s.k).concat(
-              c.status === CL_STATUS_LEGACY ? [CL_STATUS_LEGACY] : []), c.status)+'</select></div>'
-    +     '<div><label class="cl-lbl">'+clT("d.decision")+'</label>'
-    +       '<select class="cl-in" name="decision">'+opt(CL_DECISIONS, c.decision)+'</select></div>'
-    +   '</div>'
-    +   '<div class="two">'
+              // le statut courant reste dans la liste même s'il n'est plus
+              // proposé : sinon le select afficherait autre chose que la
+              // réalité, et le premier enregistrement l'écraserait.
+    +       opt(clStatusChoices(c.status), c.status)+'</select></div>'
     +     '<div><label class="cl-lbl">'+clT("d.repairdate")+'</label>'
     +       '<input class="cl-in" type="date" name="repair_date" value="'+clEsc((c.repair_date||"").slice(0,10))+'"></div>'
-    +     '<div><label class="cl-lbl">'+clT("d.restock")+'</label>'
-    +       '<select class="cl-in" name="restock_location"><option value=""></option>'
-    +       opt(CL_RESTOCK, c.restock_location)+'</select></div>'
     +   '</div>'
+    +   '<div><label class="cl-lbl">'+clT("d.restock")+'</label>'
+    +     '<select class="cl-in" name="restock_location"><option value=""></option>'
+    +     opt(CL_RESTOCK, c.restock_location)+'</select></div>'
     +   '<div><label class="cl-lbl">'+clT("d.repair")+'</label>'
     +     '<textarea class="cl-in" name="repair_notes" rows="3">'+clEsc(c.repair_notes || "")+'</textarea></div>'
     +   '<div><button class="cl-btn" type="submit">'+clT("d.save")+'</button> '
@@ -2941,6 +3018,10 @@ function clOpenDetail(id){
   const box = document.getElementById("clDetail");
   box.classList.add("open");
   document.getElementById("clClose").onclick = () => box.classList.remove("open");
+
+  if(edit){ clBindEditForm(c); return; }
+
+  document.getElementById("clEdit").onclick = () => clOpenDetail(c.id, true);
 
   // ajout d'une pièce depuis le détail — recherche et suggestion passent
   // par le même chemin, pour que le statut suive dans les deux cas
@@ -3019,7 +3100,7 @@ function clOpenDetail(id){
     e.preventDefault();
     const f = e.target, msg = document.getElementById("clDetailMsg");
     const payload = {};
-    ["status","decision","repair_date","restock_location","repair_notes"].forEach(k => {
+    ["status","repair_date","restock_location","repair_notes"].forEach(k => {
       const v = f.elements[k].value.trim(); if(v) payload[k] = v;
     });
     try {
@@ -3027,6 +3108,51 @@ function clOpenDetail(id){
       msg.textContent = clT("d.saved");
       await clRefreshAll();
     } catch(err){ msg.textContent = clT("f.err", err.message); }
+  };
+}
+
+/**
+ * Le formulaire de correction. Il envoie TOUTES les clés, y compris vides :
+ * claim_edit() traite une clé présente et vide comme un effacement, ce qui
+ * est bien le but — un pays saisi par erreur doit pouvoir repartir.
+ */
+function clBindEditForm(c){
+  const f = document.getElementById("clEditForm");
+  const hint = () => {
+    const i = f.elements.install_date.value, d = f.elements.claim_date.value;
+    const host = document.getElementById("clEditWarranty");
+    if(!i || !d){ host.innerHTML = ""; return; }
+    const days = (new Date(d) - new Date(i)) / 86400000;
+    host.innerHTML = days < 730
+      ? '<span class="cl-badge war">'+clT("war.yes")+'</span>'
+      : '<span class="cl-badge nowar">'+clT("war.no")+'</span>';
+  };
+  f.elements.install_date.onchange = hint;
+  f.elements.claim_date.onchange = hint;
+  hint();
+
+  document.getElementById("clEditCancel").onclick = () => clOpenDetail(c.id);
+
+  f.onsubmit = async e => {
+    e.preventDefault();
+    const msg = document.getElementById("clEditMsg");
+    if(!f.elements.title.value.trim()){ msg.textContent = clT("f.need.title"); return; }
+    const payload = {};
+    ["title","description","product","serial_number","install_date","claim_date",
+     "country","units_impacted","technician_name","technician_email","company"]
+      .forEach(k => { payload[k] = f.elements[k].value.trim(); });
+    const btn = f.querySelector('button[type="submit"]');
+    btn.disabled = true; msg.textContent = "";
+    try {
+      await clRpc("claim_edit", { p_pass: clState.pass, p_id: c.id, p: payload });
+      await clRefreshAll();
+      clOpenDetail(c.id);              // retour à la fiche, corrigée
+      const m = document.getElementById("clDetailMsg");
+      if(m) m.textContent = clT("d.saved");
+    } catch(err){
+      msg.textContent = clT("f.err", err.message);
+      btn.disabled = false;
+    }
   };
 }
 

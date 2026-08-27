@@ -200,8 +200,11 @@ de détail.
    s'affiche en direct dès que les deux dates sont saisies. Un ticket créé
    avec des pièces part directement en « Spare part to order ».
 2. **Claims** — le tableau, groupé par statut comme les groupes Monday.
-   Clic sur une ligne : panneau de détail, changement de statut, décision,
-   note de réparation, lieu de restockage, ajout/retrait de pièces.
+   Clic sur une ligne : panneau de détail, changement de statut, note de
+   réparation, lieu de restockage, ajout/retrait de pièces. Le bouton
+   **Corriger**, à côté du numéro `CLM-`, rouvre la fiche telle que le
+   technicien l'a remplie — machine, série, dates, pays, contact — pour un
+   ticket saisi de travers. Demande `docs/supabase/08-editer-un-ticket.sql`.
 3. **Pièces à commander** — toutes les pièces en attente, agrégées par
    référence interne, avec les claims concernés. Pas de prix à ce niveau.
    Une pièce quitte cette liste dès que le bon de commande est enregistré.
@@ -247,6 +250,7 @@ avec le rôle `anon`, celui du navigateur :
 | `parts_catalog('order')` | 182 pièces tarifées *(149 avant Blupura 2024)* |
 | `hub_scope()` / `hub_require()` | refusées — fonctions internes |
 | Dépôt anonyme d'un claim | crée le claim et sa pièce, rejette une réf inventée |
+| `claim_edit()` | corrige, efface un champ vidé, garde titre et date de claim (NOT NULL), refuse une mauvaise phrase |
 | Case « Commandée » d'un ticket | la ligne sort du bulletin, décocher la ramène |
 
 ### Deux durcissements après analyse
@@ -406,25 +410,37 @@ la donnée.
 | `Spare part to order` | Pièce à commander | Ersatzteil zu bestellen |
 | `Spare part ordered` | Pièce commandée | Ersatzteil bestellt |
 | `In progress (repair)` | Réparation en cours | Reparatur läuft |
-| `Needs to go back to supplier` | À renvoyer au fournisseur | Zurück an Lieferant |
+| `Needs to go back to supplier` *(bouton seul)* | À renvoyer au fournisseur | Zurück an Lieferant |
 | `Need to go back to Switzerland` | À renvoyer en Suisse | Zurück in die Schweiz |
 | `Stuck` | Bloqué | Blockiert |
 | `Repaired and restocked` | Réparé et remis en stock | Repariert und eingelagert |
 | `Spare Parts (Bin)` | Démonté pour pièces | Für Ersatzteile ausgeschlachtet |
 
-Les décisions (`TBD (to be defined)`, `Credit note`, `Back to the supplier`…)
-suivent la même règle.
+### Deux statuts hors de la liste déroulante
 
-### « At supplier » est devenu « Needs to go back to supplier »
+`Needs to go back to supplier` et son ancien nom `At supplier` ne sont plus
+**proposés** à la saisie. Ils restent traduits, colorés et groupés comme les
+autres, et un claim qui en porte un le garde : la liste déroulante d'un tel
+claim inclut toujours son propre statut, sinon le premier enregistrement
+l'écraserait en silence. On en sort par la liste, comme d'habitude.
 
-Le statut décrivait un état — la machine *est* chez le fournisseur — là où
-l'équipe a besoin d'une action : elle *doit* y retourner. C'est ce statut qui
-alimente l'onglet **Renvoi fournisseur**.
+Pour y **entrer**, il reste le bouton **« Envoyer au fournisseur »** du
+panneau de détail. C'est lui qui alimente l'onglet **Renvoi fournisseur** —
+le statut décrivait un état (la machine *est* chez le fournisseur) là où
+l'équipe a besoin d'une action (elle *doit* y retourner).
 
-`docs/supabase/06-statut-renvoi-fournisseur.sql` aligne les claims existants.
-Il n'est pas urgent : le hub lit les deux libellés, range les anciens au bon
-endroit et les traduit. L'ancien n'est simplement plus proposé à la saisie, et
-un claim qui le porte encore le garde tant qu'on n'y touche pas.
+`docs/supabase/06-statut-renvoi-fournisseur.sql` aligne les claims restés sur
+l'ancien libellé. Il n'est pas urgent, et à ce jour aucun claim ne le porte.
+
+### La décision a été retirée des tickets
+
+La liste **Décision** doublonnait le statut sans rien décider : 49 claims sur
+55 étaient à `TBD (to be defined)`. Elle a disparu du panneau de détail.
+
+La colonne `decision` reste en base, avec les valeurs reprises de Monday —
+rien n'est perdu, et `claim_update()` sait toujours l'écrire si le besoin
+revient. Deux d'entre elles (`Back to the supplier`, `Box repaired by
+supplier`) rangent encore un claim dans l'onglet Renvoi fournisseur.
 
 ---
 
