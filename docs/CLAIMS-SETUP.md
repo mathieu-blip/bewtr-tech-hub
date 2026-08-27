@@ -233,6 +233,42 @@ texte : les totaux se recalculent dans Excel sans retouche.
 
 ---
 
+## État de la base
+
+Tous les scripts sont appliqués sur le projet `hgjitagsffudcvqwakwk`. Vérifié
+avec le rôle `anon`, celui du navigateur :
+
+| Contrôle | Résultat |
+|---|---|
+| `select * from parts` / `claims` en direct | **0 ligne** — RLS tient |
+| `parts_public()` sans phrase | 294 pièces, ni fournisseur ni prix |
+| `parts_catalog('spare part')` | 294 pièces, fournisseur visible, **0 prix** |
+| `parts_catalog('order')` | 182 pièces tarifées *(149 avant Blupura 2024)* |
+| `hub_scope()` / `hub_require()` | refusées — fonctions internes |
+| Dépôt anonyme d'un claim | crée le claim et sa pièce, rejette une réf inventée |
+| Case « Commandée » | la ligne sort du bulletin, décocher la ramène |
+
+### Deux durcissements après analyse
+
+L'analyseur de Supabase a relevé deux points que les scripts initiaux
+laissaient passer :
+
+- **`hub_scope` et `hub_require` restaient appelables.** Le `revoke` de
+  `02-api.sql` visait `anon` et `authenticated`, mais Postgres accorde
+  `EXECUTE` à `PUBLIC` par défaut : le droit tenait toujours. Corrigé — il
+  faut révoquer sur `public` aussi.
+- **`touch_updated_at` n'avait pas de `search_path` figé.** Une fonction qui
+  laisse l'appelant choisir son `search_path` peut se voir substituer ses
+  opérateurs.
+
+Les avertissements restants (« SECURITY DEFINER exécutable par anon »,
+« RLS enabled, no policy ») décrivent **l'architecture voulue** : c'est
+précisément ainsi que le hub fonctionne sans compte utilisateur. Les tables
+sont fermées, et chaque fonction vérifie la phrase avant de rendre quoi que
+ce soit.
+
+---
+
 ## Le lien à donner aux techniciens
 
 **https://service.bewtr.com/#claims-new**
