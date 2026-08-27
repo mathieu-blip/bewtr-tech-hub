@@ -233,6 +233,55 @@ texte : les totaux se recalculent dans Excel sans retouche.
 
 ---
 
+## Évolution 2 — script à exécuter
+
+`docs/supabase/04-evolutions.sql` **doit être exécuté une fois** dans
+Supabase ▸ SQL Editor. Sans lui le hub fonctionne, mais en retrait :
+
+| Fonction | Sans le script | Avec |
+|---|---|---|
+| Filtre fournisseur (claims, pièces à commander) | le menu se masque | actif |
+| Prix saisi dans le bulletin | appliqué à la commande, **non enregistré** | enregistré au catalogue |
+| Codes et prix Blupura 2024 | anciens codes 2022 | à jour |
+
+Le script fait quatre choses :
+
+1. **Le nom du fournisseur devient visible au niveau « claims »**, pour
+   pouvoir filtrer dessus. La référence de commande et le prix, eux, restent
+   réservés à la phrase « order » — c'est ce qui était protégé, et ça le
+   reste. Un nom de fournisseur est écrit sur la machine.
+2. **`part_set_price()`** : saisir ou corriger un prix depuis le bulletin,
+   et le garder pour les commandes suivantes. Un prix tapé à la main est un
+   prix **net** — la remise contractuelle ne s'y applique plus, la fonction
+   met donc `discount` à 0.
+3. **`supplier_ref_legacy`** : conserve l'ancien code fournisseur.
+4. **Tarif Blupura REV00 du 08.11.2024.**
+
+### Blupura a renuméroté son catalogue
+
+C'est le point important. Le fichier
+`XX Spare parts Blupura/File Trascodifica Blupura REV00 08112024.xlsx`
+donne, pour chaque pièce, un **nouveau code de commande** : les références
+de 2022 ne sont plus celles à écrire sur un bon.
+
+| | |
+|---|---:|
+| Références Blupura au catalogue | 105 |
+| Retrouvées dans le fichier de transcodification | **55** |
+| dont sans aucun prix jusqu'ici | 33 |
+| Restant sur l'ancien code, sans prix | 50 |
+
+Exemples : le gazeur 1 L passe de `130009` à `760035` (79,30 €), le
+ventilateur 120×120 de `120232` à `760032` (24,80 €), la pompe du BOX 15 de
+`130053` à `760033` (152,85 €). Les prix sont **nets, en euros** — souvent
+bien en dessous des montants CHF de 2022 qui figuraient jusqu'ici.
+
+Les 50 non retrouvées sont surtout des pièces BAR2 : le fichier de
+transcodification ne les couvre pas toutes. Elles gardent leur ancien code
+et restent sans prix — à demander à Blupura.
+
+---
+
 ## Limites connues
 
 - **Pas de pièces jointes.** Le board Monday a une colonne « Files » ; le hub
