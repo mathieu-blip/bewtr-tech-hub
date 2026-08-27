@@ -415,6 +415,111 @@
   .gate-card.shake{animation:gateShake .35s}
   @keyframes gateShake{10%,90%{transform:translateX(-3px)}30%,70%{transform:translateX(6px)}50%{transform:translateX(-6px)}}
   .gate-foot{margin-top:20px;font-size:11.5px;color:#9aa6b4}
+
+  /* ============================================================
+     Onglet Claims & pièces détachées (remplace le board Monday)
+     ============================================================ */
+  /* nav a{display:flex} l'emporte sur la feuille UA : sans ceci, l'attribut
+     hidden ne masque pas le lien et l'onglet apparaîtrait avant déverrouillage. */
+  nav a[hidden]{display:none}
+  .cl-gate{max-width:430px;margin:40px auto;text-align:center}
+  .cl-gate .lock{font-size:40px;color:var(--orange);line-height:1}
+  .cl-gate h3{margin:14px 0 6px;font-size:18px}
+  .cl-gate p{color:var(--ink-soft);font-size:14px}
+  .cl-gate form{display:flex;gap:8px;margin-top:18px}
+  .cl-in{width:100%;padding:10px 13px;border:1px solid var(--line);border-radius:10px;font:inherit;font-size:14px;background:#fff;color:var(--ink)}
+  .cl-in:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(242,101,34,.13)}
+  .cl-btn{border:none;background:var(--orange);color:#fff;font:inherit;font-weight:700;font-size:14px;padding:10px 18px;border-radius:10px;cursor:pointer;white-space:nowrap}
+  .cl-btn:hover{filter:brightness(1.06)}
+  .cl-btn:disabled{opacity:.5;cursor:default}
+  .cl-btn.ghost{background:#fff;color:var(--ink-soft);border:1px solid var(--line)}
+  .cl-btn.ghost:hover{color:var(--orange);border-color:var(--orange)}
+  .cl-btn.sm{padding:6px 12px;font-size:12.5px;border-radius:8px}
+  .cl-err{color:var(--red);font-size:13px;margin-top:10px;min-height:18px}
+  .cl-ok{color:var(--green);font-size:13px;margin-top:10px;min-height:18px}
+
+  .cl-tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin:0 0 20px;flex-wrap:wrap}
+  .cl-tabs button{border:none;background:transparent;font:inherit;font-size:14px;font-weight:600;color:var(--ink-soft);padding:10px 15px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+  .cl-tabs button:hover{color:var(--orange)}
+  .cl-tabs button.on{color:var(--orange);border-bottom-color:var(--orange)}
+  .cl-tabs .count{background:var(--orange-soft);color:var(--orange);font-size:11px;font-weight:800;border-radius:999px;padding:1px 7px;margin-left:6px}
+
+  .cl-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}
+  .cl-kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 15px}
+  .cl-kpi .n{font-size:23px;font-weight:800;line-height:1.1}
+  .cl-kpi .l{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-soft);margin-top:3px}
+
+  .cl-filters{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+  .cl-filters select,.cl-filters input{padding:8px 11px;border:1px solid var(--line);border-radius:9px;font:inherit;font-size:13px;background:#fff;color:var(--ink)}
+  .cl-filters input{min-width:210px;flex:1}
+  .cl-filters select:focus,.cl-filters input:focus{outline:none;border-color:var(--orange)}
+
+  .cl-group{margin-bottom:22px}
+  .cl-group>h4{display:flex;align-items:center;gap:9px;margin:0 0 9px;text-transform:none;letter-spacing:0;font-size:14px;color:var(--ink)}
+  .cl-group>h4 .sw{width:11px;height:11px;border-radius:3px;flex:none}
+  .cl-group>h4 .c{color:var(--ink-soft);font-weight:500;font-size:12.5px}
+
+  .cl-table{width:100%;border-collapse:collapse;font-size:13.5px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .cl-table th{font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-soft);background:#fafbfc;padding:9px 11px;text-align:left;font-weight:700;white-space:nowrap}
+  .cl-table td{padding:9px 11px;border-top:1px solid var(--line);vertical-align:top}
+  .cl-table tbody tr{cursor:pointer}
+  .cl-table tbody tr:hover{background:var(--orange-soft)}
+  .cl-table .code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--ink-soft);white-space:nowrap}
+  .cl-table .ttl{font-weight:600}
+  .cl-wrap-x{overflow-x:auto;border-radius:12px}
+
+  .cl-badge{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
+  .cl-badge.war{background:#e7f6ed;color:#1f7a45}
+  .cl-badge.nowar{background:#fdeceb;color:#b33324}
+  .cl-badge.parts{background:#eef4fe;color:#1f5fd0}
+  .cl-badge.todo{background:#fdeceb;color:#b33324}
+
+  .cl-detail{position:fixed;inset:0;background:rgba(20,30,45,.45);z-index:2600;display:none;justify-content:flex-end}
+  .cl-detail.open{display:flex}
+  .cl-panel{background:var(--bg);width:min(620px,100%);height:100%;overflow-y:auto;padding:24px 26px 60px;box-shadow:-8px 0 40px rgba(20,30,45,.2)}
+  .cl-panel .x{float:right;border:none;background:transparent;font-size:24px;line-height:1;color:var(--ink-soft);cursor:pointer;padding:0 4px}
+  .cl-panel h3{font-size:19px;margin:0 6px 4px 0}
+  .cl-kv{display:grid;grid-template-columns:150px 1fr;gap:7px 14px;font-size:13.5px;margin:16px 0}
+  .cl-kv dt{color:var(--ink-soft)}
+  .cl-kv dd{margin:0;font-weight:500;word-break:break-word}
+
+  .cl-form{display:grid;gap:14px}
+  .cl-form .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .cl-lbl{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-soft);font-weight:700;margin-bottom:5px}
+  .cl-req{color:var(--orange)}
+  textarea.cl-in{resize:vertical;min-height:90px}
+
+  .cl-picker{border:1px solid var(--line);border-radius:12px;background:#fff;padding:13px}
+  .cl-picker .res{max-height:230px;overflow-y:auto;margin-top:9px;border-top:1px solid var(--line)}
+  .cl-picker .res button{display:flex;width:100%;gap:10px;align-items:baseline;border:none;background:transparent;font:inherit;text-align:left;padding:8px 9px;border-radius:8px;cursor:pointer;font-size:13px;color:var(--ink)}
+  .cl-picker .res button:hover{background:var(--orange-soft)}
+  .cl-picker .res .r{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;color:var(--orange);font-weight:700;flex:none;width:74px}
+  .cl-picker .res .m{color:var(--ink-soft);font-size:11.5px;margin-left:auto;flex:none}
+  .cl-chosen{display:flex;flex-direction:column;gap:7px;margin-top:11px}
+  .cl-chosen .row{display:flex;align-items:center;gap:9px;background:#fafbfc;border:1px solid var(--line);border-radius:9px;padding:7px 10px;font-size:13px}
+  .cl-chosen .row .r{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;color:var(--orange);font-weight:700}
+  .cl-chosen .row .n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .cl-chosen .row input{width:64px;padding:4px 7px;border:1px solid var(--line);border-radius:7px;font:inherit;font-size:12.5px;text-align:center}
+  .cl-chosen .row .del{border:none;background:transparent;color:var(--ink-soft);cursor:pointer;font-size:16px;line-height:1;padding:0 3px}
+  .cl-chosen .row .del:hover{color:var(--red)}
+
+  .cl-sup{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:16px;overflow:hidden}
+  .cl-sup>header{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--line);background:#fafbfc;flex-wrap:wrap}
+  .cl-sup>header b{font-size:15px}
+  .cl-sup>header .tot{margin-left:auto;font-weight:800;font-size:15px;white-space:nowrap}
+  .cl-sup>header .acts{display:flex;gap:8px}
+  .cl-noref{background:#fff8e6;color:#8a6100;font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:999px;white-space:nowrap}
+
+  .cl-empty{text-align:center;color:var(--ink-soft);font-size:14px;padding:36px 20px;background:#fff;border:1px dashed var(--line);border-radius:12px}
+  .cl-note{background:#fff8e6;border:1px solid #f2dda5;border-radius:10px;padding:11px 14px;font-size:13px;color:#6d5312;margin-bottom:16px}
+  .cl-spin{display:inline-block;width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--orange);border-radius:50%;animation:clspin .7s linear infinite;vertical-align:-2px}
+  @keyframes clspin{to{transform:rotate(360deg)}}
+
+  @media(max-width:760px){
+    .cl-form .two{grid-template-columns:1fr}
+    .cl-kv{grid-template-columns:110px 1fr}
+    .cl-panel{padding:20px 16px 50px}
+  }
 </style>
 </head>
 <body class="gate-locked">
@@ -520,6 +625,7 @@
       <a href="#schemas"><span class="ic">▦</span> <span data-i18n="nav.schemas"></span></a>
       <a href="#glossary"><span class="ic">▩</span> <span data-i18n="nav.glossary"></span></a>
       <a href="#gaps"><span class="ic">☑</span> <span data-i18n="nav.gaps"></span></a>
+      <a href="#claims" hidden><span class="ic">⚑</span> Claims</a>
       </div>
       <div class="nav-pin">
         <a class="nav-fb" href="#feedback"><span class="ic">✎</span> <span data-i18n="nav.feedback"></span></a>
@@ -662,6 +768,150 @@
         <p class="sec-sub" data-i18n="s12.sub"></p>
         <div data-i18n="s12.body"></div>
       </section>
+      <section id="claims">
+        <div class="sec-head"><span class="num sym">⚑</span><h2 data-cl-i18n="t"></h2></div>
+        <p class="sec-sub" data-cl-i18n="sub"></p>
+
+        <!-- écran de garde -->
+        <div class="cl-gate card" id="clGate">
+          <div class="lock">⚿</div>
+          <h3 data-cl-i18n="gate.t"></h3>
+          <p data-cl-i18n="gate.sub"></p>
+          <form id="clGateForm">
+            <input class="cl-in" id="clPass" type="password" autocomplete="off" spellcheck="false">
+            <button class="cl-btn" type="submit" data-cl-i18n="gate.go"></button>
+          </form>
+          <div class="cl-err" id="clGateErr"></div>
+        </div>
+
+        <!-- application -->
+        <div id="clApp" hidden>
+          <div class="cl-tabs" id="clTabs">
+            <button data-v="board" class="on"><span data-cl-i18n="tab.board"></span><span class="count" id="clCountBoard">0</span></button>
+            <button data-v="new"><span data-cl-i18n="tab.new"></span></button>
+            <button data-v="parts"><span data-cl-i18n="tab.parts"></span><span class="count" id="clCountParts">0</span></button>
+            <button data-v="order"><span data-cl-i18n="tab.order"></span></button>
+            <button data-v="history"><span data-cl-i18n="tab.history"></span></button>
+          </div>
+
+          <!-- vue tableau des claims -->
+          <div id="clViewBoard">
+            <div class="cl-kpis" id="clKpis"></div>
+            <div class="cl-filters">
+              <input id="clSearch" type="search" data-cl-ph="filter.search">
+              <select id="clFStatus"></select>
+              <select id="clFCountry"></select>
+              <select id="clFProduct"></select>
+              <button class="cl-btn ghost sm" id="clRefresh" data-cl-i18n="filter.refresh"></button>
+            </div>
+            <div id="clBoard"></div>
+          </div>
+
+          <!-- formulaire nouveau ticket -->
+          <div id="clViewNew" hidden>
+            <form class="card cl-form" id="clNewForm" novalidate>
+              <div>
+                <label class="cl-lbl" for="clnTitle"><span data-cl-i18n="f.title"></span> <span class="cl-req">*</span></label>
+                <input class="cl-in" id="clnTitle" maxlength="300" required>
+              </div>
+              <div>
+                <label class="cl-lbl" for="clnDesc" data-cl-i18n="f.desc"></label>
+                <textarea class="cl-in" id="clnDesc" rows="5" maxlength="4000"></textarea>
+              </div>
+              <div class="two">
+                <div>
+                  <label class="cl-lbl" for="clnProduct" data-cl-i18n="f.product"></label>
+                  <select class="cl-in" id="clnProduct"></select>
+                </div>
+                <div>
+                  <label class="cl-lbl" for="clnSerial" data-cl-i18n="f.serial"></label>
+                  <input class="cl-in" id="clnSerial" maxlength="80">
+                </div>
+              </div>
+              <div class="two">
+                <div>
+                  <label class="cl-lbl" for="clnInstall" data-cl-i18n="f.install"></label>
+                  <input class="cl-in" id="clnInstall" type="date">
+                </div>
+                <div>
+                  <label class="cl-lbl" for="clnClaim" data-cl-i18n="f.claimdate"></label>
+                  <input class="cl-in" id="clnClaim" type="date">
+                </div>
+              </div>
+              <div id="clnWarranty"></div>
+              <div class="two">
+                <div>
+                  <label class="cl-lbl" for="clnCountry" data-cl-i18n="f.country"></label>
+                  <select class="cl-in" id="clnCountry"></select>
+                </div>
+                <div>
+                  <label class="cl-lbl" for="clnUnits" data-cl-i18n="f.units"></label>
+                  <input class="cl-in" id="clnUnits" type="number" min="1" step="1" value="1">
+                </div>
+              </div>
+              <div class="two">
+                <div>
+                  <label class="cl-lbl" for="clnTech" data-cl-i18n="f.tech"></label>
+                  <input class="cl-in" id="clnTech" maxlength="120" autocomplete="name">
+                </div>
+                <div>
+                  <label class="cl-lbl" for="clnMail" data-cl-i18n="f.mail"></label>
+                  <input class="cl-in" id="clnMail" type="email" maxlength="160" autocomplete="email">
+                </div>
+              </div>
+              <div>
+                <label class="cl-lbl" for="clnCompany" data-cl-i18n="f.company"></label>
+                <input class="cl-in" id="clnCompany" maxlength="160" autocomplete="organization">
+              </div>
+              <div>
+                <span class="cl-lbl" data-cl-i18n="f.parts"></span>
+                <div class="cl-picker">
+                  <input class="cl-in" id="clnPartQ" data-cl-ph="f.parts.search">
+                  <div class="res" id="clnPartRes"></div>
+                  <div class="cl-chosen" id="clnPartSel"></div>
+                </div>
+              </div>
+              <div>
+                <button class="cl-btn" type="submit" id="clnSubmit" data-cl-i18n="f.submit"></button>
+                <span class="cl-ok" id="clnMsg"></span>
+              </div>
+            </form>
+          </div>
+
+          <!-- pièces à commander (réf interne, sans prix) -->
+          <div id="clViewParts" hidden>
+            <p class="sec-sub" style="margin-left:0" data-cl-i18n="parts.sub"></p>
+            <div id="clParts"></div>
+          </div>
+
+          <!-- bulletin de commande — second niveau de phrase de passe -->
+          <div id="clViewOrder" hidden>
+            <div class="cl-gate card" id="clOrderGate">
+              <div class="lock">⚿</div>
+              <h3 data-cl-i18n="order.gate.t"></h3>
+              <p data-cl-i18n="order.gate.sub"></p>
+              <form id="clOrderGateForm">
+                <input class="cl-in" id="clOrderPass" type="password" autocomplete="off" spellcheck="false">
+                <button class="cl-btn" type="submit" data-cl-i18n="gate.go"></button>
+              </form>
+              <div class="cl-err" id="clOrderErr"></div>
+            </div>
+            <div id="clOrderApp" hidden>
+              <p class="sec-sub" style="margin-left:0" data-cl-i18n="order.sub"></p>
+              <div id="clOrder"></div>
+            </div>
+          </div>
+
+          <!-- commandes passées -->
+          <div id="clViewHistory" hidden>
+            <div id="clHistory"></div>
+          </div>
+        </div>
+
+        <!-- panneau détail d'un claim -->
+        <div class="cl-detail" id="clDetail"><div class="cl-panel" id="clDetailBody"></div></div>
+      </section>
+
       <section id="feedback">
         <div class="sec-head"><span class="num sym">✎</span><h2 data-i18n="fb.t"></h2></div>
         <p class="sec-sub" data-i18n="fb.sub"></p>
@@ -1191,6 +1441,7 @@ function applyI18n(){
   document.querySelectorAll("#filters button").forEach(b=>{ b.textContent = d["filter."+b.dataset.f]; });
   // lang buttons
   document.querySelectorAll("#lang button").forEach(b=> b.classList.toggle("on", b.dataset.lang===lang));
+  try{ if(typeof clApplyI18n==="function"){ clApplyI18n(); if(clState.loaded){ clRenderKpis(); clRenderBoard(); clFillFilters(); } } }catch(e){}
 }
 
 function renderLibrary(){
@@ -1793,7 +2044,7 @@ function jumpTo(id){
   window.scrollTo(0,y);
   setTimeout(function(){ he.style.scrollBehavior=prev||''; },0);
 }
-var SECT_IDS=['home','overview','beconnect','install','settings','maintenance','safety','troubleshoot','experience','tutorials','schemas','glossary','gaps','feedback'];
+var SECT_IDS=['home','overview','beconnect','install','settings','maintenance','safety','troubleshoot','experience','tutorials','schemas','glossary','gaps','feedback','claims'];
 function showTab(hash){
   var id=(hash||'#home').replace('#','');
   if(SECT_IDS.indexOf(id)<0) id='home';
@@ -1828,6 +2079,873 @@ document.getElementById('closeSearch').addEventListener('click',closeSearch);
 document.getElementById('gq').addEventListener('input',doSearch);
 document.getElementById('searchbox').addEventListener('click',function(e){ if(e.target.id==='searchbox') closeSearch(); });
 document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeSearch(); });
+/* ==================================================================
+   Onglet Claims & pièces détachées — remplace le board Monday
+   « Technical troubleshooting ».
+
+   Le hub est un site statique public : la clé ci-dessous est lisible
+   par quiconque ouvre la page. Elle ne donne accès à rien seule —
+   toutes les tables sont fermées (RLS sans policy) et l'accès passe
+   par des fonctions qui exigent la phrase de passe. Voir
+   docs/claims-supabase.md.
+   ================================================================== */
+
+const CLAIMS_URL = "https://hgjitagsffudcvqwakwk.supabase.co";
+const CLAIMS_KEY = "sb_publishable_SCtyYXfzE2i-D4CfIoeBPw__u1pB0Dk";
+
+/* ------------------------------------------------------- traductions */
+const CL_I18N = {
+  fr:{
+    "t":"Claims & pièces détachées","sub":"Suivi des retours machines et commande des pièces, de la déclaration au bon fournisseur.",
+    "gate.t":"Espace protégé","gate.sub":"Saisissez la phrase de passe pour ouvrir la plateforme claims.","gate.go":"Ouvrir",
+    "gate.bad":"Phrase de passe incorrecte.","gate.net":"Connexion impossible. Vérifiez votre réseau puis réessayez.",
+    "tab.board":"Claims","tab.new":"Nouveau ticket","tab.parts":"Pièces à commander","tab.order":"Bulletin de commande","tab.history":"Commandes passées",
+    "kpi.total":"Claims ouverts","kpi.new":"À réparer","kpi.order":"Pièces à commander","kpi.supplier":"Chez le fournisseur","kpi.warranty":"Sous garantie",
+    "filter.search":"Rechercher — titre, n° série, technicien, société…","filter.refresh":"Actualiser",
+    "filter.allstatus":"Tous les statuts","filter.allcountry":"Tous les pays","filter.allproduct":"Tous les produits",
+    "f.title":"Objet du ticket","f.desc":"Description du problème","f.product":"Produit","f.serial":"N° de série",
+    "f.install":"Date d'installation","f.claimdate":"Date du claim","f.country":"Pays","f.units":"Nb d'unités concernées",
+    "f.tech":"Technicien","f.mail":"E-mail","f.company":"Société","f.parts":"Pièces nécessaires",
+    "f.parts.search":"Chercher une pièce — réf BW ou désignation…","f.submit":"Créer le ticket",
+    "f.need.title":"L'objet du ticket est obligatoire.","f.saved":"Ticket %s créé.","f.err":"Enregistrement impossible : %s",
+    "war.yes":"Sous garantie","war.no":"Hors garantie","war.unknown":"Garantie inconnue",
+    "war.hint":"Garantie = moins de 730 jours entre l'installation et le claim.",
+    "col.code":"Réf.","col.title":"Objet","col.product":"Produit","col.serial":"N° série","col.country":"Pays",
+    "col.tech":"Technicien","col.date":"Date claim","col.warranty":"Garantie","col.parts":"Pièces",
+    "d.status":"Statut","d.decision":"Décision","d.repair":"Note de réparation","d.repairdate":"Date de réparation",
+    "d.restock":"Lieu de restockage","d.save":"Enregistrer","d.saved":"Enregistré.","d.parts":"Pièces demandées",
+    "d.addpart":"Ajouter une pièce","d.ordered":"commandée","d.none":"Aucune pièce demandée.",
+    "parts.sub":"Toutes les pièces demandées et pas encore commandées, avec leur référence interne BE WTR. Les références fournisseur et les prix sont dans le bulletin de commande.",
+    "parts.none":"Aucune pièce en attente de commande.",
+    "parts.qty":"Qté","parts.claims":"Claims concernés",
+    "order.gate.t":"Bulletin de commande","order.gate.sub":"Cette zone expose les références fournisseur et les prix d'achat. Saisissez la phrase de passe commande.",
+    "order.sub":"Un bloc par fournisseur. Cochez ce que vous commandez, exportez le classeur Excel, puis enregistrez la commande — les claims concernés passent automatiquement en « pièce commandée ».",
+    "order.none":"Rien à commander pour le moment.",
+    "order.xlsx":"Exporter en Excel","order.save":"Enregistrer la commande","order.by":"Commande passée par",
+    "order.saved":"Commande %s enregistrée.","order.pick":"Sélectionnez au moins une ligne.",
+    "order.noref":"réf. à confirmer","order.noprice":"prix à confirmer",
+    "o.ref":"Réf. fournisseur","o.internal":"Réf. interne","o.desig":"Désignation","o.qty":"Qté",
+    "o.unit":"Prix unitaire","o.total":"Total","o.claim":"Claim","o.sum":"Total commande",
+    "h.none":"Aucune commande enregistrée.","h.on":"le","h.line":"ligne","h.lines":"lignes",
+    "err.load":"Chargement impossible : %s"
+  },
+  en:{
+    "t":"Claims & spare parts","sub":"Machine returns and spare-part ordering, from the report to the supplier order form.",
+    "gate.t":"Protected area","gate.sub":"Enter the passphrase to open the claims platform.","gate.go":"Open",
+    "gate.bad":"Wrong passphrase.","gate.net":"Cannot connect. Check your network and try again.",
+    "tab.board":"Claims","tab.new":"New ticket","tab.parts":"Parts to order","tab.order":"Order form","tab.history":"Past orders",
+    "kpi.total":"Open claims","kpi.new":"To repair","kpi.order":"Parts to order","kpi.supplier":"At supplier","kpi.warranty":"Under warranty",
+    "filter.search":"Search — title, serial, technician, company…","filter.refresh":"Refresh",
+    "filter.allstatus":"All statuses","filter.allcountry":"All countries","filter.allproduct":"All products",
+    "f.title":"Ticket subject","f.desc":"Problem description","f.product":"Product","f.serial":"Serial number",
+    "f.install":"Installation date","f.claimdate":"Claim date","f.country":"Country","f.units":"Units impacted",
+    "f.tech":"Technician","f.mail":"E-mail","f.company":"Company","f.parts":"Parts needed",
+    "f.parts.search":"Find a part — BW ref or designation…","f.submit":"Create ticket",
+    "f.need.title":"The ticket subject is required.","f.saved":"Ticket %s created.","f.err":"Could not save: %s",
+    "war.yes":"Under warranty","war.no":"Out of warranty","war.unknown":"Warranty unknown",
+    "war.hint":"Warranty = less than 730 days between installation and claim.",
+    "col.code":"Ref.","col.title":"Subject","col.product":"Product","col.serial":"Serial","col.country":"Country",
+    "col.tech":"Technician","col.date":"Claim date","col.warranty":"Warranty","col.parts":"Parts",
+    "d.status":"Status","d.decision":"Decision","d.repair":"Repair note","d.repairdate":"Repair date",
+    "d.restock":"Restocking location","d.save":"Save","d.saved":"Saved.","d.parts":"Parts requested",
+    "d.addpart":"Add a part","d.ordered":"ordered","d.none":"No parts requested.",
+    "parts.sub":"Every part requested and not yet ordered, with its BE WTR internal reference. Supplier references and prices live in the order form.",
+    "parts.none":"No parts waiting to be ordered.",
+    "parts.qty":"Qty","parts.claims":"Related claims",
+    "order.gate.t":"Order form","order.gate.sub":"This area exposes supplier references and purchase prices. Enter the order passphrase.",
+    "order.sub":"One block per supplier. Tick what you are ordering, export the Excel workbook, then save the order — the related claims switch to “spare part ordered” automatically.",
+    "order.none":"Nothing to order right now.",
+    "order.xlsx":"Export to Excel","order.save":"Save order","order.by":"Order placed by",
+    "order.saved":"Order %s saved.","order.pick":"Select at least one line.",
+    "order.noref":"ref. to confirm","order.noprice":"price to confirm",
+    "o.ref":"Supplier ref.","o.internal":"Internal ref.","o.desig":"Designation","o.qty":"Qty",
+    "o.unit":"Unit price","o.total":"Total","o.claim":"Claim","o.sum":"Order total",
+    "h.none":"No order recorded yet.","h.on":"on","h.line":"line","h.lines":"lines",
+    "err.load":"Could not load: %s"
+  },
+  de:{
+    "t":"Claims & Ersatzteile","sub":"Rückläufer und Ersatzteilbestellung, von der Meldung bis zum Lieferantenbeleg.",
+    "gate.t":"Geschützter Bereich","gate.sub":"Passphrase eingeben, um die Claims-Plattform zu öffnen.","gate.go":"Öffnen",
+    "gate.bad":"Falsche Passphrase.","gate.net":"Keine Verbindung. Netzwerk prüfen und erneut versuchen.",
+    "tab.board":"Claims","tab.new":"Neues Ticket","tab.parts":"Zu bestellende Teile","tab.order":"Bestellbeleg","tab.history":"Frühere Bestellungen",
+    "kpi.total":"Offene Claims","kpi.new":"Zu reparieren","kpi.order":"Teile zu bestellen","kpi.supplier":"Beim Lieferanten","kpi.warranty":"In Garantie",
+    "filter.search":"Suchen — Titel, Seriennummer, Techniker, Firma…","filter.refresh":"Aktualisieren",
+    "filter.allstatus":"Alle Status","filter.allcountry":"Alle Länder","filter.allproduct":"Alle Produkte",
+    "f.title":"Betreff","f.desc":"Problembeschreibung","f.product":"Produkt","f.serial":"Seriennummer",
+    "f.install":"Installationsdatum","f.claimdate":"Claim-Datum","f.country":"Land","f.units":"Betroffene Einheiten",
+    "f.tech":"Techniker","f.mail":"E-Mail","f.company":"Firma","f.parts":"Benötigte Teile",
+    "f.parts.search":"Teil suchen — BW-Nr. oder Bezeichnung…","f.submit":"Ticket anlegen",
+    "f.need.title":"Der Betreff ist erforderlich.","f.saved":"Ticket %s angelegt.","f.err":"Speichern fehlgeschlagen: %s",
+    "war.yes":"In Garantie","war.no":"Außerhalb Garantie","war.unknown":"Garantie unbekannt",
+    "war.hint":"Garantie = weniger als 730 Tage zwischen Installation und Claim.",
+    "col.code":"Nr.","col.title":"Betreff","col.product":"Produkt","col.serial":"Seriennr.","col.country":"Land",
+    "col.tech":"Techniker","col.date":"Claim-Datum","col.warranty":"Garantie","col.parts":"Teile",
+    "d.status":"Status","d.decision":"Entscheidung","d.repair":"Reparaturnotiz","d.repairdate":"Reparaturdatum",
+    "d.restock":"Einlagerungsort","d.save":"Speichern","d.saved":"Gespeichert.","d.parts":"Angeforderte Teile",
+    "d.addpart":"Teil hinzufügen","d.ordered":"bestellt","d.none":"Keine Teile angefordert.",
+    "parts.sub":"Alle angeforderten und noch nicht bestellten Teile mit ihrer internen BE-WTR-Nummer. Lieferantennummern und Preise stehen im Bestellbeleg.",
+    "parts.none":"Keine Teile zur Bestellung offen.",
+    "parts.qty":"Menge","parts.claims":"Zugehörige Claims",
+    "order.gate.t":"Bestellbeleg","order.gate.sub":"Dieser Bereich zeigt Lieferantennummern und Einkaufspreise. Bestell-Passphrase eingeben.",
+    "order.sub":"Ein Block je Lieferant. Zeilen ankreuzen, Excel-Mappe exportieren, dann Bestellung speichern — die zugehörigen Claims wechseln automatisch auf „Ersatzteil bestellt“.",
+    "order.none":"Derzeit nichts zu bestellen.",
+    "order.xlsx":"Nach Excel exportieren","order.save":"Bestellung speichern","order.by":"Bestellt von",
+    "order.saved":"Bestellung %s gespeichert.","order.pick":"Mindestens eine Zeile auswählen.",
+    "order.noref":"Nr. zu bestätigen","order.noprice":"Preis zu bestätigen",
+    "o.ref":"Lieferantennr.","o.internal":"Interne Nr.","o.desig":"Bezeichnung","o.qty":"Menge",
+    "o.unit":"Einzelpreis","o.total":"Summe","o.claim":"Claim","o.sum":"Bestellsumme",
+    "h.none":"Noch keine Bestellung erfasst.","h.on":"am","h.line":"Zeile","h.lines":"Zeilen",
+    "err.load":"Laden fehlgeschlagen: %s"
+  }
+};
+function clPl(n){ return n === 1 ? clT("h.line") : clT("h.lines"); }
+function clT(k, a){
+  const d = CL_I18N[lang] || CL_I18N.fr;
+  let s = (d[k] !== undefined ? d[k] : (CL_I18N.fr[k] !== undefined ? CL_I18N.fr[k] : k));
+  return a === undefined ? s : s.replace("%s", a);
+}
+
+/* ------------------------------------------------------------- état */
+const clState = {
+  pass:"", orderPass:"", view:"board",
+  claims:[], parts:[], pending:[], orders:[],
+  newParts:[], loaded:false
+};
+
+/* ------------------------------------------------- appel des fonctions
+   Une seule porte d'entrée : rpc(). La phrase de passe voyage dans le
+   corps de la requête, jamais dans l'URL (pas de trace dans les logs). */
+async function clRpc(fn, body){
+  const r = await fetch(CLAIMS_URL + "/rest/v1/rpc/" + fn, {
+    method:"POST",
+    headers:{ "apikey":CLAIMS_KEY, "Authorization":"Bearer "+CLAIMS_KEY,
+              "Content-Type":"application/json" },
+    body: JSON.stringify(body || {})
+  });
+  const txt = await r.text();
+  let data = null;
+  try { data = txt ? JSON.parse(txt) : null; } catch(e){ data = txt; }
+  if(!r.ok){
+    const msg = (data && data.message) ? data.message : ("HTTP " + r.status);
+    throw new Error(msg);
+  }
+  return data;
+}
+
+/* --------------------------------------------------- écriture XLSX
+   Un classeur .xlsx est un zip de fichiers XML. On l'écrit ici à la
+   main, en « stored » (sans compression) : ça évite toute dépendance
+   externe, et le hub reste un fichier autonome. */
+function clCrc32(buf){
+  let c, tbl = clCrc32.tbl;
+  if(!tbl){
+    tbl = clCrc32.tbl = new Int32Array(256);
+    for(let n=0;n<256;n++){ c=n; for(let k=0;k<8;k++) c = c&1 ? 0xEDB88320 ^ (c>>>1) : c>>>1; tbl[n]=c; }
+  }
+  let crc = -1;
+  for(let i=0;i<buf.length;i++) crc = (crc>>>8) ^ tbl[(crc ^ buf[i]) & 0xFF];
+  return (crc ^ -1) >>> 0;
+}
+function clZip(files){
+  const enc = new TextEncoder(), parts = [], central = [];
+  let offset = 0;
+  const u16 = n => [n & 255, (n>>>8) & 255];
+  const u32 = n => [n & 255, (n>>>8) & 255, (n>>>16) & 255, (n>>>24) & 255];
+  files.forEach(f => {
+    const name = enc.encode(f.name), data = enc.encode(f.data), crc = clCrc32(data);
+    const local = [].concat([0x50,0x4b,0x03,0x04], u16(20), u16(0), u16(0), u16(0), u16(0),
+                            u32(crc), u32(data.length), u32(data.length), u16(name.length), u16(0));
+    parts.push(new Uint8Array(local), name, data);
+    central.push({ name, crc, len:data.length, offset });
+    offset += local.length + name.length + data.length;
+  });
+  const dir = [];
+  central.forEach(c => {
+    const h = [].concat([0x50,0x4b,0x01,0x02], u16(20), u16(20), u16(0), u16(0), u16(0), u16(0),
+                        u32(c.crc), u32(c.len), u32(c.len), u16(c.name.length),
+                        u16(0), u16(0), u16(0), u16(0), u32(0), u32(c.offset));
+    dir.push(new Uint8Array(h), c.name);
+  });
+  const dirBytes = dir.reduce((n,a)=>n+a.length, 0);
+  const end = new Uint8Array([].concat([0x50,0x4b,0x05,0x06], u16(0), u16(0),
+                              u16(central.length), u16(central.length),
+                              u32(dirBytes), u32(offset), u16(0)));
+  return new Blob(parts.concat(dir, [end]), { type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+}
+function clXmlEsc(v){
+  return String(v == null ? "" : v)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&apos;")
+    // Excel rejette les caractères de contrôle dans le XML
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g,"");
+}
+function clColName(i){
+  let s = "";
+  for(i += 1; i > 0; i = Math.floor((i - 1) / 26)) s = String.fromCharCode(65 + (i - 1) % 26) + s;
+  return s;
+}
+/** rows : tableau de tableaux. Un nombre part en cellule numérique, le reste en texte. */
+function clSheetXml(rows){
+  const body = rows.map((row, r) => {
+    const cells = row.map((v, c) => {
+      const ref = clColName(c) + (r + 1);
+      if(typeof v === "number" && isFinite(v)) return '<c r="'+ref+'"><v>'+v+'</v></c>';
+      const s = clXmlEsc(v);
+      if(s === "") return "";
+      return '<c r="'+ref+'" t="inlineStr"><is><t xml:space="preserve">'+s+'</t></is></c>';
+    }).join("");
+    return '<row r="'+(r+1)+'">'+cells+'</row>';
+  }).join("");
+  const widths = '<cols><col min="1" max="1" width="16"/><col min="2" max="2" width="14"/>'
+               + '<col min="3" max="3" width="52"/><col min="4" max="4" width="8"/>'
+               + '<col min="5" max="6" width="14"/><col min="7" max="7" width="14"/></cols>';
+  return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+       + '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+       + widths + '<sheetData>' + body + '</sheetData></worksheet>';
+}
+function clXlsx(sheetName, rows){
+  const safe = String(sheetName).replace(/[\\\/\?\*\[\]:]/g,"-").slice(0,31) || "Feuille1";
+  return clZip([
+    { name:"[Content_Types].xml", data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+      + '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+      + '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
+      + '<Default Extension="xml" ContentType="application/xml"/>'
+      + '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'
+      + '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'
+      + '</Types>' },
+    { name:"_rels/.rels", data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+      + '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+      + '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>'
+      + '</Relationships>' },
+    { name:"xl/workbook.xml", data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+      + '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" '
+      + 'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+      + '<sheets><sheet name="'+clXmlEsc(safe)+'" sheetId="1" r:id="rId1"/></sheets></workbook>' },
+    { name:"xl/_rels/workbook.xml.rels", data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+      + '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+      + '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>'
+      + '</Relationships>' },
+    { name:"xl/worksheets/sheet1.xml", data: clSheetXml(rows) }
+  ]);
+}
+function clDownload(blob, filename){
+  const a = document.createElement("a"), url = URL.createObjectURL(blob);
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 4000);
+}
+
+/* ------------------------------------------------------- présentation */
+const CL_STATUS = [
+  { k:"New (to repair)",       c:"#c4c4c4" },
+  { k:"Spare part to order",   c:"#df2f4a" },
+  { k:"Spare part ordered",    c:"#579bfc" },
+  { k:"In progress (repair)",  c:"#fdab3d" },
+  { k:"At supplier",           c:"#225091" },
+  { k:"Need to go back to Switzerland", c:"#007eb5" },
+  { k:"Stuck",                 c:"#ff6d3b" },
+  { k:"Repaired and restocked",c:"#00c875" },
+  { k:"Spare Parts (Bin)",     c:"#7e3b8a" }
+];
+const CL_DECISIONS = ["TBD (to be defined)","Spare parts used","Set up modification","Box repaired by supplier",
+  "Back to the supplier","Machine sent to BE WTR CH","Credit note","Dismantling","R&D","Open question"];
+const CL_RESTOCK = ["(CH) GENEVE","(CH) LAUSANNE","(CH) ZURICH","(CH) Central stock","(BIN) For spare parts"];
+const CL_COUNTRIES = ["Switzerland","France","UK","Spain","Sweden","Denmark","Finland","Singapore","Canada",
+  "United Arab Emirates"];
+
+function clStatusColor(s){
+  const f = CL_STATUS.find(x => x.k === s);
+  return f ? f.c : "#c4c4c4";
+}
+function clEsc(v){
+  return String(v == null ? "" : v)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+function clDate(d){
+  if(!d) return "—";
+  const p = String(d).slice(0,10).split("-");
+  return p.length === 3 ? p[2]+"."+p[1]+"."+p[0] : d;
+}
+function clMoney(n, cur){
+  if(n == null || n === "") return "—";
+  return Number(n).toLocaleString(lang === "en" ? "en-GB" : "fr-CH",
+    { minimumFractionDigits:2, maximumFractionDigits:2 }) + (cur ? " " + cur : "");
+}
+/** Prix réellement payé : catalogue moins la remise contractuelle. */
+function clNet(p){
+  if(p.price == null) return null;
+  return Math.round(Number(p.price) * (1 - Number(p.discount || 0)) * 100) / 100;
+}
+
+/* ------------------------------------------------------------ chargement */
+async function clLoad(){
+  const [claims, parts] = await Promise.all([
+    clRpc("claims_list",   { p_pass: clState.pass }),
+    clRpc("parts_catalog", { p_pass: clState.orderPass || clState.pass })
+  ]);
+  clState.claims = claims || [];
+  clState.parts  = parts  || [];
+  clState.loaded = true;
+}
+async function clLoadOrder(){
+  const [pending, orders] = await Promise.all([
+    clRpc("order_pending", { p_pass: clState.orderPass }),
+    clRpc("orders_list",   { p_pass: clState.orderPass })
+  ]);
+  clState.pending = pending || [];
+  clState.orders  = orders  || [];
+}
+
+/* ------------------------------------------------------------- KPI + table */
+function clRenderKpis(){
+  const c = clState.claims;
+  const partsWaiting = c.reduce((n, x) =>
+    n + (x.parts || []).filter(p => !p.ordered).reduce((m, p) => m + (p.qty || 0), 0), 0);
+  const kpis = [
+    { n:c.length, l:clT("kpi.total") },
+    { n:c.filter(x => x.status === "New (to repair)").length, l:clT("kpi.new") },
+    { n:partsWaiting, l:clT("kpi.order") },
+    { n:c.filter(x => x.status === "At supplier").length, l:clT("kpi.supplier") },
+    { n:c.filter(x => x.under_warranty === true).length, l:clT("kpi.warranty") }
+  ];
+  document.getElementById("clKpis").innerHTML = kpis.map(k =>
+    '<div class="cl-kpi"><div class="n">'+k.n+'</div><div class="l">'+clEsc(k.l)+'</div></div>').join("");
+  document.getElementById("clCountBoard").textContent = c.length;
+  document.getElementById("clCountParts").textContent = partsWaiting;
+}
+
+function clFiltered(){
+  const q  = (document.getElementById("clSearch").value || "").trim().toLowerCase();
+  const st = document.getElementById("clFStatus").value;
+  const co = document.getElementById("clFCountry").value;
+  const pr = document.getElementById("clFProduct").value;
+  return clState.claims.filter(c => {
+    if(st && c.status  !== st) return false;
+    if(co && c.country !== co) return false;
+    if(pr && c.product !== pr) return false;
+    if(!q) return true;
+    return [c.code, c.title, c.description, c.serial_number, c.technician_name, c.company, c.product]
+      .some(v => v && String(v).toLowerCase().includes(q));
+  });
+}
+
+function clRenderBoard(){
+  const rows = clFiltered();
+  const host = document.getElementById("clBoard");
+  if(!rows.length){ host.innerHTML = '<div class="cl-empty">—</div>'; return; }
+  // groupé par statut, comme les groupes du board Monday
+  const order = CL_STATUS.map(s => s.k);
+  const groups = {};
+  rows.forEach(c => (groups[c.status] = groups[c.status] || []).push(c));
+  const keys = Object.keys(groups).sort((a,b) => {
+    const ia = order.indexOf(a), ib = order.indexOf(b);
+    return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+  });
+  host.innerHTML = keys.map(k => {
+    const list = groups[k];
+    const body = list.map(c => {
+      const waiting = (c.parts || []).filter(p => !p.ordered).length;
+      const war = c.under_warranty === true
+        ? '<span class="cl-badge war">'+clT("war.yes")+'</span>'
+        : (c.under_warranty === false
+            ? '<span class="cl-badge nowar">'+clT("war.no")+'</span>'
+            : '<span class="muted small">—</span>');
+      return '<tr data-id="'+c.id+'">'
+        + '<td class="code">'+clEsc(c.code)+'</td>'
+        + '<td class="ttl">'+clEsc(c.title)+'</td>'
+        + '<td>'+clEsc(c.product || "—")+'</td>'
+        + '<td class="code">'+clEsc(c.serial_number || "—")+'</td>'
+        + '<td>'+clEsc(c.country || "—")+'</td>'
+        + '<td>'+clEsc(c.technician_name || "—")+'</td>'
+        + '<td class="code">'+clDate(c.claim_date)+'</td>'
+        + '<td>'+war+'</td>'
+        + '<td>'+(waiting ? '<span class="cl-badge parts">'+waiting+'</span>' : '<span class="muted small">—</span>')+'</td>'
+        + '</tr>';
+    }).join("");
+    return '<div class="cl-group">'
+      + '<h4><span class="sw" style="background:'+clStatusColor(k)+'"></span>'+clEsc(k)
+      + ' <span class="c">· '+list.length+'</span></h4>'
+      + '<div class="cl-wrap-x"><table class="cl-table"><thead><tr>'
+      + ['col.code','col.title','col.product','col.serial','col.country','col.tech','col.date','col.warranty','col.parts']
+          .map(x => '<th>'+clEsc(clT(x))+'</th>').join("")
+      + '</tr></thead><tbody>'+body+'</tbody></table></div></div>';
+  }).join("");
+}
+
+/* -------------------------------------------------------- panneau détail */
+function clOpenDetail(id){
+  const c = clState.claims.find(x => x.id === id);
+  if(!c) return;
+  const opt = (list, cur) => list.map(v =>
+    '<option value="'+clEsc(v)+'"'+(v === cur ? " selected" : "")+'>'+clEsc(v)+'</option>').join("");
+  const parts = (c.parts || []).length
+    ? '<div class="cl-chosen">' + c.parts.map(p =>
+        '<div class="row"><span class="r">'+clEsc(p.ref || "—")+'</span>'
+        + '<span class="n">'+clEsc(p.name || p.free_text || "")+'</span>'
+        + '<span class="muted small">×'+p.qty+'</span>'
+        + (p.ordered
+            ? '<span class="cl-badge parts">'+clT("d.ordered")+'</span>'
+            : '<button class="del" type="button" data-del="'+p.id+'" title="×">×</button>')
+        + '</div>').join("") + '</div>'
+    : '<p class="muted small">'+clT("d.none")+'</p>';
+
+  document.getElementById("clDetailBody").innerHTML =
+      '<button class="x" type="button" id="clClose">×</button>'
+    + '<h3>'+clEsc(c.title)+'</h3>'
+    + '<p class="muted small code">'+clEsc(c.code)+'</p>'
+    + (c.description ? '<div class="card" style="white-space:pre-wrap;font-size:13.5px">'+clEsc(c.description)+'</div>' : '')
+    + '<dl class="cl-kv">'
+    + '<dt>'+clT("f.product")+'</dt><dd>'+clEsc(c.product || "—")+'</dd>'
+    + '<dt>'+clT("f.serial")+'</dt><dd>'+clEsc(c.serial_number || "—")+'</dd>'
+    + '<dt>'+clT("f.country")+'</dt><dd>'+clEsc(c.country || "—")+'</dd>'
+    + '<dt>'+clT("f.tech")+'</dt><dd>'+clEsc(c.technician_name || "—")
+        + (c.technician_email ? ' · <a href="mailto:'+clEsc(c.technician_email)+'">'+clEsc(c.technician_email)+'</a>' : '')+'</dd>'
+    + '<dt>'+clT("f.company")+'</dt><dd>'+clEsc(c.company || "—")+'</dd>'
+    + '<dt>'+clT("f.install")+'</dt><dd>'+clDate(c.install_date)+'</dd>'
+    + '<dt>'+clT("f.claimdate")+'</dt><dd>'+clDate(c.claim_date)+'</dd>'
+    + '<dt>'+clT("f.units")+'</dt><dd>'+(c.units_impacted == null ? "—" : c.units_impacted)+'</dd>'
+    + '<dt>'+clT("col.warranty")+'</dt><dd>'
+        + (c.under_warranty === true ? '<span class="cl-badge war">'+clT("war.yes")+'</span>'
+          : c.under_warranty === false ? '<span class="cl-badge nowar">'+clT("war.no")+'</span>'
+          : '<span class="muted">'+clT("war.unknown")+'</span>')+'</dd>'
+    + '</dl>'
+    + '<h4>'+clT("d.parts")+'</h4>' + parts
+    + '<div class="cl-picker" style="margin-top:11px">'
+    +   '<input class="cl-in" id="clDetailPartQ" placeholder="'+clEsc(clT("d.addpart"))+'">'
+    +   '<div class="res" id="clDetailPartRes"></div>'
+    + '</div>'
+    + '<form class="cl-form" id="clDetailForm" style="margin-top:22px">'
+    +   '<div class="two">'
+    +     '<div><label class="cl-lbl">'+clT("d.status")+'</label>'
+    +       '<select class="cl-in" name="status">'+opt(CL_STATUS.map(s=>s.k), c.status)+'</select></div>'
+    +     '<div><label class="cl-lbl">'+clT("d.decision")+'</label>'
+    +       '<select class="cl-in" name="decision">'+opt(CL_DECISIONS, c.decision)+'</select></div>'
+    +   '</div>'
+    +   '<div class="two">'
+    +     '<div><label class="cl-lbl">'+clT("d.repairdate")+'</label>'
+    +       '<input class="cl-in" type="date" name="repair_date" value="'+clEsc((c.repair_date||"").slice(0,10))+'"></div>'
+    +     '<div><label class="cl-lbl">'+clT("d.restock")+'</label>'
+    +       '<select class="cl-in" name="restock_location"><option value=""></option>'
+    +       opt(CL_RESTOCK, c.restock_location)+'</select></div>'
+    +   '</div>'
+    +   '<div><label class="cl-lbl">'+clT("d.repair")+'</label>'
+    +     '<textarea class="cl-in" name="repair_notes" rows="3">'+clEsc(c.repair_notes || "")+'</textarea></div>'
+    +   '<div><button class="cl-btn" type="submit">'+clT("d.save")+'</button> '
+    +     '<span class="cl-ok" id="clDetailMsg"></span></div>'
+    + '</form>';
+
+  const box = document.getElementById("clDetail");
+  box.classList.add("open");
+  document.getElementById("clClose").onclick = () => box.classList.remove("open");
+
+  // ajout d'une pièce depuis le détail
+  const q = document.getElementById("clDetailPartQ"), res = document.getElementById("clDetailPartRes");
+  q.oninput = () => clPartResults(q.value, res, async p => {
+    await clRpc("claim_add_part", { p_pass: clState.pass, p_claim_id: c.id, p_ref: p.ref, p_qty: 1 });
+    q.value = ""; res.innerHTML = "";
+    await clRefreshAll(); clOpenDetail(id);
+  }, c.product);
+
+  // retrait d'une pièce pas encore commandée
+  document.getElementById("clDetailBody").querySelectorAll("[data-del]").forEach(b => {
+    b.onclick = async () => {
+      await clRpc("claim_remove_part", { p_pass: clState.pass, p_id: Number(b.dataset.del) });
+      await clRefreshAll(); clOpenDetail(id);
+    };
+  });
+
+  document.getElementById("clDetailForm").onsubmit = async e => {
+    e.preventDefault();
+    const f = e.target, msg = document.getElementById("clDetailMsg");
+    const payload = {};
+    ["status","decision","repair_date","restock_location","repair_notes"].forEach(k => {
+      const v = f.elements[k].value.trim(); if(v) payload[k] = v;
+    });
+    try {
+      await clRpc("claim_update", { p_pass: clState.pass, p_id: c.id, p: payload });
+      msg.textContent = clT("d.saved");
+      await clRefreshAll();
+    } catch(err){ msg.textContent = clT("f.err", err.message); }
+  };
+}
+
+/* --------------------------------------------------- sélecteur de pièces */
+function clPartResults(q, host, onPick, product){
+  q = (q || "").trim().toLowerCase();
+  if(q.length < 2){ host.innerHTML = ""; return; }
+  let list = clState.parts.filter(p =>
+    p.ref.toLowerCase().includes(q) || (p.name || "").toLowerCase().includes(q));
+  // les pièces de la machine du ticket remontent en tête
+  if(product){
+    const m = String(product).replace(/^BW-\d+\s*/, "").trim().toUpperCase();
+    list.sort((a,b) => {
+      const am = (a.machines||[]).some(x => x.toUpperCase() === m) ? 0 : 1;
+      const bm = (b.machines||[]).some(x => x.toUpperCase() === m) ? 0 : 1;
+      return am - bm;
+    });
+  }
+  host.innerHTML = list.slice(0, 40).map((p, i) =>
+    '<button type="button" data-i="'+i+'"><span class="r">'+clEsc(p.ref)+'</span>'
+    + '<span>'+clEsc(p.name)+'</span>'
+    + '<span class="m">'+clEsc((p.machines||[]).slice(0,2).join(", "))+'</span></button>').join("");
+  const shown = list.slice(0, 40);
+  host.querySelectorAll("button").forEach(b => {
+    b.onclick = () => onPick(shown[Number(b.dataset.i)]);
+  });
+}
+
+/* ---------------------------------------------------- nouveau ticket */
+function clRenderNewForm(){
+  const prodSel = document.getElementById("clnProduct");
+  if(!prodSel.options.length){
+    const machines = Array.from(new Set(clState.parts.flatMap(p => p.machines || []))).sort();
+    prodSel.innerHTML = '<option value=""></option>'
+      + machines.map(m => '<option value="'+clEsc(m)+'">'+clEsc(m)+'</option>').join("");
+    document.getElementById("clnCountry").innerHTML = '<option value=""></option>'
+      + CL_COUNTRIES.map(c => '<option value="'+clEsc(c)+'">'+clEsc(c)+'</option>').join("");
+    document.getElementById("clnClaim").value = new Date().toISOString().slice(0,10);
+  }
+  clRenderNewParts();
+  clUpdateWarrantyHint();
+}
+function clRenderNewParts(){
+  const host = document.getElementById("clnPartSel");
+  host.innerHTML = clState.newParts.map((p, i) =>
+    '<div class="row"><span class="r">'+clEsc(p.ref)+'</span>'
+    + '<span class="n">'+clEsc(p.name)+'</span>'
+    + '<input type="number" min="1" step="1" value="'+p.qty+'" data-q="'+i+'">'
+    + '<button class="del" type="button" data-x="'+i+'">×</button></div>').join("");
+  host.querySelectorAll("[data-q]").forEach(inp => {
+    inp.onchange = () => {
+      clState.newParts[Number(inp.dataset.q)].qty = Math.max(1, parseInt(inp.value, 10) || 1);
+      clRenderNewParts();
+    };
+  });
+  host.querySelectorAll("[data-x]").forEach(b => {
+    b.onclick = () => { clState.newParts.splice(Number(b.dataset.x), 1); clRenderNewParts(); };
+  });
+}
+/** Reproduit la formule Monday : < 730 jours entre installation et claim. */
+function clUpdateWarrantyHint(){
+  const i = document.getElementById("clnInstall").value;
+  const c = document.getElementById("clnClaim").value;
+  const host = document.getElementById("clnWarranty");
+  if(!i || !c){ host.innerHTML = ""; return; }
+  const days = (new Date(c) - new Date(i)) / 86400000;
+  host.innerHTML = days < 730
+    ? '<span class="cl-badge war">'+clT("war.yes")+'</span> <span class="muted small">'+clT("war.hint")+'</span>'
+    : '<span class="cl-badge nowar">'+clT("war.no")+'</span> <span class="muted small">'+clT("war.hint")+'</span>';
+}
+
+/* ------------------------------------------- pièces à commander (interne) */
+function clRenderParts(){
+  const agg = {};
+  clState.claims.forEach(c => (c.parts || []).forEach(p => {
+    if(p.ordered) return;
+    const key = p.ref || ("free:" + (p.free_text || ""));
+    const e = agg[key] = agg[key] || { ref:p.ref, name:p.name || p.free_text, qty:0, claims:[] };
+    e.qty += p.qty || 0;
+    if(!e.claims.includes(c.code)) e.claims.push(c.code);
+  }));
+  const list = Object.values(agg).sort((a,b) => String(a.ref||"").localeCompare(String(b.ref||"")));
+  const host = document.getElementById("clParts");
+  if(!list.length){ host.innerHTML = '<div class="cl-empty">'+clT("parts.none")+'</div>'; return; }
+  host.innerHTML = '<div class="cl-wrap-x"><table class="cl-table"><thead><tr>'
+    + '<th>'+clT("o.internal")+'</th><th>'+clT("o.desig")+'</th>'
+    + '<th>'+clT("parts.qty")+'</th><th>'+clT("parts.claims")+'</th></tr></thead><tbody>'
+    + list.map(e => '<tr style="cursor:default">'
+        + '<td class="code" style="color:var(--orange);font-weight:700">'+clEsc(e.ref || "—")+'</td>'
+        + '<td>'+clEsc(e.name || "—")+'</td>'
+        + '<td><b>'+e.qty+'</b></td>'
+        + '<td class="code">'+clEsc(e.claims.join(", "))+'</td></tr>').join("")
+    + '</tbody></table></div>';
+}
+
+/* ------------------------------------------ bulletin de commande (order) */
+function clGroupPending(){
+  const by = {};
+  clState.pending.forEach(l => (by[l.supplier] = by[l.supplier] || []).push(l));
+  return by;
+}
+function clRenderOrder(){
+  const by = clGroupPending(), sups = Object.keys(by).sort();
+  const host = document.getElementById("clOrder");
+  if(!sups.length){ host.innerHTML = '<div class="cl-empty">'+clT("order.none")+'</div>'; return; }
+
+  host.innerHTML = sups.map(s => {
+    const lines = by[s];
+    const cur = (lines.find(l => l.currency) || {}).currency || "";
+    const total = lines.reduce((n, l) => {
+      const u = clNet(l); return n + (u == null ? 0 : u * l.qty);
+    }, 0);
+    const noRef = lines.filter(l => !l.supplier_ref).length;
+    const body = lines.map(l => {
+      const u = clNet(l);
+      return '<tr style="cursor:default">'
+        + '<td><input type="checkbox" checked data-line="'+l.line_id+'" data-sup="'+clEsc(s)+'"></td>'
+        + '<td class="code">'+(l.supplier_ref
+            ? '<b>'+clEsc(l.supplier_ref)+'</b>'
+            : '<span class="cl-noref">'+clT("order.noref")+'</span>')+'</td>'
+        + '<td class="code" style="color:var(--orange)">'+clEsc(l.part_ref || "—")+'</td>'
+        + '<td>'+clEsc(l.name || l.free_text || "—")
+            + (l.supplier_desc ? '<br><span class="muted small">'+clEsc(l.supplier_desc)+'</span>' : '')+'</td>'
+        + '<td><b>'+l.qty+'</b></td>'
+        + '<td>'+(u == null ? '<span class="cl-noref">'+clT("order.noprice")+'</span>' : clMoney(u, cur))+'</td>'
+        + '<td>'+(u == null ? "—" : clMoney(u * l.qty, cur))+'</td>'
+        + '<td class="code">'+clEsc(l.claim_code)+'</td></tr>';
+    }).join("");
+    return '<div class="cl-sup" data-sup="'+clEsc(s)+'">'
+      + '<header><b>'+clEsc(s)+'</b>'
+      +   '<span class="muted small">'+lines.length+' '+clPl(lines.length)+'</span>'
+      +   (noRef ? '<span class="cl-noref">'+noRef+' × '+clT("order.noref")+'</span>' : '')
+      +   '<span class="tot">'+clMoney(total, cur)+'</span>'
+      +   '<span class="acts">'
+      +     '<button class="cl-btn ghost sm" data-xlsx="'+clEsc(s)+'">'+clT("order.xlsx")+'</button>'
+      +     '<button class="cl-btn sm" data-save="'+clEsc(s)+'">'+clT("order.save")+'</button>'
+      +   '</span></header>'
+      + '<div class="cl-wrap-x"><table class="cl-table"><thead><tr><th></th>'
+      +   '<th>'+clT("o.ref")+'</th><th>'+clT("o.internal")+'</th><th>'+clT("o.desig")+'</th>'
+      +   '<th>'+clT("o.qty")+'</th><th>'+clT("o.unit")+'</th><th>'+clT("o.total")+'</th>'
+      +   '<th>'+clT("o.claim")+'</th></tr></thead><tbody>'+body+'</tbody></table></div>'
+      + '<div style="padding:11px 16px"><span class="cl-ok" data-msg="'+clEsc(s)+'"></span></div></div>';
+  }).join("");
+
+  host.querySelectorAll("[data-xlsx]").forEach(b => b.onclick = () => clExportSupplier(b.dataset.xlsx));
+  host.querySelectorAll("[data-save]").forEach(b => b.onclick = () => clSaveOrder(b.dataset.save, b));
+}
+
+function clSelectedLines(sup){
+  return Array.from(document.querySelectorAll('input[data-sup="'+CSS.escape(sup)+'"]:checked'))
+              .map(i => Number(i.dataset.line));
+}
+
+/** Un classeur par fournisseur, prêt à envoyer. */
+function clExportSupplier(sup){
+  const ids = clSelectedLines(sup);
+  const lines = clGroupPending()[sup].filter(l => ids.includes(l.line_id));
+  if(!lines.length){ alert(clT("order.pick")); return; }
+  const cur = (lines.find(l => l.currency) || {}).currency || "";
+  const today = new Date().toISOString().slice(0,10);
+
+  const rows = [
+    ["BE WTR — " + clT("tab.order")],
+    [clT("h.on"), today],
+    ["", sup],
+    [],
+    [clT("o.ref"), clT("o.internal"), clT("o.desig"), clT("o.qty"),
+     clT("o.unit") + (cur ? " ("+cur+")" : ""), clT("o.total") + (cur ? " ("+cur+")" : ""), clT("o.claim")]
+  ];
+  let total = 0;
+  lines.forEach(l => {
+    const u = clNet(l);
+    if(u != null) total += u * l.qty;
+    rows.push([
+      l.supplier_ref || clT("order.noref"),
+      l.part_ref || "",
+      l.supplier_desc || l.name || l.free_text || "",
+      l.qty,
+      u == null ? clT("order.noprice") : u,
+      u == null ? "" : Math.round(u * l.qty * 100) / 100,
+      l.claim_code
+    ]);
+  });
+  rows.push([]);
+  rows.push(["", "", "", "", clT("o.sum") + (cur ? " ("+cur+")" : ""), Math.round(total * 100) / 100]);
+
+  const safe = sup.replace(/[^A-Za-z0-9&_-]+/g, "_");
+  clDownload(clXlsx(sup, rows), "BEWTR_commande_" + safe + "_" + today + ".xlsx");
+}
+
+async function clSaveOrder(sup, btn){
+  const ids = clSelectedLines(sup);
+  const msg = document.querySelector('[data-msg="'+CSS.escape(sup)+'"]');
+  if(!ids.length){ msg.textContent = clT("order.pick"); return; }
+  btn.disabled = true;
+  try {
+    const by = (localStorage.getItem("bewtr_order_by") || "").trim()
+            || (prompt(clT("order.by")) || "").trim();
+    if(by) localStorage.setItem("bewtr_order_by", by);
+    const o = await clRpc("order_create",
+      { p_pass: clState.orderPass, p_supplier: sup, p_line_ids: ids, p_by: by || null });
+    const code = Array.isArray(o) ? (o[0] || {}).code : (o || {}).code;
+    msg.textContent = clT("order.saved", code || "");
+    await clRefreshAll(); await clLoadOrder();
+    clRenderOrder(); clRenderHistory();
+  } catch(err){
+    msg.textContent = clT("f.err", err.message);
+  } finally { btn.disabled = false; }
+}
+
+function clRenderHistory(){
+  const host = document.getElementById("clHistory");
+  if(!clState.orders.length){ host.innerHTML = '<div class="cl-empty">'+clT("h.none")+'</div>'; return; }
+  host.innerHTML = clState.orders.map(o =>
+    '<div class="cl-sup"><header><b>'+clEsc(o.code)+'</b>'
+    + '<span class="muted small">'+clEsc(o.supplier)+' · '+clDate(o.created_at)
+    + ((o.lines || []).length ? ' · '+o.lines.length+' '+clPl(o.lines.length) : '')
+    + (o.created_by ? ' · '+clEsc(o.created_by) : '')+'</span>'
+    + '<span class="tot">'+clMoney(o.total, o.currency)+'</span></header>'
+    + '<div class="cl-wrap-x"><table class="cl-table"><thead><tr>'
+    +   '<th>'+clT("o.ref")+'</th><th>'+clT("o.internal")+'</th><th>'+clT("o.desig")+'</th>'
+    +   '<th>'+clT("o.qty")+'</th><th>'+clT("o.total")+'</th></tr></thead><tbody>'
+    + (o.lines || []).map(l => '<tr style="cursor:default">'
+        + '<td class="code"><b>'+clEsc(l.supplier_ref || "—")+'</b></td>'
+        + '<td class="code" style="color:var(--orange)">'+clEsc(l.part_ref || "—")+'</td>'
+        + '<td>'+clEsc(l.designation || "—")+'</td><td>'+l.qty+'</td>'
+        + '<td>'+clMoney(l.line_total, o.currency)+'</td></tr>').join("")
+    + '</tbody></table></div></div>').join("");
+}
+
+/* --------------------------------------------------------- orchestration */
+async function clRefreshAll(){
+  await clLoad();
+  clRenderKpis(); clRenderBoard(); clRenderParts();
+  clFillFilters();
+}
+function clFillFilters(){
+  const keep = (sel, vals, allLabel) => {
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">'+clEsc(allLabel)+'</option>'
+      + vals.map(v => '<option value="'+clEsc(v)+'">'+clEsc(v)+'</option>').join("");
+    if(vals.includes(cur)) sel.value = cur;
+  };
+  const uniq = k => Array.from(new Set(clState.claims.map(c => c[k]).filter(Boolean))).sort();
+  keep(document.getElementById("clFStatus"),  uniq("status"),  clT("filter.allstatus"));
+  keep(document.getElementById("clFCountry"), uniq("country"), clT("filter.allcountry"));
+  keep(document.getElementById("clFProduct"), uniq("product"), clT("filter.allproduct"));
+}
+
+function clApplyI18n(){
+  document.querySelectorAll("#claims [data-cl-i18n]").forEach(el => {
+    el.textContent = clT(el.getAttribute("data-cl-i18n"));
+  });
+  document.querySelectorAll("#claims [data-cl-ph]").forEach(el => {
+    el.placeholder = clT(el.getAttribute("data-cl-ph"));
+  });
+}
+
+function clShowView(v){
+  clState.view = v;
+  document.querySelectorAll("#clTabs button").forEach(b => b.classList.toggle("on", b.dataset.v === v));
+  const map = { board:"clViewBoard", new:"clViewNew", parts:"clViewParts",
+                order:"clViewOrder", history:"clViewHistory" };
+  Object.keys(map).forEach(k => { document.getElementById(map[k]).hidden = (k !== v); });
+  if(v === "new")   clRenderNewForm();
+  if(v === "parts") clRenderParts();
+  if(v === "history"){
+    if(clState.orderPass) clRenderHistory();
+    else document.getElementById("clHistory").innerHTML =
+      '<div class="cl-empty">'+clT("order.gate.sub")+'</div>';
+  }
+}
+
+function clInit(){
+  clApplyI18n();
+
+  // ---- porte d'entrée du niveau claims
+  document.getElementById("clGateForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const err = document.getElementById("clGateErr");
+    const pass = document.getElementById("clPass").value;
+    err.innerHTML = '<span class="cl-spin"></span>';
+    try {
+      const scope = await clRpc("hub_auth", { p_pass: pass });
+      if(!scope){ err.textContent = clT("gate.bad"); return; }
+      clState.pass = pass;
+      if(scope === "order") clState.orderPass = pass;
+      err.textContent = "";
+      document.getElementById("clGate").hidden = true;
+      document.getElementById("clApp").hidden = false;
+      clRevealNav();
+      await clRefreshAll();
+      clShowView("board");
+    } catch(ex){ err.textContent = clT("gate.net"); }
+  });
+
+  // ---- porte d'entrée du niveau commande
+  document.getElementById("clOrderGateForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const err = document.getElementById("clOrderErr");
+    const pass = document.getElementById("clOrderPass").value;
+    err.innerHTML = '<span class="cl-spin"></span>';
+    try {
+      const scope = await clRpc("hub_auth", { p_pass: pass });
+      if(scope !== "order"){ err.textContent = clT("gate.bad"); return; }
+      clState.orderPass = pass;
+      err.textContent = "";
+      document.getElementById("clOrderGate").hidden = true;
+      document.getElementById("clOrderApp").hidden = false;
+      await clLoad();                 // recharge le catalogue, prix compris
+      await clLoadOrder();
+      clRenderOrder(); clRenderHistory();
+    } catch(ex){ err.textContent = clT("gate.net"); }
+  });
+
+  document.getElementById("clTabs").addEventListener("click", e => {
+    const b = e.target.closest("button[data-v]"); if(b) clShowView(b.dataset.v);
+  });
+  document.getElementById("clRefresh").addEventListener("click", clRefreshAll);
+  ["clSearch","clFStatus","clFCountry","clFProduct"].forEach(id => {
+    document.getElementById(id).addEventListener("input", clRenderBoard);
+  });
+
+  document.getElementById("clBoard").addEventListener("click", e => {
+    const tr = e.target.closest("tr[data-id]"); if(tr) clOpenDetail(Number(tr.dataset.id));
+  });
+  document.getElementById("clDetail").addEventListener("click", e => {
+    if(e.target.id === "clDetail") e.currentTarget.classList.remove("open");
+  });
+
+  // ---- sélecteur de pièces du formulaire
+  const q = document.getElementById("clnPartQ"), res = document.getElementById("clnPartRes");
+  q.addEventListener("input", () => clPartResults(q.value, res, p => {
+    const has = clState.newParts.find(x => x.ref === p.ref);
+    if(has) has.qty += 1; else clState.newParts.push({ ref:p.ref, name:p.name, qty:1 });
+    q.value = ""; res.innerHTML = ""; clRenderNewParts();
+  }, document.getElementById("clnProduct").value));
+
+  ["clnInstall","clnClaim"].forEach(id =>
+    document.getElementById(id).addEventListener("change", clUpdateWarrantyHint));
+
+  // ---- création d'un ticket
+  document.getElementById("clNewForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const msg = document.getElementById("clnMsg"), btn = document.getElementById("clnSubmit");
+    const val = id => document.getElementById(id).value.trim();
+    if(!val("clnTitle")){ msg.textContent = clT("f.need.title"); return; }
+    btn.disabled = true; msg.innerHTML = '<span class="cl-spin"></span>';
+    try {
+      const r = await clRpc("claim_create", { p_pass: clState.pass, p:{
+        title: val("clnTitle"), description: val("clnDesc"),
+        technician_name: val("clnTech"), technician_email: val("clnMail"),
+        company: val("clnCompany"), country: val("clnCountry"),
+        product: val("clnProduct"), serial_number: val("clnSerial"),
+        install_date: val("clnInstall"), claim_date: val("clnClaim"),
+        units_impacted: val("clnUnits"),
+        status: clState.newParts.length ? "Spare part to order" : "New (to repair)",
+        parts: clState.newParts.map(p => ({ ref:p.ref, qty:p.qty }))
+      }});
+      const code = Array.isArray(r) ? (r[0] || {}).code : (r || {}).code;
+      msg.textContent = clT("f.saved", code || "");
+      e.target.reset();
+      clState.newParts = [];
+      document.getElementById("clnClaim").value = new Date().toISOString().slice(0,10);
+      clRenderNewParts(); clUpdateWarrantyHint();
+      await clRefreshAll();
+    } catch(err){ msg.textContent = clT("f.err", err.message); }
+    finally { btn.disabled = false; }
+  });
+}
+
+/** L'onglet reste hors du menu tant que la phrase n'a pas été saisie. */
+function clRevealNav(){
+  const a = document.querySelector('#nav a[href="#claims"]');
+  if(a) a.hidden = false;
+}
+
+clInit();
+
 </script>
 </body>
 </html>

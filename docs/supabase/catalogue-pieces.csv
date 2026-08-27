@@ -1,0 +1,295 @@
+sku_bw,designation,machines,fournisseur,ref_fournisseur,designation_fournisseur,prix_catalogue,devise,remise
+BW-0012,AiR System,AQTiV COMBI; AQTiV ONE,BE WTR,BW-0012,,,,
+BW-0158,Flow regulator,BOX 80 I; BOX 120 I,,,,,,
+BW-0159,PRO1 - PCB Control Board,PRO1,Borg&Overström,701052,,72.5,CHF,
+BW-0160,PRO1 - Cup Stand,PRO1,Borg&Overström,701409,,95.0,CHF,
+BW-0161,PRO1 - Connection cable,PRO1,Borg&Overström,607135,,20.0,CHF,
+BW-0162,PRO1 - Connection box side,PRO1,Borg&Overström,702087,,39.0,CHF,
+BW-0163,PRO1 - Solenoids control board -A,PRO1,Borg&Overström,637106,,255.0,CHF,
+BW-0164,PRO1 - PCB Control board - A,PRO1,Borg&Overström,637107,,195.0,CHF,
+BW-0165,Fan 30 - A,PRO1; BOX 30 (2021),Borg&Overström,637408,,43.0,CHF,
+BW-0166,Solenoids 30E - A,PRO1,Borg&Overström,701525,,270.0,CHF,
+BW-0167,Controller 30 - A,PRO1; BOX 30 (2021),Borg&Overström,637326,,185.0,CHF,
+BW-0168,Pump - A,PRO1; BOX 30 (2021),Borg&Overström,637425,,485.0,CHF,
+BW-0169,Flow regulator 30 - A,PRO1; BOX 30 (2021),Borg&Overström,461358,,56.0,CHF,
+BW-0170,Fan 30 - B,BOX 30E; BOX 30,Borg&Overström,700085,,35.0,CHF,
+BW-0171,Pump 30 - B,BOX 30E; BOX 30,Borg&Overström,701537,,225.0,CHF,
+BW-0172,8mm PRV,BOX 30E; BOX 30,Borg&Overström,701076,,13.0,CHF,
+BW-0173,Flow compensator 8mm,BOX 30E; BOX 30,Borg&Overström,701263,,32.0,CHF,
+BW-0174,PCB Control board 30 - B,BOX 30,Borg&Overström,720148,,154.0,CHF,
+BW-0175,"Inlet solenoids 3/4"" BSP",BOX 30E,Borg&Overström,701094,,35.0,CHF,
+BW-0176,Solenoids 30E - B,BOX 30E,Borg&Overström,701515,,72.0,CHF,
+BW-0177,BAR1 Tap outlet,BAR1,Borg&Overström,604032,,105.0,CHF,
+BW-0178,BAR1 BE WTR label set,BAR1,Borg&Overström,701148,,9.0,CHF,
+BW-0179,PRO2 Solenoids,PRO2,Borg&Overström,173241,,22.0,CHF,
+BW-0180,PRO2 Cold thermostat,PRO2,Borg&Overström,173264,,19.0,CHF,
+BW-0181,PRO2 Fan,PRO2,Borg&Overström,174351,,25.0,CHF,
+BW-0182,PRO2 Tank circulation pump,PRO2,Borg&Overström,175363,,30.0,CHF,
+BW-0183,Immersion pump,BOX 80; BOX 150,Blupura,810320,,21.0,CHF,
+BW-0184,Pump 100L/h,BOX 80,Blupura,130049,,121.0,CHF,
+BW-0185,Flow compensator 8mm,BAR2 Double; BAR2 Touchless,Blupura,140194,,30.0,CHF,
+BW-0186,Cold thermostat - ice bank,BOX 80; BOX 150,Blupura,150031,,24.0,CHF,
+BW-0187,Level controller,BOX 80; BOX 150; BOX 15,Blupura,150385,,89.0,CHF,
+BW-0188,Motor for pump 200L/h,BOX 150,Blupura,130005A,,152.0,CHF,
+BW-0189,Fan 200x200,BOX 150,Blupura,750066,,55.0,CHF,
+BW-0190,UV Lamp,BAR2 Double; BAR2 Touchless,Blupura,150068,,6.0,CHF,
+BW-0191,Fan 120x120,BOX 15,Blupura,120232,,42.0,CHF,
+BW-0192,BOX 15 - Pump,BOX 15,Blupura,130053,,264.0,CHF,
+BW-0193,Flow compensator 6mm,BOX 15,Blupura,140092,,29.0,CHF,
+BW-0194,Cold thermostat - 15,BOX 15,Blupura,150525,,22.0,CHF,
+BW-0195,Fan 120x120x38,BOX 80,Blupura,750243,,40.0,CHF,
+BW-0275,PRO1 - outlet metal,PRO1,Borg&Overström,701443,,30.0,CHF,
+BW-0276,PRO1 - outlet black,PRO1,Borg&Overström,701453,,30.0,CHF,
+BW-0277,PRO1 - touch panel - A,PRO1,Borg&Overström,720215,,149.0,CHF,
+BW-0278,PRO1 - Laminar flow outlet,PRO1,Borg&Overström,700092,,7.5,CHF,
+BW-0279,Power supply 12V 30 - A,PRO1,Borg&Overström,637417,,93.0,CHF,
+BW-0280,PRO1 touch panel 30E - B,PRO1,Borg&Overström,701012,,145.0,CHF,
+BW-0281,Left panel 30 - B,BOX 30E; BOX 30,Borg&Overström,720113,,33.0,CHF,
+BW-0282,Right panel 30 - B,BOX 30E; BOX 30,Borg&Overström,720117,,33.0,CHF,
+BW-0283,Top panel 30 - B,BOX 30E; BOX 30,Borg&Overström,700721,,27.0,CHF,
+BW-0284,Front panel 30 - B,BOX 30E; BOX 30,Borg&Overström,720045,,115.0,CHF,
+BW-0285,BAR1 Core,BAR1,Borg&Overström,604606,,315.0,CHF,
+BW-0286,BAR1 outlet spacer,BAR1,Borg&Overström,604010,,7.0,CHF,
+BW-0287,Carbonator bowl 1L - 80,BOX 80,Blupura,130009,,132.0,CHF,
+BW-0288,Carbonator bowl 1L,BOX 150,Blupura,130008,,160.0,CHF,
+BW-0289,BAR2 - Cover nozzle,BAR2 Double; BAR2 Touchless,Blupura,750230,,52.0,CHF,
+BW-0290,BAR2 - Main board,BAR2 Double; BAR2 Touchless,Blupura,150576,,93.0,CHF,
+BW-0291,ELV 2 in 6 - out 8,BAR2 Double; BAR2 Touchless,Blupura,150551,,47.5,CHF,
+BW-0292,BAR2 - Volumetric counter,BAR2 Double; BAR2 Touchless,Blupura,150388,,49.0,CHF,
+BW-0293,BAR2 - Transformator,BAR2 Double; BAR2 Touchless,Blupura,150016,,39.0,CHF,
+BW-0294,BAR2 - Touch free push buttons,BAR2 Touchless,Blupura,810620,,95.0,CHF,
+BW-0295,BAR2 - Drip tray,BAR2 Double; BAR2 Touchless,Blupura,750309,,90.0,CHF,
+BW-0296,PRO2 front panel white,PRO2,Borg&Overström,120801,,41.0,CHF,
+BW-0297,PRO2 Upper front panel,PRO2,Borg&Overström,120803,,41.0,CHF,
+BW-0298,PRO2 110V/240V Main board,PRO2,Borg&Overström,171260,,83.0,CHF,
+BW-0299,PRO2 LED Display PCB,PRO2,Borg&Overström,171264,,56.0,CHF,
+BW-0300,PRO2 Touch dispense screen PCB,PRO2,Borg&Overström,171265,,56.0,CHF,
+BW-0301,PRO2 Power adapter 230V/24VDC 1.5A (Type A),PRO2,Borg&Overström,174391,,40.0,CHF,
+BW-0302,PRO2 chilled - ambient - sparkling touch screen control panel,PRO2,Borg&Overström,191005,,199.0,CHF,
+BW-0342,AQTiV ONE - Drip tray grid,AQTiV ONE,Superinox,,,,,
+BW-0343,Fixation set AQTiV ONE,AQTiV ONE,Superinox,,,,,
+BW-0344,Fixation set AQTiV COMBI,AQTiV COMBI,Superinox,,,,,
+BW-0345,Gearbox,AQTiV COMBI; AQTiV ONE,Superinox,R040044S-022,,,,
+BW-0346,Gearbox nozzle,AQTiV COMBI; AQTiV ONE,Superinox,,,,,
+BW-0347,Gearbox aerator,AQTiV COMBI; AQTiV ONE,Superinox,,,,,
+BW-0348,NBR O-ring,AQTiV COMBI,Neoperl,55121110000,,,,
+BW-0349,Honeycomb plastic aerator with O-ring,AQTiV COMBI,Superinox,R014010S-000,,,,
+BW-0366,PCB Control board 30E - B,BOX 30E,Borg&Overström,720260,,169.0,CHF,
+BW-0367,BAR2 – Button switch,BAR2 Double,Blupura,810439,,,,
+BW-0368,BAR2 – Counter gasket,BAR2 Double; BAR2 Touchless,Blupura,140564,,,,
+BW-0369,BAR2 – Fixing plate,BAR2 Double; BAR2 Touchless,Blupura,111012,,,,
+BW-0370,BAR2 – Fixing nut 1 ½” G,BAR2 Double; BAR2 Touchless,Blupura,130200,,,,
+BW-0371,BAR2 – Power cable EU,BAR2 Double,Blupura,150074,,,,
+BW-0372,BAR2 - Driptray drain connection,BAR2 Double; BAR2 Touchless,Blupura,140366,,,,
+BW-0373,BAR2 – Front glass,BAR2 Double; BAR2 Touchless,Blupura,140816,,,,
+BW-0374,BAR2 – Bottle guides,BAR2 Double; BAR2 Touchless,Blupura,110375,,,,
+BW-0375,BAR2 – Spring breaker,BAR2 Double; BAR2 Touchless,Blupura,110445,,,,
+BW-0376,BAR2 – UVC out,BAR2 Double,Blupura,810618,,,,
+BW-0377,BAR2 – SPRK button 7mm,BAR2 Double,Blupura,810697,,,,
+BW-0378,BAR2 – STLL button 7mm,BAR2 Double,Blupura,810698,,,,
+BW-0379,BAR2 -  STLL button 10mm,BAR2 Double,Blupura,810696,,,,
+BW-0380,BAR2 – SPRK button 10mm,BAR2 Double,Blupura,810695,,,,
+BW-0381,BAR2 – Solenoid valve,BAR2 Double; BAR2 Touchless,Blupura,150356,,,,
+BW-0382,BAR2 – Cap ring nut,BAR2 Double; BAR2 Touchless,Blupura,110274,,,,
+BW-0383,BAR2 – LED holder,BAR2 Double; BAR2 Touchless,Blupura,140251,,,,
+BW-0384,BAR2 – Exit valves bracket,BAR2 Double; BAR2 Touchless,Blupura,111011,,,,
+BW-0385,Flow compensator 8mm,BAR2 Double,Blupura,140194,,,,
+BW-0386,BAR2 – Rear casing,BAR2 Double; BAR2 Touchless,Blupura,110974,,,,
+BW-0387,BAR2 -  LED feeder,BAR2 Double; BAR2 Touchless,Blupura,810134,,,,
+BW-0388,BAR2 – Die-cut evilene protection,BAR2 Double,Blupura,160674,,,,
+BW-0389,BAR2 – UV LED control board,BAR2 Double,Blupura,150708,,,,
+BW-0390,BAR2 – UV board support bracket,BAR2 Double,Blupura,111420,,,,
+BW-0391,Screwless cable tie,BOX 150; BAR2 Double; BAR2 Touchless,Blupura,150011,,,,
+BW-0396,BAR2 - Touchfree button,BAR2 Touchless,Blupura,150146,,,,
+BW-0397,BAR2 - STLL touchfree,BAR2 Touchless,Blupura,810602,,,,
+BW-0398,BAR2 - SPRK touchfree,BAR2 Touchless,Blupura,810601,,,,
+BW-0399,BAR2 - Front glass (touchless),BAR2 Touchless,Blupura,140846,,,,
+BW-0400,BAR2 - Nut cover nozzle,BAR2 Touchless,Blupura,110274,,,,
+BW-0401,BAR2 - Rear carter (touchless),BAR2 Touchless,Blupura,111110,,,,
+BW-0402,BAR2 - Solenoid bracket,BAR2 Touchless,Blupura,111137,,,,
+BW-0403,BAR2 - Inverter UV,BAR2 Touchless,Blupura,150205,,,,
+BW-0404,BAR2 - Touchfree button switch,BAR2 Touchless,Blupura,150250,,,,
+BW-0405,BAR2 - Touchfree sensor,BAR2 Touchless,Blupura,150788,,,,
+BW-0406,BAR2 - BTG protection,BAR2 Touchless,Blupura,160674,,,,
+BW-0408,BAR2 - Transformer,BAR2 Touchless,Blupura,150071,,,,
+BW-0409,BAR2 - Inverter 3UV,BAR2 Touchless,Blupura,150204,,,,
+BW-0416,Bracket for Immersion Pump,BOX 80; BOX 150,Blupura,110264,,,,
+BW-0417,Motor for pump 100L/h,BOX 80,Blupura,130048A,,,,
+BW-0418,Carbonator bracket,BOX 80; BOX 150,Blupura,110103,,,,
+BW-0419,Cover box 80,BOX 80,Blupura,110138,,,,
+BW-0420,Casing box 80,BOX 80,Blupura,110137,,,,
+BW-0421,Foot pvc,BOX 80,Blupura,140118,,,,
+BW-0422,Front panel,BOX 80,Blupura,810646,,,,
+BW-0423,Power cord,BOX 80,Blupura,150087,,,,
+BW-0424,Bulkhead 8 mm,BOX 80,Blupura,140099,,,,
+BW-0425,Iec socket,BOX 80,Blupura,150094,,,,
+BW-0426,General power switch,BOX 80,Blupura,150072,,,,
+BW-0427,Plastic plug,BOX 80; BOX 150,Blupura,150051,,,,
+BW-0428,Spring type cable grand,BOX 80; BOX 150,Blupura,150052,,,,
+BW-0429,Ice bank overflow kit,BOX 80; BOX 150,Blupura,750019,,,,
+BW-0430,BOX 15 - Base,BOX 15,Blupura,140511,,,,
+BW-0431,BOX 15 - Front paneL,BOX 15,Blupura,810645,,,,
+BW-0432,Bulkhead 1/4 mm,BOX 15,Blupura,140296,,,,
+BW-0433,BOX 15 - Bore cap,BOX 15,Blupura,140845,,,,
+BW-0434,BOX 15 - Main support,BOX 15,Blupura,140512,,,,
+BW-0435,BOX 15 - Left panel,BOX 15,Blupura,140561,,,,
+BW-0436,BOX 15 - Top cover,BOX 15,Blupura,110954,,,,
+BW-0437,BOX 15 - Tank support,BOX 15,Blupura,140528,,,,
+BW-0438,BOX 15 - Back panel,BOX 15,Blupura,140521,,,,
+BW-0439,Power switch,BOX 150; BOX 15,Blupura,150157,,,,
+BW-0440,BOX 15 - Right panel,BOX 15,Blupura,140562,,,,
+BW-0441,BOX 150 - Thermostat bracket,BOX 150,Blupura,110048,,,,
+BW-0442,BOX 150 - Small cover,BOX 150,Blupura,110053,,,,
+BW-0443,BOX 150 - Inlet water pressure reducer,BOX 150,Blupura,800042,,,,
+BW-0444,BOX 150 - Interm plate,BOX 150,Blupura,110040,,,,
+BW-0445,BOX 150 - Large cover,BOX 150,Blupura,110052,,,,
+BW-0446,BOX 150 - Condenser,BOX 150,Blupura,120014,,,,
+BW-0447,BOX 150 - Rear panel,BOX 150,Blupura,110051,,,,
+BW-0448,BOX 150 - Condenser support,BOX 150,Blupura,110044,,,,
+BW-0449,BOX 150 - Compressor,BOX 150,Blupura,120001,,,,
+BW-0450,BOX 150 - Bracket,BOX 150,Blupura,110020,,,,
+BW-0451,Brass pump 200L/h,BOX 150,Blupura,130006,,135.0,CHF,
+BW-0452,BOX 150 - Bracket for valve,BOX 150,Blupura,110015A,,,,
+BW-0453,BOX 150 - Carbonator bowl bracket,BOX 150,Blupura,110013,,,,
+BW-0454,BOX 150 - SS dual coil,BOX 150,Blupura,120032,,,,
+BW-0455,BOX 150 - Evaporator,BOX 150,Blupura,120033,,,,
+BW-0456,BOX 150 - Tank cooler,BOX 150,Blupura,140004,,,,
+BW-0457,EC150 Power cable,BOX 150,Blupura,150082,,,,
+BW-0458,BOX 150 - Base,BOX 150,Blupura,110037,,,,
+BW-0459,BOX 150 - Inox shell,BOX 150,Blupura,110049,,,,
+BW-0461,"Straight adaptor, 3/8 x 1/4 BSP",BOX 30 (2021),Borg&Overström,462313,,,,
+BW-0462,"Reducer, 3/8 -5/16",BOX 30 (2021),Borg&Overström,462374,,,,
+BW-0463,5/16 LLDPE tube,BOX 30 (2021),Borg&Overström,462014,,,,
+BW-0464,1/4  LLDPE tube,BOX 30 (2021),Borg&Overström,462013,,,,
+BW-0465,BOX 30 - Can wrap insulation - A,BOX 30 (2021),Borg&Overström,635512,,,,
+BW-0466,"Single check valve, 1/4",BOX 30 (2021),Borg&Overström,462668,,,,
+BW-0467,3/8 LLDPE tube,BOX 30 (2021),Borg&Overström,462012,,,,
+BW-0468,"Bulkhead connector, 1/4",BOX 30 (2021),Borg&Overström,462325,,,,
+BW-0469,BOX 30 - Lid - A,BOX 30 (2021),Borg&Overström,632032,,,,
+BW-0470,BOX 30 - Flow control - A,BOX 30 (2021),Borg&Overström,637325,,,,
+BW-0471,"Stem adaptator, 3/8 OD x 1/4 BSP",BOX 30 (2021),Borg&Overström,462364,,,,
+BW-0472,"Equal Tee, 1/4",BOX 30 (2021),Borg&Overström,462318,,,,
+BW-0473,"Stem Elbow, 3/8-1/4",BOX 30 (2021),Borg&Overström,462359,,,,
+BW-0475,"Single check valve, 5/16",BOX 30 (2021),Borg&Overström,462667,,,,
+BW-0476,Equal elbow 5/16,BOX 30 (2021),Borg&Overström,462376,,,,
+BW-0477,Reducing elbow 3/8 x 1/4,BOX 30 (2021),Borg&Overström,462327,,,,
+BW-0478,"Equal Elbow 3/8""",BOX 30 (2021),Borg&Overström,462362,,,,
+BW-0479,BOX 30 - Swan Neck Faucet Connection Harness -A,BOX 30 (2021),Borg&Overström,172180,,,,
+BW-0480,"Stem Elbow, 3/8-1/4",BOX 30 (2021),Borg&Overström,462369,,,,
+BW-0481,"Reducing Straight Connector, 5/16-1/4",BOX 30 (2021),Borg&Overström,462874,,,,
+BW-0482,"Stem elbow, 5/16-5/16",BOX 30 (2021),Borg&Overström,462384,,,,
+BW-0483,"Stem elbow, 1/4-1/4",BOX 30 (2021),Borg&Overström,462368,,,,
+BW-0484,"Stem Elbow, 3/8-3/8",BOX 30 (2021),Borg&Overström,462371,,,,
+BW-0485,BOX 30 Front wrap - A,BOX 30 (2021),Borg&Overström,632031,,,,
+BW-0493,PRO2 - Top cover panel,PRO2,Borg&Overström,123187,,,,
+BW-0494,PRO2 - Pressure release valve for carbonation tank,PRO2,Borg&Overström,134612,,,,
+BW-0495,PRO2 - Single check valve,PRO2,Borg&Overström,132445,,,,
+BW-0496,PRO2 - Grit filter,PRO2,Borg&Overström,194121,,,,
+BW-0497,PRO2 - 2-port drainage outlet,PRO2,Borg&Overström,131426,,,,
+BW-0498,PRO2 - Electric rocker switch,PRO2,Borg&Overström,174321,,,,
+BW-0499,PRO2 - IEC Fused socket,PRO2,Borg&Overström,172163,,,,
+BW-0500,PRO2 - Pump 35L/h 24VDC,PRO2,Borg&Overström,174372,,280.0,CHF,
+BW-0501,PRO2 - Left Side Panel inc handle,PRO2,Borg&Overström,121850,,,,
+BW-0502,PRO2 - Compressor,PRO2,Borg&Overström,174313,,,,
+BW-0503,PRO2 - Main PCB Case Assembly,PRO2,Borg&Overström,171268,,,,
+BW-0504,PRO2 - Faucet 4 Outlets,PRO2,Borg&Overström,133514,,,,
+BW-0505,PRO2 - Faucet Shroud,PRO2,Borg&Overström,183246,,,,
+BW-0506,PRO2 - Front panel Black,PRO2,Borg&Overström,120802,,,,
+BW-0507,PRO2 - Drip Tray Set without drainage black,PRO2,Borg&Overström,125840,,,,
+BW-0508,PRO2 - Touch Icon Illumination Diffuser,PRO2,Borg&Overström,171269,,,,
+BW-0509,PRO2 - LED PCB Wiring Loom,PRO2,Borg&Overström,172223,,,,
+BW-0510,PRO2 - Right Side Panel inc handle,PRO2,Borg&Overström,121851,,,,
+BW-0511,PRO2 - CO2 Single Gauge Regulator with elbow,PRO2,Borg&Overström,193220,,,,
+BW-0635,AQTiV flow compensator,AQTiV COMBI; AQTiV ONE,Superinox,R040096-030,,,,
+BW-0646,PRO1 - Refrigeration probe - A,PRO1; BOX 30 (2021),Borg&Overström,720023,,43.0,CHF,
+BW-0647,PRO1 - Level probe - A,PRO1; BOX 30 (2021),Borg&Overström,637327,,,,
+BW-0783,PRO2 - Loom solenoids Rev2,PRO2,Borg&Overström,702539,,,,
+BW-0973,Gearbox - Handle (x10),AQTiV COMBI; AQTiV ONE,,,,,,
+BW-0974,Gearbox - Hat without handle (x5),AQTiV COMBI; AQTiV ONE,,,,,,
+BW-0975,Gearbox - Lever (x10),AQTiV COMBI; AQTiV ONE,,,,,,
+BW-0987,Stainless-steel tank,BOX 20,Italbedis,150030,VASCA INOX PLUS,290.0,EUR,0.6
+BW-0988,Axial fan 120x120x25,BOX 20,Italbedis,404008,VENTILATORE ASSIALE 120X120X25,27.04,EUR,0.6
+BW-0989,Condenser,BOX 20,Italbedis,111005,CONDENSATORE REFRIGERETTE,24.7,EUR,0.6
+BW-0990,Solenoid valve (per schema),BOX 20,,,,,,
+BW-0991,Thermostat Ranco K50 P1127.0,BOX 20,Italbedis,401030,TERMOSTATO PLUS/E RANCO K50 P1127.0,14.95,EUR,0.6
+BW-0992,Solenoid-valve bracket,BOX 20,Italbedis,105085,STAFFA EV H2ONDA SLIM,8.37,EUR,0.6
+BW-0993,Tank support bracket,BOX 20,Italbedis,105087,STAFFA SUPP. VASCA H2ONDA SLIM,10.45,EUR,0.6
+BW-0994,"Outer casing / cabinet, black",BOX 20,Italbedis,100048,MANTELLO SLIM H2ONDA NERO,38.0,EUR,0.6
+BW-0995,Base frame,BOX 20,Italbedis,102045,BASAMENTO SLIM H2ONDA,28.0,EUR,0.6
+BW-0996,Pump bracket,BOX 20,Italbedis,105086,STAFFA POMPA H2ONDA SLIM,14.3,EUR,0.6
+BW-0997,Tank insulation,BOX 20,Italbedis,207033,ISOLAMENTO VASCA SLIM / PLUS / NATURAL,19.03,EUR,0.6
+BW-0998,Compressor LG TS36NATG (R600a),BOX 20,Italbedis,400054,COMPRESSORE LG TS36NATG R600a,130.0,EUR,0.6
+BW-0999,Carbonator control board + time-out (level I),BOX 20; BOX 80 I,Italbedis,450015,SCHEDA CARBONATORE+TIME OUT - LIV-I,68.64,EUR,0.6
+BW-1000,Primary wiring harness,BOX 20,Italbedis,490012,CABLAGGIO PRIMARIO NEW H2ONDA SLIM,24.0,EUR,0.6
+BW-1001,Front panel,BOX 20,Italbedis,208042,FRONTALE SLIM PLUS SOTTO,37.7,EUR,0.6
+BW-1002,Wiring harness,BOX 20,Italbedis,450104,CABLAGGIO PLUS / SLIM - 4 SOTTO,22.0,EUR,0.6
+BW-1003,Booster pump,BOX 20,Italbedis,408026,POMPA BOOSTER H2ONDA SLIM,327.6,EUR,0.6
+BW-1004,"Expansion compensator, tube Ø8",BOX 20; BOX 80 I; BOX 120 I,Italbedis,320216,COMPENSATORE ODL T Ø 8,26.78,EUR,0.6
+BW-1005,Rubber cable grommet,BOX 20,Italbedis,490021,ANELLO PASSAFILO IN GOMMA,0.7,EUR,0.6
+BW-1006,"End plug, Ø6 Lokring",BOX 20,Italbedis,360084,TAPPO D6 LOKRING,1.0,EUR,0.6
+BW-1007,"Label/sticker kit, chiller-carbonator (2 undercounter +)",BOX 20,Italbedis,551045,KIT ADESIVI FRIGOGASATORI 2 SOTTO,1.56,EUR,0.6
+BW-1008,Refrigerant gas R600a,BOX 20,Italbedis,690025,GAS REFRIGERANTE R600a,0.5,EUR,0.6
+BW-1009,Aluminium rivet 4x10,BOX 20,Italbedis,630007,RIVETTO ALLUMINIO 4x10,0.2,EUR,0.6
+BW-1010,Nylon bag 55+20+20x1,BOX 20; BOX 80 I; BOX 120 I,Italbedis,502001,SACCO NYLON REFRIGERETTE 55+20+20X1,3.0,EUR,0.6
+BW-1011,Packaging - tray,BOX 20,Italbedis,500066,IMBALLO SLIM - VASSOIO,2.5,EUR,0.6
+BW-1012,Faston male terminal cover,BOX 20,Italbedis,490010,COPRITERMINALE FASTON MASCHIO,0.1,EUR,0.6
+BW-1013,Faston male terminal,BOX 20,Italbedis,490009,TERMINALE FASTON MASCHIO,0.2,EUR,0.6
+BW-1014,Time-delay fuse 3.15 A,BOX 20,Italbedis,485028,"FUSIBILE RITARDATO 3,15 A",0.7,EUR,0.6
+BW-1015,Power inlet socket with fuse,BOX 20; BOX 80 I; BOX 120 I,Italbedis,485027,PRESA ALIMENTAZIONE CON FUSIBILE,3.65,EUR,0.6
+BW-1016,Power supply cord (unit standard equipment),BOX 20; BOX 80 I; BOX 120 I,Italbedis,485017,CAVO ALIMENTAZIONE DOTAZIONE REFRIG,8.06,EUR,0.6
+BW-1017,Carbonator sensor/probe cable,BOX 20,Italbedis,485015,CAVO SONDE GASATORE PLUS,2.0,EUR,0.6
+BW-1018,"Aluminium anti-condensation tape, H75",BOX 20,Italbedis,207030,NASTRO ALL.ANTICOND.H75,0.94,EUR,0.6
+BW-1019,"Anti-vibration pad, compressor",BOX 20; BOX 80 I; BOX 120 I,Italbedis,202006,TAMPONE ANTIVIBRAZIONE COMP.,0.32,EUR,0.6
+BW-1020,"Foot, black 8mm",BOX 20,Italbedis,202023,PIEDINO NERO 8mm,0.22,EUR,0.6
+BW-1021,"Sheet metal 8/10 (0.8mm), black, 1250x2195",BOX 20,Italbedis,190014,LAM.8/10 NERA 1250x2195,160.0,EUR,0.6
+BW-1022,"Filter drier, complete",BOX 20,Italbedis,109016,FILTRO DISIDRATATORE COMPLETO SLIM,12.0,EUR,0.6
+BW-1023,Brazed charging valve,BOX 20; BOX 80 I; BOX 120 I,Italbedis,820002,VALVOLA DI CARICA SALDATA,5.08,EUR,0.6
+BW-1024,Packaging - cap,BOX 20,Italbedis,500067,IMBALLO SLIM - CAPPUCCIO,3.3,EUR,0.6
+BW-1025,Condenser,BOX 80 I,Italbedis,111015,CONDENSATORE AI 80,87.36,EUR,0.6
+BW-1026,Fan 119x119x38,BOX 80 I; BOX 120 I,Italbedis,404007,VENTILATORE 119X119X38 AI 40/80/120,30.16,EUR,0.6
+BW-1027,Motor Sisme Plus,BOX 80 I; BOX 120 I,Italbedis,404030,MOTORE SISME PLUS,140.0,EUR,0.6
+BW-1028,Pump 150 L/h,BOX 80 I,Italbedis,408023,POMPA 150LT/H JET20 / AI40 / AI80,114.0,EUR,0.6
+BW-1029,"Filter drier, complete",BOX 80 I; BOX 120 I,Italbedis,109019,FILTRO DISIDRATATORE COMPLETO 80-120,13.0,EUR,0.6
+BW-1030,Carbonator,BOX 80 I,Italbedis,390095,GASATORE AI 40 / AI 80,182.0,EUR,0.6
+BW-1031,Agitator / stirrer MIR B 4L,BOX 120 I,Italbedis,404027,AGITATORE MIR B 4L - ICE 120,103.74,EUR,0.6
+BW-1032,Agitator / stirrer MIR A,BOX 80 I,Italbedis,404029,AGITATORE MIR A - ICE 80S / 150,94.64,EUR,0.6
+BW-1033,Agitator bracket,BOX 80 I,Italbedis,103086,STAFFA AGITATORE ICE 80 2018,29.26,EUR,0.6
+BW-1034,Electronic-board bracket,BOX 80 I; BOX 120 I,Italbedis,103088,STAFFA SCHEDA ELETTRONICA ICE 80/120,8.84,EUR,0.6
+BW-1035,Thermostat Ranco K50-H2005/001,BOX 80 I; BOX 120 I,Italbedis,401029,TERMOSTATO RANCO K50-H2005/001 JET,14.95,EUR,0.6
+BW-1036,"Tank, complete",BOX 80 I,Italbedis,201039,VASCA ICE 80 2018 COMPL.,83.2,EUR,0.6
+BW-1037,Stainless-steel base,BOX 80 I,Italbedis,102062,BASAMENTO INOX ICE 80 2018,109.2,EUR,0.6
+BW-1038,Stainless-steel top cover / lid,BOX 80 I,Italbedis,103083,COPERCHIO INOX ICE 80 2018,46.8,EUR,0.6
+BW-1039,"Stainless-steel side panel, right",BOX 80 I,Italbedis,103084,PARATIA DX INOX ICE 80 2018,45.24,EUR,0.6
+BW-1040,"Stainless-steel side panel, left",BOX 80 I,Italbedis,103085,PARATIA SX INOX ICE 80 2018,45.24,EUR,0.6
+BW-1041,Motor bracket,BOX 80 I,Italbedis,103087,STAFFA MOTORE ICE 80 2018,22.0,EUR,0.6
+BW-1042,Wiring harness,BOX 80 I; BOX 120 I,Italbedis,480027,CABLAGGIO ICE 2018,28.0,EUR,0.6
+BW-1043,"Evaporator, complete",BOX 80 I,Italbedis,810086,EVAPORATORE AI 80 COMP,119.6,EUR,0.6
+BW-1044,Earth / ground wiring harness,BOX 80 I; BOX 120 I,Italbedis,480023,CABLAGGIO TERRE,3.0,EUR,0.6
+BW-1045,"Cooling coil, complete",BOX 80 I,Italbedis,810092,SERPENTINA AI 80 COMP,72.0,EUR,0.6
+BW-1046,Coil spacer,BOX 80 I; BOX 120 I,Italbedis,201080,DISTANZIALE SERPENTINA AI 40 / AI 80,2.0,EUR,0.6
+BW-1047,Square threaded insert,BOX 80 I; BOX 120 I,Italbedis,631007,INSERTO QUADRATO JET / AI,0.2,EUR,0.6
+BW-1048,"Earth / ground rivet, 4-way",BOX 80 I; BOX 120 I,Italbedis,630008,RIVETTO TERRA 4 VIE,0.5,EUR,0.6
+BW-1049,Time-delay fuse 5 A,BOX 80 I,Italbedis,485030,FUSIBILE RITARDATO 5 A,0.36,EUR,0.6
+BW-1050,Illuminated double-pole switch I/O,BOX 80 I; BOX 120 I,Italbedis,431007,INTERRUTTORE BIPOL. LUMINOSO I/O,3.64,EUR,0.6
+BW-1051,"Rubber foot Ø30, steel M6x1",BOX 80 I; BOX 120 I,Italbedis,202020,PIEDINO RUBBER FOOT D.30 STEEL M6X1,6.62,EUR,0.6
+BW-1052,Condenser,BOX 120 I,Italbedis,111012,CONDENSATORE AI120,78.0,EUR,0.6
+BW-1053,Pump 200 L/h,BOX 120 I,Italbedis,408017,POMPA 200 LT/H,114.0,EUR,0.6
+BW-1054,Carbonator,BOX 120 I,Italbedis,390000,GASATORE AI120/150,187.2,EUR,0.6
+BW-1055,Agitator bracket,BOX 120 I,Italbedis,103093,STAFFA AGITATORE ICE 120 2018,18.0,EUR,0.6
+BW-1056,Electronic control board - LIV-IBM6,BOX 120 I,Italbedis,450051,SCHEDA ELETTRONICA AI120 - LIV-IBM6,68.64,EUR,0.6
+BW-1057,"Tank, complete",BOX 120 I,Italbedis,201040,VASCA ICE 120 2018 COMPL.,93.6,EUR,0.6
+BW-1058,Stainless-steel base,BOX 120 I,Italbedis,102063,BASAMENTO INOX ICE 120 2018,120.0,EUR,0.6
+BW-1059,Stainless-steel top cover / lid,BOX 120 I,Italbedis,103089,COPERCHIO INOX ICE 120 2018,50.0,EUR,0.6
+BW-1060,"Stainless-steel side panel, right",BOX 120 I,Italbedis,103090,PARATIA DX INOX ICE 120 2018,50.0,EUR,0.6
+BW-1061,"Stainless-steel side panel, left",BOX 120 I,Italbedis,103091,PARATIA SX INOX ICE 120 2018,50.0,EUR,0.6
+BW-1062,Motor bracket,BOX 120 I,Italbedis,103092,STAFFA MOTORE ICE 120 2018,22.0,EUR,0.6
+BW-1063,"Evaporator, complete",BOX 120 I,Italbedis,810087,EVAPORATORE AI 120 COMP,120.0,EUR,0.6
+BW-1064,"Cooling coil, complete",BOX 120 I,Italbedis,810093,SERPENTINA AI 120 COMP,80.0,EUR,0.6
+BW-1065,Rubber cable grommet Ø23,BOX 120 I,Italbedis,490027,ANELLO PASSAFILO IN GOMMA D23,0.8,EUR,0.6
+BW-1066,Time-delay fuse 10 A,BOX 120 I,Italbedis,485029,FUSIBILE RITARDATO 10 A,0.42,EUR,0.6
+BW-1067,Reopenable cable tie (for panel hole),BOX 120 I,Italbedis,650009,FASCETTA RIAPRIBILE PER FORO,0.7,EUR,0.6
+BW-1068,Carb level probe,BOX 30E; BOX 30,Borg&Overström,701157,,,,
+BW-1069,Temp probe,BOX 30E; BOX 30,Borg&Overström,720023,,,,
+BW-1070,U2 Tap Twin Port 285 mm - Mounting Gasket 35 mm,BAR1,Borg&Overström,604022,,,,
+BW-1071,Recirculation pump 230 V,BOX 80,Blupura,810327,,,,
+BW-1072,Capillary tube,BOX 80 I,,,,,,
