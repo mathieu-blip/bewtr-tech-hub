@@ -70,8 +70,11 @@ create table public.claims (
 create index on public.claims (status);
 create index on public.claims (claim_date desc);
 
+-- search_path figé : une fonction qui laisse l'appelant le choisir peut se
+-- voir substituer ses opérateurs.
 create or replace function public.touch_updated_at() returns trigger
-language plpgsql as $$ begin new.updated_at = now(); return new; end $$;
+language plpgsql set search_path = public, pg_temp as $$
+begin new.updated_at = now(); return new; end $$;
 
 create trigger claims_touch before update on public.claims
   for each row execute function public.touch_updated_at();

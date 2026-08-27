@@ -268,5 +268,8 @@ grant execute on function public.order_pending(text)       to anon, authenticate
 grant execute on function public.order_create(text, text, bigint[], text, text) to anon, authenticated;
 grant execute on function public.orders_list(text)         to anon, authenticated;
 
-revoke execute on function public.hub_scope(text)       from anon, authenticated;
-revoke execute on function public.hub_require(text,text) from anon, authenticated;
+-- Postgres accorde EXECUTE à PUBLIC par défaut : révoquer sur anon et
+-- authenticated ne suffit pas, le droit resterait et ces deux fonctions
+-- internes seraient appelables via /rest/v1/rpc.
+revoke execute on function public.hub_scope(text)        from public, anon, authenticated;
+revoke execute on function public.hub_require(text, text) from public, anon, authenticated;
