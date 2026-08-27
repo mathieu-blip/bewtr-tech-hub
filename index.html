@@ -2483,18 +2483,25 @@ function clSuggestParts(text, product, limit){
   // mots du texte assez longs pour être discriminants
   const words = t.split(" ").filter(w => w.length > 3 && !CL_STOP.has(w));
 
-  const machine = product ? String(product).toUpperCase() : null;
-  const scored = clState.parts.map(function(p){
+  // Une machine choisie borne la recherche à ses pièces. Pondérer sans
+  // exclure laissait remonter le ventilateur du PRO2 sur un ticket BOX 80 :
+  // une suggestion qui ne va pas sur la machine ne rend service à personne.
+  // Sans machine choisie, tout le catalogue reste candidat.
+  const machine = product
+    ? String(product).replace(/^BW-\d+\s*/, "").trim().toUpperCase()
+    : null;
+  const pool = machine
+    ? clState.parts.filter(p => (p.machines || []).some(m => m.toUpperCase() === machine))
+    : clState.parts;
+
+  const scored = pool.map(function(p){
     const n = " " + clNorm(p.name) + " ";
     let sc = 0;
     hints.forEach(function(h){
       if(clNorm(h).split(" ").every(w => n.includes(" " + w))) sc += 10;
     });
     words.forEach(function(w){ if(n.includes(" " + w)) sc += 3; });
-    if(!sc) return null;
-    if(machine && (p.machines || []).some(m => m.toUpperCase() === machine)) sc += 6;
-    else if(machine) sc -= 2;
-    return { p: p, sc: sc };
+    return sc ? { p: p, sc: sc } : null;
   }).filter(Boolean);
 
   scored.sort((a, b) => b.sc - a.sc || a.p.ref.localeCompare(b.p.ref));
