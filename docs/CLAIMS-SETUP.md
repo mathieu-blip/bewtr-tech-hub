@@ -306,6 +306,41 @@ bulletin et l'historique d'un seul coup.
 
 ---
 
+## Les statuts
+
+Ils sont **stockés en anglais** — c'est la valeur canonique, celle qu'on
+retrouve en base, dans les exports et dans les requêtes SQL. L'écran, lui,
+les affiche dans la langue du hub. Changer de langue ne change donc rien à
+la donnée.
+
+| Valeur en base | Français | Deutsch |
+|---|---|---|
+| `New (to repair)` | Nouveau (à réparer) | Neu (zu reparieren) |
+| `Spare part to order` | Pièce à commander | Ersatzteil zu bestellen |
+| `Spare part ordered` | Pièce commandée | Ersatzteil bestellt |
+| `In progress (repair)` | Réparation en cours | Reparatur läuft |
+| `Needs to go back to supplier` | À renvoyer au fournisseur | Zurück an Lieferant |
+| `Need to go back to Switzerland` | À renvoyer en Suisse | Zurück in die Schweiz |
+| `Stuck` | Bloqué | Blockiert |
+| `Repaired and restocked` | Réparé et remis en stock | Repariert und eingelagert |
+| `Spare Parts (Bin)` | Démonté pour pièces | Für Ersatzteile ausgeschlachtet |
+
+Les décisions (`TBD (to be defined)`, `Credit note`, `Back to the supplier`…)
+suivent la même règle.
+
+### « At supplier » est devenu « Needs to go back to supplier »
+
+Le statut décrivait un état — la machine *est* chez le fournisseur — là où
+l'équipe a besoin d'une action : elle *doit* y retourner. C'est ce statut qui
+alimente l'onglet **Renvoi fournisseur**.
+
+`docs/supabase/06-statut-renvoi-fournisseur.sql` aligne les claims existants.
+Il n'est pas urgent : le hub lit les deux libellés, range les anciens au bon
+endroit et les traduit. L'ancien n'est simplement plus proposé à la saisie, et
+un claim qui le porte encore le garde tant qu'on n'y touche pas.
+
+---
+
 ## Évolution 2 — script à exécuter
 
 `docs/supabase/04-evolutions.sql` **doit être exécuté une fois** dans

@@ -2574,17 +2574,78 @@ async function clAttachPart(claim, ref){
 }
 
 /* ------------------------------------------------------- présentation */
+/* Les statuts sont stockés en anglais : c'est la valeur canonique, celle
+   qu'on retrouve en base et dans les exports. L'écran, lui, les affiche
+   dans la langue du hub — voir clStatusLabel(). */
 const CL_STATUS = [
   { k:"New (to repair)",       c:"#c4c4c4" },
   { k:"Spare part to order",   c:"#df2f4a" },
   { k:"Spare part ordered",    c:"#579bfc" },
   { k:"In progress (repair)",  c:"#fdab3d" },
-  { k:"At supplier",           c:"#225091" },
+  { k:"Needs to go back to supplier", c:"#225091" },
   { k:"Need to go back to Switzerland", c:"#007eb5" },
   { k:"Stuck",                 c:"#ff6d3b" },
   { k:"Repaired and restocked",c:"#00c875" },
   { k:"Spare Parts (Bin)",     c:"#7e3b8a" }
 ];
+
+/* « At supplier » a été renommé. Tant que 06-statut-renvoi-fournisseur.sql
+   n'est pas passé, des claims le portent encore : il reste donc traduit et
+   rangé au bon endroit, sans être proposé à la saisie. */
+const CL_STATUS_LEGACY = "At supplier";
+
+const CL_TR = {
+  fr:{
+    "New (to repair)":"Nouveau (à réparer)",
+    "Spare part to order":"Pièce à commander",
+    "Spare part ordered":"Pièce commandée",
+    "In progress (repair)":"Réparation en cours",
+    "Needs to go back to supplier":"À renvoyer au fournisseur",
+    "At supplier":"Chez le fournisseur",
+    "Need to go back to Switzerland":"À renvoyer en Suisse",
+    "Stuck":"Bloqué",
+    "Repaired and restocked":"Réparé et remis en stock",
+    "Spare Parts (Bin)":"Démonté pour pièces",
+    "TBD (to be defined)":"À définir",
+    "Spare parts used":"Pièces utilisées",
+    "Set up modification":"Modification de réglage",
+    "Box repaired by supplier":"Réparée par le fournisseur",
+    "Back to the supplier":"Retour fournisseur",
+    "Machine sent to BE WTR CH":"Machine envoyée à BE WTR CH",
+    "Credit note":"Avoir",
+    "Dismantling":"Démontage",
+    "Open question":"Question ouverte"
+  },
+  de:{
+    "New (to repair)":"Neu (zu reparieren)",
+    "Spare part to order":"Ersatzteil zu bestellen",
+    "Spare part ordered":"Ersatzteil bestellt",
+    "In progress (repair)":"Reparatur läuft",
+    "Needs to go back to supplier":"Zurück an Lieferant",
+    "At supplier":"Beim Lieferanten",
+    "Need to go back to Switzerland":"Zurück in die Schweiz",
+    "Stuck":"Blockiert",
+    "Repaired and restocked":"Repariert und eingelagert",
+    "Spare Parts (Bin)":"Für Ersatzteile ausgeschlachtet",
+    "TBD (to be defined)":"Noch zu definieren",
+    "Spare parts used":"Ersatzteile verwendet",
+    "Set up modification":"Einstellungsänderung",
+    "Box repaired by supplier":"Vom Lieferanten repariert",
+    "Back to the supplier":"Zurück an Lieferant",
+    "Machine sent to BE WTR CH":"Maschine an BE WTR CH",
+    "Credit note":"Gutschrift",
+    "Dismantling":"Demontage",
+    "Open question":"Offene Frage"
+  }
+};
+
+/** Libellé affiché d'un statut ou d'une décision. L'anglais est la valeur
+    stockée : en anglais on la rend telle quelle. */
+function clStatusLabel(v){
+  if(!v) return "";
+  const d = CL_TR[lang];
+  return (d && d[v]) || v;
+}
 const CL_DECISIONS = ["TBD (to be defined)","Spare parts used","Set up modification","Box repaired by supplier",
   "Back to the supplier","Machine sent to BE WTR CH","Credit note","Dismantling","R&D","Open question"];
 const CL_RESTOCK = ["(CH) GENEVE","(CH) LAUSANNE","(CH) ZURICH","(CH) Central stock","(BIN) For spare parts"];
@@ -2603,7 +2664,7 @@ function clHasParts(c){ return (c.parts || []).length > 0; }
 /* Un claim parti chez le fournisseur n'est plus à trier ni à commander :
    il attend un retour. Il sort donc des deux premières piles pour n'en
    encombrer aucune — un claim ouvert vit dans exactement un onglet. */
-const CL_AT_SUPPLIER = ["At supplier"];
+const CL_AT_SUPPLIER = ["Needs to go back to supplier", CL_STATUS_LEGACY];
 const CL_DEC_SUPPLIER = ["Back to the supplier", "Box repaired by supplier"];
 function clIsSupplierReturn(c){
   return CL_AT_SUPPLIER.includes(c.status) || CL_DEC_SUPPLIER.includes(c.decision);
@@ -2646,6 +2707,7 @@ function clClaimSuppliers(c){
 }
 
 function clStatusColor(s){
+  if(s === CL_STATUS_LEGACY) return "#225091";
   const f = CL_STATUS.find(x => x.k === s);
   return f ? f.c : "#c4c4c4";
 }
@@ -2785,7 +2847,7 @@ function clRenderBoard(){
         + '</tr>';
     }).join("");
     return '<div class="cl-group">'
-      + '<h4><span class="sw" style="background:'+clStatusColor(k)+'"></span>'+clEsc(k)
+      + '<h4><span class="sw" style="background:'+clStatusColor(k)+'"></span>'+clEsc(clStatusLabel(k))
       + ' <span class="c">· '+list.length+'</span></h4>'
       + '<div class="cl-wrap-x"><table class="cl-table"><thead><tr>'
       + ['col.code','col.title','col.product','col.serial','col.country','col.tech','col.date','col.warranty','col.parts']
@@ -2798,8 +2860,10 @@ function clRenderBoard(){
 function clOpenDetail(id){
   const c = clState.claims.find(x => x.id === id);
   if(!c) return;
+  // la valeur envoyée reste l'anglais canonique, seul le libellé est traduit
   const opt = (list, cur) => list.map(v =>
-    '<option value="'+clEsc(v)+'"'+(v === cur ? " selected" : "")+'>'+clEsc(v)+'</option>').join("");
+    '<option value="'+clEsc(v)+'"'+(v === cur ? " selected" : "")+'>'
+    + clEsc(clStatusLabel(v))+'</option>').join("");
   const parts = (c.parts || []).length
     ? '<div class="cl-chosen">' + c.parts.map(p =>
         '<div class="row"><span class="r">'+clEsc(p.ref || "—")+'</span>'
@@ -2826,6 +2890,7 @@ function clOpenDetail(id){
     + '<dt>'+clT("f.install")+'</dt><dd>'+clDate(c.install_date)+'</dd>'
     + '<dt>'+clT("f.claimdate")+'</dt><dd>'+clDate(c.claim_date)+'</dd>'
     + '<dt>'+clT("f.units")+'</dt><dd>'+(c.units_impacted == null ? "—" : c.units_impacted)+'</dd>'
+    + '<dt>'+clT("d.status")+'</dt><dd>'+clEsc(clStatusLabel(c.status))+'</dd>'
     + '<dt>'+clT("col.warranty")+'</dt><dd>'
         + (c.under_warranty === true ? '<span class="cl-badge war">'+clT("war.yes")+'</span>'
           : c.under_warranty === false ? '<span class="cl-badge nowar">'+clT("war.no")+'</span>'
@@ -2844,7 +2909,9 @@ function clOpenDetail(id){
     + '<form class="cl-form" id="clDetailForm" style="margin-top:22px">'
     +   '<div class="two">'
     +     '<div><label class="cl-lbl">'+clT("d.status")+'</label>'
-    +       '<select class="cl-in" name="status">'+opt(CL_STATUS.map(s=>s.k), c.status)+'</select></div>'
+    +       '<select class="cl-in" name="status">'
+    +       opt(CL_STATUS.map(s=>s.k).concat(
+              c.status === CL_STATUS_LEGACY ? [CL_STATUS_LEGACY] : []), c.status)+'</select></div>'
     +     '<div><label class="cl-lbl">'+clT("d.decision")+'</label>'
     +       '<select class="cl-in" name="decision">'+opt(CL_DECISIONS, c.decision)+'</select></div>'
     +   '</div>'
@@ -2884,7 +2951,7 @@ function clOpenDetail(id){
     const msg = document.getElementById("clDetailMsg");
     try {
       await clRpc("claim_update", { p_pass: clState.pass, p_id: c.id,
-                                    p:{ status: "At supplier" } });
+                                    p:{ status: "Needs to go back to supplier" } });
       box.classList.remove("open");
       await clRefreshAll();
     } catch(err){ msg.textContent = clT("f.err", err.message); }
@@ -3313,14 +3380,14 @@ async function clRefreshAll(){
   clFillFilters();
 }
 function clFillFilters(){
-  const keep = (sel, vals, allLabel) => {
-    const cur = sel.value;
+  const keep = (sel, vals, allLabel, label) => {
+    const cur = sel.value, lab = label || (v => v);
     sel.innerHTML = '<option value="">'+clEsc(allLabel)+'</option>'
-      + vals.map(v => '<option value="'+clEsc(v)+'">'+clEsc(v)+'</option>').join("");
+      + vals.map(v => '<option value="'+clEsc(v)+'">'+clEsc(lab(v))+'</option>').join("");
     if(vals.includes(cur)) sel.value = cur;
   };
   const uniq = k => Array.from(new Set(clState.claims.map(c => c[k]).filter(Boolean))).sort();
-  keep(document.getElementById("clFStatus"),  uniq("status"),  clT("filter.allstatus"));
+  keep(document.getElementById("clFStatus"),  uniq("status"),  clT("filter.allstatus"), clStatusLabel);
   keep(document.getElementById("clFProduct"), uniq("product"), clT("filter.allproduct"));
 
   // Le pays est un périmètre, pas un filtre de colonne : il se remplit une
