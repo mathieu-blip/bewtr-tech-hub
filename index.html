@@ -422,6 +422,10 @@
   /* nav a{display:flex} l'emporte sur la feuille UA : sans ceci, l'attribut
      hidden ne masque pas le lien et l'onglet apparaîtrait avant déverrouillage. */
   nav a[hidden]{display:none}
+  .spare-table .sp-act{width:1%;white-space:nowrap;text-align:right}
+  .sp-ticket{border:1px solid var(--line);background:#fff;color:var(--ink-soft);font:inherit;font-size:11.5px;
+    font-weight:700;padding:4px 10px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:.15s}
+  .sp-ticket:hover{border-color:var(--orange);color:var(--orange);background:var(--orange-soft)}
   .cl-gate{max-width:430px;margin:40px auto;text-align:center}
   .cl-gate .lock{font-size:40px;color:var(--orange);line-height:1}
   .cl-gate h3{margin:14px 0 6px;font-size:18px}
@@ -898,12 +902,20 @@
             </div>
             <div id="clOrderApp" hidden>
               <p class="sec-sub" style="margin-left:0" data-cl-i18n="order.sub"></p>
+              <div class="cl-filters">
+                <select id="clOFCountry"></select>
+                <select id="clOFSupplier"></select>
+              </div>
               <div id="clOrder"></div>
             </div>
           </div>
 
           <!-- commandes passées -->
           <div id="clViewHistory" hidden>
+            <div class="cl-filters">
+              <select id="clHFCountry"></select>
+              <select id="clHFSupplier"></select>
+            </div>
             <div id="clHistory"></div>
           </div>
         </div>
@@ -1691,8 +1703,10 @@ function partName(n){var t=PARTTR[n]; return (lang!=="en"&&t&&t[lang])||n;}
 function openSpare(p){
   const lb=ensureImgbox(), d=I18N[lang];
   const parts=(typeof SPAREPARTS!=='undefined'&&SPAREPARTS[p])||[];
-  const rows=parts.map(x=>x.sep?'<tr><td colspan="3" style="height:14px;border-bottom:2px solid #cdd8e0;background:#f2f7fb;padding:0"></td></tr>':'<tr><td class="sp-ph">'+(x.img?'<img src="'+x.img+'">':'')+'</td><td>'+x.ref+'</td><td>'+partName(x.name)+'</td></tr>').join('');
-  const table=parts.length?'<table class="spare-table"><thead><tr><th></th><th>'+d['spare.ref']+'</th><th>'+d['spare.name']+'</th></tr></thead><tbody>'+rows+'</tbody></table>':'<p class="small muted" style="padding:10px">'+d['spare.none']+'</p>';
+  const tl=(typeof clT==='function')?clT('spare.ticket'):'Ticket';
+  const rows=parts.map(x=>x.sep?'<tr><td colspan="4" style="height:14px;border-bottom:2px solid #cdd8e0;background:#f2f7fb;padding:0"></td></tr>':'<tr><td class="sp-ph">'+(x.img?'<img src="'+x.img+'">':'')+'</td><td>'+x.ref+'</td><td>'+partName(x.name)+'</td>'
+    +'<td class="sp-act"><button type="button" class="sp-ticket" data-ref="'+x.ref+'" data-machine="'+String(p).replace(/"/g,'&quot;')+'" title="'+tl+'">⚑ '+tl+'</button></td></tr>').join('');
+  const table=parts.length?'<table class="spare-table"><thead><tr><th></th><th>'+d['spare.ref']+'</th><th>'+d['spare.name']+'</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>':'<p class="small muted" style="padding:10px">'+d['spare.none']+'</p>';
   const view=(typeof EXPLODED!=='undefined'&&EXPLODED[p])||null;
   lb.querySelector('.img-title').textContent=productLabel(p)+' — '+d['schema.exploded'];
   lb.querySelector('.img-scroll').innerHTML=(view?'<img src="'+view+'" style="width:100%;max-width:1000px;height:auto;display:block;margin:0 auto 16px;border-radius:4px">':'')+table;
@@ -2127,6 +2141,7 @@ const CL_I18N = {
     "o.ref":"Réf. fournisseur","o.internal":"Réf. interne","o.desig":"Désignation","o.qty":"Qté",
     "o.unit":"Prix unitaire","o.total":"Total","o.claim":"Claim","o.sum":"Total commande",
     "h.none":"Aucune commande enregistrée.","h.on":"le","h.line":"ligne","h.lines":"lignes",
+    "spare.ticket":"Ticket","of.allcountry":"Tous les pays","of.allsupplier":"Tous les fournisseurs","of.none":"Aucune ligne ne correspond aux filtres.",
     "err.load":"Chargement impossible : %s"
   },
   en:{
@@ -2161,6 +2176,7 @@ const CL_I18N = {
     "o.ref":"Supplier ref.","o.internal":"Internal ref.","o.desig":"Designation","o.qty":"Qty",
     "o.unit":"Unit price","o.total":"Total","o.claim":"Claim","o.sum":"Order total",
     "h.none":"No order recorded yet.","h.on":"on","h.line":"line","h.lines":"lines",
+    "spare.ticket":"Ticket","of.allcountry":"All countries","of.allsupplier":"All suppliers","of.none":"No line matches the filters.",
     "err.load":"Could not load: %s"
   },
   de:{
@@ -2195,6 +2211,7 @@ const CL_I18N = {
     "o.ref":"Lieferantennr.","o.internal":"Interne Nr.","o.desig":"Bezeichnung","o.qty":"Menge",
     "o.unit":"Einzelpreis","o.total":"Summe","o.claim":"Claim","o.sum":"Bestellsumme",
     "h.none":"Noch keine Bestellung erfasst.","h.on":"am","h.line":"Zeile","h.lines":"Zeilen",
+    "spare.ticket":"Ticket","of.allcountry":"Alle Länder","of.allsupplier":"Alle Lieferanten","of.none":"Keine Zeile entspricht den Filtern.",
     "err.load":"Laden fehlgeschlagen: %s"
   }
 };
@@ -2209,6 +2226,7 @@ function clT(k, a){
 const clState = {
   pass:"", orderPass:"", view:"board",
   claims:[], parts:[], pending:[], orders:[],
+  orderFilter:{country:"",supplier:""}, histFilter:{country:"",supplier:""}, prefill:null,
   newParts:[], loaded:false
 };
 
@@ -2664,14 +2682,46 @@ function clRenderParts(){
 
 /* ------------------------------------------ bulletin de commande (order) */
 function clGroupPending(){
-  const by = {};
-  clState.pending.forEach(l => (by[l.supplier] = by[l.supplier] || []).push(l));
+  const f = clState.orderFilter, by = {};
+  clState.pending
+    .filter(l => (!f.country || l.country === f.country) && (!f.supplier || l.supplier === f.supplier))
+    .forEach(l => (by[l.supplier] = by[l.supplier] || []).push(l));
   return by;
 }
+
+/** Remplit un select en conservant la valeur choisie si elle existe encore. */
+function clFillSelect(el, values, allLabel, current){
+  if(!el) return;
+  el.innerHTML = '<option value="">' + clEsc(allLabel) + '</option>'
+    + values.map(v => '<option value="' + clEsc(v) + '">' + clEsc(v) + '</option>').join("");
+  el.value = values.includes(current) ? current : "";
+}
+
+/** Le pays d'une commande passée se lit sur les claims qui l'ont déclenchée. */
+function clOrderCountries(o){
+  const out = [];
+  (o.lines || []).forEach(l => {
+    const c = clState.claims.find(x => x.id === l.claim_id);
+    if(c && c.country && !out.includes(c.country)) out.push(c.country);
+  });
+  return out;
+}
 function clRenderOrder(){
+  const f = clState.orderFilter;
+  clFillSelect(document.getElementById("clOFCountry"),
+    Array.from(new Set(clState.pending.map(l => l.country).filter(Boolean))).sort(),
+    clT("of.allcountry"), f.country);
+  clFillSelect(document.getElementById("clOFSupplier"),
+    Array.from(new Set(clState.pending.map(l => l.supplier).filter(Boolean))).sort(),
+    clT("of.allsupplier"), f.supplier);
+
   const by = clGroupPending(), sups = Object.keys(by).sort();
   const host = document.getElementById("clOrder");
-  if(!sups.length){ host.innerHTML = '<div class="cl-empty">'+clT("order.none")+'</div>'; return; }
+  if(!sups.length){
+    host.innerHTML = '<div class="cl-empty">'
+      + clT(clState.pending.length ? "of.none" : "order.none") + '</div>';
+    return;
+  }
 
   host.innerHTML = sups.map(s => {
     const lines = by[s];
@@ -2778,9 +2828,19 @@ async function clSaveOrder(sup, btn){
 }
 
 function clRenderHistory(){
-  const host = document.getElementById("clHistory");
+  const host = document.getElementById("clHistory"), f = clState.histFilter;
+  const allCountries = Array.from(new Set(clState.orders.flatMap(clOrderCountries))).sort();
+  clFillSelect(document.getElementById("clHFCountry"), allCountries, clT("of.allcountry"), f.country);
+  clFillSelect(document.getElementById("clHFSupplier"),
+    Array.from(new Set(clState.orders.map(o => o.supplier).filter(Boolean))).sort(),
+    clT("of.allsupplier"), f.supplier);
+
   if(!clState.orders.length){ host.innerHTML = '<div class="cl-empty">'+clT("h.none")+'</div>'; return; }
-  host.innerHTML = clState.orders.map(o =>
+  const shown = clState.orders.filter(o =>
+    (!f.supplier || o.supplier === f.supplier)
+    && (!f.country || clOrderCountries(o).includes(f.country)));
+  if(!shown.length){ host.innerHTML = '<div class="cl-empty">'+clT("of.none")+'</div>'; return; }
+  host.innerHTML = shown.map(o =>
     '<div class="cl-sup"><header><b>'+clEsc(o.code)+'</b>'
     + '<span class="muted small">'+clEsc(o.supplier)+' · '+clDate(o.created_at)
     + ((o.lines || []).length ? ' · '+o.lines.length+' '+clPl(o.lines.length) : '')
@@ -2859,7 +2919,7 @@ function clInit(){
       document.getElementById("clApp").hidden = false;
       clRevealNav();
       await clRefreshAll();
-      clShowView("board");
+      if(clState.prefill) clApplyPrefill(); else clShowView("board");
     } catch(ex){ err.textContent = clT("gate.net"); }
   });
 
@@ -2886,6 +2946,15 @@ function clInit(){
     const b = e.target.closest("button[data-v]"); if(b) clShowView(b.dataset.v);
   });
   document.getElementById("clRefresh").addEventListener("click", clRefreshAll);
+
+  [["clOFCountry","orderFilter","country"],["clOFSupplier","orderFilter","supplier"],
+   ["clHFCountry","histFilter","country"],["clHFSupplier","histFilter","supplier"]]
+   .forEach(function(x){
+     document.getElementById(x[0]).addEventListener("change", function(){
+       clState[x[1]][x[2]] = this.value;
+       if(x[1] === "orderFilter") clRenderOrder(); else clRenderHistory();
+     });
+   });
   ["clSearch","clFStatus","clFCountry","clFProduct"].forEach(id => {
     document.getElementById(id).addEventListener("input", clRenderBoard);
   });
@@ -2937,6 +3006,50 @@ function clInit(){
     finally { btn.disabled = false; }
   });
 }
+
+/* ------------------------------------------- ticket depuis une pièce
+   Le bouton « Ticket » des listes de pièces d'une machine amène ici.
+   L'onglet claims étant protégé, la pièce choisie est mise de côté et
+   n'est appliquée qu'une fois la phrase de passe saisie. */
+function clTicketFor(ref, machine){
+  clState.prefill = { ref: ref, machine: machine };
+  const lb = document.getElementById("imgbox");
+  if(lb){ lb.style.display = "none"; try{ unlockScroll(); }catch(e){} }
+  try{ showTab("#claims"); }catch(e){}
+  if(clState.pass) clApplyPrefill();
+  // sinon l'écran de garde s'affiche : clApplyPrefill() sera rappelé après
+}
+
+function clApplyPrefill(){
+  const p = clState.prefill;
+  if(!p) return;
+  clState.prefill = null;
+  clShowView("new");
+
+  const sel = document.getElementById("clnProduct");
+  if(sel && p.machine && Array.from(sel.options).some(o => o.value === p.machine)) sel.value = p.machine;
+
+  const part = clState.parts.find(x => x.ref === p.ref);
+  if(part && !clState.newParts.some(x => x.ref === part.ref)){
+    clState.newParts.push({ ref: part.ref, name: part.name, qty: 1 });
+    clRenderNewParts();
+  }
+
+  const t = document.getElementById("clnTitle");
+  if(t){
+    // un objet par défaut vaut mieux qu'un champ obligatoire vide ; il est
+    // pré-sélectionné pour que le technicien le remplace en tapant
+    if(!t.value) t.value = (part ? part.name : p.ref) + " (" + p.ref + ")";
+    t.focus(); t.select();
+  }
+}
+
+document.addEventListener("click", function(e){
+  const b = e.target.closest ? e.target.closest(".sp-ticket") : null;
+  if(!b) return;
+  e.preventDefault();
+  clTicketFor(b.dataset.ref, b.dataset.machine);
+});
 
 /** L'onglet reste hors du menu tant que la phrase n'a pas été saisie. */
 function clRevealNav(){
