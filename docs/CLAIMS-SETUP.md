@@ -306,6 +306,31 @@ bulletin et l'historique d'un seul coup.
 
 ---
 
+## Commander pour reconstituer le stock
+
+Une machine réparée avec une pièce prise en stock laisse une pièce **à
+racheter**. Ce n'est donc pas l'état du claim qui décide si une pièce reste
+à commander, mais la case **« Commandée »** de la ligne.
+
+Concrètement : un claim en « Réparé et remis en stock » garde ses pièces
+dans l'onglet **Pièces à commander** tant qu'on ne les a pas cochées. Un
+claim en renvoi fournisseur aussi.
+
+La case existe à deux endroits, sur la même donnée :
+
+| Où | Effet |
+|---|---|
+| **Pièces à commander**, une case par référence | Coche **tous les tickets** qui demandent cette pièce, d'un coup. C'est le geste normal après avoir passé la commande. |
+| **Panneau de détail d'un ticket**, une case par pièce | Ne touche que cette ligne. Sert à corriger, ou à traiter un ticket isolément. |
+
+Une pièce partie sur un **bon de commande** enregistré est cochée
+automatiquement et n'est pas décochable ici : c'est le bon qui fait foi.
+Décocher laisserait croire qu'elle est à recommander.
+
+Demande `docs/supabase/07-piece-commandee.sql`.
+
+---
+
 ## Les statuts
 
 Ils sont **stockés en anglais** — c'est la valeur canonique, celle qu'on
