@@ -934,7 +934,6 @@
               <select id="clPFSupplier"></select>
             </div>
             <div id="clParts"></div>
-            <div class="cl-ok" id="clPartsMsg"></div>
           </div>
 
           <!-- bulletin de commande — second niveau de phrase de passe -->
@@ -955,6 +954,8 @@
                 <select id="clOFSupplier"></select>
               </div>
               <div id="clOrder"></div>
+              <!-- hors du bloc re-rendu : clRenderOrder réécrit #clOrder -->
+              <div class="cl-ok" id="clOrderMsg"></div>
             </div>
           </div>
 
@@ -2193,9 +2194,9 @@ const CL_I18N = {
     "d.status":"Statut","d.decision":"Décision","d.repair":"Note de réparation","d.repairdate":"Date de réparation",
     "d.restock":"Lieu de restockage","d.save":"Enregistrer","d.saved":"Enregistré.","d.parts":"Pièces demandées",
     "d.addpart":"Ajouter une pièce","d.ordered":"commandée","d.none":"Aucune pièce demandée.",
-    "parts.sub":"Toutes les pièces demandées et pas encore commandées, avec leur référence interne BE WTR. Les références fournisseur et les prix sont dans le bulletin de commande.",
+    "parts.sub":"Toutes les pièces demandées et pas encore commandées, avec leur référence interne BE WTR. Une pièce quitte cette liste dès que le bon de commande est enregistré. Les références fournisseur et les prix sont dans le bulletin de commande.",
     "parts.none":"Aucune pièce en attente de commande.",
-    "parts.ordered":"Commandée","parts.ordered.help":"Cocher marque la pièce commandée sur tous les tickets qui la demandent.","parts.ordered.done":"Commandée : %s","parts.qty":"Qté","parts.claims":"Claims concernés",
+    "parts.ordered":"Commandée","parts.ordered.help":"Marque la pièce commandée pour ce ticket, sans passer par un bon de commande.","parts.qty":"Qté","parts.claims":"Claims concernés",
     "order.gate.t":"Bulletin de commande","order.gate.sub":"Cette zone expose les références fournisseur et les prix d'achat. Saisissez la phrase de passe commande.",
     "order.sub":"Un bloc par fournisseur. Cochez ce que vous commandez, exportez le classeur Excel, puis enregistrez la commande — les claims concernés passent automatiquement en « pièce commandée ».",
     "order.none":"Rien à commander pour le moment.",
@@ -2230,9 +2231,9 @@ const CL_I18N = {
     "d.status":"Status","d.decision":"Decision","d.repair":"Repair note","d.repairdate":"Repair date",
     "d.restock":"Restocking location","d.save":"Save","d.saved":"Saved.","d.parts":"Parts requested",
     "d.addpart":"Add a part","d.ordered":"ordered","d.none":"No parts requested.",
-    "parts.sub":"Every part requested and not yet ordered, with its BE WTR internal reference. Supplier references and prices live in the order form.",
+    "parts.sub":"Every part requested and not yet ordered, with its BE WTR internal reference. A part leaves this list as soon as the order is saved. Supplier references and prices live in the order form.",
     "parts.none":"No parts waiting to be ordered.",
-    "parts.ordered":"Ordered","parts.ordered.help":"Ticking marks the part ordered on every ticket that asks for it.","parts.ordered.done":"Ordered: %s","parts.qty":"Qty","parts.claims":"Related claims",
+    "parts.ordered":"Ordered","parts.ordered.help":"Marks the part ordered on this ticket, without going through an order form.","parts.qty":"Qty","parts.claims":"Related claims",
     "order.gate.t":"Order form","order.gate.sub":"This area exposes supplier references and purchase prices. Enter the order passphrase.",
     "order.sub":"One block per supplier. Tick what you are ordering, export the Excel workbook, then save the order — the related claims switch to “spare part ordered” automatically.",
     "order.none":"Nothing to order right now.",
@@ -2267,9 +2268,9 @@ const CL_I18N = {
     "d.status":"Status","d.decision":"Entscheidung","d.repair":"Reparaturnotiz","d.repairdate":"Reparaturdatum",
     "d.restock":"Einlagerungsort","d.save":"Speichern","d.saved":"Gespeichert.","d.parts":"Angeforderte Teile",
     "d.addpart":"Teil hinzufügen","d.ordered":"bestellt","d.none":"Keine Teile angefordert.",
-    "parts.sub":"Alle angeforderten und noch nicht bestellten Teile mit ihrer internen BE-WTR-Nummer. Lieferantennummern und Preise stehen im Bestellbeleg.",
+    "parts.sub":"Alle angeforderten und noch nicht bestellten Teile mit ihrer internen BE-WTR-Nummer. Ein Teil verlässt diese Liste, sobald die Bestellung gespeichert ist. Lieferantennummern und Preise stehen im Bestellbeleg.",
     "parts.none":"Keine Teile zur Bestellung offen.",
-    "parts.ordered":"Bestellt","parts.ordered.help":"Markiert das Teil auf allen Tickets als bestellt.","parts.ordered.done":"Bestellt: %s","parts.qty":"Menge","parts.claims":"Zugehörige Claims",
+    "parts.ordered":"Bestellt","parts.ordered.help":"Markiert das Teil für dieses Ticket als bestellt, ohne Bestellschein.","parts.qty":"Menge","parts.claims":"Zugehörige Claims",
     "order.gate.t":"Bestellbeleg","order.gate.sub":"Dieser Bereich zeigt Lieferantennummern und Einkaufspreise. Bestell-Passphrase eingeben.",
     "order.sub":"Ein Block je Lieferant. Zeilen ankreuzen, Excel-Mappe exportieren, dann Bestellung speichern — die zugehörigen Claims wechseln automatisch auf „Ersatzteil bestellt“.",
     "order.none":"Derzeit nichts zu bestellen.",
@@ -3157,48 +3158,17 @@ function clRenderParts(){
     host.innerHTML = '<div class="cl-empty">'+clT(any ? "of.none" : "parts.none")+'</div>';
     return;
   }
+  // Pas de case « commandée » ici : c'est l'enregistrement du bon de commande
+  // qui marque les lignes, et elles quittent alors cette liste d'elles-mêmes.
   host.innerHTML = '<div class="cl-wrap-x"><table class="cl-table"><thead><tr>'
-    + '<th title="'+clEsc(clT("parts.ordered.help"))+'">'+clT("parts.ordered")+'</th>'
     + '<th>'+clT("o.internal")+'</th><th>'+clT("o.desig")+'</th>'
     + '<th>'+clT("parts.qty")+'</th><th>'+clT("parts.claims")+'</th></tr></thead><tbody>'
-    + list.map((e, i) => '<tr style="cursor:default">'
-        + '<td><input type="checkbox" data-ord="'+i+'" title="'
-        +   clEsc(clT("parts.ordered.help"))+'"></td>'
+    + list.map(e => '<tr style="cursor:default">'
         + '<td class="code" style="color:var(--orange);font-weight:700">'+clEsc(e.ref || "—")+'</td>'
         + '<td>'+clEsc(e.name || "—")+'</td>'
         + '<td><b>'+e.qty+'</b></td>'
         + '<td class="code">'+clEsc(e.claims.join(", "))+'</td></tr>').join("")
     + '</tbody></table></div>';
-
-  // cocher une pièce coche toutes les lignes qui la demandent
-  host.querySelectorAll("[data-ord]").forEach(function(cb){
-    cb.onchange = function(){
-      cb.disabled = true;
-      clSetOrdered(list[Number(cb.dataset.ord)], true, cb);
-    };
-  });
-}
-
-/**
- * Marque des lignes comme commandées, sans passer par un bon.
- * Sert à reconstituer le stock : la machine est réparée, la pièce reste à
- * racheter, et une fois rachetée elle sort de la liste.
- */
-async function clSetOrdered(entry, ordered, cb){
-  const msg = document.getElementById("clPartsMsg");
-  try {
-    await clRpc("claim_parts_set_ordered",
-      { p_pass: clState.pass, p_ids: entry.ids, p_ordered: !!ordered });
-    await clRefreshAll();
-    // écrit après le re-rendu : clRenderParts réécrit le tableau au-dessus
-    if(msg) msg.textContent = clT("parts.ordered.done",
-      (entry.ref || "") + " — " + entry.claims.length + " "
-      + clT(entry.claims.length === 1 ? "h.line" : "h.lines"));
-    if(clState.orderPass){ await clLoadOrder(); clRenderOrder(); }
-  } catch(err){
-    if(cb){ cb.checked = !ordered; cb.disabled = false; }
-    if(msg) msg.textContent = clT("f.err", err.message);
-  }
 }
 
 /* ------------------------------------------ bulletin de commande (order) */
@@ -3387,6 +3357,8 @@ function clExportSupplier(sup){
 async function clSaveOrder(sup, btn){
   const ids = clSelectedLines(sup);
   const msg = document.querySelector('[data-msg="'+CSS.escape(sup)+'"]');
+  const out = document.getElementById("clOrderMsg");
+  if(out) out.textContent = "";
   if(!ids.length){ msg.textContent = clT("order.pick"); return; }
   btn.disabled = true;
   try {
@@ -3396,9 +3368,11 @@ async function clSaveOrder(sup, btn){
     const o = await clRpc("order_create",
       { p_pass: clState.orderPass, p_supplier: sup, p_line_ids: ids, p_by: by || null });
     const code = Array.isArray(o) ? (o[0] || {}).code : (o || {}).code;
-    msg.textContent = clT("order.saved", code || "");
     await clRefreshAll(); await clLoadOrder();
     clRenderOrder(); clRenderHistory();
+    // écrit après le re-rendu : le bloc fournisseur qui portait le message
+    // vient d'être réécrit, voire de disparaître si tout est parti.
+    if(out) out.textContent = clT("order.saved", code || "");
   } catch(err){
     msg.textContent = clT("f.err", err.message);
   } finally { btn.disabled = false; }
