@@ -237,15 +237,35 @@ texte : les totaux se recalculent dans Excel sans retouche.
 
 **https://service.bewtr.com/#claims-new**
 
-Il ouvre directement le formulaire de déclaration, sans passer par le
-tableau. Sur téléphone, le technicien saisit le mot de passe du hub puis la
-phrase `spare part` **une seule fois par appareil** : les visites suivantes
-tombent droit sur le formulaire.
+Il ouvre le formulaire de déclaration **sans phrase de passe**. Le technicien
+saisit le mot de passe du hub (une fois par appareil, comme pour le reste du
+guide) et se retrouve directement sur le formulaire.
 
-La phrase du bulletin de commande (`order`), qui ouvre les prix d'achat,
-n'est **jamais** mémorisée — elle est redemandée à chaque visite. Le bouton
-« Verrouiller », en haut de l'onglet, efface la phrase mémorisée : à utiliser
-sur un appareil prêté ou rendu.
+En mode déclaration, il ne voit que ça : pas d'onglets, pas de liste de
+claims, pas de prix. Deux fonctions seulement lui sont ouvertes —
+`parts_public()` (réf interne, désignation, machines) et `claim_submit()`
+(dépose un claim, renvoie son numéro). Il ne peut lire aucun claim existant,
+pas même le sien.
+
+> **Ce script est indispensable.** Sans `05-formulaire-public.sql`, le lien
+> retombe sur l'écran de passe. À exécuter avant de diffuser le lien.
+
+Un bouton **Accès équipe** ouvre la plateforme complète pour qui a la phrase.
+Une fois saisie, elle est mémorisée par appareil ; le bouton **Verrouiller**
+l'efface, à utiliser sur un appareil prêté. La phrase du bulletin de commande
+(`order`) n'est **jamais** mémorisée.
+
+### Le garde-fou du formulaire ouvert
+
+`claim_submit()` refuse au-delà de **200 déclarations par heure**, tous
+techniciens confondus. Un usage normal n'approche pas ce plafond ; il n'est
+là que pour qu'une clé publique trouvée ne serve pas à remplir la base. Les
+quantités sont bornées à 999 et les pièces doivent exister au catalogue :
+pas de texte libre par cette porte.
+
+
+
+**https://service.bewtr.com/#claims-new**
 
 ---
 
@@ -258,12 +278,18 @@ L'ordre suit le flux de travail, de gauche à droite.
 | **Nouveau ticket** | Le technicien déclare. C'est la cible du lien ci-dessus. |
 | **Claims à qualifier** | Les claims **sans pièce**. C'est la pile de tri. |
 | **Claims avec pièces** | Dès qu'une pièce est attachée, le claim bascule ici. |
+| **Renvoi fournisseur** | Le claim est parti chez le fournisseur : il sort des deux piles précédentes et n'encombre plus le tri. |
 | **Pièces à commander** | Le besoin agrégé, réf. interne seulement. |
 | **Bulletin de commande** | Par fournisseur, avec prix. Phrase `order`. |
 | **Commandes passées** | L'historique, prix figés au jour de la commande. |
 
 Le passage d'un onglet à l'autre est **automatique** : il n'y a rien à
-cocher ni à déplacer. Un claim porte une pièce, ou il n'en porte pas.
+cocher ni à déplacer. Un claim ouvert vit dans **exactement un** onglet —
+parti chez le fournisseur, sinon avec pièces, sinon à qualifier. Le bouton
+« Renvoyer au fournisseur » du panneau de détail l'y envoie.
+
+Les compteurs suivent le périmètre pays : choisir « France » ne cadre pas
+seulement les tableaux, il recalcule aussi les chiffres au-dessus.
 
 ### Trier vite
 
