@@ -233,6 +233,53 @@ texte : les totaux se recalculent dans Excel sans retouche.
 
 ---
 
+## Le lien à donner aux techniciens
+
+**https://service.bewtr.com/#claims-new**
+
+Il ouvre directement le formulaire de déclaration, sans passer par le
+tableau. Sur téléphone, le technicien saisit le mot de passe du hub puis la
+phrase `spare part` **une seule fois par appareil** : les visites suivantes
+tombent droit sur le formulaire.
+
+La phrase du bulletin de commande (`order`), qui ouvre les prix d'achat,
+n'est **jamais** mémorisée — elle est redemandée à chaque visite. Le bouton
+« Verrouiller », en haut de l'onglet, efface la phrase mémorisée : à utiliser
+sur un appareil prêté ou rendu.
+
+---
+
+## Le parcours en six onglets
+
+L'ordre suit le flux de travail, de gauche à droite.
+
+| Onglet | À quoi il sert |
+|---|---|
+| **Nouveau ticket** | Le technicien déclare. C'est la cible du lien ci-dessus. |
+| **Claims à qualifier** | Les claims **sans pièce**. C'est la pile de tri. |
+| **Claims avec pièces** | Dès qu'une pièce est attachée, le claim bascule ici. |
+| **Pièces à commander** | Le besoin agrégé, réf. interne seulement. |
+| **Bulletin de commande** | Par fournisseur, avec prix. Phrase `order`. |
+| **Commandes passées** | L'historique, prix figés au jour de la commande. |
+
+Le passage d'un onglet à l'autre est **automatique** : il n'y a rien à
+cocher ni à déplacer. Un claim porte une pièce, ou il n'en porte pas.
+
+### Trier vite
+
+Ouvrir un claim de la pile « à qualifier » affiche des **pièces probables**
+déduites de la description, et un bouton **Vue éclatée** quand la machine en
+a une. Un clic attache la pièce, le statut passe à « pièce à commander », et
+le claim quitte la pile. C'est le geste du tri.
+
+### Le pays est un périmètre, pas un filtre
+
+Le sélecteur de pays est en haut, au-dessus des onglets, et vaut pour
+**tous** : choisir « France » cadre les claims, les pièces à commander, le
+bulletin et l'historique d'un seul coup.
+
+---
+
 ## Évolution 2 — script à exécuter
 
 `docs/supabase/04-evolutions.sql` **doit être exécuté une fois** dans
