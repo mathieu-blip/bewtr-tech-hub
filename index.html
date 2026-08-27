@@ -422,6 +422,17 @@
   /* nav a{display:flex} l'emporte sur la feuille UA : sans ceci, l'attribut
      hidden ne masque pas le lien et l'onglet apparaîtrait avant déverrouillage. */
   nav a[hidden]{display:none}
+  /* la visionneuse (z-index 2000) passe sous le panneau de détail (2600)
+     quand elle est ouverte depuis un ticket : ses boutons deviendraient
+     inatteignables, le panneau interceptant les clics */
+  #imgbox.cl-over{z-index:2700}
+  .cl-scope{display:flex;align-items:center;gap:11px;flex-wrap:wrap;margin:0 0 16px;
+    padding:11px 15px;background:#fff;border:1px solid var(--line);border-radius:12px}
+  .cl-scope .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--ink-soft);font-weight:700}
+  .cl-scope select{padding:7px 12px;border:1px solid var(--line);border-radius:9px;font:inherit;
+    font-size:14px;font-weight:600;background:#fff;color:var(--ink);min-width:190px}
+  .cl-scope select:focus{outline:none;border-color:var(--orange)}
+  .cl-scope .hint{font-size:12.5px;color:var(--ink-soft)}
   .cl-chk{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-soft);cursor:pointer;white-space:nowrap}
   .cl-chk input{accent-color:var(--orange);width:15px;height:15px;cursor:pointer}
   .cl-sugg{margin-top:10px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
@@ -803,9 +814,17 @@
 
         <!-- application -->
         <div id="clApp" hidden>
+          <div class="cl-scope">
+            <span class="lbl" data-cl-i18n="scope.country"></span>
+            <select id="clCountry"></select>
+            <span class="hint" data-cl-i18n="scope.hint"></span>
+            <button class="cl-btn ghost sm" id="clLock" data-cl-i18n="scope.lock"
+                    style="margin-left:auto"></button>
+          </div>
           <div class="cl-tabs" id="clTabs">
-            <button data-v="board" class="on"><span data-cl-i18n="tab.board"></span><span class="count" id="clCountBoard">0</span></button>
             <button data-v="new"><span data-cl-i18n="tab.new"></span></button>
+            <button data-v="board" class="on"><span data-cl-i18n="tab.board"></span><span class="count" id="clCountBoard">0</span></button>
+            <button data-v="withparts"><span data-cl-i18n="tab.withparts"></span><span class="count" id="clCountWith">0</span></button>
             <button data-v="parts"><span data-cl-i18n="tab.parts"></span><span class="count" id="clCountParts">0</span></button>
             <button data-v="order"><span data-cl-i18n="tab.order"></span></button>
             <button data-v="history"><span data-cl-i18n="tab.history"></span></button>
@@ -817,7 +836,6 @@
             <div class="cl-filters">
               <input id="clSearch" type="search" data-cl-ph="filter.search">
               <select id="clFStatus"></select>
-              <select id="clFCountry"></select>
               <select id="clFProduct"></select>
               <select id="clFSupplier"></select>
               <label class="cl-chk"><input type="checkbox" id="clShowArchived">
@@ -887,6 +905,8 @@
               <div>
                 <span class="cl-lbl" data-cl-i18n="f.parts"></span>
                 <div class="cl-picker">
+                  <button class="cl-btn ghost sm" type="button" id="clnExploded"
+                          data-cl-i18n="d.exploded" style="margin-bottom:9px" hidden></button>
                   <input class="cl-in" id="clnPartQ" data-cl-ph="f.parts.search">
                   <div class="res" id="clnPartRes"></div>
                   <div class="cl-chosen" id="clnPartSel"></div>
@@ -903,7 +923,6 @@
           <div id="clViewParts" hidden>
             <p class="sec-sub" style="margin-left:0" data-cl-i18n="parts.sub"></p>
             <div class="cl-filters">
-              <select id="clPFCountry"></select>
               <select id="clPFSupplier"></select>
             </div>
             <div id="clParts"></div>
@@ -924,7 +943,6 @@
             <div id="clOrderApp" hidden>
               <p class="sec-sub" style="margin-left:0" data-cl-i18n="order.sub"></p>
               <div class="cl-filters">
-                <select id="clOFCountry"></select>
                 <select id="clOFSupplier"></select>
               </div>
               <div id="clOrder"></div>
@@ -934,7 +952,6 @@
           <!-- commandes passées -->
           <div id="clViewHistory" hidden>
             <div class="cl-filters">
-              <select id="clHFCountry"></select>
               <select id="clHFSupplier"></select>
             </div>
             <div id="clHistory"></div>
@@ -1706,8 +1723,10 @@ function ensureImgbox(){
   if(!lb){lb=document.createElement('div');lb.id='imgbox';
     lb.innerHTML='<div class="img-wrap"><div class="img-bar"><span class="img-title"></span><span class="img-note"></span><button class="img-close">✕</button></div><div class="img-scroll"></div></div>';
     document.body.appendChild(lb);
-    lb.addEventListener('click',e=>{if(e.target===lb){lb.style.display='none';unlockScroll();waterSplash(e.clientX,e.clientY);}});
-    lb.querySelector('.img-close').addEventListener('click',(e)=>{lb.style.display='none';unlockScroll();waterSplash(e.clientX,e.clientY);});
+    lb.addEventListener('click',e=>{if(e.target===lb){lb.style.display='none';unlockScroll();waterSplash(e.clientX,e.clientY);
+      try{ clState.spareTarget=null; }catch(err){} lb.classList.remove('cl-over');}});
+    lb.querySelector('.img-close').addEventListener('click',(e)=>{lb.style.display='none';unlockScroll();waterSplash(e.clientX,e.clientY);
+      try{ clState.spareTarget=null; }catch(err){} lb.classList.remove('cl-over');});
   }
   return lb;
 }
@@ -1724,7 +1743,8 @@ function partName(n){var t=PARTTR[n]; return (lang!=="en"&&t&&t[lang])||n;}
 function openSpare(p){
   const lb=ensureImgbox(), d=I18N[lang];
   const parts=(typeof SPAREPARTS!=='undefined'&&SPAREPARTS[p])||[];
-  const tl=(typeof clT==='function')?clT('spare.ticket'):'Ticket';
+  const tgt=(typeof clState!=='undefined')?clState.spareTarget:null;
+  const tl=(typeof clT==='function')?clT(tgt?'spare.add':'spare.ticket'):'Ticket';
   const rows=parts.map(x=>x.sep?'<tr><td colspan="4" style="height:14px;border-bottom:2px solid #cdd8e0;background:#f2f7fb;padding:0"></td></tr>':'<tr><td class="sp-ph">'+(x.img?'<img src="'+x.img+'">':'')+'</td><td>'+x.ref+'</td><td>'+partName(x.name)+'</td>'
     +'<td class="sp-act"><button type="button" class="sp-ticket" data-ref="'+x.ref+'" data-machine="'+String(p).replace(/"/g,'&quot;')+'" title="'+tl+'">⚑ '+tl+'</button></td></tr>').join('');
   const table=parts.length?'<table class="spare-table"><thead><tr><th></th><th>'+d['spare.ref']+'</th><th>'+d['spare.name']+'</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>':'<p class="small muted" style="padding:10px">'+d['spare.none']+'</p>';
@@ -2081,6 +2101,14 @@ function jumpTo(id){
 }
 var SECT_IDS=['home','overview','beconnect','install','settings','maintenance','safety','troubleshoot','experience','tutorials','schemas','glossary','gaps','feedback','claims'];
 function showTab(hash){
+  // Lien direct donné aux techniciens : ouvre l'onglet claims et, une fois
+  // la phrase saisie, se pose sur le formulaire au lieu du tableau.
+  // showTab s'exécute avant la déclaration de clState : on note l'intention
+  // sur window, sans quoi elle serait perdue dans un catch silencieux.
+  if((hash || "").replace(/^#/, "") === "claims-new"){
+    hash = "#claims";
+    window.__clLanding = "new";
+  }
   var id=(hash||'#home').replace('#','');
   if(SECT_IDS.indexOf(id)<0) id='home';
   document.querySelectorAll('.wrap>section').forEach(function(s){ s.classList.toggle('tab-on', s.id===id); });
@@ -2125,6 +2153,11 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeSearc
    docs/claims-supabase.md.
    ================================================================== */
 
+/* Le technicien saisit la phrase une fois par appareil, comme pour le hub.
+   Seul le niveau « claims » est mémorisé : la phrase du bulletin de commande,
+   qui ouvre les prix d'achat, est redemandée à chaque visite. */
+const CL_PASS_KEY = "bewtr_claims_pass";
+
 const CLAIMS_URL = "https://hgjitagsffudcvqwakwk.supabase.co";
 const CLAIMS_KEY = "sb_publishable_SCtyYXfzE2i-D4CfIoeBPw__u1pB0Dk";
 
@@ -2134,7 +2167,8 @@ const CL_I18N = {
     "t":"Claims & pièces détachées","sub":"Suivi des retours machines et commande des pièces, de la déclaration au bon fournisseur.",
     "gate.t":"Espace protégé","gate.sub":"Saisissez la phrase de passe pour ouvrir la plateforme claims.","gate.go":"Ouvrir",
     "gate.bad":"Phrase de passe incorrecte.","gate.net":"Connexion impossible. Vérifiez votre réseau puis réessayez.",
-    "tab.board":"Claims","tab.new":"Nouveau ticket","tab.parts":"Pièces à commander","tab.order":"Bulletin de commande","tab.history":"Commandes passées",
+    "scope.lock":"Verrouiller","scope.country":"Pays","scope.hint":"S'applique à tous les onglets.",
+    "tab.board":"Claims à qualifier","tab.withparts":"Claims avec pièces","kpi.toqualify":"À qualifier","kpi.withparts":"Avec pièces","board.none.toqualify":"Tout est qualifié : chaque claim ouvert porte au moins une pièce.","board.none.withparts":"Aucun claim ne porte encore de pièce.","d.sugg":"Pièces probables","tab.new":"Nouveau ticket","tab.parts":"Pièces à commander","tab.order":"Bulletin de commande","tab.history":"Commandes passées",
     "kpi.total":"Claims ouverts","kpi.new":"À réparer","kpi.order":"Pièces à commander","kpi.supplier":"Chez le fournisseur","kpi.warranty":"Sous garantie",
     "filter.search":"Rechercher — titre, n° série, technicien, société…","filter.refresh":"Actualiser",
     "filter.allstatus":"Tous les statuts","filter.allcountry":"Tous les pays","filter.allproduct":"Tous les produits",
@@ -2162,7 +2196,7 @@ const CL_I18N = {
     "o.ref":"Réf. fournisseur","o.internal":"Réf. interne","o.desig":"Désignation","o.qty":"Qté",
     "o.unit":"Prix unitaire","o.total":"Total","o.claim":"Claim","o.sum":"Total commande",
     "h.none":"Aucune commande enregistrée.","h.on":"le","h.line":"ligne","h.lines":"lignes",
-    "spare.ticket":"Ticket","filter.archived":"Voir les archivés","filter.allsupplier":"Tous les fournisseurs","f.sugg":"Suggestions","f.parts.hint":"Choisissez d'abord un produit pour ne voir que ses pièces.","d.archive":"Archiver le ticket","o.editprice":"Prix modifiable — enregistré pour les prochaines commandes","o.priced":"Prix enregistré pour %s.","o.pricelocal":"Prix appliqué à cette commande, mais pas enregistré : %s","kpi.archived":"Archivés",
+    "spare.ticket":"Ticket","spare.add":"Ajouter","d.exploded":"Vue éclatée","filter.archived":"Voir les archivés","filter.allsupplier":"Tous les fournisseurs","f.sugg":"Suggestions","f.parts.hint":"Choisissez d'abord un produit pour ne voir que ses pièces.","d.archive":"Archiver le ticket","o.editprice":"Prix modifiable — enregistré pour les prochaines commandes","o.priced":"Prix enregistré pour %s.","o.pricelocal":"Prix appliqué à cette commande, mais pas enregistré : %s","kpi.archived":"Archivés",
     "of.allcountry":"Tous les pays","of.allsupplier":"Tous les fournisseurs","of.none":"Aucune ligne ne correspond aux filtres.",
     "err.load":"Chargement impossible : %s"
   },
@@ -2170,7 +2204,8 @@ const CL_I18N = {
     "t":"Claims & spare parts","sub":"Machine returns and spare-part ordering, from the report to the supplier order form.",
     "gate.t":"Protected area","gate.sub":"Enter the passphrase to open the claims platform.","gate.go":"Open",
     "gate.bad":"Wrong passphrase.","gate.net":"Cannot connect. Check your network and try again.",
-    "tab.board":"Claims","tab.new":"New ticket","tab.parts":"Parts to order","tab.order":"Order form","tab.history":"Past orders",
+    "scope.lock":"Lock","scope.country":"Country","scope.hint":"Applies to every tab.",
+    "tab.board":"Claims to qualify","tab.withparts":"Claims with parts","kpi.toqualify":"To qualify","kpi.withparts":"With parts","board.none.toqualify":"Everything is qualified: every open claim carries at least one part.","board.none.withparts":"No claim carries a part yet.","d.sugg":"Likely parts","tab.new":"New ticket","tab.parts":"Parts to order","tab.order":"Order form","tab.history":"Past orders",
     "kpi.total":"Open claims","kpi.new":"To repair","kpi.order":"Parts to order","kpi.supplier":"At supplier","kpi.warranty":"Under warranty",
     "filter.search":"Search — title, serial, technician, company…","filter.refresh":"Refresh",
     "filter.allstatus":"All statuses","filter.allcountry":"All countries","filter.allproduct":"All products",
@@ -2198,7 +2233,7 @@ const CL_I18N = {
     "o.ref":"Supplier ref.","o.internal":"Internal ref.","o.desig":"Designation","o.qty":"Qty",
     "o.unit":"Unit price","o.total":"Total","o.claim":"Claim","o.sum":"Order total",
     "h.none":"No order recorded yet.","h.on":"on","h.line":"line","h.lines":"lines",
-    "spare.ticket":"Ticket","filter.archived":"Show archived","filter.allsupplier":"All suppliers","f.sugg":"Suggestions","f.parts.hint":"Pick a product first to narrow the list to its parts.","d.archive":"Archive ticket","o.editprice":"Editable price — saved for future orders","o.priced":"Price saved for %s.","o.pricelocal":"Price applied to this order but not saved: %s","kpi.archived":"Archived",
+    "spare.ticket":"Ticket","spare.add":"Add","d.exploded":"Exploded view","filter.archived":"Show archived","filter.allsupplier":"All suppliers","f.sugg":"Suggestions","f.parts.hint":"Pick a product first to narrow the list to its parts.","d.archive":"Archive ticket","o.editprice":"Editable price — saved for future orders","o.priced":"Price saved for %s.","o.pricelocal":"Price applied to this order but not saved: %s","kpi.archived":"Archived",
     "of.allcountry":"All countries","of.allsupplier":"All suppliers","of.none":"No line matches the filters.",
     "err.load":"Could not load: %s"
   },
@@ -2206,7 +2241,8 @@ const CL_I18N = {
     "t":"Claims & Ersatzteile","sub":"Rückläufer und Ersatzteilbestellung, von der Meldung bis zum Lieferantenbeleg.",
     "gate.t":"Geschützter Bereich","gate.sub":"Passphrase eingeben, um die Claims-Plattform zu öffnen.","gate.go":"Öffnen",
     "gate.bad":"Falsche Passphrase.","gate.net":"Keine Verbindung. Netzwerk prüfen und erneut versuchen.",
-    "tab.board":"Claims","tab.new":"Neues Ticket","tab.parts":"Zu bestellende Teile","tab.order":"Bestellbeleg","tab.history":"Frühere Bestellungen",
+    "scope.lock":"Sperren","scope.country":"Land","scope.hint":"Gilt für alle Reiter.",
+    "tab.board":"Claims zu qualifizieren","tab.withparts":"Claims mit Teilen","kpi.toqualify":"Zu qualifizieren","kpi.withparts":"Mit Teilen","board.none.toqualify":"Alles qualifiziert: jeder offene Claim trägt mindestens ein Teil.","board.none.withparts":"Noch kein Claim mit Teil.","d.sugg":"Wahrscheinliche Teile","tab.new":"Neues Ticket","tab.parts":"Zu bestellende Teile","tab.order":"Bestellbeleg","tab.history":"Frühere Bestellungen",
     "kpi.total":"Offene Claims","kpi.new":"Zu reparieren","kpi.order":"Teile zu bestellen","kpi.supplier":"Beim Lieferanten","kpi.warranty":"In Garantie",
     "filter.search":"Suchen — Titel, Seriennummer, Techniker, Firma…","filter.refresh":"Aktualisieren",
     "filter.allstatus":"Alle Status","filter.allcountry":"Alle Länder","filter.allproduct":"Alle Produkte",
@@ -2234,7 +2270,7 @@ const CL_I18N = {
     "o.ref":"Lieferantennr.","o.internal":"Interne Nr.","o.desig":"Bezeichnung","o.qty":"Menge",
     "o.unit":"Einzelpreis","o.total":"Summe","o.claim":"Claim","o.sum":"Bestellsumme",
     "h.none":"Noch keine Bestellung erfasst.","h.on":"am","h.line":"Zeile","h.lines":"Zeilen",
-    "spare.ticket":"Ticket","filter.archived":"Archivierte anzeigen","filter.allsupplier":"Alle Lieferanten","f.sugg":"Vorschläge","f.parts.hint":"Zuerst ein Produkt wählen, um nur dessen Teile zu sehen.","d.archive":"Ticket archivieren","o.editprice":"Preis änderbar — für künftige Bestellungen gespeichert","o.priced":"Preis für %s gespeichert.","o.pricelocal":"Preis für diese Bestellung übernommen, aber nicht gespeichert: %s","kpi.archived":"Archiviert",
+    "spare.ticket":"Ticket","spare.add":"Hinzufügen","d.exploded":"Explosionszeichnung","filter.archived":"Archivierte anzeigen","filter.allsupplier":"Alle Lieferanten","f.sugg":"Vorschläge","f.parts.hint":"Zuerst ein Produkt wählen, um nur dessen Teile zu sehen.","d.archive":"Ticket archivieren","o.editprice":"Preis änderbar — für künftige Bestellungen gespeichert","o.priced":"Preis für %s gespeichert.","o.pricelocal":"Preis für diese Bestellung übernommen, aber nicht gespeichert: %s","kpi.archived":"Archiviert",
     "of.allcountry":"Alle Länder","of.allsupplier":"Alle Lieferanten","of.none":"Keine Zeile entspricht den Filtern.",
     "err.load":"Laden fehlgeschlagen: %s"
   }
@@ -2250,8 +2286,9 @@ function clT(k, a){
 const clState = {
   pass:"", orderPass:"", view:"board",
   claims:[], parts:[], pending:[], orders:[],
-  orderFilter:{country:"",supplier:""}, histFilter:{country:"",supplier:""},
-  partsFilter:{country:"",supplier:""}, orderUnchecked:{}, prefill:null,
+  orderFilter:{supplier:""}, histFilter:{supplier:""},
+  partsFilter:{supplier:""}, orderUnchecked:{}, prefill:null, boardMode:"toqualify",
+  country:"", spareTarget:null,     // périmètre commun à tous les onglets
   newParts:[], loaded:false
 };
 
@@ -2508,6 +2545,28 @@ function clSuggestParts(text, product, limit){
   return scored.slice(0, limit || 5).map(x => x.p);
 }
 
+/**
+ * Attache une pièce à un claim, puis rouvre le détail à jour.
+ *
+ * Un claim qui reçoit une pièce n'est plus « à réparer » mais « pièce à
+ * commander » : sans ce basculement il resterait invisible du bulletin de
+ * commande, et le statut cesserait de vouloir dire quelque chose. On ne
+ * touche que « New (to repair) » — un claim déjà chez le fournisseur ou en
+ * cours de réparation garde le sien.
+ */
+async function clAttachPart(claim, ref){
+  await clRpc("claim_add_part", { p_pass: clState.pass, p_claim_id: claim.id,
+                                  p_ref: ref, p_qty: 1 });
+  if(claim.status === "New (to repair)"){
+    try {
+      await clRpc("claim_update", { p_pass: clState.pass, p_id: claim.id,
+                                    p:{ status: "Spare part to order" } });
+    } catch(e){ /* la pièce est attachée : un statut non basculé n'est pas bloquant */ }
+  }
+  await clRefreshAll();
+  clOpenDetail(claim.id);
+}
+
 /* ------------------------------------------------------- présentation */
 const CL_STATUS = [
   { k:"New (to repair)",       c:"#c4c4c4" },
@@ -2530,6 +2589,30 @@ const CL_COUNTRIES = ["Switzerland","France","UK","Spain","Sweden","Denmark","Fi
    par défaut, sans être supprimé. */
 const CL_DONE = ["Repaired and restocked", "Spare Parts (Bin)"];
 function clIsArchived(c){ return CL_DONE.includes(c.status); }
+
+/* Le partage entre les deux onglets. Aucune colonne en base : un claim
+   bascule dès qu'on lui attache une pièce, et revient si on la retire. */
+function clHasParts(c){ return (c.parts || []).length > 0; }
+
+/**
+ * Le produit d'un claim ne porte pas toujours la clé exacte du catalogue :
+ * la reprise Monday donne « BW-0596 BOX 20 Home » ou « PRO2 White » là où
+ * les listes s'appellent « BOX 20 » et « PRO2 ». On retire le SKU de tête,
+ * puis on retient la clé la plus longue qui commence la désignation.
+ */
+function clSpareKey(product){
+  if(!product || typeof SPAREPARTS === "undefined") return null;
+  const t = String(product).replace(/^BW-[\d.]+\s*/, "").trim().toLowerCase();
+  if(!t) return null;
+  let best = null;
+  Object.keys(SPAREPARTS).forEach(function(k){
+    const kl = k.toLowerCase();
+    if(t === kl || t.indexOf(kl) === 0){
+      if(!best || kl.length > best.length) best = k;
+    }
+  });
+  return best;
+}
 
 /** Le fournisseur d'une pièce, via le catalogue chargé. */
 function clPartSupplier(ref){
@@ -2598,7 +2681,8 @@ function clRenderKpis(){
     n + (x.parts || []).filter(p => !p.ordered).reduce((m, p) => m + (p.qty || 0), 0), 0);
   const open = c.filter(x => !clIsArchived(x));
   const kpis = [
-    { n:open.length, l:clT("kpi.total") },
+    { n:open.filter(x => !clHasParts(x)).length, l:clT("kpi.toqualify") },
+    { n:open.filter(clHasParts).length, l:clT("kpi.withparts") },
     { n:c.filter(x => x.status === "New (to repair)").length, l:clT("kpi.new") },
     { n:partsWaiting, l:clT("kpi.order") },
     { n:c.filter(x => x.status === "At supplier").length, l:clT("kpi.supplier") },
@@ -2606,14 +2690,14 @@ function clRenderKpis(){
   ];
   document.getElementById("clKpis").innerHTML = kpis.map(k =>
     '<div class="cl-kpi"><div class="n">'+k.n+'</div><div class="l">'+clEsc(k.l)+'</div></div>').join("");
-  document.getElementById("clCountBoard").textContent = open.length;
+  document.getElementById("clCountBoard").textContent = open.filter(x => !clHasParts(x)).length;
+  document.getElementById("clCountWith").textContent  = open.filter(clHasParts).length;
   document.getElementById("clCountParts").textContent = partsWaiting;
 }
 
 function clFiltered(){
   const q  = (document.getElementById("clSearch").value || "").trim().toLowerCase();
   const st = document.getElementById("clFStatus").value;
-  const co = document.getElementById("clFCountry").value;
   const pr = document.getElementById("clFProduct").value;
   const su = document.getElementById("clFSupplier").value;
   const arch = document.getElementById("clShowArchived").checked;
@@ -2621,8 +2705,14 @@ function clFiltered(){
     // un claim clos ne remonte que si on demande explicitement les archivés,
     // ou si on filtre justement sur son statut
     if(!arch && clIsArchived(c) && st !== c.status) return false;
+    // un claim sans pièce est à qualifier ; dès qu'il en porte une il passe
+    // dans l'autre onglet, sans rien à cocher ni à déplacer
+    if(!clIsArchived(c)){
+      if(clState.boardMode === "toqualify" &&  clHasParts(c)) return false;
+      if(clState.boardMode === "withparts"  && !clHasParts(c)) return false;
+    }
     if(st && c.status  !== st) return false;
-    if(co && c.country !== co) return false;
+    if(clState.country && c.country !== clState.country) return false;
     if(pr && c.product !== pr) return false;
     if(su && !clClaimSuppliers(c).includes(su)) return false;
     if(!q) return true;
@@ -2634,7 +2724,12 @@ function clFiltered(){
 function clRenderBoard(){
   const rows = clFiltered();
   const host = document.getElementById("clBoard");
-  if(!rows.length){ host.innerHTML = '<div class="cl-empty">—</div>'; return; }
+  if(!rows.length){
+    host.innerHTML = '<div class="cl-empty">'
+      + clT("board.none." + (clState.boardMode === "withparts" ? "withparts" : "toqualify"))
+      + '</div>';
+    return;
+  }
   // groupé par statut, comme les groupes du board Monday
   const order = CL_STATUS.map(s => s.k);
   const groups = {};
@@ -2711,7 +2806,12 @@ function clOpenDetail(id){
           : c.under_warranty === false ? '<span class="cl-badge nowar">'+clT("war.no")+'</span>'
           : '<span class="muted">'+clT("war.unknown")+'</span>')+'</dd>'
     + '</dl>'
-    + '<h4>'+clT("d.parts")+'</h4>' + parts
+    + '<h4>'+clT("d.parts")
+    +   (clSpareKey(c.product)
+          ? ' <button class="cl-btn ghost sm" type="button" id="clDetailExploded">'
+            + clT("d.exploded")+'</button>' : '')
+    + '</h4>' + parts
+    + '<div class="cl-sugg" id="clDetailSugg"></div>'
     + '<div class="cl-picker" style="margin-top:11px">'
     +   '<input class="cl-in" id="clDetailPartQ" placeholder="'+clEsc(clT("d.addpart"))+'">'
     +   '<div class="res" id="clDetailPartRes"></div>'
@@ -2742,13 +2842,31 @@ function clOpenDetail(id){
   box.classList.add("open");
   document.getElementById("clClose").onclick = () => box.classList.remove("open");
 
-  // ajout d'une pièce depuis le détail
+  // ajout d'une pièce depuis le détail — recherche et suggestion passent
+  // par le même chemin, pour que le statut suive dans les deux cas
   const q = document.getElementById("clDetailPartQ"), res = document.getElementById("clDetailPartRes");
   q.oninput = () => clPartResults(q.value, res, async p => {
-    await clRpc("claim_add_part", { p_pass: clState.pass, p_claim_id: c.id, p_ref: p.ref, p_qty: 1 });
     q.value = ""; res.innerHTML = "";
-    await clRefreshAll(); clOpenDetail(id);
+    await clAttachPart(c, p.ref);
   }, c.product);
+
+  // Pièces probables d'après ce que le technicien a décrit. C'est le geste
+  // du tri : lire le claim, cliquer la pièce, il bascule dans l'autre onglet.
+  const ex = document.getElementById("clDetailExploded");
+  if(ex) ex.onclick = function(){ clOpenSpareFor(c.product, { claimId: c.id }); };
+
+  const sg = document.getElementById("clDetailSugg");
+  const already = (c.parts || []).map(x => x.ref);
+  const sugg = clSuggestParts((c.title || "") + " " + (c.description || ""), c.product, 4)
+                 .filter(x => !already.includes(x.ref));
+  if(sugg.length){
+    sg.innerHTML = '<span class="lbl">' + clEsc(clT("d.sugg")) + '</span>'
+      + sugg.map((x, i) => '<button type="button" data-g="' + i + '">'
+          + '<span class="r">' + clEsc(x.ref) + '</span>' + clEsc(x.name) + '</button>').join("");
+    sg.querySelectorAll("button").forEach(function(bt){
+      bt.onclick = function(){ clAttachPart(c, sugg[Number(bt.dataset.g)].ref); };
+    });
+  } else { sg.innerHTML = ""; }
 
   // retrait d'une pièce pas encore commandée
   document.getElementById("clDetailBody").querySelectorAll("[data-del]").forEach(b => {
@@ -2823,6 +2941,8 @@ function clRenderNewForm(){
   clRenderNewParts();
   clUpdateWarrantyHint();
   clRenderSuggestions();
+  const exb = document.getElementById("clnExploded");
+  if(exb) exb.hidden = !clSpareKey(document.getElementById("clnProduct").value);
 }
 
 /** Propose des pièces d'après ce que le technicien vient de décrire. */
@@ -2885,7 +3005,7 @@ function clRenderParts(){
   clState.claims.forEach(c => (c.parts || []).forEach(p => {
     if(p.ordered) return;
     if(clIsArchived(c)) return;                       // un claim clos ne commande plus
-    if(f.country && c.country !== f.country) return;
+    if(clState.country && c.country !== clState.country) return;
     if(f.supplier && clPartSupplier(p.ref) !== f.supplier) return;
     const key = p.ref || ("free:" + (p.free_text || ""));
     const e = agg[key] = agg[key] || { ref:p.ref, name:p.name || p.free_text, qty:0, claims:[] };
@@ -2897,9 +3017,6 @@ function clRenderParts(){
 
   const openClaims = clState.claims.filter(c => !clIsArchived(c));
   const waiting = openClaims.filter(c => (c.parts||[]).some(x => !x.ordered));
-  clFillSelect(document.getElementById("clPFCountry"),
-    Array.from(new Set(waiting.map(c => c.country).filter(Boolean))).sort(),
-    clT("of.allcountry"), f.country);
   clFillSelect(document.getElementById("clPFSupplier"),
     Array.from(new Set(waiting.flatMap(c => clClaimSuppliers(c)))).sort(),
     clT("of.allsupplier"), f.supplier);
@@ -2924,7 +3041,8 @@ function clRenderParts(){
 function clGroupPending(){
   const f = clState.orderFilter, by = {};
   clState.pending
-    .filter(l => (!f.country || l.country === f.country) && (!f.supplier || l.supplier === f.supplier))
+    .filter(l => (!clState.country || l.country === clState.country)
+              && (!f.supplier || l.supplier === f.supplier))
     .forEach(l => (by[l.supplier] = by[l.supplier] || []).push(l));
   return by;
 }
@@ -2949,9 +3067,6 @@ function clOrderCountries(o){
 }
 function clRenderOrder(){
   const f = clState.orderFilter;
-  clFillSelect(document.getElementById("clOFCountry"),
-    Array.from(new Set(clState.pending.map(l => l.country).filter(Boolean))).sort(),
-    clT("of.allcountry"), f.country);
   clFillSelect(document.getElementById("clOFSupplier"),
     Array.from(new Set(clState.pending.map(l => l.supplier).filter(Boolean))).sort(),
     clT("of.allsupplier"), f.supplier);
@@ -3127,8 +3242,6 @@ async function clSaveOrder(sup, btn){
 
 function clRenderHistory(){
   const host = document.getElementById("clHistory"), f = clState.histFilter;
-  const allCountries = Array.from(new Set(clState.orders.flatMap(clOrderCountries))).sort();
-  clFillSelect(document.getElementById("clHFCountry"), allCountries, clT("of.allcountry"), f.country);
   clFillSelect(document.getElementById("clHFSupplier"),
     Array.from(new Set(clState.orders.map(o => o.supplier).filter(Boolean))).sort(),
     clT("of.allsupplier"), f.supplier);
@@ -3136,7 +3249,7 @@ function clRenderHistory(){
   if(!clState.orders.length){ host.innerHTML = '<div class="cl-empty">'+clT("h.none")+'</div>'; return; }
   const shown = clState.orders.filter(o =>
     (!f.supplier || o.supplier === f.supplier)
-    && (!f.country || clOrderCountries(o).includes(f.country)));
+    && (!clState.country || clOrderCountries(o).includes(clState.country)));
   if(!shown.length){ host.innerHTML = '<div class="cl-empty">'+clT("of.none")+'</div>'; return; }
   host.innerHTML = shown.map(o =>
     '<div class="cl-sup"><header><b>'+clEsc(o.code)+'</b>'
@@ -3170,8 +3283,14 @@ function clFillFilters(){
   };
   const uniq = k => Array.from(new Set(clState.claims.map(c => c[k]).filter(Boolean))).sort();
   keep(document.getElementById("clFStatus"),  uniq("status"),  clT("filter.allstatus"));
-  keep(document.getElementById("clFCountry"), uniq("country"), clT("filter.allcountry"));
   keep(document.getElementById("clFProduct"), uniq("product"), clT("filter.allproduct"));
+
+  // Le pays est un périmètre, pas un filtre de colonne : il se remplit une
+  // fois avec tous les pays connus et ne bouge pas quand on change d'onglet.
+  const cs = document.getElementById("clCountry"), curC = cs.value;
+  cs.innerHTML = '<option value="">' + clEsc(clT("filter.allcountry")) + '</option>'
+    + uniq("country").map(v => '<option value="' + clEsc(v) + '">' + clEsc(v) + '</option>').join("");
+  cs.value = clState.country && uniq("country").includes(clState.country) ? clState.country : "";
 
   // Le fournisseur d'un claim se déduit de ses pièces. Tant que le catalogue
   // ne le renvoie pas (script 04 non exécuté), la liste est vide et le filtre
@@ -3196,9 +3315,20 @@ function clApplyI18n(){
 function clShowView(v){
   clState.view = v;
   document.querySelectorAll("#clTabs button").forEach(b => b.classList.toggle("on", b.dataset.v === v));
-  const map = { board:"clViewBoard", new:"clViewNew", parts:"clViewParts",
-                order:"clViewOrder", history:"clViewHistory" };
-  Object.keys(map).forEach(k => { document.getElementById(map[k]).hidden = (k !== v); });
+  // « à qualifier » et « avec pièces » sont deux lectures du même tableau :
+  // mêmes filtres, même rendu, seul le partage change.
+  if(v === "board" || v === "withparts"){
+    clState.boardMode = (v === "withparts") ? "withparts" : "toqualify";
+  }
+  const map = { board:"clViewBoard", withparts:"clViewBoard", new:"clViewNew",
+                parts:"clViewParts", order:"clViewOrder", history:"clViewHistory" };
+  const shown = map[v];
+  Object.keys(map).forEach(k => {
+    const el = document.getElementById(map[k]);
+    if(map[k] !== shown) el.hidden = true;
+  });
+  document.getElementById(shown).hidden = false;
+  if(v === "board" || v === "withparts") clRenderBoard();
   if(v === "new")   clRenderNewForm();
   if(v === "parts") clRenderParts();
   if(v === "history"){
@@ -3206,6 +3336,27 @@ function clShowView(v){
     else document.getElementById("clHistory").innerHTML =
       '<div class="cl-empty">'+clT("order.gate.sub")+'</div>';
   }
+}
+
+/** Rouvre la plateforme sans ressaisie quand l'appareil a déjà la phrase. */
+async function clAutoUnlock(){
+  let pass = null;
+  try{ pass = localStorage.getItem(CL_PASS_KEY); }catch(e){}
+  if(!pass) return;
+  try {
+    const scope = await clRpc("hub_auth", { p_pass: pass });
+    if(!scope){                       // phrase changée depuis : on oublie
+      try{ localStorage.removeItem(CL_PASS_KEY); }catch(e){}
+      return;
+    }
+    clState.pass = pass;
+    document.getElementById("clGate").hidden = true;
+    document.getElementById("clApp").hidden = false;
+    clRevealNav();
+    await clRefreshAll();
+    clShowView(window.__clLanding === "new" ? "new" : "board");
+    window.__clLanding = null;
+  } catch(e){ /* hors réseau : l'écran de garde reste, rien n'est cassé */ }
 }
 
 function clInit(){
@@ -3225,9 +3376,12 @@ function clInit(){
       err.textContent = "";
       document.getElementById("clGate").hidden = true;
       document.getElementById("clApp").hidden = false;
+      if(scope === "claims"){ try{ localStorage.setItem(CL_PASS_KEY, pass); }catch(e){} }
       clRevealNav();
       await clRefreshAll();
-      if(clState.prefill) clApplyPrefill(); else clShowView("board");
+      if(clState.prefill) clApplyPrefill();
+      else clShowView(window.__clLanding === "new" ? "new" : "board");
+      window.__clLanding = null;
     } catch(ex){ err.textContent = clT("gate.net"); }
   });
 
@@ -3255,29 +3409,45 @@ function clInit(){
   });
   document.getElementById("clRefresh").addEventListener("click", clRefreshAll);
 
-  [["clOFCountry","orderFilter","country"],["clOFSupplier","orderFilter","supplier"],
-   ["clHFCountry","histFilter","country"],["clHFSupplier","histFilter","supplier"]]
+  [["clOFSupplier","orderFilter","supplier"],
+   ["clHFSupplier","histFilter","supplier"]]
    .forEach(function(x){
      document.getElementById(x[0]).addEventListener("change", function(){
        clState[x[1]][x[2]] = this.value;
        if(x[1] === "orderFilter") clRenderOrder(); else clRenderHistory();
      });
    });
-  ["clSearch","clFStatus","clFCountry","clFProduct","clFSupplier","clShowArchived"].forEach(id => {
+  document.getElementById("clLock").addEventListener("click", function(){
+    try{ localStorage.removeItem(CL_PASS_KEY); }catch(e){}
+    location.reload();
+  });
+
+  document.getElementById("clCountry").addEventListener("change", function(){
+    clState.country = this.value;
+    // le périmètre vaut pour tout : chaque vue se rejoue
+    clRenderBoard(); clRenderParts();
+    if(clState.orderPass){ clRenderOrder(); clRenderHistory(); }
+  });
+
+  ["clSearch","clFStatus","clFProduct","clFSupplier","clShowArchived"].forEach(id => {
     document.getElementById(id).addEventListener("input", clRenderBoard);
   });
 
-  [["clPFCountry","country"],["clPFSupplier","supplier"]].forEach(function(x){
-    document.getElementById(x[0]).addEventListener("change", function(){
-      clState.partsFilter[x[1]] = this.value;
-      clRenderParts();
-    });
+  document.getElementById("clPFSupplier").addEventListener("change", function(){
+    clState.partsFilter.supplier = this.value;
+    clRenderParts();
   });
 
   // la suggestion suit ce que le technicien écrit
   ["clnTitle","clnDesc"].forEach(id =>
     document.getElementById(id).addEventListener("input", clRenderSuggestions));
   document.getElementById("clnProduct").addEventListener("change", clRenderSuggestions);
+
+  // la vue éclatée n'a de sens qu'une fois la machine choisie
+  const exBtn = document.getElementById("clnExploded"), prodSel = document.getElementById("clnProduct");
+  const syncEx = function(){ exBtn.hidden = !clSpareKey(prodSel.value); };
+  prodSel.addEventListener("change", syncEx);
+  exBtn.addEventListener("click", function(){ clOpenSpareFor(prodSel.value, { form: true }); });
 
   document.getElementById("clBoard").addEventListener("click", e => {
     const tr = e.target.closest("tr[data-id]"); if(tr) clOpenDetail(Number(tr.dataset.id));
@@ -3364,12 +3534,46 @@ function clApplyPrefill(){
   }
 }
 
-document.addEventListener("click", function(e){
+document.addEventListener("click", async function(e){
   const b = e.target.closest ? e.target.closest(".sp-ticket") : null;
   if(!b) return;
   e.preventDefault();
-  clTicketFor(b.dataset.ref, b.dataset.machine);
+  const ref = b.dataset.ref, tgt = clState.spareTarget;
+
+  // Ouverte depuis le catalogue machines, la vue éclatée crée un ticket.
+  // Ouverte depuis un ticket ou depuis le formulaire, elle y ajoute la pièce
+  // — sinon on perdrait le claim en cours pour en créer un doublon.
+  if(!tgt){ clTicketFor(ref, b.dataset.machine); return; }
+
+  clCloseSpare();
+  if(tgt.form){
+    const p = clState.parts.find(x => x.ref === ref);
+    const has = clState.newParts.find(x => x.ref === ref);
+    if(has) has.qty += 1;
+    else clState.newParts.push({ ref: ref, name: p ? p.name : ref, qty: 1 });
+    clRenderNewParts(); clRenderSuggestions();
+  } else if(tgt.claimId){
+    const c = clState.claims.find(x => x.id === tgt.claimId);
+    if(c) await clAttachPart(c, ref);
+  }
 });
+
+/** Ferme la visionneuse et rend la vue éclatée à son usage normal. */
+function clCloseSpare(){
+  const lb = document.getElementById("imgbox");
+  if(lb){ lb.style.display = "none"; lb.classList.remove("cl-over"); try{ unlockScroll(); }catch(e){} }
+  clState.spareTarget = null;
+}
+
+/** Ouvre la vue éclatée en la rattachant au contexte d'appel. */
+function clOpenSpareFor(product, target){
+  const key = clSpareKey(product);
+  if(!key) return;
+  clState.spareTarget = target;
+  openSpare(key);
+  const lb = document.getElementById("imgbox");
+  if(lb) lb.classList.add("cl-over");
+}
 
 /** L'onglet reste hors du menu tant que la phrase n'a pas été saisie. */
 function clRevealNav(){
@@ -3378,6 +3582,7 @@ function clRevealNav(){
 }
 
 clInit();
+clAutoUnlock();
 
 </script>
 </body>
