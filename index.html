@@ -18,6 +18,13 @@
   a{color:var(--orange);text-decoration:none}
   a:hover{text-decoration:underline}
   .shell{display:grid;grid-template-columns:264px 1fr;min-height:100vh}
+  /* Lien externe #ticket : la page se réduit au dépôt d'un ticket. Le menu
+     et la recherche donneraient accès aux tutoriels et aux schémas, qui
+     restent réservés aux techniciens BE WTR. */
+  body.ticket-only .shell{grid-template-columns:1fr}
+  body.ticket-only aside,
+  body.ticket-only .hsearch,
+  body.ticket-only #clRefresh{display:none}
   /* grid items default to min-width:auto, which lets wide content stretch the page past the viewport */
   .shell>*{min-width:0}
   aside{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;background:#fff;border-right:1px solid var(--line);padding:26px 18px;}
@@ -616,8 +623,16 @@
     input.focus();
   }
 
-  var already = false;
-  try{ already = localStorage.getItem(STORE_KEY) === GATE_HASH; }catch(e){}
+  /* Le lien #ticket est fait pour les externes — installateurs, clients,
+     prestataires — qui doivent pouvoir déclarer une panne sans rien
+     connaître. La garde du site les arrêterait. Elle se retire donc, mais
+     la page se réduit alors au seul formulaire : ni menu, ni tutoriels, ni
+     schémas. Voir la classe « ticket-only ». */
+  var TICKET = (location.hash || "").replace(/^#/, "") === "ticket";
+  if(TICKET) document.body.classList.add("ticket-only");
+
+  var already = TICKET;
+  try{ already = already || localStorage.getItem(STORE_KEY) === GATE_HASH; }catch(e){}
   if(already){ unlock(); return; }
 
   form.addEventListener("submit", function(e){
@@ -825,8 +840,6 @@
             <span class="lbl" data-cl-i18n="scope.country"></span>
             <select id="clCountry"></select>
             <span class="hint" data-cl-i18n="scope.hint"></span>
-            <button class="cl-btn ghost sm" id="clLock" data-cl-i18n="scope.lock"
-                    style="margin-left:auto"></button>
           </div>
           <div class="cl-tabs" id="clTabs">
             <button data-v="new"><span data-cl-i18n="tab.new"></span></button>
@@ -875,6 +888,16 @@
                   <input class="cl-in" id="clnSerial" maxlength="80">
                 </div>
               </div>
+              <div>
+                <span class="cl-lbl" data-cl-i18n="f.parts"></span>
+                <div class="cl-picker">
+                  <button class="cl-btn ghost sm" type="button" id="clnExploded"
+                          data-cl-i18n="d.exploded" style="margin-bottom:9px" hidden></button>
+                  <input class="cl-in" id="clnPartQ" data-cl-ph="f.parts.search">
+                  <div class="res" id="clnPartRes"></div>
+                  <div class="cl-chosen" id="clnPartSel"></div>
+                </div>
+              </div>
               <div class="two">
                 <div>
                   <label class="cl-lbl" for="clnInstall" data-cl-i18n="f.install"></label>
@@ -909,16 +932,6 @@
               <div>
                 <label class="cl-lbl" for="clnCompany" data-cl-i18n="f.company"></label>
                 <input class="cl-in" id="clnCompany" maxlength="160" autocomplete="organization">
-              </div>
-              <div>
-                <span class="cl-lbl" data-cl-i18n="f.parts"></span>
-                <div class="cl-picker">
-                  <button class="cl-btn ghost sm" type="button" id="clnExploded"
-                          data-cl-i18n="d.exploded" style="margin-bottom:9px" hidden></button>
-                  <input class="cl-in" id="clnPartQ" data-cl-ph="f.parts.search">
-                  <div class="res" id="clnPartRes"></div>
-                  <div class="cl-chosen" id="clnPartSel"></div>
-                </div>
               </div>
               <div>
                 <button class="cl-btn" type="submit" id="clnSubmit" data-cl-i18n="f.submit"></button>
@@ -1501,7 +1514,16 @@ function applyI18n(){
   document.querySelectorAll("#filters button").forEach(b=>{ b.textContent = d["filter."+b.dataset.f]; });
   // lang buttons
   document.querySelectorAll("#lang button").forEach(b=> b.classList.toggle("on", b.dataset.lang===lang));
-  try{ if(typeof clApplyI18n==="function"){ clApplyI18n(); if(clState.loaded){ clRenderKpis(); clRenderBoard(); clFillFilters(); } } }catch(e){}
+  // Les désignations de pièces suivent la langue : changer de langue doit
+  // redessiner tout ce qui en affiche, pas seulement les libellés fixes.
+  try{ if(typeof clApplyI18n==="function"){
+    clApplyI18n();
+    if(clState.loaded){
+      clRenderKpis(); clRenderBoard(); clFillFilters(); clRenderParts();
+      if(typeof clRenderNewParts==="function"){ clRenderNewParts(); clRenderSuggestions(); }
+      if(clState.orderPass){ clRenderOrder(); clRenderHistory(); }
+    }
+  } }catch(e){}
 }
 
 function renderLibrary(){
@@ -2115,7 +2137,9 @@ function showTab(hash){
   // la phrase saisie, se pose sur le formulaire au lieu du tableau.
   // showTab s'exécute avant la déclaration de clState : on note l'intention
   // sur window, sans quoi elle serait perdue dans un catch silencieux.
-  if((hash || "").replace(/^#/, "") === "claims-new"){
+  var raw = (hash || "").replace(/^#/, "");
+  if(raw === "claims-new" || raw === "ticket"){
+    if(raw === "ticket") window.__clTicketOnly = true;
     hash = "#claims";
     window.__clLanding = "new";
   }
@@ -2132,7 +2156,15 @@ document.addEventListener('click',function(e){
   var id=a.getAttribute('href').replace('#','');
   if(SECT_IDS.indexOf(id)>=0){ e.preventDefault(); showTab('#'+id); var tf=a.getAttribute('data-tf'); if(tf){ var fb=document.querySelector('#filters button[data-f="'+tf+'"]'); if(fb) fb.click(); } var pp=a.getAttribute('data-parts'); if(pp){ showProducts('exploded'); } }
 });
-window.addEventListener('hashchange',function(){ showTab(location.hash); });
+window.addEventListener('hashchange',function(){
+  // #ticket dépouille la page dès le chargement, dans le script de garde :
+  // y arriver par un simple changement de fragment ne rejouerait rien. On
+  // recharge, pour que le lien montre la même chose partout.
+  if((location.hash||"").replace(/^#/,"") === "ticket" && !window.__clTicketOnly){
+    location.reload(); return;
+  }
+  showTab(location.hash);
+});
 
 applyI18n();
 renderLibrary();
@@ -2177,7 +2209,7 @@ const CL_I18N = {
     "t":"Claims & pièces détachées","sub":"Suivi des retours machines et commande des pièces, de la déclaration au bon fournisseur.",
     "gate.t":"Espace protégé","gate.sub":"Saisissez la phrase de passe pour ouvrir la plateforme claims.","gate.go":"Ouvrir",
     "gate.bad":"Phrase de passe incorrecte.","gate.net":"Connexion impossible. Vérifiez votre réseau puis réessayez.",
-    "anon.unlock":"Accès équipe","scope.lock":"Verrouiller","scope.country":"Pays","scope.hint":"S'applique à tous les onglets.",
+    "anon.unlock":"Accès équipe","scope.country":"Pays","scope.hint":"S'applique à tous les onglets.",
     "tab.board":"Claims à qualifier","tab.withparts":"Claims avec pièces","tab.supplier":"Renvoi fournisseur","d.tosupplier":"Renvoyer au fournisseur","board.none.supplier":"Aucun renvoi fournisseur en cours.","kpi.toqualify":"À qualifier","kpi.withparts":"Avec pièces","board.none.toqualify":"Tout est qualifié : chaque claim ouvert porte au moins une pièce.","board.none.withparts":"Aucun claim ne porte encore de pièce.","tab.new":"Nouveau ticket","tab.parts":"Pièces à commander","tab.order":"Bulletin de commande","tab.history":"Commandes passées",
     "kpi.total":"Claims ouverts","kpi.new":"À réparer","kpi.order":"Pièces à commander","kpi.supplier":"Chez le fournisseur","kpi.warranty":"Sous garantie",
     "filter.search":"Rechercher — titre, n° série, technicien, société…","filter.refresh":"Actualiser",
@@ -2216,7 +2248,7 @@ const CL_I18N = {
     "t":"Claims & spare parts","sub":"Machine returns and spare-part ordering, from the report to the supplier order form.",
     "gate.t":"Protected area","gate.sub":"Enter the passphrase to open the claims platform.","gate.go":"Open",
     "gate.bad":"Wrong passphrase.","gate.net":"Cannot connect. Check your network and try again.",
-    "anon.unlock":"Team access","scope.lock":"Lock","scope.country":"Country","scope.hint":"Applies to every tab.",
+    "anon.unlock":"Team access","scope.country":"Country","scope.hint":"Applies to every tab.",
     "tab.board":"Claims to qualify","tab.withparts":"Claims with parts","tab.supplier":"Supplier return","d.tosupplier":"Send back to supplier","board.none.supplier":"No supplier return in progress.","kpi.toqualify":"To qualify","kpi.withparts":"With parts","board.none.toqualify":"Everything is qualified: every open claim carries at least one part.","board.none.withparts":"No claim carries a part yet.","tab.new":"New ticket","tab.parts":"Parts to order","tab.order":"Order form","tab.history":"Past orders",
     "kpi.total":"Open claims","kpi.new":"To repair","kpi.order":"Parts to order","kpi.supplier":"At supplier","kpi.warranty":"Under warranty",
     "filter.search":"Search — title, serial, technician, company…","filter.refresh":"Refresh",
@@ -2255,7 +2287,7 @@ const CL_I18N = {
     "t":"Claims & Ersatzteile","sub":"Rückläufer und Ersatzteilbestellung, von der Meldung bis zum Lieferantenbeleg.",
     "gate.t":"Geschützter Bereich","gate.sub":"Passphrase eingeben, um die Claims-Plattform zu öffnen.","gate.go":"Öffnen",
     "gate.bad":"Falsche Passphrase.","gate.net":"Keine Verbindung. Netzwerk prüfen und erneut versuchen.",
-    "anon.unlock":"Team-Zugang","scope.lock":"Sperren","scope.country":"Land","scope.hint":"Gilt für alle Reiter.",
+    "anon.unlock":"Team-Zugang","scope.country":"Land","scope.hint":"Gilt für alle Reiter.",
     "tab.board":"Claims zu qualifizieren","tab.withparts":"Claims mit Teilen","tab.supplier":"Lieferantenrücksendung","d.tosupplier":"An Lieferant senden","board.none.supplier":"Keine laufende Rücksendung.","kpi.toqualify":"Zu qualifizieren","kpi.withparts":"Mit Teilen","board.none.toqualify":"Alles qualifiziert: jeder offene Claim trägt mindestens ein Teil.","board.none.withparts":"Noch kein Claim mit Teil.","tab.new":"Neues Ticket","tab.parts":"Zu bestellende Teile","tab.order":"Bestellbeleg","tab.history":"Frühere Bestellungen",
     "kpi.total":"Offene Claims","kpi.new":"Zu reparieren","kpi.order":"Teile zu bestellen","kpi.supplier":"Beim Lieferanten","kpi.warranty":"In Garantie",
     "filter.search":"Suchen — Titel, Seriennummer, Techniker, Firma…","filter.refresh":"Aktualisieren",
@@ -2742,6 +2774,18 @@ function clSpareKey(product){
   return best;
 }
 
+/**
+ * Le nom d'une pièce d'un ticket, dans la langue du hub.
+ *
+ * La désignation vient du catalogue en anglais — c'est la valeur stockée,
+ * celle des exports et des bons de commande. Seul l'affichage suit la
+ * langue, via PARTTR. Un texte libre saisi par un technicien n'est pas
+ * traduit : c'est sa phrase, pas une entrée de catalogue.
+ */
+function clPartLabel(p){
+  return p.name ? partName(p.name) : (p.free_text || "");
+}
+
 /** Le fournisseur d'une pièce, via le catalogue chargé. */
 function clPartSupplier(ref){
   if(!ref) return null;
@@ -3020,7 +3064,7 @@ function clOpenDetail(id, edit){
   const parts = (c.parts || []).length
     ? '<div class="cl-chosen">' + c.parts.map(p =>
         '<div class="row"><span class="r">'+clEsc(p.ref || "—")+'</span>'
-        + '<span class="n">'+clEsc(p.name || p.free_text || "")+'</span>'
+        + '<span class="n">'+clEsc(clPartLabel(p))+'</span>'
         + '<span class="muted small">×'+p.qty+'</span>'
         + '<label class="cl-chk" title="'+clEsc(clT("parts.ordered.help"))+'">'
         +   '<input type="checkbox" data-ord-one="'+p.id+'"'+(p.ordered ? " checked" : "")+'>'
@@ -3116,7 +3160,7 @@ function clOpenDetail(id, edit){
   if(sugg.length){
     sg.innerHTML = '<span class="lbl">' + clEsc(clT("f.sugg")) + '</span>'
       + sugg.map((x, i) => '<button type="button" data-g="' + i + '">'
-          + '<span class="r">' + clEsc(x.ref) + '</span>' + clEsc(x.name) + '</button>').join("");
+          + '<span class="r">' + clEsc(x.ref) + '</span>' + clEsc(partName(x.name)) + '</button>').join("");
     sg.querySelectorAll("button").forEach(function(bt){
       bt.onclick = function(){ clAttachPart(c, sugg[Number(bt.dataset.g)].ref); };
     });
@@ -3240,7 +3284,7 @@ function clBindEditForm(c){
   const chosen = () => {
     sel.innerHTML = (c.parts || []).map(x =>
       '<div class="row"><span class="r">'+clEsc(x.ref || "—")+'</span>'
-      + '<span class="n">'+clEsc(x.name || x.free_text || "")+'</span>'
+      + '<span class="n">'+clEsc(clPartLabel(x))+'</span>'
       + '<span class="muted small">×'+x.qty+'</span>'
       // une pièce partie sur un bon reste tracée : elle ne se retire plus
       + (x.ordered ? '' : '<button class="del" type="button" data-x="'+x.id+'">×</button>')
@@ -3259,7 +3303,7 @@ function clBindEditForm(c){
     sg.hidden = false;
     sg.innerHTML = '<span class="lbl">'+clEsc(clT("f.sugg"))+'</span>'
       + list.map((x, i) => '<button type="button" data-s="'+i+'">'
-          + '<span class="r">'+clEsc(x.ref)+'</span>'+clEsc(x.name)+'</button>').join("");
+          + '<span class="r">'+clEsc(x.ref)+'</span>'+clEsc(partName(x.name))+'</button>').join("");
     sg.querySelectorAll("button").forEach(bt => {
       bt.onclick = () => pick(list[Number(bt.dataset.s)].ref);
     });
@@ -3309,8 +3353,12 @@ async function clEditSave(){
 function clPartResults(q, host, onPick, product){
   q = (q || "").trim().toLowerCase();
   if(q.length < 2){ host.innerHTML = ""; return; }
+  // Les noms s'affichent traduits : la recherche doit accepter le mot lu à
+  // l'écran autant que la désignation anglaise du catalogue.
   let list = clState.parts.filter(p =>
-    p.ref.toLowerCase().includes(q) || (p.name || "").toLowerCase().includes(q));
+    p.ref.toLowerCase().includes(q)
+    || (p.name || "").toLowerCase().includes(q)
+    || partName(p.name || "").toLowerCase().includes(q));
 
   // Une machine choisie restreint la liste à ses pièces : c'est ce qui évite
   // de commander la pompe d'un autre modèle. Si le filtre ne laisse rien, on
@@ -3322,7 +3370,7 @@ function clPartResults(q, host, onPick, product){
   }
   host.innerHTML = list.slice(0, 40).map((p, i) =>
     '<button type="button" data-i="'+i+'"><span class="r">'+clEsc(p.ref)+'</span>'
-    + '<span>'+clEsc(p.name)+'</span>'
+    + '<span>'+clEsc(partName(p.name))+'</span>'
     + '<span class="m">'+clEsc((p.machines||[]).slice(0,2).join(", "))+'</span></button>').join("");
   const shown = list.slice(0, 40);
   host.querySelectorAll("button").forEach(b => {
@@ -3362,7 +3410,7 @@ function clRenderSuggestions(){
   host.hidden = false;
   host.innerHTML = '<span class="lbl">' + clEsc(clT("f.sugg")) + '</span>'
     + list.map((p, i) => '<button type="button" data-s="' + i + '">'
-        + '<span class="r">' + clEsc(p.ref) + '</span>' + clEsc(p.name) + '</button>').join("");
+        + '<span class="r">' + clEsc(p.ref) + '</span>' + clEsc(partName(p.name)) + '</button>').join("");
   host.querySelectorAll("button").forEach(function(b){
     b.onclick = function(){
       const p = list[Number(b.dataset.s)];
@@ -3376,7 +3424,7 @@ function clRenderNewParts(){
   const host = document.getElementById("clnPartSel");
   host.innerHTML = clState.newParts.map((p, i) =>
     '<div class="row"><span class="r">'+clEsc(p.ref)+'</span>'
-    + '<span class="n">'+clEsc(p.name)+'</span>'
+    + '<span class="n">'+clEsc(partName(p.name))+'</span>'
     + '<input type="number" min="1" step="1" value="'+p.qty+'" data-q="'+i+'">'
     + '<button class="del" type="button" data-x="'+i+'">×</button></div>').join("");
   host.querySelectorAll("[data-q]").forEach(inp => {
@@ -3440,7 +3488,7 @@ function clRenderParts(){
     + '<th>'+clT("parts.qty")+'</th><th>'+clT("parts.claims")+'</th></tr></thead><tbody>'
     + list.map(e => '<tr style="cursor:default">'
         + '<td class="code" style="color:var(--orange);font-weight:700">'+clEsc(e.ref || "—")+'</td>'
-        + '<td>'+clEsc(e.name || "—")+'</td>'
+        + '<td>'+clEsc(e.name ? partName(e.name) : "—")+'</td>'
         + '<td><b>'+e.qty+'</b></td>'
         + '<td class="code">'+clEsc(e.claims.join(", "))+'</td></tr>').join("")
     + '</tbody></table></div>';
@@ -3504,7 +3552,7 @@ function clRenderOrder(){
             ? '<b>'+clEsc(l.supplier_ref)+'</b>'
             : '<span class="cl-noref">'+clT("order.noref")+'</span>')+'</td>'
         + '<td class="code" style="color:var(--orange)">'+clEsc(l.part_ref || "—")+'</td>'
-        + '<td>'+clEsc(l.name || l.free_text || "—")
+        + '<td>'+clEsc(l.name ? partName(l.name) : (l.free_text || "—"))
             + (l.supplier_desc ? '<br><span class="muted small">'+clEsc(l.supplier_desc)+'</span>' : '')+'</td>'
         + '<td><b>'+l.qty+'</b></td>'
         + '<td><input class="cl-price-in'+(u == null ? ' empty' : '')+'" type="number" min="0" step="0.01"'
@@ -3676,7 +3724,7 @@ function clRenderHistory(){
     + (o.lines || []).map(l => '<tr style="cursor:default">'
         + '<td class="code"><b>'+clEsc(l.supplier_ref || "—")+'</b></td>'
         + '<td class="code" style="color:var(--orange)">'+clEsc(l.part_ref || "—")+'</td>'
-        + '<td>'+clEsc(l.designation || "—")+'</td><td>'+l.qty+'</td>'
+        + '<td>'+clEsc(l.designation ? partName(l.designation) : "—")+'</td><td>'+l.qty+'</td>'
         + '<td>'+clMoney(l.line_total, o.currency)+'</td></tr>').join("")
     + '</tbody></table></div></div>').join("");
 }
@@ -3784,6 +3832,14 @@ async function clAutoUnlock(){
   let pass = null;
   try{ pass = localStorage.getItem(CL_PASS_KEY); }catch(e){}
 
+  // Le lien externe ne montre que le dépôt, même sur un poste BE WTR :
+  // sinon on ne verrait jamais ce qu'un externe voit.
+  if(window.__clTicketOnly){
+    window.__clLanding = null;
+    await clOpenSubmitOnly();
+    return;
+  }
+
   // Sans phrase mémorisée, le lien technicien ouvre le formulaire seul
   // plutôt que l'écran de garde.
   if(!pass){
@@ -3869,16 +3925,14 @@ function clInit(){
    });
   document.getElementById("clUnlock").addEventListener("click", function(){
     clState.anon = false;
+    // on quitte le mode dépôt : le hub complet redevient légitime
+    document.body.classList.remove("ticket-only");
+    window.__clTicketOnly = false;
     document.getElementById("clApp").hidden = true;
     document.getElementById("clGate").hidden = false;
     document.querySelectorAll("#clTabs button").forEach(b => b.hidden = false);
     document.querySelector(".cl-scope").hidden = false;
     document.getElementById("clUnlock").hidden = true;
-  });
-
-  document.getElementById("clLock").addEventListener("click", function(){
-    try{ localStorage.removeItem(CL_PASS_KEY); }catch(e){}
-    location.reload();
   });
 
   document.getElementById("clCountry").addEventListener("change", function(){
