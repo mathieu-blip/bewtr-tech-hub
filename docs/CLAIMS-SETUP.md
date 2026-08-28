@@ -150,6 +150,47 @@ catalogue, lisible dans Excel.
 
 ## La reprise depuis Monday
 
+### Mise à jour du 2026-08-28 — script 09
+
+Le board « Technical troubleshooting » (2470912823) compte **321 items**.
+`docs/supabase/09-reprise-monday.sql` les reprend tous :
+
+| Groupe Monday | Items | Devient |
+|---|---|---|
+| New claims + In progress HQ | 57 | claims ouverts |
+| Done (Repaired and returned to stock) | 264 | **archivés** |
+
+Le script est **rejouable**. `monday_id` est unique et le conflit ne fait
+*rien* : le hub est la source de vérité, un claim corrigé dans le hub ne doit
+pas être réécrit par une reprise. Seuls les tickets absents entrent, ce qui
+permet de relancer la reprise à volonté.
+
+Les statuts Monday sont normalisés à l'entrée :
+
+| Monday | Hub |
+|---|---|
+| `✅ Repaired and restocked` | `Repaired and restocked` *(archivé)* |
+| `❌ Spare Parts (Bin)` | `Spare Parts (Bin)` *(archivé)* |
+| `➡️ In progress (repair in progress)` | `In progress (repair)` |
+| `Stucked` | `Stuck` |
+| `At supplier` | `Needs to go back to supplier` |
+
+**Huit valeurs mises à `null`.** Le champ « nb d'unités impactées » a servi de
+champ libre : on y trouve des numéros de série (`754085`, `2603111957`, …).
+Au-delà de 999 ce n'est plus un compte de machines — et `2603111957`
+dépasserait la capacité d'un `integer`. Même traitement quand la valeur est
+identique au numéro de série de la ligne (`00459`).
+
+Une date de claim `0024-03-14` a été lue `2024-03-14` : l'année avait perdu
+ses deux premiers chiffres à la saisie. Les dates d'installation
+manifestement conventionnelles (`1999-01-01`, `2000-01-01`) sont laissées
+telles quelles — ce sont des données, pas des fautes de frappe.
+
+Les pièces ne sont **pas** reprises : aucune des descriptions importées ici
+n'a le format `BW-0416 5PC …` que le premier import savait lire.
+
+
+
 Les **54 claims non clôturés** du board ont été importés (les 264 du groupe
 « Done » sont restés dans Monday comme archive). La correspondance des
 colonnes :
@@ -256,6 +297,9 @@ avec le rôle `anon`, celui du navigateur :
 | `hub_scope()` / `hub_require()` | refusées — fonctions internes |
 | Dépôt anonyme d'un claim | crée le claim et sa pièce, rejette une réf inventée |
 | `claim_edit()` | corrige, efface un champ vidé, garde titre et date de claim (NOT NULL), refuse une mauvaise phrase |
+
+**À exécuter :** `docs/supabase/09-reprise-monday.sql` — la reprise Monday
+du 2026-08-28. C'est le seul script en attente.
 | Case « Commandée » d'un ticket | la ligne sort du bulletin, décocher la ramène |
 
 ### Deux durcissements après analyse
