@@ -202,9 +202,13 @@ de détail.
 2. **Claims** — le tableau, groupé par statut comme les groupes Monday.
    Clic sur une ligne : panneau de détail, changement de statut, note de
    réparation, lieu de restockage, ajout/retrait de pièces. Le bouton
-   **Corriger**, à côté du numéro `CLM-`, rouvre la fiche telle que le
+   **Modifier**, à côté du numéro `CLM-`, rouvre la fiche telle que le
    technicien l'a remplie — machine, série, dates, pays, contact — pour un
    ticket saisi de travers. Demande `docs/supabase/08-editer-un-ticket.sql`.
+   Tant que le ticket ne porte aucune pièce, les **propositions** s'affichent
+   sous le formulaire et suivent ce qu'on corrige : changer la machine change
+   ce qui est proposé. Choisir une pièce enregistre d'abord la fiche — sinon
+   le rechargement du claim écraserait la correction en cours.
 3. **Pièces à commander** — toutes les pièces en attente, agrégées par
    référence interne, avec les claims concernés. Pas de prix à ce niveau.
    Une pièce quitte cette liste dès que le bon de commande est enregistré.
