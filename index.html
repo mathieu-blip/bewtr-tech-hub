@@ -849,6 +849,7 @@
             <button data-v="parts"><span data-cl-i18n="tab.parts"></span><span class="count" id="clCountParts">0</span></button>
             <button data-v="order"><span data-cl-i18n="tab.order"></span></button>
             <button data-v="history"><span data-cl-i18n="tab.history"></span></button>
+            <button data-v="report"><span data-cl-i18n="tab.report"></span></button>
           </div>
 
           <!-- vue tableau des claims -->
@@ -980,6 +981,12 @@
               <select id="clHFSupplier"></select>
             </div>
             <div id="clHistory"></div>
+          </div>
+
+          <!-- rapport — le périmètre est celui du filtre pays, tout en haut -->
+          <div id="clViewReport" hidden>
+            <p class="sec-sub" style="margin-left:0" data-cl-i18n="rep.sub"></p>
+            <div id="clReport"></div>
           </div>
         </div>
 
@@ -1521,7 +1528,7 @@ function applyI18n(){
   try{ if(typeof clApplyI18n==="function"){
     clApplyI18n();
     if(clState.loaded){
-      clRenderKpis(); clRenderBoard(); clFillFilters(); clRenderParts();
+      clRenderKpis(); clRenderBoard(); clFillFilters(); clRenderParts(); clRenderReport();
       if(typeof clRenderNewParts==="function"){ clRenderNewParts(); clRenderSuggestions(); }
       if(clState.orderPass){ clRenderOrder(); clRenderHistory(); }
     }
@@ -2212,7 +2219,13 @@ const CL_I18N = {
     "gate.t":"Espace protégé","gate.sub":"Saisissez la phrase de passe pour ouvrir la plateforme claims.","gate.go":"Ouvrir",
     "gate.bad":"Phrase de passe incorrecte.","gate.net":"Connexion impossible. Vérifiez votre réseau puis réessayez.",
     "anon.unlock":"Accès équipe","scope.country":"Pays","scope.hint":"S'applique à tous les onglets.",
-    "tab.board":"Claims à qualifier","tab.withparts":"Claims avec pièces","tab.supplier":"Renvoi fournisseur","d.tosupplier":"Renvoyer au fournisseur","board.none.supplier":"Aucun renvoi fournisseur en cours.","kpi.toqualify":"À qualifier","kpi.withparts":"Avec pièces","board.none.toqualify":"Tout est qualifié : chaque claim ouvert porte au moins une pièce.","board.none.withparts":"Aucun claim ne porte encore de pièce.","tab.new":"Nouveau ticket","tab.parts":"Pièces à commander","tab.order":"Bulletin de commande","tab.history":"Commandes passées",
+    "tab.board":"Claims à qualifier","tab.withparts":"Claims avec pièces","tab.supplier":"Renvoi fournisseur","d.tosupplier":"Renvoyer au fournisseur","board.none.supplier":"Aucun renvoi fournisseur en cours.","kpi.toqualify":"À qualifier","kpi.withparts":"Avec pièces","board.none.toqualify":"Tout est qualifié : chaque claim ouvert porte au moins une pièce.","board.none.withparts":"Aucun claim ne porte encore de pièce.","tab.new":"Nouveau ticket","tab.parts":"Pièces à commander","tab.order":"Bulletin de commande","tab.history":"Commandes passées","tab.report":"Rapport",
+    "rep.sub":"Le périmètre est celui du filtre pays, tout en haut de la page.",
+    "rep.open":"Tickets ouverts","rep.closed":"Tickets fermés","rep.parts":"Pièces posées",
+    "rep.byStatus":"Les tickets ouverts, par statut","rep.byProduct":"Tickets fermés, par produit",
+    "rep.byPart":"Pièces utilisées sur les tickets fermés","rep.repaired":"Réparés","rep.binned":"Démontés",
+    "rep.tickets":"Tickets","rep.none.open":"Aucun ticket ouvert.","rep.none.closed":"Aucun ticket fermé.",
+    "rep.none.parts":"Aucune pièce enregistrée sur les tickets fermés de ce périmètre.",
     "kpi.total":"Claims ouverts","kpi.new":"À réparer","kpi.order":"Pièces à commander","kpi.supplier":"Chez le fournisseur","kpi.warranty":"Sous garantie",
     "filter.search":"Rechercher — titre, n° série, technicien, société…","filter.refresh":"Actualiser",
     "filter.allstatus":"Tous les statuts","filter.allcountry":"Tous les pays","filter.allproduct":"Tous les produits",
@@ -2251,7 +2264,13 @@ const CL_I18N = {
     "gate.t":"Protected area","gate.sub":"Enter the passphrase to open the claims platform.","gate.go":"Open",
     "gate.bad":"Wrong passphrase.","gate.net":"Cannot connect. Check your network and try again.",
     "anon.unlock":"Team access","scope.country":"Country","scope.hint":"Applies to every tab.",
-    "tab.board":"Claims to qualify","tab.withparts":"Claims with parts","tab.supplier":"Supplier return","d.tosupplier":"Send back to supplier","board.none.supplier":"No supplier return in progress.","kpi.toqualify":"To qualify","kpi.withparts":"With parts","board.none.toqualify":"Everything is qualified: every open claim carries at least one part.","board.none.withparts":"No claim carries a part yet.","tab.new":"New ticket","tab.parts":"Parts to order","tab.order":"Order form","tab.history":"Past orders",
+    "tab.board":"Claims to qualify","tab.withparts":"Claims with parts","tab.supplier":"Supplier return","d.tosupplier":"Send back to supplier","board.none.supplier":"No supplier return in progress.","kpi.toqualify":"To qualify","kpi.withparts":"With parts","board.none.toqualify":"Everything is qualified: every open claim carries at least one part.","board.none.withparts":"No claim carries a part yet.","tab.new":"New ticket","tab.parts":"Parts to order","tab.order":"Order form","tab.history":"Past orders","tab.report":"Report",
+    "rep.sub":"The scope is the country filter at the top of the page.",
+    "rep.open":"Open tickets","rep.closed":"Closed tickets","rep.parts":"Parts fitted",
+    "rep.byStatus":"Open tickets, by status","rep.byProduct":"Closed tickets, by product",
+    "rep.byPart":"Parts used on closed tickets","rep.repaired":"Repaired","rep.binned":"Stripped",
+    "rep.tickets":"Tickets","rep.none.open":"No open ticket.","rep.none.closed":"No closed ticket.",
+    "rep.none.parts":"No part recorded on the closed tickets in this scope.",
     "kpi.total":"Open claims","kpi.new":"To repair","kpi.order":"Parts to order","kpi.supplier":"At supplier","kpi.warranty":"Under warranty",
     "filter.search":"Search — title, serial, technician, company…","filter.refresh":"Refresh",
     "filter.allstatus":"All statuses","filter.allcountry":"All countries","filter.allproduct":"All products",
@@ -2290,7 +2309,13 @@ const CL_I18N = {
     "gate.t":"Geschützter Bereich","gate.sub":"Passphrase eingeben, um die Claims-Plattform zu öffnen.","gate.go":"Öffnen",
     "gate.bad":"Falsche Passphrase.","gate.net":"Keine Verbindung. Netzwerk prüfen und erneut versuchen.",
     "anon.unlock":"Team-Zugang","scope.country":"Land","scope.hint":"Gilt für alle Reiter.",
-    "tab.board":"Claims zu qualifizieren","tab.withparts":"Claims mit Teilen","tab.supplier":"Lieferantenrücksendung","d.tosupplier":"An Lieferant senden","board.none.supplier":"Keine laufende Rücksendung.","kpi.toqualify":"Zu qualifizieren","kpi.withparts":"Mit Teilen","board.none.toqualify":"Alles qualifiziert: jeder offene Claim trägt mindestens ein Teil.","board.none.withparts":"Noch kein Claim mit Teil.","tab.new":"Neues Ticket","tab.parts":"Zu bestellende Teile","tab.order":"Bestellbeleg","tab.history":"Frühere Bestellungen",
+    "tab.board":"Claims zu qualifizieren","tab.withparts":"Claims mit Teilen","tab.supplier":"Lieferantenrücksendung","d.tosupplier":"An Lieferant senden","board.none.supplier":"Keine laufende Rücksendung.","kpi.toqualify":"Zu qualifizieren","kpi.withparts":"Mit Teilen","board.none.toqualify":"Alles qualifiziert: jeder offene Claim trägt mindestens ein Teil.","board.none.withparts":"Noch kein Claim mit Teil.","tab.new":"Neues Ticket","tab.parts":"Zu bestellende Teile","tab.order":"Bestellbeleg","tab.history":"Frühere Bestellungen","tab.report":"Bericht",
+    "rep.sub":"Der Umfang ist der Länderfilter oben auf der Seite.",
+    "rep.open":"Offene Tickets","rep.closed":"Geschlossene Tickets","rep.parts":"Verbaute Teile",
+    "rep.byStatus":"Offene Tickets nach Status","rep.byProduct":"Geschlossene Tickets nach Produkt",
+    "rep.byPart":"Teile in geschlossenen Tickets","rep.repaired":"Repariert","rep.binned":"Ausgeschlachtet",
+    "rep.tickets":"Tickets","rep.none.open":"Kein offenes Ticket.","rep.none.closed":"Kein geschlossenes Ticket.",
+    "rep.none.parts":"Kein Teil auf den geschlossenen Tickets dieses Umfangs erfasst.",
     "kpi.total":"Offene Claims","kpi.new":"Zu reparieren","kpi.order":"Teile zu bestellen","kpi.supplier":"Beim Lieferanten","kpi.warranty":"In Garantie",
     "filter.search":"Suchen — Titel, Seriennummer, Techniker, Firma…","filter.refresh":"Aktualisieren",
     "filter.allstatus":"Alle Status","filter.allcountry":"Alle Länder","filter.allproduct":"Alle Produkte",
@@ -3360,6 +3385,109 @@ async function clEditSave(){
   return true;
 }
 
+/* ------------------------------------------------------------- rapport */
+
+/**
+ * Le libellé de regroupement d'un produit. On retire le SKU de tête, rien de
+ * plus : « BOX 30 » et « BOX 30E » sont deux machines, les confondre par
+ * préfixe ferait mentir le rapport. Les variantes de couleur restent donc
+ * distinctes elles aussi — c'est ce que le champ dit.
+ */
+function clProductLabel(v){
+  const t = String(v || "").replace(/^BW-[\d.]+\s*/, "").trim();
+  return t || "—";
+}
+
+/**
+ * Le rapport. Le périmètre est celui du filtre pays global, comme partout
+ * ailleurs : un rapport qui ignorerait le filtre affiché juste au-dessus
+ * serait pire qu'absent.
+ */
+function clRenderReport(){
+  const host = document.getElementById("clReport");
+  const rows = clState.claims.filter(c => !clState.country || c.country === clState.country);
+  if(!rows.length){ host.innerHTML = '<div class="cl-empty">'+clT("of.none")+'</div>'; return; }
+
+  const open   = rows.filter(c => !clIsArchived(c));
+  const closed = rows.filter(clIsArchived);
+
+  // ---- tickets ouverts, et leur répartition par statut
+  const byStatus = {};
+  open.forEach(c => { byStatus[c.status] = (byStatus[c.status] || 0) + 1; });
+  const statusOrder = CL_STATUS_ALL.map(x => x.k);
+  const statuses = Object.keys(byStatus).sort((a, b) => {
+    const ia = statusOrder.indexOf(a), ib = statusOrder.indexOf(b);
+    return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+  });
+
+  // ---- tickets fermés par produit
+  const byProduct = {};
+  closed.forEach(c => {
+    const k = clProductLabel(c.product);
+    const e = byProduct[k] = byProduct[k] || { n:0, repaired:0, binned:0 };
+    e.n++;
+    if(c.status === "Spare Parts (Bin)") e.binned++; else e.repaired++;
+  });
+  const products = Object.keys(byProduct).sort((a, b) => byProduct[b].n - byProduct[a].n
+                                                     || a.localeCompare(b));
+
+  // ---- pièces utilisées sur ces tickets fermés
+  const byPart = {};
+  closed.forEach(c => (c.parts || []).forEach(x => {
+    // Les pièces reprises de Monday sont en texte libre, saisi à la main :
+    // « fun », « Fun », « FUN ». On regroupe sans la casse — c'est le seul
+    // rapprochement sûr. « fun » et « ventilateur » restent deux lignes :
+    // deviner qu'il s'agit de la même pièce n'est pas à la machine de le faire.
+    const k = x.ref || ("libre:" + (x.free_text || "").trim().toLowerCase());
+    const e = byPart[k] = byPart[k] || { ref:x.ref, name:clPartLabel(x), qty:0, claims:0 };
+    e.qty += x.qty || 0;
+    e.claims++;
+  }));
+  const parts = Object.values(byPart).sort((a, b) => b.qty - a.qty
+                                                  || String(a.ref||"").localeCompare(String(b.ref||"")));
+  const partsTotal = parts.reduce((n, x) => n + x.qty, 0);
+
+  host.innerHTML =
+      // mêmes cartes que les compteurs du tableau : classes .n et .l
+      '<div class="cl-kpis">'
+    +   '<div class="cl-kpi"><div class="n">'+open.length+'</div><div class="l">'+clT("rep.open")+'</div></div>'
+    +   '<div class="cl-kpi"><div class="n">'+closed.length+'</div><div class="l">'+clT("rep.closed")+'</div></div>'
+    +   '<div class="cl-kpi"><div class="n">'+partsTotal+'</div><div class="l">'+clT("rep.parts")+'</div></div>'
+    + '</div>'
+
+    + '<h4 style="margin:22px 0 8px">'+clT("rep.byStatus")+'</h4>'
+    + (statuses.length
+        ? '<div class="cl-sugg" style="margin-top:4px">' + statuses.map(k =>
+            '<span class="cl-badge" style="background:'+clStatusColor(k)+'22;color:'+clStatusColor(k)+'">'
+            + clEsc(clStatusLabel(k))+' · <b>'+byStatus[k]+'</b></span>').join("") + '</div>'
+        : '<p class="muted small">'+clT("rep.none.open")+'</p>')
+
+    + '<h4 style="margin:26px 0 8px">'+clT("rep.byProduct")+'</h4>'
+    + (products.length
+        ? '<div class="cl-wrap-x"><table class="cl-table"><thead><tr>'
+          + '<th>'+clT("f.product")+'</th><th>'+clT("rep.closed")+'</th>'
+          + '<th>'+clT("rep.repaired")+'</th><th>'+clT("rep.binned")+'</th>'
+          + '</tr></thead><tbody>'
+          + products.map(k => '<tr style="cursor:default">'
+              + '<td>'+clEsc(k)+'</td><td><b>'+byProduct[k].n+'</b></td>'
+              + '<td>'+byProduct[k].repaired+'</td><td>'+byProduct[k].binned+'</td></tr>').join("")
+          + '</tbody></table></div>'
+        : '<p class="muted small">'+clT("rep.none.closed")+'</p>')
+
+    + '<h4 style="margin:26px 0 8px">'+clT("rep.byPart")+'</h4>'
+    + (parts.length
+        ? '<div class="cl-wrap-x"><table class="cl-table"><thead><tr>'
+          + '<th>'+clT("o.internal")+'</th><th>'+clT("o.desig")+'</th>'
+          + '<th>'+clT("parts.qty")+'</th><th>'+clT("rep.tickets")+'</th>'
+          + '</tr></thead><tbody>'
+          + parts.map(x => '<tr style="cursor:default">'
+              + '<td class="code" style="color:var(--orange);font-weight:700">'+clEsc(x.ref || "—")+'</td>'
+              + '<td>'+clEsc(x.name || "—")+'</td>'
+              + '<td><b>'+x.qty+'</b></td><td>'+x.claims+'</td></tr>').join("")
+          + '</tbody></table></div>'
+        : '<p class="muted small">'+clT("rep.none.parts")+'</p>');
+}
+
 /* --------------------------------------------------- sélecteur de pièces */
 function clPartResults(q, host, onPick, product){
   q = (q || "").trim().toLowerCase();
@@ -3808,7 +3936,8 @@ function clShowView(v){
     clState.boardMode = (v === "board") ? "toqualify" : v;
   }
   const map = { board:"clViewBoard", withparts:"clViewBoard", supplier:"clViewBoard", new:"clViewNew",
-                parts:"clViewParts", order:"clViewOrder", history:"clViewHistory" };
+                parts:"clViewParts", order:"clViewOrder", history:"clViewHistory",
+                report:"clViewReport" };
   const shown = map[v];
   Object.keys(map).forEach(k => {
     const el = document.getElementById(map[k]);
@@ -3818,6 +3947,7 @@ function clShowView(v){
   if(v === "board" || v === "withparts" || v === "supplier") clRenderBoard();
   if(v === "new")   clRenderNewForm();
   if(v === "parts") clRenderParts();
+  if(v === "report") clRenderReport();
   if(v === "history"){
     if(clState.orderPass) clRenderHistory();
     else document.getElementById("clHistory").innerHTML =
@@ -3965,7 +4095,7 @@ function clInit(){
     clState.country = this.value;
     // le périmètre vaut pour tout : compteurs compris, sinon ils annoncent
     // un total pendant que le tableau juste dessous montre un pays
-    clRenderKpis(); clRenderBoard(); clRenderParts();
+    clRenderKpis(); clRenderBoard(); clRenderParts(); clRenderReport();
     if(clState.orderPass){ clRenderOrder(); clRenderHistory(); }
   });
 

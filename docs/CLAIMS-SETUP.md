@@ -329,6 +329,9 @@ avec le rôle `anon`, celui du navigateur :
 2. `docs/supabase/10-date-claim-pas-dans-le-futur.sql` — la borne sur la date
    de claim. Après 09, dont un ticket est daté `2027-01-17` : le rattrapage
    de fin de script le ramènera au jour même.
+3. `docs/supabase/11-pieces-des-archives.sql` — les pièces posées sur les
+   tickets archivés, sans quoi le rapport annonce 264 tickets fermés et zéro
+   pièce utilisée. Après 09, dont il complète les claims.
 
 ### La date d'un claim ne peut pas être dans le futur
 
@@ -451,6 +454,36 @@ peut taper « ventilateur » comme « fan ». Une pièce absente du dictionnaire
 garde son nom anglais plutôt qu'une traduction inventée.
 
 Le **classeur Excel** reste en anglais : c'est le fournisseur qui le lit.
+
+---
+
+## L'onglet Rapport
+
+Trois compteurs — tickets **ouverts**, tickets **fermés**, **pièces posées** —
+puis trois lectures :
+
+| Section | Ce qu'elle montre |
+|---|---|
+| Les tickets ouverts, par statut | une puce colorée par statut, dans l'ordre du tableau |
+| Tickets fermés, par produit | fermés, dont réparés, dont démontés pour pièces |
+| Pièces utilisées sur les tickets fermés | réf interne, désignation, quantité, nombre de tickets |
+
+Le périmètre est **le filtre pays global**, celui du haut de page : le rapport
+n'a pas son propre sélecteur, sinon deux filtres se contrediraient à l'écran.
+
+### Les produits ne sont pas regroupés par famille
+
+On retire le SKU de tête (`BW-0596 BOX 20 Home` → `BOX 20 Home`) et rien de
+plus. `BOX 30` et `BOX 30E` sont deux machines : les rapprocher par préfixe
+ferait mentir le rapport. Les variantes de couleur restent distinctes pour la
+même raison — c'est ce que le champ dit. Si tu préfères un regroupement par
+famille, c'est un choix à faire, pas une évidence.
+
+### Les pièces reprises de Monday sont en texte libre
+
+Elles se regroupent **sans tenir compte de la casse** : `fun`, `Fun` et `FUN`
+font une ligne. `fun` et `ventilateur` en font deux — deviner qu'il s'agit de
+la même pièce n'est pas à la machine de le faire.
 
 ---
 
