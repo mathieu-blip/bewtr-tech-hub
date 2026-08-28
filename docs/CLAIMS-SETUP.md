@@ -196,7 +196,7 @@ de détail.
 
 1. **Nouveau ticket** — le technicien décrit la panne, choisit la machine et
    ajoute les pièces nécessaires (recherche par réf BW ou par désignation ;
-   les pièces de la machine choisie remontent en tête). La garantie
+   le bloc pièces suit le produit, dont il dépend). La garantie
    s'affiche en direct dès que les deux dates sont saisies. Un ticket créé
    avec des pièces part directement en « Spare part to order ».
 2. **Claims** — le tableau, groupé par statut comme les groupes Monday.
@@ -300,13 +300,31 @@ seul — `order_create` l'a écrit, rien ne le relit.
 
 ---
 
-## Le lien à donner aux techniciens
+## Deux liens pour déclarer un ticket
 
-**https://service.bewtr.com/#claims-new**
+| À qui | Lien | Mot de passe |
+|---|---|---|
+| Techniciens BE WTR | **https://service.bewtr.com/#claims-new** | celui du hub, une fois par appareil |
+| Externes — installateurs, clients, prestataires | **https://service.bewtr.com/#ticket** | **aucun** |
 
-Il ouvre le formulaire de déclaration **sans phrase de passe**. Le technicien
+### Le lien technicien
+
+Il ouvre le formulaire de déclaration **sans la phrase claims**. Le technicien
 saisit le mot de passe du hub (une fois par appareil, comme pour le reste du
-guide) et se retrouve directement sur le formulaire.
+guide) et se retrouve directement sur le formulaire, hub complet autour.
+
+### Le lien externe
+
+`#ticket` ne demande **rien du tout** : ni le mot de passe du hub, ni la
+phrase claims. En contrepartie la page se réduit au seul formulaire — menu
+latéral, recherche globale, tutoriels et schémas disparaissent. Un externe
+déclare sa panne, reçoit son numéro `CLM-`, et n'a accès à rien d'autre.
+
+Le mot de passe du hub n'est pas mémorisé au passage : le reste du site
+reste fermé sur son appareil. Un bouton **Accès équipe** rend la page
+entière à qui connaît la phrase.
+
+Les deux liens partagent la même mécanique côté serveur.
 
 En mode déclaration, il ne voit que ça : pas d'onglets, pas de liste de
 claims, pas de prix. Deux fonctions seulement lui sont ouvertes —
@@ -318,9 +336,8 @@ pas même le sien.
 > retombe sur l'écran de passe. À exécuter avant de diffuser le lien.
 
 Un bouton **Accès équipe** ouvre la plateforme complète pour qui a la phrase.
-Une fois saisie, elle est mémorisée par appareil ; le bouton **Verrouiller**
-l'efface, à utiliser sur un appareil prêté. La phrase du bulletin de commande
-(`order`) n'est **jamais** mémorisée.
+Une fois saisie, elle est mémorisée par appareil. La phrase du bulletin de
+commande (`order`) n'est **jamais** mémorisée.
 
 ### Le garde-fou du formulaire ouvert
 
@@ -328,11 +345,19 @@ l'efface, à utiliser sur un appareil prêté. La phrase du bulletin de commande
 techniciens confondus. Un usage normal n'approche pas ce plafond ; il n'est
 là que pour qu'une clé publique trouvée ne serve pas à remplir la base. Les
 quantités sont bornées à 999 et les pièces doivent exister au catalogue :
-pas de texte libre par cette porte.
+pas de texte libre par cette porte. C'est ce plafond qui rend le lien
+`#ticket` diffusable hors de l'entreprise.
 
+### Les désignations suivent la langue
 
+Le catalogue est stocké en anglais — c'est la valeur des exports et des bons
+de commande. À l'écran, les désignations passent par `PARTTR` et s'affichent
+en français ou en allemand : propositions, recherche, pièces d'un ticket,
+pièces à commander, bulletin, historique. La recherche accepte les deux, on
+peut taper « ventilateur » comme « fan ». Une pièce absente du dictionnaire
+garde son nom anglais plutôt qu'une traduction inventée.
 
-**https://service.bewtr.com/#claims-new**
+Le **classeur Excel** reste en anglais : c'est le fournisseur qui le lit.
 
 ---
 
