@@ -205,10 +205,11 @@ de détail.
    **Modifier**, à côté du numéro `CLM-`, rouvre la fiche telle que le
    technicien l'a remplie — machine, série, dates, pays, contact — pour un
    ticket saisi de travers. Demande `docs/supabase/08-editer-un-ticket.sql`.
-   Tant que le ticket ne porte aucune pièce, les **propositions** s'affichent
-   sous le formulaire et suivent ce qu'on corrige : changer la machine change
-   ce qui est proposé. Choisir une pièce enregistre d'abord la fiche — sinon
-   le rechargement du claim écraserait la correction en cours.
+   Le bloc **pièces** y est placé sous la description, comme sur un nouveau
+   ticket : propositions collées à la description, vue éclatée, recherche et
+   liste choisie. Tout suit ce qu'on corrige — changer la machine change ce
+   qui est proposé. Ajouter ou retirer une pièce enregistre d'abord la fiche,
+   sinon le rechargement du claim écraserait la correction en cours.
 3. **Pièces à commander** — toutes les pièces en attente, agrégées par
    référence interne, avec les claims concernés. Pas de prix à ce niveau.
    Une pièce quitte cette liste dès que le bon de commande est enregistré.
