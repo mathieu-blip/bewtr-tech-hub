@@ -205,8 +205,8 @@ de détail.
    **Modifier**, à côté du numéro `CLM-`, rouvre la fiche telle que le
    technicien l'a remplie — machine, série, dates, pays, contact — pour un
    ticket saisi de travers. Demande `docs/supabase/08-editer-un-ticket.sql`.
-   Le bloc **pièces** y est placé sous la description, comme sur un nouveau
-   ticket : propositions collées à la description, vue éclatée, recherche et
+   Le bloc **pièces** est placé sous la description, sur la fiche comme en
+   modification et comme sur un nouveau ticket : propositions collées à la description, vue éclatée, recherche et
    liste choisie. Tout suit ce qu'on corrige — changer la machine change ce
    qui est proposé. Ajouter ou retirer une pièce enregistre d'abord la fiche,
    sinon le rechargement du claim écraserait la correction en cours.
@@ -399,6 +399,21 @@ automatiquement et n'est pas décochable : c'est le bon qui fait foi.
 Décocher laisserait croire qu'elle est à recommander.
 
 Demande `docs/supabase/07-piece-commandee.sql`.
+
+---
+
+### Le produit d'un claim n'est pas une clé du catalogue
+
+La reprise Monday donne « BW-0596 BOX 20 Home », « PRO2 White » ou
+« BW-0067 BOX30 B » là où les pièces sont rangées sous `BOX 20`, `PRO2` et
+`BOX 30`. Sur les **14 produits distincts** portés par les claims, **10 ne
+tombent pas juste**. Une égalité stricte vidait donc la liste des pièces
+candidates et le ticket n'avait aucune proposition — alors qu'un nouveau
+ticket, dont le produit sort d'une liste déroulante, en avait toujours.
+
+`clMachineKey()` retire le SKU de tête puis retient la machine la plus longue
+qui commence la désignation, avec un second passage sans les espaces pour
+rattraper `BOX30 B`. Même règle que `clSpareKey()` pour la vue éclatée.
 
 ---
 
