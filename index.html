@@ -2220,7 +2220,7 @@ const CL_I18N = {
     "f.install":"Date d'installation","f.claimdate":"Date du claim","f.country":"Pays","f.units":"Nb d'unités concernées",
     "f.tech":"Technicien","f.mail":"E-mail","f.company":"Société","f.parts":"Pièces nécessaires",
     "f.parts.search":"Chercher une pièce — réf BW ou désignation…","f.submit":"Créer le ticket",
-    "f.need.title":"L'objet du ticket est obligatoire.","f.saved":"Ticket %s créé.","f.err":"Enregistrement impossible : %s",
+    "f.need.title":"L'objet du ticket est obligatoire.","f.need.claimdate":"La date du claim ne peut pas être dans le futur.","f.saved":"Ticket %s créé.","f.err":"Enregistrement impossible : %s",
     "war.yes":"Sous garantie","war.no":"Hors garantie","war.unknown":"Garantie inconnue",
     "war.hint":"Garantie = moins de 730 jours entre l'installation et le claim.",
     "col.code":"Réf.","col.title":"Objet","col.product":"Produit","col.serial":"N° série","col.country":"Pays",
@@ -2259,7 +2259,7 @@ const CL_I18N = {
     "f.install":"Installation date","f.claimdate":"Claim date","f.country":"Country","f.units":"Units impacted",
     "f.tech":"Technician","f.mail":"E-mail","f.company":"Company","f.parts":"Parts needed",
     "f.parts.search":"Find a part — BW ref or designation…","f.submit":"Create ticket",
-    "f.need.title":"The ticket subject is required.","f.saved":"Ticket %s created.","f.err":"Could not save: %s",
+    "f.need.title":"The ticket subject is required.","f.need.claimdate":"The claim date cannot be in the future.","f.saved":"Ticket %s created.","f.err":"Could not save: %s",
     "war.yes":"Under warranty","war.no":"Out of warranty","war.unknown":"Warranty unknown",
     "war.hint":"Warranty = less than 730 days between installation and claim.",
     "col.code":"Ref.","col.title":"Subject","col.product":"Product","col.serial":"Serial","col.country":"Country",
@@ -2298,7 +2298,7 @@ const CL_I18N = {
     "f.install":"Installationsdatum","f.claimdate":"Claim-Datum","f.country":"Land","f.units":"Betroffene Einheiten",
     "f.tech":"Techniker","f.mail":"E-Mail","f.company":"Firma","f.parts":"Benötigte Teile",
     "f.parts.search":"Teil suchen — BW-Nr. oder Bezeichnung…","f.submit":"Ticket anlegen",
-    "f.need.title":"Der Betreff ist erforderlich.","f.saved":"Ticket %s angelegt.","f.err":"Speichern fehlgeschlagen: %s",
+    "f.need.title":"Der Betreff ist erforderlich.","f.need.claimdate":"Das Claim-Datum darf nicht in der Zukunft liegen.","f.saved":"Ticket %s angelegt.","f.err":"Speichern fehlgeschlagen: %s",
     "war.yes":"In Garantie","war.no":"Außerhalb Garantie","war.unknown":"Garantie unbekannt",
     "war.hint":"Garantie = weniger als 730 Tage zwischen Installation und Claim.",
     "col.code":"Nr.","col.title":"Betreff","col.product":"Produkt","col.serial":"Seriennr.","col.country":"Land",
@@ -3004,7 +3004,10 @@ function clDetailEditForm(c){
     '<option value="'+clEsc(v)+'"'+(v === cur ? " selected" : "")+'>'+clEsc(v)+'</option>').join("");
   const d = v => clEsc(String(v || "").slice(0, 10));
   return '<p class="muted small code">'+clEsc(c.code)+'</p>'
-    + '<form class="cl-form" id="clEditForm" data-claim="'+c.id+'">'
+    // novalidate comme le formulaire de création : c'est notre message,
+    // traduit et posé au même endroit, qui explique le refus — pas la bulle
+    // native du navigateur.
+    + '<form class="cl-form" id="clEditForm" novalidate data-claim="'+c.id+'">'
     +   '<div><label class="cl-lbl">'+clT("f.title")+' <span class="cl-req">*</span></label>'
     +     '<input class="cl-in" name="title" maxlength="300" value="'+clEsc(c.title)+'"></div>'
     +   '<div><label class="cl-lbl">'+clT("f.desc")+'</label>'
@@ -3032,7 +3035,8 @@ function clDetailEditForm(c){
     +     '<div><label class="cl-lbl">'+clT("f.install")+'</label>'
     +       '<input class="cl-in" type="date" name="install_date" value="'+d(c.install_date)+'"></div>'
     +     '<div><label class="cl-lbl">'+clT("f.claimdate")+'</label>'
-    +       '<input class="cl-in" type="date" name="claim_date" value="'+d(c.claim_date)+'"></div>'
+    +       '<input class="cl-in" type="date" name="claim_date" max="'+clToday()+'"'
+    +         ' value="'+d(c.claim_date)+'"></div>'
     +   '</div>'
     +   '<div id="clEditWarranty"></div>'
     +   '<div class="two">'
@@ -3342,6 +3346,11 @@ async function clEditSave(){
     if(msg) msg.textContent = clT("f.need.title");
     return false;
   }
+  // Un claim daté de demain fausse l'ancienneté comme la garantie.
+  if(f.elements.claim_date.value > clToday()){
+    if(msg) msg.textContent = clT("f.need.claimdate");
+    return false;
+  }
   const p = {};
   ["title","description","product","serial_number","install_date","claim_date",
    "country","units_impacted","technician_name","technician_email","company"]
@@ -3380,6 +3389,17 @@ function clPartResults(q, host, onPick, product){
   });
 }
 
+/**
+ * La date du jour, au fuseau de l'appareil. toISOString() rend de l'UTC :
+ * un technicien à Singapour verrait la veille toute la matinée, et un
+ * ticket daté d'hier passerait pour du retard.
+ */
+function clToday(){
+  const d = new Date();
+  return new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+           .toISOString().slice(0, 10);
+}
+
 /* ---------------------------------------------------- nouveau ticket */
 function clRenderNewForm(){
   const prodSel = document.getElementById("clnProduct");
@@ -3389,8 +3409,12 @@ function clRenderNewForm(){
       + machines.map(m => '<option value="'+clEsc(m)+'">'+clEsc(m)+'</option>').join("");
     document.getElementById("clnCountry").innerHTML = '<option value=""></option>'
       + CL_COUNTRIES.map(c => '<option value="'+clEsc(c)+'">'+clEsc(c)+'</option>').join("");
-    document.getElementById("clnClaim").value = new Date().toISOString().slice(0,10);
   }
+  // Rejoué à chaque ouverture de l'onglet : la borne doit suivre le jour,
+  // pas la date du chargement de la page.
+  const cd = document.getElementById("clnClaim");
+  cd.max = clToday();
+  if(!cd.value) cd.value = cd.max;
   clRenderNewParts();
   clUpdateWarrantyHint();
   clRenderSuggestions();
@@ -3989,6 +4013,7 @@ function clInit(){
     const msg = document.getElementById("clnMsg"), btn = document.getElementById("clnSubmit");
     const val = id => document.getElementById(id).value.trim();
     if(!val("clnTitle")){ msg.textContent = clT("f.need.title"); return; }
+    if(val("clnClaim") > clToday()){ msg.textContent = clT("f.need.claimdate"); return; }
     btn.disabled = true; msg.innerHTML = '<span class="cl-spin"></span>';
     try {
       const payload = {
@@ -4009,7 +4034,7 @@ function clInit(){
       msg.textContent = clT("f.saved", code || "");
       e.target.reset();
       clState.newParts = [];
-      document.getElementById("clnClaim").value = new Date().toISOString().slice(0,10);
+      document.getElementById("clnClaim").value = clToday();
       clRenderNewParts(); clUpdateWarrantyHint(); clRenderSuggestions();
       if(!clState.anon) await clRefreshAll();
     } catch(err){ msg.textContent = clT("f.err", err.message); }
