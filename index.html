@@ -931,7 +931,9 @@
               </div>
               <div>
                 <label class="cl-lbl" for="clnCompany" data-cl-i18n="f.company"></label>
-                <input class="cl-in" id="clnCompany" maxlength="160" autocomplete="organization">
+                <!-- pré-rempli : l'écrasante majorité des tickets vient de
+                     l'interne, seuls les externes ont à le changer -->
+                <input class="cl-in" id="clnCompany" maxlength="160" autocomplete="organization" value="BE WTR">
               </div>
               <div>
                 <button class="cl-btn" type="submit" id="clnSubmit" data-cl-i18n="f.submit"></button>
