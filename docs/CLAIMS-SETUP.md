@@ -285,6 +285,31 @@ texte : les totaux se recalculent dans Excel sans retouche.
 
 ## État de la base
 
+### Le contrôle de santé
+
+Une requête à coller dans l'éditeur SQL après chaque reprise, ou quand un
+chiffre du hub semble faux :
+
+```sql
+select
+  (select count(*) from public.claims)                                   as claims,
+  (select count(*) from public.claims
+     where status in ('Repaired and restocked','Spare Parts (Bin)'))     as archives,
+  (select count(*) from public.claims
+     where status not in ('Repaired and restocked','Spare Parts (Bin)')) as ouverts,
+  (select count(*) from public.claims where monday_id is not null)       as repris_de_monday,
+  (select count(*) from public.claims where claim_date > current_date)   as dates_futures,
+  (select count(*) from public.claims where units_impacted > 999)        as unites_aberrantes,
+  (select count(*) from public.parts)                                    as pieces,
+  (select count(*) from public.claim_parts
+     where order_id is null and not ordered_manual)                      as pieces_a_commander,
+  (select count(*) from public.orders)                                   as commandes;
+```
+
+`dates_futures` et `unites_aberrantes` doivent valoir **0**. Une date future
+signale que le script 10 n'a pas tourné, ou qu'il a tourné avant le 09.
+
+
 Tous les scripts sont appliqués sur le projet `hgjitagsffudcvqwakwk`. Vérifié
 avec le rôle `anon`, celui du navigateur :
 
