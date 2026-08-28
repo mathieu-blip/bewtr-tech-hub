@@ -2193,7 +2193,7 @@ const CL_I18N = {
     "col.tech":"Technicien","col.date":"Date claim","col.warranty":"Garantie","col.parts":"Pièces",
     "d.status":"Statut","d.repair":"Note de réparation","d.repairdate":"Date de réparation",
     "d.edit":"Modifier","d.editcancel":"Annuler",
-    "d.editparts":"Aucune pièce sur ce ticket. Corriger la machine change les propositions ; choisir une pièce enregistre d'abord la fiche.",
+    "d.editparts":"Ajouter ou retirer une pièce enregistre d'abord la fiche.",
     "d.restock":"Lieu de restockage","d.save":"Enregistrer","d.saved":"Enregistré.","d.parts":"Pièces demandées",
     "d.addpart":"Ajouter une pièce","d.ordered":"commandée","d.none":"Aucune pièce demandée.",
     "parts.sub":"Toutes les pièces demandées et pas encore commandées, avec leur référence interne BE WTR. Une pièce quitte cette liste dès que le bon de commande est enregistré. Les références fournisseur et les prix sont dans le bulletin de commande.",
@@ -2232,7 +2232,7 @@ const CL_I18N = {
     "col.tech":"Technician","col.date":"Claim date","col.warranty":"Warranty","col.parts":"Parts",
     "d.status":"Status","d.repair":"Repair note","d.repairdate":"Repair date",
     "d.edit":"Edit","d.editcancel":"Cancel",
-    "d.editparts":"No part on this ticket. Fixing the machine changes what is suggested; picking a part saves the form first.",
+    "d.editparts":"Adding or removing a part saves the form first.",
     "d.restock":"Restocking location","d.save":"Save","d.saved":"Saved.","d.parts":"Parts requested",
     "d.addpart":"Add a part","d.ordered":"ordered","d.none":"No parts requested.",
     "parts.sub":"Every part requested and not yet ordered, with its BE WTR internal reference. A part leaves this list as soon as the order is saved. Supplier references and prices live in the order form.",
@@ -2271,7 +2271,7 @@ const CL_I18N = {
     "col.tech":"Techniker","col.date":"Claim-Datum","col.warranty":"Garantie","col.parts":"Teile",
     "d.status":"Status","d.repair":"Reparaturnotiz","d.repairdate":"Reparaturdatum",
     "d.edit":"Bearbeiten","d.editcancel":"Abbrechen",
-    "d.editparts":"Kein Teil auf diesem Ticket. Die richtige Maschine ändert die Vorschläge; ein Teil zu wählen speichert zuerst das Formular.",
+    "d.editparts":"Ein Teil hinzuzufügen oder zu entfernen speichert zuerst das Formular.",
     "d.restock":"Einlagerungsort","d.save":"Speichern","d.saved":"Gespeichert.","d.parts":"Angeforderte Teile",
     "d.addpart":"Teil hinzufügen","d.ordered":"bestellt","d.none":"Keine Teile angefordert.",
     "parts.sub":"Alle angeforderten und noch nicht bestellten Teile mit ihrer internen BE-WTR-Nummer. Ein Teil verlässt diese Liste, sobald die Bestellung gespeichert ist. Lieferantennummern und Preise stehen im Bestellbeleg.",
@@ -2918,11 +2918,24 @@ function clDetailEditForm(c){
     '<option value="'+clEsc(v)+'"'+(v === cur ? " selected" : "")+'>'+clEsc(v)+'</option>').join("");
   const d = v => clEsc(String(v || "").slice(0, 10));
   return '<p class="muted small code">'+clEsc(c.code)+'</p>'
-    + '<form class="cl-form" id="clEditForm">'
+    + '<form class="cl-form" id="clEditForm" data-claim="'+c.id+'">'
     +   '<div><label class="cl-lbl">'+clT("f.title")+' <span class="cl-req">*</span></label>'
     +     '<input class="cl-in" name="title" maxlength="300" value="'+clEsc(c.title)+'"></div>'
     +   '<div><label class="cl-lbl">'+clT("f.desc")+'</label>'
-    +     '<textarea class="cl-in" name="description" rows="5" maxlength="4000">'+clEsc(c.description || "")+'</textarea></div>'
+    +     '<textarea class="cl-in" name="description" rows="5" maxlength="4000">'+clEsc(c.description || "")+'</textarea>'
+              // Mêmes gestes que le nouveau ticket : les propositions collent
+              // à la description, et la pièce se choisit dans la foulée.
+    +     '<div class="cl-sugg" id="clEditSugg" hidden></div></div>'
+    +   '<div><span class="cl-lbl">'+clT("f.parts")+'</span>'
+    +     '<p class="muted small" style="margin:0 0 7px">'+clT("d.editparts")+'</p>'
+    +     '<div class="cl-picker">'
+    +       '<button class="cl-btn ghost sm" type="button" id="clEditExploded"'
+    +         ' style="margin-bottom:9px"'+(clSpareKey(c.product) ? '' : ' hidden')+'>'
+    +         clT("d.exploded")+'</button>'
+    +       '<input class="cl-in" id="clEditPartQ" placeholder="'+clEsc(clT("f.parts.search"))+'">'
+    +       '<div class="res" id="clEditPartRes"></div>'
+    +       '<div class="cl-chosen" id="clEditPartSel"></div>'
+    +     '</div></div>'
     +   '<div class="two">'
     +     '<div><label class="cl-lbl">'+clT("f.product")+'</label>'
     +       '<select class="cl-in" name="product">'+sel(machines, c.product)+'</select></div>'
@@ -2954,20 +2967,7 @@ function clDetailEditForm(c){
     +   '<div><button class="cl-btn" type="submit">'+clT("d.save")+'</button> '
     +     '<button class="cl-btn ghost" type="button" id="clEditCancel">'+clT("d.editcancel")+'</button> '
     +     '<span class="cl-ok" id="clEditMsg"></span></div>'
-    + '</form>'
-    // Un ticket sans pièce est souvent un ticket à requalifier : corriger la
-    // machine change ce qu'on peut lui proposer, donc les propositions
-    // suivent le formulaire au lieu d'attendre le retour à la fiche.
-    // Le sélecteur reste HORS du formulaire : « Entrée » dans une recherche
-    // ne doit pas enregistrer la fiche.
-    + (clHasParts(c) ? ''
-      : '<h4 style="margin-top:26px">'+clT("d.parts")+'</h4>'
-        + '<p class="muted small">'+clT("d.editparts")+'</p>'
-        + '<div class="cl-sugg" id="clEditSugg"></div>'
-        + '<div class="cl-picker" style="margin-top:11px">'
-        +   '<input class="cl-in" id="clEditPartQ" placeholder="'+clEsc(clT("d.addpart"))+'">'
-        +   '<div class="res" id="clEditPartRes"></div>'
-        + '</div>');
+    + '</form>';
 }
 
 function clOpenDetail(id, edit){
@@ -3149,30 +3149,13 @@ function clBindEditForm(c){
 
   document.getElementById("clEditCancel").onclick = () => clOpenDetail(c.id);
 
-  /** Les valeurs saisies, prêtes pour claim_edit(). */
-  const values = () => {
-    const p = {};
-    ["title","description","product","serial_number","install_date","claim_date",
-     "country","units_impacted","technician_name","technician_email","company"]
-      .forEach(k => { p[k] = f.elements[k].value.trim(); });
-    return p;
-  };
-
-  /** Enregistre la fiche. Rend faux si le titre manque. */
-  const save = async () => {
-    const msg = document.getElementById("clEditMsg");
-    if(!f.elements.title.value.trim()){ msg.textContent = clT("f.need.title"); return false; }
-    await clRpc("claim_edit", { p_pass: clState.pass, p_id: c.id, p: values() });
-    return true;
-  };
-
   f.onsubmit = async e => {
     e.preventDefault();
     const msg = document.getElementById("clEditMsg");
     const btn = f.querySelector('button[type="submit"]');
     btn.disabled = true; msg.textContent = "";
     try {
-      if(!(await save())){ btn.disabled = false; return; }
+      if(!(await clEditSave())){ btn.disabled = false; return; }
       await clRefreshAll();
       clOpenDetail(c.id);              // retour à la fiche, corrigée
       const m = document.getElementById("clDetailMsg");
@@ -3183,47 +3166,97 @@ function clBindEditForm(c){
     }
   };
 
-  // ---- propositions de pièces, tant que le ticket n'en porte aucune
-  const sg = document.getElementById("clEditSugg");
-  if(!sg) return;
+  // ---- pièces : mêmes gestes que sur un nouveau ticket
+  const sg  = document.getElementById("clEditSugg"),
+        sel = document.getElementById("clEditPartSel"),
+        q   = document.getElementById("clEditPartQ"),
+        res = document.getElementById("clEditPartRes");
 
-  /**
-   * Attacher une pièce recharge le claim depuis le serveur : on enregistre
-   * d'abord la fiche, sinon la correction en cours serait écrasée par les
-   * anciennes valeurs — et la pièce doit de toute façon être choisie sur la
-   * machine corrigée, pas sur l'ancienne.
-   */
-  const pick = async ref => {
+  // Le sélecteur vit dans le formulaire pour tenir sous la description :
+  // « Entrée » y chercherait une pièce, pas à enregistrer la fiche.
+  q.onkeydown = e => { if(e.key === "Enter") e.preventDefault(); };
+
+  const act = async fn => {
     const msg = document.getElementById("clEditMsg");
     try {
-      if(!(await save())) return;
-      await clAttachPart(c, ref, true);
+      if(!(await clEditSave())) return;
+      await fn();
     } catch(err){ msg.textContent = clT("f.err", err.message); }
   };
 
-  const refresh = () => {
-    const prod = f.elements.product.value;
-    const sugg = clSuggestParts(
-      f.elements.title.value + " " + f.elements.description.value, prod, 4);
-    sg.innerHTML = sugg.length
-      ? '<span class="lbl">'+clEsc(clT("d.sugg"))+'</span>'
-        + sugg.map((x, i) => '<button type="button" data-g="'+i+'">'
-            + '<span class="r">'+clEsc(x.ref)+'</span>'+clEsc(x.name)+'</button>').join("")
-      : "";
-    sg.querySelectorAll("button").forEach(bt => {
-      bt.onclick = () => pick(sugg[Number(bt.dataset.g)].ref);
+  const pick   = ref => act(() => clAttachPart(c, ref, true));
+  const remove = id  => act(async () => {
+    await clRpc("claim_remove_part", { p_pass: clState.pass, p_id: id });
+    await clRefreshAll();
+    clOpenDetail(c.id, true);
+  });
+
+  const chosen = () => {
+    sel.innerHTML = (c.parts || []).map(x =>
+      '<div class="row"><span class="r">'+clEsc(x.ref || "—")+'</span>'
+      + '<span class="n">'+clEsc(x.name || x.free_text || "")+'</span>'
+      + '<span class="muted small">×'+x.qty+'</span>'
+      // une pièce partie sur un bon reste tracée : elle ne se retire plus
+      + (x.ordered ? '' : '<button class="del" type="button" data-x="'+x.id+'">×</button>')
+      + '</div>').join("");
+    sel.querySelectorAll("[data-x]").forEach(b => {
+      b.onclick = () => remove(Number(b.dataset.x));
     });
   };
-  ["title","description"].forEach(k => { f.elements[k].oninput = refresh; });
-  f.elements.product.onchange = refresh;
-  refresh();
 
-  const q = document.getElementById("clEditPartQ"),
-        res = document.getElementById("clEditPartRes");
-  q.oninput = () => clPartResults(q.value, res, p => {
+  const suggest = () => {
+    const already = (c.parts || []).map(x => x.ref);
+    const list = clSuggestParts(
+      f.elements.title.value + " " + f.elements.description.value,
+      f.elements.product.value, 5).filter(x => !already.includes(x.ref));
+    if(!list.length){ sg.hidden = true; sg.innerHTML = ""; return; }
+    sg.hidden = false;
+    sg.innerHTML = '<span class="lbl">'+clEsc(clT("f.sugg"))+'</span>'
+      + list.map((x, i) => '<button type="button" data-s="'+i+'">'
+          + '<span class="r">'+clEsc(x.ref)+'</span>'+clEsc(x.name)+'</button>').join("");
+    sg.querySelectorAll("button").forEach(bt => {
+      bt.onclick = () => pick(list[Number(bt.dataset.s)].ref);
+    });
+  };
+
+  ["title","description"].forEach(k => { f.elements[k].oninput = suggest; });
+  const ex = document.getElementById("clEditExploded");
+  f.elements.product.onchange = () => {
+    ex.hidden = !clSpareKey(f.elements.product.value);
+    suggest();
+  };
+  ex.onclick = () => clOpenSpareFor(f.elements.product.value,
+                                    { claimId: c.id, edit: true });
+
+  q.oninput = () => clPartResults(q.value, res, x => {
     q.value = ""; res.innerHTML = "";
-    pick(p.ref);
+    pick(x.ref);
   }, f.elements.product.value);
+
+  chosen(); suggest();
+}
+
+/**
+ * Enregistre la fiche en cours de modification, si le panneau en montre une.
+ * Attacher ou retirer une pièce recharge le claim depuis le serveur : sans
+ * cet enregistrement, les anciennes valeurs écraseraient la correction en
+ * cours. Rend faux si le titre manque — il est NOT NULL en base.
+ */
+async function clEditSave(){
+  const f = document.getElementById("clEditForm");
+  if(!f) return true;
+  const msg = document.getElementById("clEditMsg");
+  if(!f.elements.title.value.trim()){
+    if(msg) msg.textContent = clT("f.need.title");
+    return false;
+  }
+  const p = {};
+  ["title","description","product","serial_number","install_date","claim_date",
+   "country","units_impacted","technician_name","technician_email","company"]
+    .forEach(k => { p[k] = f.elements[k].value.trim(); });
+  await clRpc("claim_edit",
+    { p_pass: clState.pass, p_id: Number(f.dataset.claim), p: p });
+  return true;
 }
 
 /* --------------------------------------------------- sélecteur de pièces */
@@ -3939,7 +3972,11 @@ document.addEventListener("click", async function(e){
     clRenderNewParts(); clRenderSuggestions();
   } else if(tgt.claimId){
     const c = clState.claims.find(x => x.id === tgt.claimId);
-    if(c) await clAttachPart(c, ref);
+    if(!c) return;
+    // ouverte depuis une fiche en cours de modification : on l'enregistre
+    // avant, et on y revient après
+    if(tgt.edit && !(await clEditSave())) return;
+    await clAttachPart(c, ref, tgt.edit);
   }
 });
 
