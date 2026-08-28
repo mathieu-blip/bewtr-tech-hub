@@ -298,8 +298,32 @@ avec le rôle `anon`, celui du navigateur :
 | Dépôt anonyme d'un claim | crée le claim et sa pièce, rejette une réf inventée |
 | `claim_edit()` | corrige, efface un champ vidé, garde titre et date de claim (NOT NULL), refuse une mauvaise phrase |
 
-**À exécuter :** `docs/supabase/09-reprise-monday.sql` — la reprise Monday
-du 2026-08-28. C'est le seul script en attente.
+**À exécuter, dans cet ordre :**
+
+1. `docs/supabase/09-reprise-monday.sql` — la reprise Monday du 2026-08-28.
+2. `docs/supabase/10-date-claim-pas-dans-le-futur.sql` — la borne sur la date
+   de claim. Après 09, dont un ticket est daté `2027-01-17` : le rattrapage
+   de fin de script le ramènera au jour même.
+
+### La date d'un claim ne peut pas être dans le futur
+
+Le navigateur borne le champ — attribut `max`, plus un contrôle à l'envoi,
+car les deux formulaires sont en `novalidate` et `max` n'y bloque rien tout
+seul. Le champ est aussi **pré-rempli au jour même**, recalculé à chaque
+ouverture de l'onglet plutôt qu'au chargement de la page, sans quoi un poste
+resté ouvert la nuit daterait de la veille.
+
+`clToday()` lit le fuseau de l'appareil. `toISOString()` rend de l'UTC : un
+technicien à Singapour aurait vu la veille toute la matinée.
+
+Côté serveur, `claim_submit()`, `claim_create()` et `claim_edit()` **ramènent**
+au jour même au lieu de refuser. Une borne côté page ne tient pas contre un
+appel direct, et `claim_submit()` est la fonction ouverte du lien `#ticket` :
+un externe qui se trompe d'un jour ne doit pas perdre sa déclaration, il n'a
+pas de seconde chance.
+
+La date d'**installation**, elle, n'est pas bornée : une machine peut être
+enregistrée avant sa pose.
 | Case « Commandée » d'un ticket | la ligne sort du bulletin, décocher la ramène |
 
 ### Deux durcissements après analyse
