@@ -2711,6 +2711,13 @@ const CL_STATUS_OFF = [
 ];
 const CL_STATUS_ALL = CL_STATUS.concat(CL_STATUS_OFF);
 
+/* L'ordre d'affichage des groupes du tableau. Il ne suit pas le cycle de vie
+   mais l'urgence : ce qui est en cours de réparation en tête, le reste
+   ensuite dans l'ordre du cycle. La liste déroulante d'un ticket, elle,
+   garde l'ordre du cycle — on y choisit une étape, on n'y trie rien. */
+const CL_BOARD_ORDER = ["In progress (repair)"].concat(
+  CL_STATUS_ALL.map(s => s.k).filter(k => k !== "In progress (repair)"));
+
 const CL_TR = {
   fr:{
     "New (to repair)":"Nouveau (à réparer)",
@@ -2946,8 +2953,11 @@ function clRenderBoard(){
       + '</div>';
     return;
   }
-  // groupé par statut, comme les groupes du board Monday
-  const order = CL_STATUS_ALL.map(s => s.k);
+  // Groupé par statut, comme les groupes du board Monday, à un écart près :
+  // une réparation commencée passe AVANT un ticket qu'on n'a pas encore
+  // ouvert. C'est du travail en cours — il se termine avant qu'on en entame
+  // un autre, et il doit donc être sous les yeux en premier.
+  const order = CL_BOARD_ORDER;
   const groups = {};
   rows.forEach(c => (groups[c.status] = groups[c.status] || []).push(c));
   const keys = Object.keys(groups).sort((a,b) => {
@@ -3411,8 +3421,12 @@ const CL_PRODUCT_GROUPS = [
   [/^BOX\s*80\s+ITALBEDIS$/,     "BOX 80 I"],
   [/^BOX\s*30$/,                 "BOX 30 O"],
   [/^BOX\s*30\s*E$/,             "BOX 30 E"],
-  [/^BOX\s*30\s*B$/,             "BOX 30 B"]
+  [/^BOX\s*30\s*B$/,             "BOX 30 B"],
+  [/^BOX\s*120\s+ITALBEDIS$/,    "BOX 120 I"],
+  [/^PRO1\s+BLACK$/,             "PRO1"]
 ];
+/* « BAR2 double portion control » garde son nom entier : c'est celui de la
+   machine, pas un libellé à raccourcir. */
 
 /**
  * Le libellé de regroupement d'un produit.
