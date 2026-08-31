@@ -1,0 +1,265 @@
+﻿monday_id;produit;objet;categorie;famille_estimee;confiance;source;piece_nommee_dans_monday;decision;note_de_reparation
+7312922910;BW-0271 PRO2 White;piece holding the drainer is broken and the drainer no longer holds;posée;Carrosserie / habillage;moyenne;objet / description;Face PRO2 white;Spare parts used;
+8199036172;BW-0273 Base cabinet;stains on the door;posée;Carrosserie / habillage;moyenne;objet / description;door base cabinet;Spare parts used;
+8912463226;BW-0270 BAR1;sticker still and sparkling water;posée;Carrosserie / habillage;moyenne;objet / description;701148;Spare parts used;
+8914119792;BW-0050 AQTiV ONE;Missing grille and logo;incertain;Carrosserie / habillage;basse;objet / description;grille;Back to the supplier;
+5930383392;BW-0050 AQTiV ONE;Assembly problems;incertain;Carrosserie / habillage;basse;objet / description;;TBD (to be defined);
+12419824478;BW-0001 BOX 80;Fuite;réglage;Carrosserie / habillage;haute;note de réparation;;Set up modification;Le trop-plein est cassé, j'ai fait une modification pour que ça s'écoule par lavant en cas de débordement avec un petit sticker d'explication
+4334120914;BW-0271 PRO2 White;DK21;posée;Carrosserie / habillage;moyenne;objet / description;;Spare parts used;
+7013093591;BW-0136 BAR2 double portion control;Acheter 2 drip tray BAR2 en spare pour la France;posée;Carrosserie / habillage;basse;objet / description;;Spare parts used;
+5820137528;BW-0072 BOX 30E;Frozen box;posée;Carte électronique;basse;objet / description;ID961 - thermostat control circuit;Spare parts used;
+6900604336;BW-0074 BOX 30;box frozen;incertain;Carte électronique;basse;objet / description;;TBD (to be defined);
+6594615228;BW-0596 BOX 20 Home;Pump HS;posée;Carte électronique;moyenne;objet / description;Level controller;Spare parts used;
+7988965516;BW-0074 BOX 30;Thermostat HS;posée;Carte électronique;moyenne;objet / description;Controller ID961;Spare parts used;
+8046028953;BW-0074 BOX 30;Box frozen;posée;Carte électronique;moyenne;objet / description;Controller ID961;Spare parts used;
+8028904034;BW-0074 BOX 30;box hs;posée;Carte électronique;moyenne;objet / description;Controller ID 961;Spare parts used;
+8187966671;BW-0074 BOX 30;Problem with the temperature indicated on the display (incorrect);posée;Carte électronique;moyenne;objet / description;BW-0167 Controller 30 - A;Spare parts used;
+7530946447;BW-0074 BOX 30;BOX FROZEN;réglage;Carte électronique;basse;objet / description;;Set up modification;
+7586218216;BW-0072 BOX 30E;BOX FROZEN;posée;Carte électronique;moyenne;objet / description;Eliwell ID961;Spare parts used;
+7206064591;BW-0596 BOX 20 Home;Control board HS;posée;Carte électronique;moyenne;objet / description;;Spare parts used;
+8317241229;BW-0001 BOX 80;water leakage;réglage;Carte électronique;moyenne;objet / description;SPARE LEVEL CONTROL PLUS AMBIENT, COLD AND FIZZ;Set up modification;
+8297023064;BW-0072 BOX 30E;Box frozen;posée;Carte électronique;moyenne;objet / description;Controller 30 - A;Spare parts used;
+8287973831;BW-0271 PRO2 White;The water is warm;posée;Carte électronique;moyenne;objet / description;PCB upgrade;Spare parts used;
+8350926714;BW-0271 PRO2 White;The water is warm;posée;Carte électronique;moyenne;objet / description;PCB upgrade;Spare parts used;
+8189910526;BW-0596 BOX 20 Home;Pump HS;posée;Carte électronique;moyenne;objet / description;SCHEDA CARBONATORE+TIME OUT - LIV-I;Spare parts used;
+8516784300;BW-0072 BOX 30E;the water is warm;posée;Carte électronique;moyenne;objet / description;Controller 30 - A;Spare parts used;
+8505387611;BW-0136 BAR2 double portion control;Led bouton little sparkling water hs;posée;Carte électronique;moyenne;objet / description;SPARE BLUGLASS TOWER TAP ELECTRONIC BOARD - 150576;Spare parts used;
+8371148930;BW-0001 BOX 80;Pump HS;posée;Carte électronique;moyenne;objet / description;SPARE LEVEL CONTROL DC 230V;Spare parts used;
+9237144416;BW-0271 PRO2 White;Without new PCB;incertain;Carte électronique;moyenne;objet / description;PCB upgrade;Other;
+9077238203;BW-0001 BOX 80;the pump doesn't stop;posée;Carte électronique;moyenne;objet / description;SPARE LEVEL CONTROL DC 230V W/RETROFIT CABLE;Spare parts used;
+8516850556;BW-0072 BOX 30E;the box is frozen;posée;Carte électronique;moyenne;objet / description;Controller 30 - A;Spare parts used;
+8362425959;BW-0072 BOX 30E;The water is warm;posée;Carte électronique;moyenne;objet / description;Controller 30 - A;Spare parts used;
+8309569585;BW-0074 BOX 30;the box is hot and doesn't cool the water;posée;Carte électronique;moyenne;objet / description;Controller 30 - A;Spare parts used;
+12333350408;BW-0074 BOX 30;Carte éléctronique HS;incertain;Carte électronique;haute;note de réparation;Carte éléctronique;TBD (to be defined);Remplacement de la carte mère qui avait brulé + teste ok, remise en stock a GVA
+12347810239;BW-0074 BOX 30;ne refroidit pas et se met en sécurité régulièrement selon le client;posée;Carte électronique;haute;note de réparation;panneau de controle;Spare parts used;Remplacement carte éléctronique + test ok
+12368844623;BW-0271 PRO2 White;Fuite sur purge carbonateur;posée;Carte électronique;haute;note de réparation;panneau de controle;Spare parts used;Remplacement de la carte électronique, le relais laisser toujours la pompe en fonctionnement ce qui faisait cracher la soupape de sécurité et donc créer une fuite. J'ai remplacé la carte, j'ai fait la mise à jour et les essais
+12527446190;BW-0272.01 PRO2 Black;Carte éléctronique HS;posée;Carte électronique;haute;note de réparation;panneau de controle;Spare parts used;Remplacement carte électronique + mise à jour (partie cramé au niveau du compresseur)
+12201994621;BW-0272.01 PRO2 Black;Problème de carte électronique;posée;Carte électronique;haute;note de réparation;panneau de controle;Spare parts used;Remplacement carte éléctronique + mise à jour. Test ok (pompe, refroidissement)
+12670167721;BW-0272.01 PRO2 Black;Compresseur ne tourne pas;posée;Carte électronique;haute;note de réparation;Carte électronique + panneau de controle;Spare parts used;Il aurait fallu remplacer la carte électronique + le panneau tactile 2 fois, pour que ça fonctionne à nouveau. Demander une compensation
+12670223767;BW-0271.01 PRO2 Silver;Compresseur ne tourne pas;posée;Carte électronique;haute;note de réparation;Carte électronique + panneau de controle;Spare parts used;Il aurait fallu remplacer la carte électronique + le panneau tactile 2 fois, pour que ça fonctionne à nouveau. Demander une compensation
+12670519576;BW-0272 PRO2 Black;Le compresseur ne refroidit pas;posée;Carte électronique;haute;note de réparation;Carte électronique + panneau de controle;Spare parts used;Il aurait fallu remplacer la carte électronique + le panneau tactile 2 fois, pour que ça fonctionne à nouveau. Demander une compensation
+12526209007;BW-0272.01 PRO2 Black;Problème électronique, la pompe ne s'arrête pas;posée;Carte électronique;haute;note de réparation;;Spare parts used;Remplacement de la carte électronique et mise à jour. Le problème venais finalement de la sonde
+12345200032;BW-0271 PRO2 White;Upgrade + réparation condensateur;posée;Carte électronique;haute;note de réparation;;Spare parts used;-Réparation câble condensateur dé-soudé -Upgrade carte électronique -Mise à jour -Teste
+4510325365;BW-0329 PRO1 Black, BW-0072 BOX 30E;DK24;incertain;Carte électronique;moyenne;objet / description;;Other;
+4672961392;BW-0072 BOX 30E;DK26;posée;Carte électronique;moyenne;objet / description;;Spare parts used;
+6277799704;BW-0072 BOX 30E;Frozen;posée;Carte électronique;basse;objet / description;;Spare parts used;
+12793906408;BW-0074 BOX 30;PB Inconnu;posée;Carte électronique;haute;note de réparation;carte electronique;Spare parts used;Le thermostat est HS, j'ai remplacé la carte électronique. Test ok sur 48h
+4625905523;BW-0350 BOX 100;CH11;incertain;Compresseur;moyenne;objet / description;;Back to the supplier;
+8309326614;BW-0352 BOX 80 Italbedis;the water is warm;réglage;Compresseur;moyenne;objet / description;compressor start coil;Set up modification;
+8028586041;BW-0001 BOX 80;The water is warm;rien;Compresseur;basse;objet / description;;Dismantling;
+5733136602;BW-0352 BOX 80 Italbedis;Not cooling - despite electric / compressor working;posée;Compresseur;moyenne;objet / description;blupura box 80 - replacement;Spare parts used;
+9098087981;BW-0004 BOX 15;Doesn't cool;rien;Compresseur;moyenne;objet / description;;Dismantling;
+2989929358;BW-0072 BOX 30E;DK7;rien;Compresseur;moyenne;objet / description;;Credit note;
+3220479944;BW-0074 BOX 30;FI6;rien;Compresseur;moyenne;objet / description;;Credit note;
+4802153503;BW-0271 PRO2 White;DK30;incertain;Compresseur;basse;objet / description;;TBD (to be defined);
+4770148526;BW-0072 BOX 30E;DK37;rien;Compresseur;basse;objet / description;;Dismantling;
+4732027393;BW-0271 PRO2 White, PRO2 HOT;DK39;rien;Compresseur;moyenne;objet / description;;Dismantling;
+5246463132;BW-0271 PRO2 White;DK41;rien;Compresseur;basse;objet / description;;Dismantling;
+5246604465;BW-0072 BOX 30E;DK42;posée;Compresseur;basse;objet / description;;Spare parts used;
+6812073464;BW-0271 PRO2 White;internal water lackage;réglage;Câble / connecteur;moyenne;objet / description;;Set up modification;
+6812130393;BW-0271 PRO2 White;Internal water leakage;réglage;Câble / connecteur;moyenne;objet / description;;Set up modification;
+7961999124;BW-0074 BOX 30;Leakage from the box;réglage;Câble / connecteur;moyenne;objet / description;connector;Set up modification;
+8187941275;BW-0072 BOX 30E;pin connector broken;posée;Câble / connecteur;moyenne;objet / description;BW-0162 Box Cable assembly;Spare parts used;
+8199089069;BW-0072 BOX 30E;Pin connection broken;posée;Câble / connecteur;moyenne;objet / description;BW-0162 PRO1 - Connection box side;Spare parts used;
+7963971542;BW-0596 BOX 20 Home;Leakage gaz from the box;posée;Câble / connecteur;moyenne;objet / description;connecteur;Spare parts used;
+5222626763;BW-0074 BOX 30;FI9;posée;Câble / connecteur;moyenne;objet / description;Water inlet connector;Spare parts used;
+4770197726;BW-0072 BOX 30E;DK34;incertain;Câble / connecteur;moyenne;objet / description;;TBD (to be defined);
+6009460844;BW-0001 BOX 80;Doesn't cool;rien;Gaz réfrigérant;basse;objet / description;;Dismantling;
+7998135227;BW-0001 BOX 80;The water is warm;rien;Gaz réfrigérant;basse;objet / description;;Dismantling;
+8075666504;BW-0074 BOX 30;The water is warm;rien;Gaz réfrigérant;basse;objet / description;;Dismantling;
+8167524813;BW-0074 BOX 30;Leakage from the box;rien;Gaz réfrigérant;basse;objet / description;;Dismantling;
+8849912299;BW-0072 BOX 30E;the water is warm;rien;Gaz réfrigérant;basse;objet / description;;Dismantling;
+8280205427;BW-0072 BOX 30E;The water is warm;rien;Gaz réfrigérant;basse;objet / description;;Dismantling;
+4334085606;BW-0074 BOX 30;DK18;rien;Gaz réfrigérant;basse;objet / description;;Credit note;
+8091536012;BW-0072 BOX 30E;Problem with the connection cable with the tap;posée;Gearbox / robinet;moyenne;objet / description;BW-0161 HMI Cable Assembly;Spare parts used;
+5978826798;BW-0042 AQTiV COMBI;Filetage vis de fixation gear-box cassé;incertain;Gearbox / robinet;moyenne;objet / description;Support de la gear-box;TBD (to be defined);
+2860981115;BW-0329 PRO1 Black;FI1;réglage;Gearbox / robinet;moyenne;objet / description;;Set up modification;
+3441365811;BW-0270 BAR1;FI5;posée;Gearbox / robinet;basse;objet / description;;Spare parts used;
+3854229301;FIZ1;DK13;posée;Gearbox / robinet;moyenne;objet / description;;Blupura;
+3924847644;BW-0042 AQTiV COMBI;DK14;posée;Gearbox / robinet;moyenne;objet / description;;Spare parts used;
+3942638651;BW-0050 AQTiV ONE;DK15;posée;Gearbox / robinet;basse;objet / description;;Spare parts used;
+4548713633;BW-0270 BAR1;SE7;posée;Gearbox / robinet;moyenne;objet / description;BW-0177 BAR1 Tap outlet;Spare parts used;
+4510268548;BW-0329 PRO1 Black, BW-0072 BOX 30E;DK23;posée;Gearbox / robinet;moyenne;objet / description;;Spare parts used;
+5452392120;BW-0050 AQTiV ONE;SGP3;posée;Gearbox / robinet;moyenne;objet / description;Installation kit;Spare parts used;
+5167330011;BW-0050 AQTiV ONE;SGP1;incertain;Gearbox / robinet;moyenne;objet / description;Gearbox REV 01;TBD (to be defined);
+5166482922;BW-0050 AQTiV ONE;SGP2;incertain;Gearbox / robinet;moyenne;objet / description;Gearbox AQTIV ONE (Rev1);TBD (to be defined);
+5607530948;BW-0050 AQTiV ONE;leaking;incertain;Gearbox / robinet;moyenne;objet / description;;TBD (to be defined);
+6060706715;BW-0050 AQTiV ONE;loose gear arm;incertain;Gearbox / robinet;basse;objet / description;;TBD (to be defined);
+6592352647;BW-0050 AQTiV ONE;Loose gear arm;incertain;Gearbox / robinet;basse;objet / description;Bw 050;TBD (to be defined);
+6426163431;BW-0050 AQTiV ONE;Continuos flow;incertain;Gearbox / robinet;basse;objet / description;Gear rev 2;TBD (to be defined);
+6453949208;BW-0042 AQTiV COMBI;leaking;incertain;Gearbox / robinet;moyenne;objet / description;;TBD (to be defined);
+6453959861;BW-0050 AQTiV ONE;leaking/broken handle Gear only;incertain;Gearbox / robinet;moyenne;objet / description;;TBD (to be defined);
+6539695550;BW-0050 AQTiV ONE;Gear dripping constantly;incertain;Gearbox / robinet;moyenne;objet / description;Gear rev 2;TBD (to be defined);
+6397823134;BW-0050 AQTiV ONE;Leaky Gear;incertain;Gearbox / robinet;moyenne;objet / description;Gear rev 2;TBD (to be defined);
+6453964750;BW-0050 AQTiV ONE;leaking;incertain;Gearbox / robinet;moyenne;objet / description;;TBD (to be defined);
+6693416186;BW-0050 AQTiV ONE;Base set screw very loose;incertain;Gearbox / robinet;moyenne;objet / description;;TBD (to be defined);
+12487631648;BW-0050 AQTiV ONE;Gearbox HS;posée;Gearbox / robinet;haute;note de réparation;piston;Spare parts used;Remplacement des pistons, impossible d'enlever la vis de la GEARBOX donc réparation sur place. Nettoyage complet et remise en carton. test ok
+6818838623;BW-0006 BOX 150;Missing overflow system;incertain;Kit / divers;moyenne;objet / description;;Other;
+5930241383;BW-0136 BAR2 double portion control;programming doesn't work;incertain;Panneau tactile / boutons;moyenne;objet / description;;Back to the supplier;
+7518489655;BW-0136 BAR2 double portion control;Sparkling water button led;posée;Panneau tactile / boutons;moyenne;objet / description;Sparkling water button;Spare parts used;
+8482498890;BW-0136 BAR2 double portion control;Small portion buttons with led hs;posée;Panneau tactile / boutons;moyenne;objet / description;SPARE PUSH BUTTON STILL LITTLE;Spare parts used;
+12345718594;BW-0329 PRO1 Black;Fuite dans le carbonateur;posée;Panneau tactile / boutons;haute;note de réparation;;Spare parts used;Réparation de la fuite causé par un défaut du panneau tactile, je l'ai donc remplacé fait la mise à jour fait le formulaire. J'ai un contrôle de fuite et fait des essais, tout fonctionne normalement. (carte changé 2 fois)
+12771108992;BW-0271.01 PRO2 Silver;Neuve mais pb de panneau de controle;posée;Panneau tactile / boutons;haute;note de réparation;;Spare parts used;remplacement panneau de controle + test ok
+2861884415;BW-0329 PRO1 Black;DK5;incertain;Panneau tactile / boutons;basse;objet / description;;Other;
+3726693475;BW-0271 PRO2 White;DK12;posée;Panneau tactile / boutons;moyenne;objet / description;;Spare parts used;
+4916319588;BW-0271 PRO2 White;DK28;posée;Panneau tactile / boutons;basse;objet / description;;Spare parts used;
+4655904553;BW-0271 PRO2 White;DK25;posée;Panneau tactile / boutons;moyenne;objet / description;;Spare parts used;
+4770166865;BW-0072 BOX 30E;DK36;posée;Panneau tactile / boutons;basse;objet / description;;Spare parts used;
+4266608135;BW-0271 PRO2 White;CH10;incertain;Pompe;basse;objet / description;;Back to the supplier;
+4294494404;BW-0001 BOX 80;CH13;posée;Pompe;moyenne;objet / description;;Spare parts used;
+6652558267;BW-0596 BOX 20 Home;Pump HS frequently;incertain;Pompe;moyenne;objet / description;;TBD (to be defined);
+7408247356;BW-0271 PRO2 White;Pump HS;posée;Pompe;moyenne;objet / description;pump for sparkling water;Spare parts used;
+6926986447;BW-0001 BOX 80;The water is warm sometimes;posée;Pompe;moyenne;objet / description;recirculation pump;Spare parts used;
+7823759358;BW-0596 BOX 20 Home;Pump HS;incertain;Pompe;moyenne;objet / description;;TBD (to be defined);
+7998774631;BW-0271 PRO2 White;Leakage from the box;posée;Pompe;moyenne;objet / description;Submersible Pump AP-333;Spare parts used;
+8067234822;BW-0074 BOX 30;Pump HS;posée;Pompe;moyenne;objet / description;Level sensor cable;Spare parts used;
+8067690257;BW-0072 BOX 30E;Pump HS;posée;Pompe;moyenne;objet / description;;Spare parts used;
+8008932426;BW-0352 BOX 80 Italbedis;Electrical problem;posée;Pompe;moyenne;objet / description;Recirculation pump;Spare parts used;
+8794034772;BW-0352 BOX 80 Italbedis;Pump blocked and rec. pump hs;posée;Pompe;moyenne;objet / description;recirculation pump;Spare parts used;
+8667085337;BW-0001 BOX 80;Recirculation pump hs;posée;Pompe;moyenne;objet / description;SPARE AGITATOR - RECIRCULATION PUMP 230V;Spare parts used;
+8667385443;BW-0001 BOX 80;Achat spare parts;posée;Pompe;basse;objet / description;;Spare parts used;
+12346297618;BW-0001 BOX 80;Pompe HS ?;incertain;Pompe;haute;note de réparation;;TBD (to be defined);La pompe était bloquée, je l'ai changé, tout fonctionne après essai
+12347737234;BW-0001 BOX 80;Pompe HS;incertain;Pompe;haute;note de réparation;;TBD (to be defined);Réparation de la pompe (elle était bloqué et le plastique de transmission cassée)  test ok
+12347273026;BW-0001 BOX 80;Box désinstaller avec pompe bloque + nettoyage;incertain;Pompe;haute;note de réparation;;TBD (to be defined);-Pompe carbonateur débloqué -Test effectué -Nettoyage éffectué
+2861165766;BW-0074 BOX 30;SE2;posée;Pompe;moyenne;objet / description;;Spare parts used;
+2861331198;BW-0074 BOX 30;FI2;posée;Pompe;basse;objet / description;;Spare parts used;
+2861541737;BW-0074 BOX 30;DK1;posée;Pompe;moyenne;objet / description;;Spare parts used;
+3101649706;BW-0072 BOX 30E;FI4;incertain;Pompe;moyenne;objet / description;;TBD (to be defined);
+3101968156;BW-0329 PRO1 Black;DK9;incertain;Pompe;basse;objet / description;;TBD (to be defined);
+3174743901;BW-0271 PRO2 White;SE3;incertain;Pompe;moyenne;objet / description;;TBD (to be defined);
+3226206209;BW-0329 PRO1 Black;DK10;réglage;Pompe;basse;objet / description;;Set up modification;
+4159504578;BW-0001 BOX 80;FRA1;posée;Pompe;basse;objet / description;;Spare parts used;
+4334124423;BW-0271 PRO2 White;DK20;réglage;Pompe;moyenne;objet / description;;Set up modification;
+4997151331;BW-0074 BOX 30;FI8;posée;Pompe;moyenne;objet / description;;Spare parts used;
+5710897685;PRO2 HOT;leaking;incertain;Pompe;moyenne;objet / description;;Open question;
+6826673370;BW-0352 BOX 80 Italbedis;Box Frozen, circulator pump not working;posée;Pompe;moyenne;objet / description;;Spare parts used;
+7945057025;BW-0353 BOX 120 Italbedis;Circulator Pump Failure;posée;Pompe;basse;objet / description;;Spare parts used;
+6061055109;BW-0353 BOX 120 Italbedis;Box frozen (thermostat to 6);réglage;Sonde / thermostat;basse;objet / description;;Set up modification;
+6098908341;BW-0596 BOX 20 Home;box frozen with thermostat at 4/5;réglage;Sonde / thermostat;moyenne;objet / description;;Set up modification;
+6099085526;BW-0596 BOX 20 Home;box frozen with thermostat at 6;réglage;Sonde / thermostat;basse;objet / description;;Set up modification;
+6744639906;BW-0271 PRO2 White;The box doesn't cool;rien;Sonde / thermostat;basse;objet / description;;Dismantling;
+6594506046;BW-0596 BOX 20 Home;the fan never stops but the box isn't frozen;posée;Sonde / thermostat;haute;règle métier;Thermostat;Spare parts used;
+7204908982;BW-0596 BOX 20 Home;box frozen with thermostat at 5;incertain;Sonde / thermostat;basse;objet / description;;TBD (to be defined);
+7258852905;BW-0596 BOX 20 Home;Box frozen (therm. 5);incertain;Sonde / thermostat;basse;objet / description;;TBD (to be defined);
+9774271659;BW-0074 BOX 30;commande sondes BOX30;incertain;Sonde / thermostat;basse;objet / description;;TBD (to be defined);
+12114273762;BW-0001 BOX 80;Fuite icebank;incertain;Sonde / thermostat;haute;note de réparation;;TBD (to be defined);Le tuyau qui va au trop-plein du bac de glasse à cassé. Impossible à réparer, j'ai donc siliconé, réduis le tuyau de remplissage du niveau, j'ai mis un sticker comme quoi il fallait toujours surveiller le niveau
+12367808179;BW-0074 BOX 30;La box bip apres quelques temps alors qu'on ne tire pas d'eau;réglage;Sonde / thermostat;moyenne;note de réparation;;Set up modification;Mise bombe de peinture sur sonde carbonateur + test ok
+12429326796;BW-0074 BOX 30;Box gelée;posée;Sonde / thermostat;haute;note de réparation;Thermostat;Spare parts used;remplacement thermostat
+12451697674;BW-0001 BOX 80;Box 80;réglage;Sonde / thermostat;moyenne;note de réparation;;Set up modification;Tout fonctionne, comme il faut, le thermostat était tout simplement réglé sur 7 donc la boxe était gelée
+12586808920;BW-0067 BOX30 B;Box geler;réglage;Sonde / thermostat;moyenne;note de réparation;;Set up modification;BOX en essaie 24h elle n'as pas gelé, j'ai rajouté du spray sur la sonde
+12772272549;BW-0074 BOX 30;Pb inconnu retour dalmayer;réglage;Sonde / thermostat;moyenne;note de réparation;;Set up modification;Test pendant 24 heures, aucun problème détecté, j'ai rajouté du spray sur la sonde
+3284488882;BW-0329 PRO1 Black;DK11;posée;Sonde / thermostat;moyenne;objet / description;;Refurbishing;
+4334109822;BW-0074 BOX 30;DK19;posée;Sonde / thermostat;basse;objet / description;;Spare parts used;
+7350524494;BW-0271 PRO2 White;Transformer ko;incertain;Transformateur / alimentation;haute;règle métier;AC ADAPTOR;TBD (to be defined);
+8029261190;BW-0271 PRO2 White;no power supply for buttons;posée;Transformateur / alimentation;haute;règle métier;transformer 174391;Spare parts used;
+8035828137;BW-0271 PRO2 White;no power supply for buttons;posée;Transformateur / alimentation;haute;règle métier;Transformer 174391;Spare parts used;
+8067077085;BW-0271 PRO2 White;no power supply for buttons;posée;Transformateur / alimentation;haute;règle métier;174391 - 230v/24vdc 1.5A Power Adapter (Type A);Spare parts used;
+8911872185;BW-0271 PRO2 White;Buttons hs;incertain;Transformateur / alimentation;haute;règle métier;174391 - power supply;TBD (to be defined);
+8406165332;BW-0271 PRO2 White;no power supply for buttons;posée;Transformateur / alimentation;haute;règle métier;transformer;Spare parts used;
+12609085420;BW-0271 PRO2 White;Boutons tactiles HS;posée;Transformateur / alimentation;haute;règle métier;Transformateur 230V;Spare parts used;Transformateur 24V remplacer et test ok
+12699759604;BW-0271 PRO2 White;Tactile qui ne fonctionne pas;posée;Transformateur / alimentation;haute;note de réparation;Transformateur 230V;Spare parts used;Remplacement du transformateur et test ok
+12771717012;BW-0272 PRO2 Black;Boutin tactile HS;posée;Transformateur / alimentation;haute;règle métier;Transformateur 230V;Spare parts used;remplacement du transfornateur. Teste ok
+12464080297;BW-0272 PRO2 Black;Broken touch button;posée;Transformateur / alimentation;haute;note de réparation;Transformateur 230V;Spare parts used;Remplacement du transformateur, 230 V
+4255438162;BW-0350 BOX 100;CH14;posée;Ventilateur;moyenne;objet / description;;Spare parts used;
+6053362328;BW-0004 BOX 15;FAN KO;posée;Ventilateur;moyenne;objet / description;fan for Piccola box;Spare parts used;
+6053386043;BW-0004 BOX 15;FAN KO;posée;Ventilateur;moyenne;objet / description;Fan for Piccola box;Spare parts used;
+6053454768;BW-0004 BOX 15;FAN KO;posée;Ventilateur;moyenne;objet / description;fan for Piccola box;Spare parts used;
+6593117807;BW-0596 BOX 20 Home;Metallic sound and frozen box;incertain;Ventilateur;basse;objet / description;;TBD (to be defined);
+6900817178;BW-0067 BOX30 B;FAN KO;incertain;Ventilateur;moyenne;objet / description;;TBD (to be defined);
+5398526793;BW-0596 BOX 20 Home;CH17;posée;Ventilateur;moyenne;objet / description;;Spare parts used;
+5670073134;BW-0596 BOX 20 Home;FAN KO;posée;Ventilateur;moyenne;objet / description;;Spare parts used;
+5670906253;BW-0596 BOX 20 Home;FAN KO;posée;Ventilateur;moyenne;objet / description;;Spare parts used;
+6717341204;BW-0596 BOX 20 Home;FAN KO;posée;Ventilateur;haute;note de réparation;ventilateur + boitier DTI;Spare parts used;Remplacement du ventilateur, plus le boîtier DTI. Teste ok + modification de la boxe pour qu'elle soit compatible avec le type de ventilation
+7205899542;BW-0596 BOX 20 Home;FAN KO;incertain;Ventilateur;moyenne;objet / description;fun;TBD (to be defined);
+7204775419;BW-0596 BOX 20 Home;FAN KO;incertain;Ventilateur;moyenne;objet / description;fun;TBD (to be defined);
+6652393754;BW-0004 BOX 15;FAN KO AND LACKAGE;incertain;Ventilateur;moyenne;objet / description;FAN;TBD (to be defined);
+4479074808;BW-0004 BOX 15;CH15;incertain;Ventilateur;basse;objet / description;;Back to the supplier;
+7676729116;BW-0004 BOX 15;The box doesn't cool well;posée;Ventilateur;moyenne;objet / description;Fun for piccola box;Spare parts used;
+7407205406;BW-0596 BOX 20 Home;FAN KO;posée;Ventilateur;moyenne;objet / description;;Spare parts used;
+7683525515;BW-0074 BOX 30;Burning smell;posée;Ventilateur;moyenne;objet / description;fan box 30 B&O -DR200A;Spare parts used;
+7824562643;BW-0004 BOX 15;The water is warm;posée;Ventilateur;moyenne;objet / description;Fun;Spare parts used;
+8384651123;BW-0596 BOX 20 Home;Fan hs;posée;Ventilateur;moyenne;objet / description;404008 - VENTILATORE ASSIALE 120X120X25;Spare parts used;
+8405854777;BW-0596 BOX 20 Home;the water is warm;posée;Ventilateur;moyenne;objet / description;404008 VENTILATORE ASSIALE 120X120X25;Spare parts used;
+7998603909;BW-0596 BOX 20 Home;Pump HS;posée;Ventilateur;moyenne;objet / description;fun;Spare parts used;
+7812645279;BW-0596 BOX 20 Home;fan hs;posée;Ventilateur;moyenne;objet / description;fun;Spare parts used;
+8787235450;BW-0596 BOX 20 Home;Fun hs + gaz leakage;posée;Ventilateur;moyenne;objet / description;VENTILATORE ASSIALE 120X120X25 - 404008;Spare parts used;
+8838469512;BW-0004 BOX 15;the water is warm;posée;Ventilateur;moyenne;objet / description;BW-0191 fun;Spare parts used;
+3477695378;BW-0074 BOX 30;FI7;posée;Ventilateur;moyenne;objet / description;;Refurbishing;
+4787325501;BW-0271 PRO2 White;DK32;incertain;Ventilateur;moyenne;objet / description;;Open question;
+4787160232;BW-0271 PRO2 White;DK33;posée;Ventilateur;basse;objet / description;;Refurbishing;
+6124536835;BW-0271 PRO2 White;No Cooling / no cooling fluid gas;rien;Ventilateur;basse;objet / description;;Dismantling;
+8035424154;BW-0353 BOX 120 Italbedis;Box not cooling;réglage;Ventilateur;basse;objet / description;;Set up modification;
+12771969839;BW-0596 BOX 20 Home;Not cold;posée;Ventilateur;haute;note de réparation;ventilateur;Spare parts used;réparé, le ventilateur était HS. Je l'ai remplacé et j'ai fait des tests
+12841349698;BW-0596 BOX 20 Home;Ventillateur HS;posée;Ventilateur;haute;note de réparation;ventilateur;Spare parts used;Remplacement du ventilateur, modification pour être compatible avec un kit de ventilation. Test ok
+12851840644;BW-0596 BOX 20 Home;Ventilateur HS;posée;Ventilateur;haute;note de réparation;ventilateur;Spare parts used;remplacement ventilateur + modification box pour adaptation, kit de ventilation
+12889961878;BW-0004 BOX 15;Ventillateur HS;posée;Ventilateur;haute;note de réparation;ventilateur;Spare parts used;Remplacement ventilateur + teste ok
+12890730196;BW-0596 BOX 20 Home;ventilateur qui fait du bruit;réglage;Ventilateur;basse;objet / description;;Set up modification;J'ai tout démonté, nettoyé et fait des essais
+12891175711;BW-0596 BOX 20 Home;FAN KO;posée;Ventilateur;haute;note de réparation;ventilateur;Spare parts used;remplacement ventillateur + modification pour installation kit
+2860956209;BW-0271 PRO2 White;CH1;réglage;;;;;Set up modification;
+3451073845;BW-0001 BOX 80;CH1;posée;;;;;Blupura;
+4067091057;BW-0329 PRO1 Black;CH3;incertain;;;;;Open question;
+4255591430;BW-0273 Base cabinet;CH12;incertain;;;;;Open question;
+5661506842;BW-0136 BAR2 double portion control;CHX;posée;;;;;Spare parts used;
+5398827189;BW-0353 BOX 120 Italbedis;CH16;incertain;;;;;Open question;
+6513649178;BW-0271 PRO2 White;Doesn't cool;rien;;;;;Dismantling;
+7742773175;BW-0074 BOX 30;Slow carbonizing fill;incertain;;;;;TBD (to be defined);
+4479659071;BW-0042 AQTiV COMBI;CH14;incertain;;;;;TBD (to be defined);
+5913316843;BW-0042 AQTiV COMBI;leakage of filtered water from the main column;incertain;;;;;TBD (to be defined);
+5930627137;BW-0050 AQTiV ONE;Assembly problems;incertain;;;;;TBD (to be defined);
+12680389045;BW-0272 PRO2 Black;Pour pièces;démontée;;—;machine démontée;;TBD (to be defined);Récupérer pour pièces et sortie du stock car le compresseur est HS
+12680363546;BW-0272 PRO2 Black;Pour pièces;démontée;;—;machine démontée;;TBD (to be defined);Récupérer pour pièces et sortie du stock car le compresseur est HS
+12680385241;601527;Pour pièces;démontée;;—;machine démontée;;TBD (to be defined);Récupérer pour pièces et sortie du stock car le compresseur est HS
+12680385265;601527;Pour pièces;démontée;;—;machine démontée;;TBD (to be defined);Récupérer pour pièces et sortie du stock car le compresseur est HS
+12680363553;601527;Pour pièces;démontée;;—;machine démontée;;TBD (to be defined);Récupérer pour pièces et sortie du stock car le compresseur est HS
+12680360005;601527;Pour pièces;démontée;;—;machine démontée;;TBD (to be defined);Récupérer pour pièces et sortie du stock car le compresseur est HS
+12680363819;BW-0001 BOX 80;Pour pièces;démontée;;—;machine démontée;;TBD (to be defined);Récupérer pour pièces et sortie du stock car le compresseur est HS
+12680385216;BW-0001 BOX 80;Pour pièces;démontée;;—;machine démontée;;TBD (to be defined);Récupérer pour pièces et sortie du stock car le compresseur est HS
+12680389039;BW-0001 BOX 80;Pour pièces;démontée;;—;machine démontée;;TBD (to be defined);Récupérer pour pièces et sortie du stock car le compresseur est HS
+12680364116;BW-0001 BOX 80;Pour pièces;démontée;;—;machine démontée;;TBD (to be defined);Récupérer pour pièces et sortie du stock car le compresseur est HS
+12680363856;BW-0271 PRO2 White;Pour pièces;démontée;;—;machine démontée;;TBD (to be defined);Récupérer pour pièces et sortie du stock car le compresseur est HS
+12680381483;BW-0271 PRO2 White;Pour pièces;démontée;;—;machine démontée;;TBD (to be defined);Récupérer pour pièces et sortie du stock car le compresseur est HS
+12680381225;Others;Pour pièces;démontée;;—;machine démontée;;TBD (to be defined);Récupérer pour pièces et sortie du stock car le compresseur est HS
+12680385074;Others;Pour pièces;démontée;;—;machine démontée;;TBD (to be defined);Récupérer pour pièces et sortie du stock car le compresseur est HS
+12333316254;BW-0352 BOX 80 Italbedis;Retour paleo a nettoyer et controler;incertain;;;;;TBD (to be defined);Nettoyage et réparation effectué, remise en stock a GVA
+12357853152;BW-0001 BOX 80;Retour PALEO a contrôler et nettoyer;réglage;;;;;Set up modification;Nettoyage et testes ok
+12358506761;BW-0001 BOX 80;Retour PALEO a contrôler et nettoyer;réglage;;;;;Set up modification;Nettoyage et testes ok
+12357869212;BW-0001 BOX 80;Retour PALEO a contrôler et nettoyer;réglage;;;;;Set up modification;Nettoyage et testes ok
+12358643305;BW-0352 BOX 80 Italbedis;Retour paléo, teste + nettoyage;réglage;;;;;Set up modification;Nettoyage et testes ok
+12358872456;BW-0001 BOX 80;Retour PALEO a contrôler et nettoyer;réglage;;;;;Set up modification;Nettoyage et testes ok
+12358959140;BW-0001 BOX 80;Retour PALEO a contrôler et nettoyer;réglage;;;;;Set up modification;Nettoyage et testes ok
+12359087169;BW-0001 BOX 80;Retour PALEO a contrôler et nettoyer;réglage;;;;;Set up modification;Nettoyage et testes ok
+12358766542;BW-0352 BOX 80 Italbedis;Retour paléo, teste + nettoyage;réglage;;;;;Set up modification;Nettoyage et testes ok
+12358580135;BW-0352 BOX 80 Italbedis;Retour paléo, teste + nettoyage;réglage;;;;;Set up modification;Nettoyage et testes ok
+12358814850;BW-0352 BOX 80 Italbedis;Retour paléo, teste + nettoyage;réglage;;;;;Set up modification;Nettoyage et testes ok
+12671555336;BW-0271.01 PRO2 Silver;Ne refroidit pas;démontée;;—;machine démontée;;Dismantling;Récupérer pour pièces et sortie du stock car le compresseur est HS
+12699691358;BW-0271.01 PRO2 Silver;Compresseur HS;démontée;;—;machine démontée;;Dismantling;Le compresseur fonctionne, mais le froid ne sort pas et il surchauffe, on a tout essayé BORG confirme qu'elle est bonne à la poubelle. Il faut demander une indemnisation
+12699700289;BW-0271.01 PRO2 Silver;Proto labo flon;démontée;;—;machine démontée;;Dismantling;Box uniquement pour pièces c'était un prototype du labo
+12770344163;BW-0045 AQTiV COMBI H;Combi HS (incendie dans maison);démontée;;—;machine démontée;;Dismantling;Mis à la déchetterie car il a pris feu dans un incendie
+12772116116;BW-0272 PRO2 Black;A controler;réglage;;;;;Set up modification;Et c'est effectué et aucun problème détecté tout fonctionne normalement et il n'y a aucune fuite
+12713529854;BW-0271 PRO2 White;Réfrigérant shortage;démontée;;—;machine démontée;;Dismantling;Compresseur HS, les pièces ont été récupérées
+2861308018;BW-0271 PRO2 White;SE1;posée;;;;;Refurbishing;
+2861655128;BW-0271 PRO2 White;DK2;rien;;;;;Machine sent to BE WTR CH;
+2862919999;BW-0074 BOX 30;FI3;posée;;;;;Spare parts used;
+2964294740;BW-0074 BOX 30;FI5;réglage;;;;BW-0173 Flow compensator 8mm;Set up modification;
+3006885948;BW-0072 BOX 30E;DK8;incertain;;;;;Back to the supplier;
+3575504762;BW-0045 AQTiV COMBI H, BW-0042 AQTiV COMBI;SE4;posée;;;;;Spare parts used;
+3739695522;BW-0045 AQTiV COMBI H;SE5;réglage;;;;;Set up modification;
+3755587483;BW-0072 BOX 30E;SE6;posée;;;;;Spare parts used;
+4159621081;BW-0001 BOX 80;UAE1;posée;;;;;Spare parts used;
+4819384609;BW-0072 BOX 30E;Beeping constantly now water dispensing;posée;;;;main board;Spare parts used;
+5246446031;BW-0271 PRO2 White;DK40;posée;;;;;Spare parts used;
+4769169183;BW-0072 BOX 30E;DK38;posée;;;;;Spare parts used;
+6078126914;PRO2 HOT;leaking outlet pipe;rien;;;;;Dismantling;
+5932129012;BW-0271 PRO2 White;DKX;posée;;;;;Spare parts used;
+4827389728;BW-0074 BOX 30;DK29;posée;;;;;Refurbishing;
+6557140453;BW-0329 PRO1 Black;spontaneous tapping;incertain;;;;;Other;
+7945064790;BW-0001 BOX 80;Box does not turn on;réglage;;;;;Set up modification;
+6453974208;BW-0042 AQTiV COMBI;internal leak;incertain;;;;;TBD (to be defined);
+7067164412;BW-0352 BOX 80 Italbedis;Box cannot turn on;posée;;;;;Spare parts used;
+7945054339;BW-0353 BOX 120 Italbedis;Box does not turn on;posée;;;;;Spare parts used;
+12772189906;BW-0074 BOX 30;pas d'eau plate ni petillante;réglage;;;;;Set up modification;Ne gele pas ici en essais depuis 24h
+12793798866;BW-0074 BOX 30;BOX GELE;démontée;;—;machine démontée;;Dismantling;Pour pièce, elle n'est pas réparable, la sonde a cassé à l'intérieur du carbonateur
+12453783489;BW-0596 BOX 20 Home;Not cold;réglage;;;;;Set up modification;Je n'ai constaté aucun problème, tout fonctionne parfaitement bien, l'eau est bien froide
+12773176189;BW-0067 BOX30 B;Carbonisateur gèle;réglage;;;;;Set up modification;J'ai juste fait un Reset sur la carte. Je l'ai laissé en essai pendant trois jours sans aucun problème
+7453009828;BW-0271 PRO2 White;Leakage;posée;Électrovanne;moyenne;objet / description;solenoid valve;Spare parts used;
+7406866441;BW-0271 PRO2 White;drop by drop from the main exit;posée;Électrovanne;moyenne;objet / description;solenoid valve;Spare parts used;

@@ -332,6 +332,49 @@ avec le rôle `anon`, celui du navigateur :
 3. `docs/supabase/11-pieces-des-archives.sql` — les pièces posées sur les
    tickets archivés, sans quoi le rapport annonce 264 tickets fermés et zéro
    pièce utilisée. Après 09, dont il complète les claims.
+4. `docs/supabase/12-pieces-deduites.sql` — 23 pièces de plus, déduites du
+   texte des tickets. Voir ci-dessous.
+
+### Les pièces déduites du texte — script 12
+
+Monday ne nomme la pièce que sur 97 des 264 tickets archivés. Pour le reste,
+seul le texte dit ce qui a été remplacé. Le script 12 écrit **les 23 cas où
+c'est sûr**, et rien d'autre.
+
+Un ticket n'entre que si son texte décrit un remplacement **fait** :
+
+| Texte | Entre ? | Pourquoi |
+|---|---|---|
+| « fan ko, changed » | oui | le geste est décrit |
+| « Remplacement de la carte électronique » | oui | idem |
+| « The radiator cooling fan doesn't work » | non | symptôme, pas geste |
+| « J'ai rajouté du spray sur la sonde » | non | réglage, aucune pièce |
+| « I reset main board and now is ok » | non | reset, aucune pièce |
+| « La pompe était bloquée, débloquée » | non | réparée, pas remplacée |
+
+Les machines démontées pour pièces, mises au rebut ou passées en avoir sont
+exclues d'office : elles ont **fourni** des pièces, elles n'en ont pas reçu.
+
+**Justesse mesurée : 65 sur 66, soit 98 %.** Le contrôle est possible parce
+que 97 tickets portent la réponse : on applique le même filtre à ceux-là et
+on compare. La seule erreur confond un kit d'installation avec un robinet.
+
+Deux règles métier viennent de Mathieu, pas du texte :
+
+- « panneau de contrôle » désigne **la carte électronique**, pas une pièce à part ;
+- un **panneau tactile qui lâche** est une **carte électronique HMI**.
+
+Elles ont fait passer la justesse moyenne de 83 % à 93 %.
+
+Les pièces entrent en « commandée » — elles ont été *posées*, pas demandées —
+et portent le suffixe `(déduit)` pour se distinguer d'un relevé à l'écran.
+Pour tout annuler :
+
+```sql
+delete from public.claim_parts where free_text like '%(déduit)';
+```
+
+Le détail ticket par ticket est dans `docs/estimation.csv`.
 
 ### La date d'un claim ne peut pas être dans le futur
 
