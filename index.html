@@ -2843,13 +2843,62 @@ function clPartSupplier(ref){
   const p = clState.parts.find(x => x.ref === ref);
   return (p && p.supplier) || null;
 }
-/** Les fournisseurs distincts concernés par un claim. */
+/**
+ * Le fournisseur d'une machine, déduit du catalogue : une machine et ses
+ * pièces détachées viennent du même fournisseur. On retient le plus
+ * représenté pour ignorer les quelques composants achetés ailleurs
+ * (le mousseur Neoperl d'une AQTiV ne fait pas de Neoperl son fournisseur).
+ *
+ * La table est reconstruite quand le catalogue change, pas à chaque appel :
+ * clFiltered() passe sur tous les claims à chaque frappe.
+ */
+let clSupCache = { parts: null, byMachine: null, byProduct: null };
+function clSupIndex(){
+  if(clSupCache.parts === clState.parts) return clSupCache;
+  const byMachine = {};
+  clState.parts.forEach(function(p){
+    if(!p.supplier) return;
+    (p.machines || []).forEach(function(m){
+      const k = String(m).trim().toUpperCase();
+      if(!k) return;
+      const c = byMachine[k] = byMachine[k] || {};
+      c[p.supplier] = (c[p.supplier] || 0) + 1;
+    });
+  });
+  clSupCache = { parts: clState.parts, byMachine: byMachine, byProduct: {} };
+  return clSupCache;
+}
+
+/** Le fournisseur d'un produit, via la machine que son libellé désigne. */
+function clProductSupplier(product){
+  if(!product) return null;
+  const ix = clSupIndex();
+  if(product in ix.byProduct) return ix.byProduct[product];
+  const machine = clMachineKey(product);
+  const counts = machine ? ix.byMachine[machine] : null;
+  let best = null;
+  if(counts) Object.keys(counts).forEach(function(s){
+    if(!best || counts[s] > counts[best]) best = s;
+  });
+  return (ix.byProduct[product] = best);
+}
+
+/**
+ * Les fournisseurs distincts concernés par un claim.
+ *
+ * Ses pièces le disent quand il en porte — mais un ticket « à qualifier »
+ * n'en a précisément aucune, et le filtre fournisseur ne ramenait alors
+ * rien sur l'onglet où on trie le plus. La machine tranche à leur place :
+ * elle et ses pièces ont le même fournisseur.
+ */
 function clClaimSuppliers(c){
   const out = [];
   (c.parts || []).forEach(function(x){
     const s = clPartSupplier(x.ref);
     if(s && !out.includes(s)) out.push(s);
   });
+  const s = clProductSupplier(c.product);
+  if(s && !out.includes(s)) out.push(s);
   return out;
 }
 
@@ -3739,8 +3788,12 @@ function clRenderParts(){
 
   const openClaims = clState.claims.filter(c => !clIsArchived(c));
   const waiting = openClaims.filter(c => (c.parts||[]).some(x => !x.ordered));
+  // Les options sortent des pièces en attente, pas des claims : ce filtre
+  // compare au fournisseur de la pièce, proposer autre chose ne donnerait
+  // qu'un tableau vide.
   clFillSelect(document.getElementById("clPFSupplier"),
-    Array.from(new Set(waiting.flatMap(c => clClaimSuppliers(c)))).sort(),
+    Array.from(new Set(waiting.flatMap(c => (c.parts || [])
+      .filter(x => !x.ordered).map(x => clPartSupplier(x.ref)).filter(Boolean)))).sort(),
     clT("of.allsupplier"), f.supplier);
 
   if(!list.length){
