@@ -26,7 +26,9 @@ garde dépose le mot de passe saisi dans `localStorage`
 (`bewtr_claims_pass`) et le bloc Claims l'envoie aux fonctions Supabase. En
 base, la ligne `claims` porte donc ce mot de passe **normalisé comme
 `index.html` le normalise** : `trim`, espaces réduits, majuscules —
-`AQTIV DUO`.
+`AQTIV DUO`. `hub_scope` applique la même normalisation à ce qu'on lui
+présente : `aqtiv duo` saisi à la main ouvre les tickets, quelle que soit la
+casse.
 
 ### Changer une phrase de passe
 

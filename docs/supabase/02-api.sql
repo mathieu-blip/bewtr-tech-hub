@@ -3,14 +3,28 @@
 -- 'order' ouvre aussi tout ce que 'claims' ouvre.
 -- ============================================================
 
+-- La phrase exacte est essayée d'abord — « order » ne coûte rien. Sinon on
+-- retente normalisé comme l'écran de garde du hub normalise (trim, espaces
+-- réduits, majuscules), pour que « aqtiv duo » ouvre les tickets quelle que
+-- soit la casse saisie.
 create or replace function public.hub_scope(p_pass text)
 returns text
-language sql stable security definer set search_path = hub, public, extensions as $$
-  select s.scope from hub.secrets s
+language plpgsql stable security definer set search_path = hub, public, extensions as $$
+declare v text;
+begin
+  select s.scope into v from hub.secrets s
    where s.pass_hash = extensions.crypt(p_pass, s.pass_hash)
    order by case s.scope when 'order' then 0 else 1 end
    limit 1;
-$$;
+  if v is not null then return v; end if;
+
+  select s.scope into v from hub.secrets s
+   where s.pass_hash = extensions.crypt(
+           upper(regexp_replace(btrim(p_pass), '\s+', ' ', 'g')), s.pass_hash)
+   order by case s.scope when 'order' then 0 else 1 end
+   limit 1;
+  return v;
+end $$;
 
 -- Renvoie le niveau ouvert par la phrase, ou null. Sert à l'écran de garde.
 create or replace function public.hub_auth(p_pass text)

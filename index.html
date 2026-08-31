@@ -2248,9 +2248,6 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeSearc
    les prix d'achat, et elle est redemandée à chaque visite. */
 const CL_PASS_KEY = "bewtr_claims_pass";
 
-/* « aqtiv duo », « AQTiV  DUO » … : même normalisation que l'écran de garde,
-   sinon la phrase enregistrée en base ne serait jamais retrouvée. */
-const clNormPass = v => String(v||"").trim().replace(/\s+/g," ").toUpperCase();
 
 const CLAIMS_URL = "https://hgjitagsffudcvqwakwk.supabase.co";
 const CLAIMS_KEY = "sb_publishable_SCtyYXfzE2i-D4CfIoeBPw__u1pB0Dk";
@@ -4444,16 +4441,12 @@ function clInit(){
   document.getElementById("clGateForm").addEventListener("submit", async e => {
     e.preventDefault();
     const err = document.getElementById("clGateErr");
-    const typed = document.getElementById("clPass").value;
+    // hub_auth normalise comme l'écran de garde (trim, espaces réduits,
+    // majuscules) : « aqtiv duo » se tape comme on veut.
+    const pass = document.getElementById("clPass").value;
     err.innerHTML = '<span class="cl-spin"></span>';
     try {
-      // la phrase commande se saisit telle quelle ; le mot de passe du hub,
-      // lui, se tape comme on veut — on retente une fois, normalisé.
-      let pass = typed, scope = await clRpc("hub_auth", { p_pass: pass });
-      if(!scope && clNormPass(typed) !== typed){
-        pass = clNormPass(typed);
-        scope = await clRpc("hub_auth", { p_pass: pass });
-      }
+      const scope = await clRpc("hub_auth", { p_pass: pass });
       if(!scope){ err.textContent = clT("gate.bad"); return; }
       clState.pass = pass;
       if(scope === "order") clState.orderPass = pass;
