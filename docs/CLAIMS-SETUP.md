@@ -567,6 +567,11 @@ noms tels que l'équipe les emploie.
 | `BOX 30` | **BOX 30 O** |
 | `BOX 30E` | **BOX 30 E** |
 | `BOX30 B` | **BOX 30 B** |
+| `BOX 120 Italbedis` | **BOX 120 I** |
+| `PRO1 Black` | **PRO1** |
+
+`BAR2 double portion control` garde son nom entier : c'est celui de la
+machine, pas un libellé à raccourcir.
 
 La PRO2 blanche et la noire ne sont pas deux finitions d'une même machine :
 ce sont **deux générations**, V1 et V2, et elles ne prennent pas les mêmes
@@ -613,6 +618,17 @@ parti chez le fournisseur, sinon avec pièces, sinon à qualifier. Le bouton
 
 Les compteurs suivent le périmètre pays : choisir « France » ne cadre pas
 seulement les tableaux, il recalcule aussi les chiffres au-dessus.
+
+### Une réparation commencée passe avant un ticket neuf
+
+Dans **Claims à qualifier** et **Claims avec pièces**, le groupe « Réparation
+en cours » s'affiche en tête, avant « Nouveau (à réparer) ». L'ordre du
+tableau ne suit donc pas le cycle de vie mais l'urgence : ce qui est déjà
+ouvert sur l'établi se termine avant qu'on en entame un autre.
+
+La liste déroulante d'un ticket, elle, garde l'ordre du cycle — on y choisit
+une étape, on n'y trie rien. C'est `CL_BOARD_ORDER` qui porte l'ordre
+d'affichage, séparément de `CL_STATUS`.
 
 ### Trier vite
 
