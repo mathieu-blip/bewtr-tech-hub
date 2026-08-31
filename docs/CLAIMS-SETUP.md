@@ -465,11 +465,22 @@ puis trois lectures :
 | Section | Ce qu'elle montre |
 |---|---|
 | Les tickets ouverts, par statut | une puce colorée par statut, dans l'ordre du tableau |
-| Tickets fermés, par produit | fermés, dont réparés, dont démontés pour pièces |
+| Tickets fermés, par produit | fermés, dont réparés, dont démontés pour pièces — **cliquer une ligne déplie ses tickets** |
 | Pièces utilisées sur les tickets fermés | réf interne, désignation, quantité, nombre de tickets |
 
 Le périmètre est **le filtre pays global**, celui du haut de page : le rapport
 n'a pas son propre sélecteur, sinon deux filtres se contrediraient à l'écran.
+
+### Le détail d'un produit
+
+Cliquer une ligne du tableau déplie ses tickets sous elle : réf, objet,
+description, note de réparation, date du claim, date de réparation. Les plus
+récemment réparés d'abord, à défaut le claim le plus récent.
+
+Un seul produit reste ouvert à la fois — en ouvrir un referme le précédent,
+sinon la page devient un mur. Les lignes dépliées ne se cliquent pas : elles
+se lisent, et leur survol reste neutre pour ne pas promettre une action qui
+n'existe pas.
 
 ### Les produits ne sont pas regroupés par famille
 

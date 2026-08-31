@@ -502,6 +502,9 @@
   .cl-table td{padding:9px 11px;border-top:1px solid var(--line);vertical-align:top}
   .cl-table tbody tr{cursor:pointer}
   .cl-table tbody tr:hover{background:var(--orange-soft)}
+  /* les tickets dépliés d'un produit se lisent, ne se cliquent pas :
+     un survol orange y promettrait une action qui n'existe pas */
+  .cl-table.cl-sub tbody tr:hover{background:transparent}
   .cl-table .code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--ink-soft);white-space:nowrap}
   .cl-table .ttl{font-weight:600}
   .cl-wrap-x{overflow-x:auto;border-radius:12px}
@@ -2224,7 +2227,7 @@ const CL_I18N = {
     "rep.open":"Tickets ouverts","rep.closed":"Tickets fermés","rep.parts":"Pièces posées",
     "rep.byStatus":"Les tickets ouverts, par statut","rep.byProduct":"Tickets fermés, par produit",
     "rep.byPart":"Pièces utilisées sur les tickets fermés","rep.repaired":"Réparés","rep.binned":"Démontés",
-    "rep.tickets":"Tickets","rep.none.open":"Aucun ticket ouvert.","rep.none.closed":"Aucun ticket fermé.",
+    "rep.tickets":"Tickets","rep.click":"— cliquez une ligne pour voir ses tickets","rep.none.open":"Aucun ticket ouvert.","rep.none.closed":"Aucun ticket fermé.",
     "rep.none.parts":"Aucune pièce enregistrée sur les tickets fermés de ce périmètre.",
     "kpi.total":"Claims ouverts","kpi.new":"À réparer","kpi.order":"Pièces à commander","kpi.supplier":"Chez le fournisseur","kpi.warranty":"Sous garantie",
     "filter.search":"Rechercher — titre, n° série, technicien, société…","filter.refresh":"Actualiser",
@@ -2269,7 +2272,7 @@ const CL_I18N = {
     "rep.open":"Open tickets","rep.closed":"Closed tickets","rep.parts":"Parts fitted",
     "rep.byStatus":"Open tickets, by status","rep.byProduct":"Closed tickets, by product",
     "rep.byPart":"Parts used on closed tickets","rep.repaired":"Repaired","rep.binned":"Stripped",
-    "rep.tickets":"Tickets","rep.none.open":"No open ticket.","rep.none.closed":"No closed ticket.",
+    "rep.tickets":"Tickets","rep.click":"— click a row to see its tickets","rep.none.open":"No open ticket.","rep.none.closed":"No closed ticket.",
     "rep.none.parts":"No part recorded on the closed tickets in this scope.",
     "kpi.total":"Open claims","kpi.new":"To repair","kpi.order":"Parts to order","kpi.supplier":"At supplier","kpi.warranty":"Under warranty",
     "filter.search":"Search — title, serial, technician, company…","filter.refresh":"Refresh",
@@ -2314,7 +2317,7 @@ const CL_I18N = {
     "rep.open":"Offene Tickets","rep.closed":"Geschlossene Tickets","rep.parts":"Verbaute Teile",
     "rep.byStatus":"Offene Tickets nach Status","rep.byProduct":"Geschlossene Tickets nach Produkt",
     "rep.byPart":"Teile in geschlossenen Tickets","rep.repaired":"Repariert","rep.binned":"Ausgeschlachtet",
-    "rep.tickets":"Tickets","rep.none.open":"Kein offenes Ticket.","rep.none.closed":"Kein geschlossenes Ticket.",
+    "rep.tickets":"Tickets","rep.click":"— eine Zeile anklicken, um ihre Tickets zu sehen","rep.none.open":"Kein offenes Ticket.","rep.none.closed":"Kein geschlossenes Ticket.",
     "rep.none.parts":"Kein Teil auf den geschlossenen Tickets dieses Umfangs erfasst.",
     "kpi.total":"Offene Claims","kpi.new":"Zu reparieren","kpi.order":"Teile zu bestellen","kpi.supplier":"Beim Lieferanten","kpi.warranty":"In Garantie",
     "filter.search":"Suchen — Titel, Seriennummer, Techniker, Firma…","filter.refresh":"Aktualisieren",
@@ -2364,6 +2367,7 @@ const clState = {
   orderFilter:{supplier:""}, histFilter:{supplier:""},
   partsFilter:{supplier:""}, orderUnchecked:{}, prefill:null, boardMode:"toqualify",
   country:"", spareTarget:null, anon:false,   // périmètre commun à tous les onglets
+  repProduct:null,                           // produit déplié dans le rapport
   newParts:[], loaded:false
 };
 
@@ -3462,15 +3466,23 @@ function clRenderReport(){
             + clEsc(clStatusLabel(k))+' · <b>'+byStatus[k]+'</b></span>').join("") + '</div>'
         : '<p class="muted small">'+clT("rep.none.open")+'</p>')
 
-    + '<h4 style="margin:26px 0 8px">'+clT("rep.byProduct")+'</h4>'
+    + '<h4 style="margin:26px 0 8px">'+clT("rep.byProduct")
+    +   ' <span class="muted small" style="font-weight:400;text-transform:none;letter-spacing:0">'
+    +   clT("rep.click")+'</span></h4>'
     + (products.length
         ? '<div class="cl-wrap-x"><table class="cl-table"><thead><tr>'
           + '<th>'+clT("f.product")+'</th><th>'+clT("rep.closed")+'</th>'
           + '<th>'+clT("rep.repaired")+'</th><th>'+clT("rep.binned")+'</th>'
           + '</tr></thead><tbody>'
-          + products.map(k => '<tr style="cursor:default">'
-              + '<td>'+clEsc(k)+'</td><td><b>'+byProduct[k].n+'</b></td>'
-              + '<td>'+byProduct[k].repaired+'</td><td>'+byProduct[k].binned+'</td></tr>').join("")
+          + products.map(k => '<tr data-p="'+clEsc(k)+'">'
+              + '<td>'+(clState.repProduct === k ? "▾ " : "▸ ")+clEsc(k)+'</td>'
+              + '<td><b>'+byProduct[k].n+'</b></td>'
+              + '<td>'+byProduct[k].repaired+'</td><td>'+byProduct[k].binned+'</td></tr>'
+              + (clState.repProduct === k
+                  ? '<tr style="cursor:default"><td colspan="4" style="padding:0;background:#fbfcfd">'
+                    + clReportTickets(closed.filter(c => clProductLabel(c.product) === k))
+                    + '</td></tr>'
+                  : '')).join("")
           + '</tbody></table></div>'
         : '<p class="muted small">'+clT("rep.none.closed")+'</p>')
 
@@ -3486,6 +3498,44 @@ function clRenderReport(){
               + '<td><b>'+x.qty+'</b></td><td>'+x.claims+'</td></tr>').join("")
           + '</tbody></table></div>'
         : '<p class="muted small">'+clT("rep.none.parts")+'</p>');
+
+  // déplier / replier un produit
+  host.querySelectorAll("[data-p]").forEach(function(tr){
+    tr.onclick = function(){
+      clState.repProduct = (clState.repProduct === tr.dataset.p) ? null : tr.dataset.p;
+      clRenderReport();
+    };
+  });
+}
+
+/**
+ * Les tickets d'un produit, dépliés sous sa ligne. Description et note de
+ * réparation sont du texte libre parfois long : elles gardent leurs retours
+ * à la ligne et sont bornées en largeur, le tableau défile horizontalement
+ * comme les autres.
+ */
+function clReportTickets(list){
+  if(!list.length) return '<p class="muted small" style="padding:11px 14px">'
+                        + clT("rep.none.closed")+'</p>';
+  // les plus récemment réparés d'abord ; à défaut, le claim le plus récent
+  const sorted = list.slice().sort((a, b) =>
+    String(b.repair_date || "").localeCompare(String(a.repair_date || ""))
+    || String(b.claim_date || "").localeCompare(String(a.claim_date || "")));
+  const cell = v => v
+    ? '<div style="white-space:pre-wrap;max-width:38ch">'+clEsc(v)+'</div>'
+    : '<span class="muted">—</span>';
+  return '<div class="cl-wrap-x"><table class="cl-table cl-sub" style="margin:0">'
+    + '<thead><tr><th>'+clT("col.code")+'</th><th>'+clT("f.title")+'</th>'
+    +   '<th>'+clT("f.desc")+'</th><th>'+clT("d.repair")+'</th>'
+    +   '<th>'+clT("f.claimdate")+'</th><th>'+clT("d.repairdate")+'</th></tr></thead><tbody>'
+    + sorted.map(c => '<tr style="cursor:default">'
+        + '<td class="code">'+clEsc(c.code)+'</td>'
+        + '<td class="ttl">'+clEsc(c.title)+'</td>'
+        + '<td>'+cell(c.description)+'</td>'
+        + '<td>'+cell(c.repair_notes)+'</td>'
+        + '<td>'+clDate(c.claim_date)+'</td>'
+        + '<td>'+clDate(c.repair_date)+'</td></tr>').join("")
+    + '</tbody></table></div>';
 }
 
 /* --------------------------------------------------- sélecteur de pièces */
