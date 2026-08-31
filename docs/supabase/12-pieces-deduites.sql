@@ -23,34 +23,35 @@
 --   un panneau tactile qui lâche = carte électronique HMI.
 --
 -- Les pièces entrent en « commandée » : elles ont été POSÉES, pas demandées.
--- Le suffixe « (déduit) » les distingue à l'écran d'un relevé. Pour tout
--- annuler :  delete from public.claim_parts where free_text like '%(déduit)';
+-- Elles portent le nom de la famille, sans suffixe : à l'écran on veut lire
+-- « Ventilateur », pas « Ventilateur (déduit) ». Ce qui les distingue d'un
+-- relevé, c'est l'absence de référence catalogue — part_ref est null.
 -- ---------------------------------------------------------------------------
 
 with src(monday_id, piece) as (values
-  ('4255438162', 'Ventilateur (déduit)'),
-  ('4294494404', 'Pompe (déduit)'),
-  ('6812073464', 'Câble / connecteur (déduit)'),
-  ('6812130393', 'Câble / connecteur (déduit)'),
-  ('7407205406', 'Ventilateur (déduit)'),
-  ('7823759358', 'Pompe (déduit)'),
-  ('12345718594', 'Carte électronique HMI (déduit)'),
-  ('12346297618', 'Pompe (déduit)'),
-  ('12526209007', 'Carte électronique (déduit)'),
-  ('12345200032', 'Carte électronique (déduit)'),
-  ('12771108992', 'Carte électronique (déduit)'),
-  ('2861165766', 'Pompe (déduit)'),
-  ('3477695378', 'Ventilateur (déduit)'),
-  ('3924847644', 'Gearbox / robinet (déduit)'),
-  ('4334124423', 'Pompe (déduit)'),
-  ('4997151331', 'Pompe (déduit)'),
-  ('4655904553', 'Carte électronique HMI (déduit)'),
-  ('5710897685', 'Pompe (déduit)'),
-  ('6818838623', 'Kit / divers (déduit)'),
-  ('5607530948', 'Gearbox / robinet (déduit)'),
-  ('6453949208', 'Gearbox / robinet (déduit)'),
-  ('6453964750', 'Gearbox / robinet (déduit)'),
-  ('6693416186', 'Gearbox / robinet (déduit)')
+  ('4255438162', 'Ventilateur'),
+  ('4294494404', 'Pompe'),
+  ('6812073464', 'Câble / connecteur'),
+  ('6812130393', 'Câble / connecteur'),
+  ('7407205406', 'Ventilateur'),
+  ('7823759358', 'Pompe'),
+  ('12345718594', 'Carte électronique HMI'),
+  ('12346297618', 'Pompe'),
+  ('12526209007', 'Carte électronique'),
+  ('12345200032', 'Carte électronique'),
+  ('12771108992', 'Carte électronique'),
+  ('2861165766', 'Pompe'),
+  ('3477695378', 'Ventilateur'),
+  ('3924847644', 'Gearbox / robinet'),
+  ('4334124423', 'Pompe'),
+  ('4997151331', 'Pompe'),
+  ('4655904553', 'Carte électronique HMI'),
+  ('5710897685', 'Pompe'),
+  ('6818838623', 'Kit / divers'),
+  ('5607530948', 'Gearbox / robinet'),
+  ('6453949208', 'Gearbox / robinet'),
+  ('6453964750', 'Gearbox / robinet'),
+  ('6693416186', 'Gearbox / robinet')
 )
 insert into public.claim_parts (claim_id, free_text, qty, ordered_manual)
 select c.id, src.piece, 1, true
@@ -61,5 +62,5 @@ select c.id, src.piece, 1, true
 -- Contrôle : 23 lignes attendues, et la répartition.
 select free_text, count(*) as n
   from public.claim_parts
- where free_text like '%(déduit)'
+ where part_ref is null and free_text is not null
  group by free_text order by n desc, free_text;

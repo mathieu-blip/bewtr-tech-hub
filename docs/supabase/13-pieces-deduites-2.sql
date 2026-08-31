@@ -26,34 +26,33 @@
 -- 15 fois sur 15.
 --
 -- À passer après le 12. Rejouable : un claim qui porte déjà une pièce est
--- laissé tel quel. Pour tout annuler, 12 et 13 ensemble :
---   delete from public.claim_parts where free_text like '%(déduit)';
+-- laissé tel quel.
 -- ---------------------------------------------------------------------------
 
 with src(monday_id, piece) as (values
-  ('4266608135', 'Pompe (déduit)'),
-  ('5398526793', 'Ventilateur (déduit)'),
-  ('5670073134', 'Ventilateur (déduit)'),
-  ('5670906253', 'Ventilateur (déduit)'),
-  ('4625905523', 'Compresseur (déduit)'),
-  ('5930383392', 'Carrosserie / habillage (déduit)'),
-  ('2861331198', 'Pompe (déduit)'),
-  ('2861541737', 'Pompe (déduit)'),
-  ('2861884415', 'Carte électronique HMI (déduit)'),
-  ('3101968156', 'Pompe (déduit)'),
-  ('3174743901', 'Pompe (déduit)'),
-  ('3441365811', 'Gearbox / robinet (déduit)'),
-  ('3854229301', 'Gearbox / robinet (déduit)'),
-  ('3942638651', 'Gearbox / robinet (déduit)'),
-  ('4159504578', 'Pompe (déduit)'),
-  ('4334120914', 'Carrosserie / habillage (déduit)'),
-  ('4916319588', 'Carte électronique HMI (déduit)'),
-  ('4802153503', 'Compresseur (déduit)'),
-  ('4770197726', 'Câble / connecteur (déduit)'),
-  ('4334109822', 'Sonde / thermostat (déduit)'),
-  ('6060706715', 'Gearbox / robinet (déduit)'),
-  ('6453959861', 'Gearbox / robinet (déduit)'),
-  ('7945057025', 'Pompe (déduit)')
+  ('4266608135', 'Pompe'),
+  ('5398526793', 'Ventilateur'),
+  ('5670073134', 'Ventilateur'),
+  ('5670906253', 'Ventilateur'),
+  ('4625905523', 'Compresseur'),
+  ('5930383392', 'Carrosserie / habillage'),
+  ('2861331198', 'Pompe'),
+  ('2861541737', 'Pompe'),
+  ('2861884415', 'Carte électronique HMI'),
+  ('3101968156', 'Pompe'),
+  ('3174743901', 'Pompe'),
+  ('3441365811', 'Gearbox / robinet'),
+  ('3854229301', 'Gearbox / robinet'),
+  ('3942638651', 'Gearbox / robinet'),
+  ('4159504578', 'Pompe'),
+  ('4334120914', 'Carrosserie / habillage'),
+  ('4916319588', 'Carte électronique HMI'),
+  ('4802153503', 'Compresseur'),
+  ('4770197726', 'Câble / connecteur'),
+  ('4334109822', 'Sonde / thermostat'),
+  ('6060706715', 'Gearbox / robinet'),
+  ('6453959861', 'Gearbox / robinet'),
+  ('7945057025', 'Pompe')
 )
 insert into public.claim_parts (claim_id, free_text, qty, ordered_manual)
 select c.id, src.piece, 1, true
@@ -64,7 +63,7 @@ select c.id, src.piece, 1, true
 -- Contrôle : les deux passages réunis, par famille.
 select free_text, count(*) as n
   from public.claim_parts
- where free_text like '%(déduit)'
+ where part_ref is null and free_text is not null
  group by free_text order by n desc, free_text;
 
 -- Et la couverture : combien d'archives portent enfin une pièce.

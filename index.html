@@ -862,6 +862,7 @@
               <input id="clSearch" type="search" data-cl-ph="filter.search">
               <select id="clFStatus"></select>
               <select id="clFProduct"></select>
+              <select id="clFPart"></select>
               <select id="clFSupplier"></select>
               <label class="cl-chk"><input type="checkbox" id="clShowArchived">
                 <span data-cl-i18n="filter.archived"></span></label>
@@ -2234,7 +2235,7 @@ const CL_I18N = {
     "rep.none.parts":"Aucune pièce enregistrée sur les tickets fermés de ce périmètre.",
     "kpi.total":"Tickets ouverts","kpi.new":"À réparer","kpi.order":"Pièces à commander","kpi.supplier":"Chez le fournisseur","kpi.warranty":"Sous garantie",
     "filter.search":"Rechercher — titre, n° série, technicien, société…","filter.refresh":"Actualiser",
-    "filter.allstatus":"Tous les statuts","filter.allcountry":"Tous les pays","filter.allproduct":"Tous les produits",
+    "filter.allstatus":"Tous les statuts","filter.allcountry":"Tous les pays","filter.allproduct":"Tous les produits","filter.allpart":"Toutes les pièces",
     "f.title":"Objet du ticket","f.desc":"Description du problème","f.product":"Produit","f.serial":"N° de série",
     "f.install":"Date d'installation","f.claimdate":"Date du ticket","f.country":"Pays","f.units":"Nb d'unités concernées",
     "f.tech":"Technicien","f.mail":"E-mail","f.company":"Société","f.parts":"Pièces nécessaires",
@@ -2279,7 +2280,7 @@ const CL_I18N = {
     "rep.none.parts":"No part recorded on the closed tickets in this scope.",
     "kpi.total":"Open claims","kpi.new":"To repair","kpi.order":"Parts to order","kpi.supplier":"At supplier","kpi.warranty":"Under warranty",
     "filter.search":"Search — title, serial, technician, company…","filter.refresh":"Refresh",
-    "filter.allstatus":"All statuses","filter.allcountry":"All countries","filter.allproduct":"All products",
+    "filter.allstatus":"All statuses","filter.allcountry":"All countries","filter.allproduct":"All products","filter.allpart":"All parts",
     "f.title":"Ticket subject","f.desc":"Problem description","f.product":"Product","f.serial":"Serial number",
     "f.install":"Installation date","f.claimdate":"Claim date","f.country":"Country","f.units":"Units impacted",
     "f.tech":"Technician","f.mail":"E-mail","f.company":"Company","f.parts":"Parts needed",
@@ -2324,7 +2325,7 @@ const CL_I18N = {
     "rep.none.parts":"Kein Teil auf den geschlossenen Tickets dieses Umfangs erfasst.",
     "kpi.total":"Offene Claims","kpi.new":"Zu reparieren","kpi.order":"Teile zu bestellen","kpi.supplier":"Beim Lieferanten","kpi.warranty":"In Garantie",
     "filter.search":"Suchen — Titel, Seriennummer, Techniker, Firma…","filter.refresh":"Aktualisieren",
-    "filter.allstatus":"Alle Status","filter.allcountry":"Alle Länder","filter.allproduct":"Alle Produkte",
+    "filter.allstatus":"Alle Status","filter.allcountry":"Alle Länder","filter.allproduct":"Alle Produkte","filter.allpart":"Alle Teile",
     "f.title":"Betreff","f.desc":"Problembeschreibung","f.product":"Produkt","f.serial":"Seriennummer",
     "f.install":"Installationsdatum","f.claimdate":"Claim-Datum","f.country":"Land","f.units":"Betroffene Einheiten",
     "f.tech":"Techniker","f.mail":"E-Mail","f.company":"Firma","f.parts":"Benötigte Teile",
@@ -2827,6 +2828,15 @@ function clPartLabel(p){
   return p.name ? partName(p.name) : (p.free_text || "");
 }
 
+/**
+ * La clé d'agrégation d'une pièce. La référence catalogue quand il y en a
+ * une ; sinon le texte libre, sans la casse — les pièces reprises de Monday
+ * sont saisies à la main et « fun », « Fun » et « FUN » sont la même chose.
+ */
+function clPartKey(p){
+  return p.ref || ("libre:" + (p.free_text || "").trim().toLowerCase());
+}
+
 /** Le fournisseur d'une pièce, via le catalogue chargé. */
 function clPartSupplier(ref){
   if(!ref) return null;
@@ -2919,6 +2929,7 @@ function clFiltered(){
   const q  = (document.getElementById("clSearch").value || "").trim().toLowerCase();
   const st = document.getElementById("clFStatus").value;
   const pr = document.getElementById("clFProduct").value;
+  const pc = document.getElementById("clFPart").value;
   const su = document.getElementById("clFSupplier").value;
   const arch = document.getElementById("clShowArchived").checked;
   return clState.claims.filter(c => {
@@ -2935,7 +2946,10 @@ function clFiltered(){
     }
     if(st && c.status  !== st) return false;
     if(clState.country && c.country !== clState.country) return false;
-    if(pr && c.product !== pr) return false;
+    // le produit se filtre sur le nom affiché, pas sur le libellé Monday :
+    // choisir « PRO2 V2 » doit ramener la noire et l'argent
+    if(pr && clProductLabel(c.product) !== pr) return false;
+    if(pc && !(c.parts || []).some(x => clPartKey(x) === pc)) return false;
     if(su && !clClaimSuppliers(c).includes(su)) return false;
     if(!q) return true;
     return [c.code, c.title, c.description, c.serial_number, c.technician_name, c.company, c.product]
@@ -3491,7 +3505,7 @@ function clRenderReport(){
     // « fun », « Fun », « FUN ». On regroupe sans la casse — c'est le seul
     // rapprochement sûr. « fun » et « ventilateur » restent deux lignes :
     // deviner qu'il s'agit de la même pièce n'est pas à la machine de le faire.
-    const k = x.ref || ("libre:" + (x.free_text || "").trim().toLowerCase());
+    const k = clPartKey(x);
     const e = byPart[k] = byPart[k] || { ref:x.ref, name:clPartLabel(x), qty:0, claims:0 };
     e.qty += x.qty || 0;
     e.claims++;
@@ -3997,7 +4011,22 @@ function clFillFilters(){
   };
   const uniq = k => Array.from(new Set(clState.claims.map(c => c[k]).filter(Boolean))).sort();
   keep(document.getElementById("clFStatus"),  uniq("status"),  clT("filter.allstatus"), clStatusLabel);
-  keep(document.getElementById("clFProduct"), uniq("product"), clT("filter.allproduct"));
+  const prods = Array.from(new Set(clState.claims.map(c => clProductLabel(c.product))
+                                         .filter(v => v && v !== "—"))).sort();
+  keep(document.getElementById("clFProduct"), prods, clT("filter.allproduct"));
+
+  // Les pièces réellement portées par des claims, dédoublonnées par leur clé
+  // et affichées dans la langue du hub. Vide, le filtre se masque : une base
+  // fraîche n'a encore rien à proposer.
+  const byKey = {};
+  clState.claims.forEach(c => (c.parts || []).forEach(x => {
+    const k = clPartKey(x);
+    if(!byKey[k]) byKey[k] = clPartLabel(x) || k;
+  }));
+  const pkeys = Object.keys(byKey).sort((a, b) => byKey[a].localeCompare(byKey[b]));
+  const ps = document.getElementById("clFPart");
+  ps.hidden = !pkeys.length;
+  keep(ps, pkeys, clT("filter.allpart"), k => byKey[k]);
 
   // Le pays est un périmètre, pas un filtre de colonne : il se remplit une
   // fois avec tous les pays connus et ne bouge pas quand on change d'onglet.
@@ -4198,7 +4227,7 @@ function clInit(){
     if(clState.orderPass){ clRenderOrder(); clRenderHistory(); }
   });
 
-  ["clSearch","clFStatus","clFProduct","clFSupplier","clShowArchived"].forEach(id => {
+  ["clSearch","clFStatus","clFProduct","clFPart","clFSupplier","clShowArchived"].forEach(id => {
     document.getElementById(id).addEventListener("input", clRenderBoard);
   });
 
