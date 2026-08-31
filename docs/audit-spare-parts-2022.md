@@ -38,10 +38,29 @@ aucune n'y figurait.
 |---|---|---|
 | `BW-1031` | Agitator / stirrer MIR B 4L | BOX 120 I *(inchangé)* |
 | `BW-1032` | Agitator / stirrer MIR A | BOX 80 I *(inchangé)* |
-| `BW-1072` | Capillary tube | BOX 80 I *(nouveau SKU)* |
+| — | Capillary tube | BOX 80 I *(SKU retiré, voir plus bas)* |
 
 `BW-1068` étant réattribué à la sonde de niveau, le **flow regulator** des BOX 80 I et BOX 120 I
 passe de `BW-1068` à **`BW-0158`**.
+
+### Renumérotation du BOX 20 (août 2026)
+
+Italbedis a renuméroté les deux premières pièces du BOX 20. Le hub suit :
+
+| Ancien SKU | Nouveau SKU | Désignation | Machine |
+|---|---|---|---|
+| `BW-0987` | `BW-1072` | Stainless-steel tank | BOX 20 |
+| `BW-0988` | `BW-1073` | Axial fan 120x120x25 | BOX 20 |
+
+`BW-1072` était occupé par le **capillary tube** du BOX 80 I — un SKU créé lors de
+cet audit pour lever la collision `BW-1031`, sans référence fournisseur. Il est
+écrasé : le capillary tube sort de la liste de pièces du BOX 80 I et n'est plus
+commandable. Il reste repéré sur l'image de la vue éclatée, qui n'est pas indexée
+sur les SKU ; il faudra lui en attribuer un neuf pour le remettre au catalogue.
+
+Les tickets et les commandes déjà saisis sur `BW-0987` / `BW-0988` ont été
+rattachés aux nouveaux SKU (script `15-renumerotation-box-20.sql`) : aucune ligne
+ne pointe plus sur une référence morte. Le catalogue passe de 294 à 293 SKU.
 
 ### Pièces rattachées à leur machine
 
@@ -106,7 +125,7 @@ cher qu'une absence de photo.
 
 ### Écarts restants dans le classeur, sans effet sur le hub
 
-- Les BOX 20, BOX 80 I et BOX 120 I (82 SKU, `BW-0987` → `BW-1072`) n'existent pas dans la base
+- Les BOX 20, BOX 80 I et BOX 120 I (82 SKU, `BW-0989` → `BW-1073`) n'existent pas dans la base
   de septembre 2022 : elle ne peut plus servir de référence prix / fournisseur pour ces machines.
 - L'onglet Database duplique 21 références dans un second bloc de colonnes (T→AF) : 232 lignes
   pour 211 pièces réelles.
