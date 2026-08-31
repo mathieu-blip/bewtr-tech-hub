@@ -4,9 +4,10 @@ Remplace le board Monday **Technical troubleshooting** : déclaration d'un
 retour machine, suivi du statut, liste des pièces à commander, bulletin de
 commande fournisseur en Excel.
 
-L'onglet n'apparaît pas dans le menu. Il s'ouvre en ajoutant `#claims` à
-l'URL du hub, puis il faut la phrase de passe. Une fois ouvert, le lien
-« Claims » se montre dans le menu pour le reste de la session.
+L'onglet n'apparaît pas dans le menu tant que le hub est verrouillé. Le mot
+de passe de l'écran de garde du hub l'ouvre : rien de plus à saisir, et le
+lien « Claims » se montre dans le menu. La plateforme ne se charge qu'à la
+première ouverture de l'onglet.
 
 ---
 
@@ -14,10 +15,20 @@ l'URL du hub, puis il faut la phrase de passe. Une fois ouvert, le lien
 
 | Phrase | Ce qu'elle ouvre |
 |---|---|
-| `spare part` | Les claims, le formulaire, et la liste des pièces à commander **avec la référence interne BW uniquement**. |
+| Le mot de passe du hub (`aqtiv duo`) | Les claims, le formulaire, et la liste des pièces à commander **avec la référence interne BW uniquement**. |
 | `order` | Tout ce qui précède **plus** le bulletin de commande : références fournisseur, prix d'achat, remises, export Excel, historique des commandes. |
 
 `order` ouvre aussi le niveau `claims` — inutile de saisir les deux.
+
+Le niveau `claims` n'a plus de phrase à lui : qui a franchi l'écran de garde
+du hub est un technicien BE WTR, les tickets lui sont ouverts d'office. La
+garde dépose le mot de passe saisi dans `localStorage`
+(`bewtr_claims_pass`) et le bloc Claims l'envoie aux fonctions Supabase. En
+base, la ligne `claims` porte donc ce mot de passe **normalisé comme
+`index.html` le normalise** : `trim`, espaces réduits, majuscules —
+`AQTIV DUO`. `hub_scope` applique la même normalisation à ce qu'on lui
+présente : `aqtiv duo` saisi à la main ouvre les tickets, quelle que soit la
+casse.
 
 ### Changer une phrase de passe
 
@@ -29,8 +40,10 @@ update hub.secrets
  where scope = 'order';       -- ou 'claims'
 ```
 
-Rien à modifier dans `index.html` : les phrases ne sont stockées que côté
-base, sous forme de hash bcrypt.
+Pour `order`, rien à modifier dans `index.html` : la phrase n'est stockée que
+côté base, sous forme de hash bcrypt. Pour `claims`, la ligne doit rester
+alignée sur le mot de passe du hub : changer l'un demande de rejouer l'autre
+(`GATE_HASH` dans `index.html`, voir `docs/supabase/16-…`).
 
 ---
 
@@ -54,13 +67,17 @@ Vérification faite en base, avec le rôle `anon` (celui du navigateur) :
 |---|---|
 | `select * from parts` en direct | 0 ligne |
 | `select * from claims` en direct | 0 ligne |
-| `parts_catalog('spare part')` | 294 lignes, **0 prix, 0 réf fournisseur** |
+| `parts_catalog('AQTIV DUO')` | 294 lignes, **0 prix, 0 réf fournisseur** |
 | `parts_catalog('order')` | 294 lignes, 283 réfs fournisseur |
-| `order_pending('spare part')` | refusé — `order passphrase required` |
+| `order_pending('AQTIV DUO')` | refusé — `order passphrase required` |
 | `claims_list('mauvaise phrase')` | refusé — `unauthorized` |
 
 > **Le point à garder en tête.** Une phrase courte comme `order` résiste mal
-> à quelqu'un qui aurait la clé et voudrait la deviner par force brute. Tant
+> à quelqu'un qui aurait la clé et voudrait la deviner par force brute. Le
+> niveau `claims` partage désormais le mot de passe du hub, dont le SHA-256
+> est lisible dans `index.html` : deviner « aqtiv duo » à partir de ce hash
+> est à la portée du premier venu outillé, et ouvre alors les tickets — noms
+> de clients et adresses e-mail compris. Tant
 > que l'URL du hub reste interne, c'est proportionné. Si la plateforme
 > s'ouvre plus largement, passez à des phrases longues (voir ci-dessus) —
 > le changement prend une requête SQL et ne touche pas au code.
@@ -74,6 +91,9 @@ Si le projet Supabase est perdu, dans **SQL Editor**, dans l'ordre :
 1. `docs/supabase/01-schema.sql` — tables, séquences, RLS, phrases de passe
 2. `docs/supabase/02-api.sql` — les fonctions et les droits
 3. `docs/supabase/03-seed-parts.sql` — les 294 pièces du catalogue
+
+Les scripts numérotés au-delà (`04-…` et suivants) reprennent les évolutions
+appliquées depuis, dans l'ordre.
 
 Puis, dans `index.html`, mettre à jour les deux constantes en tête du bloc
 Claims :

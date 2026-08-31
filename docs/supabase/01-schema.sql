@@ -18,9 +18,13 @@ create table hub.secrets (
   pass_hash text not null
 );
 
+-- 'claims' porte le mot de passe de l'écran de garde du hub, normalisé
+-- comme index.html le normalise (trim, espaces réduits, majuscules) : la
+-- plateforme des tickets n'a pas de phrase à elle. 'order' garde la sienne,
+-- parce qu'elle seule ouvre les réfs fournisseur et les prix d'achat.
 insert into hub.secrets(scope, pass_hash) values
-  ('claims', extensions.crypt('spare part', extensions.gen_salt('bf', 10))),
-  ('order',  extensions.crypt('order',      extensions.gen_salt('bf', 10)));
+  ('claims', extensions.crypt('AQTIV DUO', extensions.gen_salt('bf', 10))),
+  ('order',  extensions.crypt('order',     extensions.gen_salt('bf', 10)));
 
 -- ------------------------------------------------------------ catalogue
 create table public.parts (
