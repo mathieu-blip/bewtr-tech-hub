@@ -3394,16 +3394,24 @@ async function clEditSave(){
 
 /* ------------------------------------------------------------- rapport */
 
-/* Regroupements déclarés par l'équipe. Une variante de FINITION n'est pas un
-   autre produit : la PRO2 blanche, noire et argent sont la même machine, et
-   le « H » de l'AQTiV COMBI ne change pas la pièce qu'on y monte. Une
-   variante FONCTIONNELLE en est un : BOX 30 et BOX 30E, PRO2 et PRO2 HOT
-   restent séparées. On ne regroupe donc que ce qui est écrit ici — deviner
-   par préfixe fondrait la BOX 30E dans la BOX 30 et ferait mentir le
-   rapport. */
+/* Les noms de machines tels que l'équipe les emploie, en face des libellés
+   que Monday a accumulés. Ce n'est pas un regroupement par ressemblance mais
+   une table dictée : la PRO2 blanche et la noire ne sont pas deux finitions
+   d'une même machine, ce sont deux générations, V1 et V2. Le « H » de
+   l'AQTiV COMBI, lui, ne change pas les pièces qu'on y monte.
+
+   Tout ce qui n'est pas dans cette table s'affiche tel quel. Deviner par
+   préfixe fondrait la BOX 30 E dans la BOX 30 O et ferait mentir le rapport. */
 const CL_PRODUCT_GROUPS = [
-  [/^AQTIV\s+COMBI(\s+H)?$/, "AQTiV COMBI"],
-  [/^PRO2\s+(WHITE|BLACK|SILVER)$/, "PRO2"]
+  [/^PRO2\s+WHITE$/,             "PRO2 V1"],
+  [/^PRO2\s+(BLACK|SILVER)$/,    "PRO2 V2"],
+  [/^AQTIV\s+COMBI(\s+H)?$/,     "AQTiV COMBI"],
+  [/^BOX\s*20\s+HOME$/,          "BOX 20"],
+  [/^BOX\s*80$/,                 "BOX 80 B"],
+  [/^BOX\s*80\s+ITALBEDIS$/,     "BOX 80 I"],
+  [/^BOX\s*30$/,                 "BOX 30 O"],
+  [/^BOX\s*30\s*E$/,             "BOX 30 E"],
+  [/^BOX\s*30\s*B$/,             "BOX 30 B"]
 ];
 
 /**

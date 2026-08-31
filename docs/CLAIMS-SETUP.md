@@ -376,6 +376,31 @@ delete from public.claim_parts where free_text like '%(déduit)';
 
 Le détail ticket par ticket est dans `docs/estimation.csv`.
 
+### Second passage — script 13
+
+Le script 12 exigeait un verbe : « fan ko, **changed** ». Il laissait donc de
+côté les ventilateurs annoncés sans verbe — « The radiator cooling fan
+doesn't work », décision `Spare parts used`. Une pièce a servi, une seule
+famille est citée : c'est le ventilateur, il n'y a pas d'autre lecture.
+
+Le script 13 retient ces cas-là : **une seule famille citée dans tout le
+ticket**, et rien qui dise qu'aucune pièce n'a été posée. Ce qui fait sortir
+un ticket, relevé sur les tickets eux-mêmes :
+
+- la décision dit `Set up modification` — c'est un réglage ;
+- le texte décrit le réglage : spray sur la sonde, ruban isolant, thermostat
+  remis sur 4, reset de la carte ;
+- le texte décrit une remise en état sans pièce : pompe débloquée,
+  ventilateur mal branché puis rebranché, nettoyage, « the fun is ok » ;
+- la pièce a été changée ailleurs (« pump already changed ») ;
+- c'est un bon d'achat (« Acheter 2 drip tray BAR2 en spare pour la France ») ;
+- la machine est démontée, au rebut ou passée en avoir.
+
+**Justesse mesurée : 42 sur 44, soit 95 %.** Le ventilateur, la famille la
+plus attendue, y tombe juste **15 fois sur 15**.
+
+23 tickets de plus, ce qui porte les archives avec pièce de 120 à 143.
+
 ### La date d'un claim ne peut pas être dans le futur
 
 Le navigateur borne le champ — attribut `max`, plus un contrôle à l'envoi,
@@ -525,20 +550,30 @@ sinon la page devient un mur. Les lignes dépliées ne se cliquent pas : elles
 se lisent, et leur survol reste neutre pour ne pas promettre une action qui
 n'existe pas.
 
-### Les regroupements de produits sont déclarés, pas devinés
+### Les noms de machines sont dictés, pas devinés
 
-On retire le SKU de tête (`BW-0596 BOX 20 Home` → `BOX 20 Home`), puis on
-applique la liste `CL_PRODUCT_GROUPS` — et rien d'autre.
+On retire le SKU de tête, puis on applique la table `CL_PRODUCT_GROUPS` — et
+rien d'autre. Ce n'est pas un regroupement par ressemblance mais la liste des
+noms tels que l'équipe les emploie.
 
-| Regroupé | Devient | Pourquoi |
-|---|---|---|
-| `PRO2 White` · `PRO2 Black` · `PRO2 Silver` | **PRO2** | variante de finition, même machine |
-| `AQTiV COMBI` · `AQTiV COMBI H` | **AQTiV COMBI** | le « H » ne change pas les pièces |
+| Libellé Monday | Devient |
+|---|---|
+| `PRO2 White` | **PRO2 V1** |
+| `PRO2 Black` · `PRO2 Silver` | **PRO2 V2** |
+| `AQTiV COMBI` · `AQTiV COMBI H` | **AQTiV COMBI** |
+| `BOX 20 Home` | **BOX 20** |
+| `BOX 80` | **BOX 80 B** |
+| `BOX 80 Italbedis` | **BOX 80 I** |
+| `BOX 30` | **BOX 30 O** |
+| `BOX 30E` | **BOX 30 E** |
+| `BOX30 B` | **BOX 30 B** |
 
-Tout le reste reste séparé, volontairement. `BOX 30` et `BOX 30E`, `PRO2` et
-`PRO2 HOT` sont des variantes **fonctionnelles** : les rapprocher par préfixe
-ferait mentir le rapport. Pour regrouper autre chose, il faut l'ajouter à la
-liste — c'est une décision d'équipe, pas une règle que le code peut deviner.
+La PRO2 blanche et la noire ne sont pas deux finitions d'une même machine :
+ce sont **deux générations**, V1 et V2, et elles ne prennent pas les mêmes
+pièces. Le « H » de l'AQTiV COMBI, lui, ne change rien à ce qu'on y monte.
+
+Tout ce qui n'est pas dans la table s'affiche tel quel. Deviner par préfixe
+fondrait la `BOX 30 E` dans la `BOX 30 O` et ferait mentir le rapport.
 
 ### Une cellule Monday peut porter deux machines
 
