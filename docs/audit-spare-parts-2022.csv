@@ -207,8 +207,6 @@ BW-0783,oui,PRO2 - Loom solenoids Rev2,PRO2.1,PRO2,oui,Borg&Overström,702539,AS
 BW-0973,oui,Gearbox - Handle (x10),AQTiV COMBI; AQTiV COMBI H; AQTiV ONE,AQTiV COMBI; AQTiV ONE,oui,,P040039 + P036001,
 BW-0974,oui,Gearbox - Hat without handle (x5),AQTiV COMBI; AQTiV COMBI H; AQTiV ONE,AQTiV COMBI; AQTiV ONE,oui,,P040038,
 BW-0975,oui,Gearbox - Lever (x10),AQTiV COMBI; AQTiV COMBI H; AQTiV ONE,AQTiV COMBI; AQTiV ONE,oui,, P040035 + P040040,
-BW-0987,oui,Stainless-steel tank,(absent de la base),BOX 20,oui,,,
-BW-0988,oui,Axial fan 120x120x25,(absent de la base),BOX 20,oui,,,
 BW-0989,oui,Condenser,(absent de la base),BOX 20,oui,,,
 BW-0990,oui,Solenoid valve (per schema),(absent de la base),BOX 20,oui,,,
 BW-0991,oui,Thermostat Ranco K50 P1127.0,(absent de la base),BOX 20,oui,,,
@@ -292,4 +290,5 @@ BW-1068,oui,Carb level probe,BOX 30; BOX 30E,BOX 30E; BOX 30,oui,Borg&Overström
 BW-1069,oui,Temp probe,BOX 30; BOX 30E,BOX 30E; BOX 30,oui,Borg&Overström,720023,AS*
 BW-1070,oui,U2 Tap Twin Port 285 mm Mounting Gasket 35 mm,BAR1,BAR1,oui,Borg&Overström,604022,AS*
 BW-1071,oui,RECIRCULATION PUMP 230V,BOX 80,BOX 80,oui,Blupura,810327,AS*
-BW-1072,oui,Capillary tube,(absent de la base),BOX 80 I,oui,,,
+BW-1072,oui,Stainless-steel tank,(absent de la base),BOX 20,oui,,,
+BW-1073,oui,Axial fan 120x120x25,(absent de la base),BOX 20,oui,,,

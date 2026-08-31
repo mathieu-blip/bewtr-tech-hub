@@ -207,8 +207,6 @@ insert into public.parts (ref,name,machines,supplier,supplier_ref,supplier_desc,
 ('BW-0973','Gearbox - Handle (x10)','{"AQTiV COMBI","AQTiV ONE"}',null,null,null,null,null,null),
 ('BW-0974','Gearbox - Hat without handle (x5)','{"AQTiV COMBI","AQTiV ONE"}',null,null,null,null,null,null),
 ('BW-0975','Gearbox - Lever (x10)','{"AQTiV COMBI","AQTiV ONE"}',null,null,null,null,null,null),
-('BW-0987','Stainless-steel tank','{"BOX 20"}','Italbedis','150030','VASCA INOX PLUS',290,'EUR',0.6),
-('BW-0988','Axial fan 120x120x25','{"BOX 20"}','Italbedis','404008','VENTILATORE ASSIALE 120X120X25',27.04,'EUR',0.6),
 ('BW-0989','Condenser','{"BOX 20"}','Italbedis','111005','CONDENSATORE REFRIGERETTE',24.7,'EUR',0.6),
 ('BW-0990','Solenoid valve (per schema)','{"BOX 20"}',null,null,null,null,null,null),
 ('BW-0991','Thermostat Ranco K50 P1127.0','{"BOX 20"}','Italbedis','401030','TERMOSTATO PLUS/E RANCO K50 P1127.0',14.95,'EUR',0.6),
@@ -292,5 +290,6 @@ insert into public.parts (ref,name,machines,supplier,supplier_ref,supplier_desc,
 ('BW-1069','Temp probe','{"BOX 30E","BOX 30"}','Borg&Overström','720023',null,null,null,null),
 ('BW-1070','U2 Tap Twin Port 285 mm - Mounting Gasket 35 mm','{"BAR1"}','Borg&Overström','604022',null,null,null,null),
 ('BW-1071','Recirculation pump 230 V','{"BOX 80"}','Blupura','810327',null,null,null,null),
-('BW-1072','Capillary tube','{"BOX 80 I"}',null,null,null,null,null,null)
+('BW-1072','Stainless-steel tank','{"BOX 20"}','Italbedis','150030','VASCA INOX PLUS',290,'EUR',0.6),
+('BW-1073','Axial fan 120x120x25','{"BOX 20"}','Italbedis','404008','VENTILATORE ASSIALE 120X120X25',27.04,'EUR',0.6)
 on conflict (ref) do update set name=excluded.name,machines=excluded.machines,supplier=excluded.supplier,supplier_ref=excluded.supplier_ref,supplier_desc=excluded.supplier_desc,price=excluded.price,currency=excluded.currency,discount=excluded.discount;

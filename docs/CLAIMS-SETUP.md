@@ -93,13 +93,13 @@ Le projet actuel est `hgjitagsffudcvqwakwk` (région eu-west-1).
 
 ## Le catalogue de pièces
 
-294 SKU BW, repris de l'objet `SPAREPARTS` du hub et enrichis :
+293 SKU BW, repris de l'objet `SPAREPARTS` du hub et enrichis :
 
 | Source | Références couvertes |
 |---|---|
 | Base `September 2022 - BE WTR spare parts list.xlsm` | 208 |
 | BOM Italbedis récupérées sur SharePoint (voir plus bas) | 80 |
-| **Sans référence fournisseur** | **6 + 5 Superinox** |
+| **Sans référence fournisseur** | **5 + 5 Superinox** |
 
 Les BOM Italbedis viennent de
 `Technical/05 Aftersales/Techs/02 Spare parts/XX Spare parts list Italbedis` :
@@ -116,7 +116,7 @@ en **EUR catalogue**, avec la **remise business de 60 %** portée dans la
 colonne `discount` : le bulletin de commande affiche et totalise le prix
 net, pas le prix catalogue.
 
-### Les 11 références encore à confirmer
+### Les 10 références encore à confirmer
 
 Elles apparaissent quand même dans le bulletin, marquées « réf. à
 confirmer » — rien n'est masqué silencieusement.
@@ -125,7 +125,6 @@ confirmer » — rien n'est masqué silencieusement.
 |---|---|---|---|
 | `BW-0158` | Flow regulator | BOX 80 I, BOX 120 I | — |
 | `BW-0990` | Solenoid valve (per schema) | BOX 20 | — |
-| `BW-1072` | Capillary tube | BOX 80 I | — |
 | `BW-0973` | Gearbox - Handle (x10) | AQTiV | — |
 | `BW-0974` | Gearbox - Hat without handle (x5) | AQTiV | — |
 | `BW-0975` | Gearbox - Lever (x10) | AQTiV | — |
