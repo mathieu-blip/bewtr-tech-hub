@@ -15,8 +15,8 @@ première ouverture de l'onglet.
 
 | Phrase | Ce qu'elle ouvre |
 |---|---|
-| Le mot de passe du hub (`aqtiv duo`) | Les claims, le formulaire, et la liste des pièces à commander **avec la référence interne BW uniquement**. |
-| `order` | Tout ce qui précède **plus** le bulletin de commande : références fournisseur, prix d'achat, remises, export Excel, historique des commandes. |
+| Le mot de passe du hub (`aqtiv duo`) | Les claims, le formulaire, la liste des pièces à commander et l'export Excel des tickets — avec la référence interne BW **et le code de commande du fournisseur**. |
+| `order` | Tout ce qui précède **plus** le bulletin de commande : prix d'achat, remises, désignation fournisseur, historique des commandes. |
 
 `order` ouvre aussi le niveau `claims` — inutile de saisir les deux.
 
@@ -67,8 +67,8 @@ Vérification faite en base, avec le rôle `anon` (celui du navigateur) :
 |---|---|
 | `select * from parts` en direct | 0 ligne |
 | `select * from claims` en direct | 0 ligne |
-| `parts_catalog('AQTIV DUO')` | 294 lignes, **0 prix, 0 réf fournisseur** |
-| `parts_catalog('order')` | 294 lignes, 283 réfs fournisseur |
+| `parts_catalog('AQTIV DUO')` | 293 lignes, 283 réfs fournisseur, **0 prix** |
+| `parts_catalog('order')` | 293 lignes, 283 réfs fournisseur, 182 prix |
 | `order_pending('AQTIV DUO')` | refusé — `order passphrase required` |
 | `claims_list('mauvaise phrase')` | refusé — `unauthorized` |
 
