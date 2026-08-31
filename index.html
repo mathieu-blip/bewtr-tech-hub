@@ -25,7 +25,7 @@
   body.ticket-only aside,
   body.ticket-only .hsearch,
   body.ticket-only #clRefresh,
-  body.ticket-only #clCsv{display:none}
+  body.ticket-only #clXls{display:none}
   /* grid items default to min-width:auto, which lets wide content stretch the page past the viewport */
   .shell>*{min-width:0}
   aside{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;background:#fff;border-right:1px solid var(--line);padding:26px 18px;}
@@ -868,7 +868,7 @@
               <label class="cl-chk"><input type="checkbox" id="clShowArchived">
                 <span data-cl-i18n="filter.archived"></span></label>
               <button class="cl-btn ghost sm" id="clRefresh" data-cl-i18n="filter.refresh"></button>
-              <button class="cl-btn ghost sm" id="clCsv" data-cl-i18n="filter.csv"></button>
+              <button class="cl-btn ghost sm" id="clXls" data-cl-i18n="filter.xlsx"></button>
             </div>
             <div id="clBoard"></div>
           </div>
@@ -2237,7 +2237,7 @@ const CL_I18N = {
     "rep.none.parts":"Aucune pièce enregistrée sur les tickets fermés de ce périmètre.",
     "kpi.total":"Tickets ouverts","kpi.new":"À réparer","kpi.order":"Pièces à commander","kpi.supplier":"Chez le fournisseur","kpi.warranty":"Sous garantie",
     "filter.search":"Rechercher — titre, n° série, technicien, société…","filter.refresh":"Actualiser",
-    "filter.csv":"Exporter en CSV","csv.none":"Aucun ticket à exporter.","csv.supplier":"Fournisseur","csv.ordered":"Pièce commandée","csv.yes":"oui","csv.no":"non",
+    "filter.xlsx":"Exporter en Excel","x.none":"Aucun ticket à exporter.","x.sheet":"Tickets","x.filters":"Filtres","x.filter":"Filtre","x.value":"Valeur appliquée","x.date":"Date de l'export","x.tab":"Onglet","x.search":"Recherche","x.part":"Pièce","x.supplier":"Fournisseur","x.ordered":"Pièce commandée","x.exported":"Tickets exportés","x.lines":"Lignes du tableau","x.yes":"oui","x.no":"non",
     "filter.allstatus":"Tous les statuts","filter.allcountry":"Tous les pays","filter.allproduct":"Tous les produits","filter.allpart":"Toutes les pièces",
     "f.title":"Objet du ticket","f.desc":"Description du problème","f.product":"Produit","f.serial":"N° de série",
     "f.install":"Date d'installation","f.claimdate":"Date du ticket","f.country":"Pays","f.units":"Nb d'unités concernées",
@@ -2283,7 +2283,7 @@ const CL_I18N = {
     "rep.none.parts":"No part recorded on the closed tickets in this scope.",
     "kpi.total":"Open claims","kpi.new":"To repair","kpi.order":"Parts to order","kpi.supplier":"At supplier","kpi.warranty":"Under warranty",
     "filter.search":"Search — title, serial, technician, company…","filter.refresh":"Refresh",
-    "filter.csv":"Export to CSV","csv.none":"No claim to export.","csv.supplier":"Supplier","csv.ordered":"Part ordered","csv.yes":"yes","csv.no":"no",
+    "filter.xlsx":"Export to Excel","x.none":"No claim to export.","x.sheet":"Claims","x.filters":"Filters","x.filter":"Filter","x.value":"Applied value","x.date":"Export date","x.tab":"Tab","x.search":"Search","x.part":"Part","x.supplier":"Supplier","x.ordered":"Part ordered","x.exported":"Claims exported","x.lines":"Table rows","x.yes":"yes","x.no":"no",
     "filter.allstatus":"All statuses","filter.allcountry":"All countries","filter.allproduct":"All products","filter.allpart":"All parts",
     "f.title":"Ticket subject","f.desc":"Problem description","f.product":"Product","f.serial":"Serial number",
     "f.install":"Installation date","f.claimdate":"Claim date","f.country":"Country","f.units":"Units impacted",
@@ -2329,7 +2329,7 @@ const CL_I18N = {
     "rep.none.parts":"Kein Teil auf den geschlossenen Tickets dieses Umfangs erfasst.",
     "kpi.total":"Offene Claims","kpi.new":"Zu reparieren","kpi.order":"Teile zu bestellen","kpi.supplier":"Beim Lieferanten","kpi.warranty":"In Garantie",
     "filter.search":"Suchen — Titel, Seriennummer, Techniker, Firma…","filter.refresh":"Aktualisieren",
-    "filter.csv":"Als CSV exportieren","csv.none":"Keine Tickets zum Exportieren.","csv.supplier":"Lieferant","csv.ordered":"Teil bestellt","csv.yes":"ja","csv.no":"nein",
+    "filter.xlsx":"Nach Excel exportieren","x.none":"Keine Tickets zum Exportieren.","x.sheet":"Tickets","x.filters":"Filter","x.filter":"Filter","x.value":"Angewendeter Wert","x.date":"Exportdatum","x.tab":"Registerkarte","x.search":"Suche","x.part":"Teil","x.supplier":"Lieferant","x.ordered":"Teil bestellt","x.exported":"Exportierte Tickets","x.lines":"Tabellenzeilen","x.yes":"ja","x.no":"nein",
     "filter.allstatus":"Alle Status","filter.allcountry":"Alle Länder","filter.allproduct":"Alle Produkte","filter.allpart":"Alle Teile",
     "f.title":"Betreff","f.desc":"Problembeschreibung","f.product":"Produkt","f.serial":"Seriennummer",
     "f.install":"Installationsdatum","f.claimdate":"Claim-Datum","f.country":"Land","f.units":"Betroffene Einheiten",
@@ -2452,34 +2452,108 @@ function clColName(i){
   for(i += 1; i > 0; i = Math.floor((i - 1) / 26)) s = String.fromCharCode(65 + (i - 1) % 26) + s;
   return s;
 }
-/** rows : tableau de tableaux. Un nombre part en cellule numérique, le reste en texte. */
-function clSheetXml(rows){
+/* Un peu de style : l'en-tête en gras sur fond clair, et un format de date
+   qui se trie. Sans styles.xml, Excel affiche une date comme un nombre. */
+const CL_XL_STYLES = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+  + '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+  + '<numFmts count="1"><numFmt numFmtId="164" formatCode="yyyy\\-mm\\-dd"/></numFmts>'
+  + '<fonts count="2"><font><sz val="11"/><name val="Calibri"/></font>'
+  +   '<font><b/><sz val="11"/><name val="Calibri"/></font></fonts>'
+  + '<fills count="3"><fill><patternFill patternType="none"/></fill>'
+  +   '<fill><patternFill patternType="gray125"/></fill>'
+  +   '<fill><patternFill patternType="solid"><fgColor rgb="FFF1F4F8"/>'
+  +     '<bgColor indexed="64"/></patternFill></fill></fills>'
+  + '<borders count="2"><border/><border><left/><right/><top/>'
+  +   '<bottom style="thin"><color rgb="FFBFC7D1"/></bottom><diagonal/></border></borders>'
+  + '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'
+  + '<cellXfs count="3">'
+  +   '<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>'
+  +   '<xf numFmtId="0" fontId="1" fillId="2" borderId="1" xfId="0"'
+  +     ' applyFont="1" applyFill="1" applyBorder="1"/>'
+  +   '<xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>'
+  + '</cellXfs>'
+  + '<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>'
+  + '</styleSheet>';
+
+/**
+ * Une date ISO en numéro de série Excel — le nombre de jours depuis le
+ * 30.12.1899. C'est ce qui distingue une vraie date d'un texte qui y
+ * ressemble : elle se trie, se filtre par mois, se soustrait.
+ */
+function clXlDate(v){
+  if(!v) return "";
+  const s = String(v).slice(0, 10), p = s.split("-");
+  if(p.length !== 3) return s;
+  const t = Date.UTC(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+  if(!isFinite(t)) return s;
+  return { date: Math.round(t / 86400000) + 25569 };
+}
+
+/**
+ * rows : tableau de tableaux. Un nombre part en cellule numérique, une date
+ * — clXlDate() — en vraie date, le reste en texte.
+ *
+ * opts.cols : les largeurs de colonnes, dans l'ordre.
+ * opts.head : la première ligne est un en-tête. Elle passe en gras, reste à
+ *             l'écran quand on descend, et chaque colonne porte son entonnoir
+ *             de tri — c'est ce qu'on attend d'un tableau qu'on ouvre pour
+ *             trier et croiser.
+ */
+function clSheetXml(rows, opts){
+  const o = opts || {};
   const body = rows.map((row, r) => {
+    const st = (o.head && r === 0) ? ' s="1"' : "";
     const cells = row.map((v, c) => {
       const ref = clColName(c) + (r + 1);
-      if(typeof v === "number" && isFinite(v)) return '<c r="'+ref+'"><v>'+v+'</v></c>';
+      if(typeof v === "number" && isFinite(v)) return '<c r="'+ref+'"'+st+'><v>'+v+'</v></c>';
+      if(v && typeof v === "object" && v.date != null)
+        return '<c r="'+ref+'" s="2"><v>'+v.date+'</v></c>';
       const s = clXmlEsc(v);
-      if(s === "") return "";
-      return '<c r="'+ref+'" t="inlineStr"><is><t xml:space="preserve">'+s+'</t></is></c>';
+      // une cellule d'en-tête vide garde quand même son fond
+      if(s === "") return st ? '<c r="'+ref+'"'+st+'/>' : "";
+      return '<c r="'+ref+'"'+st+' t="inlineStr"><is><t xml:space="preserve">'+s+'</t></is></c>';
     }).join("");
     return '<row r="'+(r+1)+'">'+cells+'</row>';
   }).join("");
-  const widths = '<cols><col min="1" max="1" width="16"/><col min="2" max="2" width="14"/>'
-               + '<col min="3" max="3" width="52"/><col min="4" max="4" width="8"/>'
-               + '<col min="5" max="6" width="14"/><col min="7" max="7" width="14"/></cols>';
+  const widths = (o.cols || []).length
+    ? '<cols>' + o.cols.map((w, i) => '<col min="'+(i+1)+'" max="'+(i+1)+'" width="'
+                                    + w + '" customWidth="1"/>').join("") + '</cols>'
+    : "";
+  const view = o.head
+    ? '<sheetViews><sheetView workbookViewId="0">'
+      + '<pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/>'
+      + '</sheetView></sheetViews>'
+    : "";
+  const wide = rows.reduce((n, r) => Math.max(n, r.length), 0);
+  const filter = (o.head && rows.length > 1 && wide)
+    ? '<autoFilter ref="A1:' + clColName(wide - 1) + rows.length + '"/>' : "";
+  // l'ordre des éléments est imposé par le schéma : vues, colonnes,
+  // données, puis le filtre automatique
   return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
        + '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
-       + widths + '<sheetData>' + body + '</sheetData></worksheet>';
+       + view + widths + '<sheetData>' + body + '</sheetData>' + filter + '</worksheet>';
 }
-function clXlsx(sheetName, rows){
-  const safe = String(sheetName).replace(/[\\\/\?\*\[\]:]/g,"-").slice(0,31) || "Feuille1";
+
+/** Un classeur, une feuille ou plusieurs. sheets : { name, rows, cols, head }. */
+function clWorkbook(sheets){
+  const seen = {};
+  const list = sheets.map((sh, i) => {
+    // Excel refuse ces caractères dans un nom d'onglet, et deux onglets
+    // homonymes lui font rejeter le classeur entier.
+    let n = String(sh.name || "").replace(/[\\\/\?\*\[\]:]/g, "-").slice(0, 31) || ("Feuille" + (i+1));
+    while(seen[n.toLowerCase()]) n = n.slice(0, 28) + "_" + (i + 1);
+    seen[n.toLowerCase()] = true;
+    return { name:n, sh:sh, id:i + 1 };
+  });
+  const styleId = "rId" + (list.length + 1);
   return clZip([
     { name:"[Content_Types].xml", data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
       + '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
       + '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
       + '<Default Extension="xml" ContentType="application/xml"/>'
       + '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'
-      + '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'
+      + list.map(x => '<Override PartName="/xl/worksheets/sheet'+x.id+'.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>').join("")
+      + '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'
       + '</Types>' },
     { name:"_rels/.rels", data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
       + '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
@@ -2488,13 +2562,22 @@ function clXlsx(sheetName, rows){
     { name:"xl/workbook.xml", data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
       + '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" '
       + 'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
-      + '<sheets><sheet name="'+clXmlEsc(safe)+'" sheetId="1" r:id="rId1"/></sheets></workbook>' },
+      + '<sheets>'
+      + list.map(x => '<sheet name="'+clXmlEsc(x.name)+'" sheetId="'+x.id+'" r:id="rId'+x.id+'"/>').join("")
+      + '</sheets></workbook>' },
     { name:"xl/_rels/workbook.xml.rels", data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
       + '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
-      + '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>'
+      + list.map(x => '<Relationship Id="rId'+x.id+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet'+x.id+'.xml"/>').join("")
+      + '<Relationship Id="'+styleId+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>'
       + '</Relationships>' },
-    { name:"xl/worksheets/sheet1.xml", data: clSheetXml(rows) }
-  ]);
+    { name:"xl/styles.xml", data: CL_XL_STYLES }
+  ].concat(list.map(x => ({ name:"xl/worksheets/sheet"+x.id+".xml",
+                            data: clSheetXml(x.sh.rows, x.sh) }))));
+}
+
+/** Le bulletin de commande : une feuille, ses largeurs d'origine. */
+function clXlsx(sheetName, rows){
+  return clWorkbook([{ name:sheetName, rows:rows, cols:[16, 14, 52, 8, 14, 14, 14] }]);
 }
 function clDownload(blob, filename){
   const a = document.createElement("a"), url = URL.createObjectURL(blob);
@@ -2503,77 +2586,89 @@ function clDownload(blob, filename){
   setTimeout(()=>URL.revokeObjectURL(url), 4000);
 }
 
-/* ------------------------------------------------------ écriture CSV
-   Le classeur .xlsx sert au fournisseur ; le .csv sert à l'analyse —
-   on le rouvre dans Excel, dans Sheets ou dans un tableur maison. Le
-   point-virgule est le séparateur attendu par un Excel français ou
-   allemand, et la BOM lui dit que le fichier est en UTF-8 : sans elle,
-   « pièce » revient en « piÃ¨ce ». */
-function clCsvCell(v){
-  if(v == null) return "";
-  let s = String(v);
-  // Une cellule qui commence par =, + ou @ est lue comme une formule par
-  // Excel. On la neutralise : c'est du texte saisi par un technicien.
-  if(/^[=+@]/.test(s)) s = "'" + s;
-  return /[";\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
-}
-/** rows : tableau de tableaux. La première ligne sert d'en-tête. */
-function clCsv(rows){
-  const txt = rows.map(r => r.map(clCsvCell).join(";")).join("\r\n");
-  return new Blob(["\uFEFF" + txt], { type:"text/csv;charset=utf-8" });
-}
-
 /**
- * Les tickets affichés, avec leurs pièces, en CSV.
+ * Les tickets affichés, avec leurs pièces, en classeur Excel.
  *
- * Le périmètre est celui du tableau qu'on a sous les yeux : onglet, pays,
- * recherche et filtres compris. Exporter autre chose que ce qui est affiché
- * serait un piège — le fichier ne collerait pas au compteur de l'écran.
+ * Le périmètre est exactement celui du tableau qu'on a sous les yeux :
+ * onglet, pays, recherche et filtres compris. Une seconde feuille récapitule
+ * ces filtres — trois semaines plus tard, un fichier qui ne dit pas ce qu'il
+ * contient ne vaut pas grand-chose.
  *
  * Une ligne par pièce, le ticket répété à chaque fois : c'est la forme qui
- * se trie et se croise dans un tableur. Un ticket sans pièce garde sa ligne,
- * colonnes pièce vides, sinon il disparaîtrait de l'export.
+ * se trie et se croise dans un tableau croisé dynamique. Un ticket sans pièce
+ * garde sa ligne, colonnes pièce vides, sinon il disparaîtrait de l'export.
  */
 function clExportClaims(){
   const rows = clFiltered();
-  if(!rows.length){ alert(clT("csv.none")); return; }
+  if(!rows.length){ alert(clT("x.none")); return; }
   const war = v => v === true ? clT("war.yes") : v === false ? clT("war.no") : "";
-  const d = v => v ? String(v).slice(0, 10) : "";
+  // un nombre illisible vaut mieux vide qu'en « NaN » au milieu du tableau
+  const num = v => { const n = Number(v); return v == null || !isFinite(n) ? "" : n; };
 
-  const out = [[
+  const table = [[
     clT("col.code"), clT("f.title"), clT("d.status"), clT("f.product"),
     clT("f.serial"), clT("f.country"), clT("f.company"), clT("f.tech"),
     clT("f.mail"), clT("f.install"), clT("f.claimdate"), clT("col.warranty"),
     clT("f.units"), clT("d.repairdate"), clT("d.restock"), clT("d.repair"),
     clT("f.desc"),
     clT("o.internal"), clT("o.desig"), clT("parts.qty"),
-    clT("csv.supplier"), clT("csv.ordered")
+    clT("x.supplier"), clT("x.ordered")
   ]];
-  // Le tri du tableau est celui des groupes de statut ; ici on trie sur la
-  // référence, la seule clé stable quand le fichier ressort d'un tableur.
+  // Le tableau groupe par statut ; ici on trie sur la référence, la seule
+  // clé stable une fois le fichier rouvert et retrié dans un tableur.
   rows.slice().sort((a, b) => String(a.code || "").localeCompare(String(b.code || "")))
       .forEach(c => {
     const head = [
       c.code || "", c.title || "", clStatusLabel(c.status), c.product || "",
       c.serial_number || "", c.country || "", c.company || "", c.technician_name || "",
-      c.technician_email || "", d(c.install_date), d(c.claim_date), war(c.under_warranty),
-      c.units_impacted == null ? "" : c.units_impacted,
-      d(c.repair_date), c.restock_location || "", c.repair_notes || "",
+      c.technician_email || "", clXlDate(c.install_date), clXlDate(c.claim_date),
+      war(c.under_warranty),
+      num(c.units_impacted),
+      clXlDate(c.repair_date), c.restock_location || "", c.repair_notes || "",
       c.description || ""
     ];
     const parts = c.parts || [];
-    if(!parts.length){ out.push(head.concat(["", "", "", "", ""])); return; }
-    parts.forEach(x => out.push(head.concat([
+    if(!parts.length){ table.push(head.concat(["", "", "", "", ""])); return; }
+    parts.forEach(x => table.push(head.concat([
       x.ref || "",
       // la désignation catalogue en anglais, comme dans le bon de commande
       x.name || x.free_text || "",
-      x.qty == null ? "" : x.qty,
+      num(x.qty),
       clPartSupplier(x.ref) || "",
-      x.ordered ? clT("csv.yes") : clT("csv.no")
+      x.ordered ? clT("x.yes") : clT("x.no")
     ])));
   });
 
-  clDownload(clCsv(out), "BEWTR_tickets_" + new Date().toISOString().slice(0,10) + ".csv");
+  // Ce que le tableau montrait au moment du clic. Les valeurs sont les
+  // intitulés des menus eux-mêmes : « Tous les statuts » se relit comme à
+  // l'écran, sans avoir à deviner ce qu'une case vide voulait dire.
+  const pick = id => {
+    const el = document.getElementById(id);
+    return el && el.selectedIndex >= 0 ? el.options[el.selectedIndex].text : "";
+  };
+  const tab = { withparts:"tab.withparts", supplier:"tab.supplier" }[clState.boardMode]
+            || "tab.board";
+  const scope = [
+    [clT("x.filter"), clT("x.value")],
+    [clT("x.date"), clXlDate(clToday())],
+    [clT("x.tab"), clT(tab)],
+    [clT("scope.country"), pick("clCountry")],
+    [clT("x.search"), (document.getElementById("clSearch").value || "").trim()],
+    [clT("d.status"), pick("clFStatus")],
+    [clT("f.product"), pick("clFProduct")],
+    [clT("x.part"), pick("clFPart")],
+    [clT("x.supplier"), pick("clFSupplier")],
+    [clT("filter.archived"),
+     document.getElementById("clShowArchived").checked ? clT("x.yes") : clT("x.no")],
+    [clT("x.exported"), rows.length],
+    [clT("x.lines"), table.length - 1]
+  ];
+
+  clDownload(clWorkbook([
+    { name:clT("x.sheet"), rows:table, head:true,
+      cols:[13, 44, 22, 24, 16, 9, 22, 20, 26, 13, 13, 15, 9, 13, 18, 40, 50, 13, 34, 6, 18, 15] },
+    { name:clT("x.filters"), rows:scope, head:true, cols:[26, 46] }
+  ]), "BEWTR_tickets_" + clToday() + ".xlsx");
 }
 
 /* ---------------------------------------------- suggestion de pièces
@@ -4276,7 +4371,7 @@ function clInit(){
     const b = e.target.closest("button[data-v]"); if(b) clShowView(b.dataset.v);
   });
   document.getElementById("clRefresh").addEventListener("click", clRefreshAll);
-  document.getElementById("clCsv").addEventListener("click", clExportClaims);
+  document.getElementById("clXls").addEventListener("click", clExportClaims);
 
   [["clOFSupplier","orderFilter","supplier"],
    ["clHFSupplier","histFilter","supplier"]]
