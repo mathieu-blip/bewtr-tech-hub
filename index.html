@@ -592,6 +592,11 @@
 (function(){
   var GATE_HASH = "95f6796b8fc04a72a55a4c74f7a84ae467d52bf0201a866432894859dfa509b1";
   var STORE_KEY = "bewtr_gate_ok";
+  /* Ce mot de passe ouvre aussi la plateforme des tickets : elle n'a plus de
+     phrase à elle. On le dépose sous la clé que lit le bloc Claims, qui
+     l'enverra à Supabase à l'ouverture (voir clAutoUnlock). Les prix d'achat
+     gardent, eux, la phrase « commande ». */
+  var CLAIMS_PASS_KEY = "bewtr_claims_pass";
   var gate = document.getElementById("gate");
   var card = document.getElementById("gateCard");
   var form = document.getElementById("gateForm");
@@ -610,11 +615,16 @@
     });
   }
 
-  function unlock(){
+  function unlock(pass){
+    if(pass){ try{ localStorage.setItem(CLAIMS_PASS_KEY, pass); }catch(e){} }
     document.body.classList.remove("gate-locked");
     if(gate && gate.parentNode) gate.parentNode.removeChild(gate);
     /* le hub a été construit pendant le verrouillage : on remet l'onglet en place */
     try{ if(typeof showTab === "function") showTab(location.hash); }catch(e){}
+    /* mot de passe saisi à l'instant : la plateforme tickets s'ouvre sans
+       recharger la page. Au chargement, la fonction n'existe pas encore —
+       le bloc Claims l'appelle lui-même en fin de script. */
+    try{ if(pass && typeof clAutoUnlock === "function") clAutoUnlock(); }catch(e){}
   }
 
   function fail(msg){
@@ -634,24 +644,41 @@
      schémas. Voir la classe « ticket-only ». */
   var TICKET = (location.hash || "").replace(/^#/, "") === "ticket";
   if(TICKET) document.body.classList.add("ticket-only");
+  if(TICKET){ unlock(); return; }   // externe : ni mot de passe, ni plateforme
 
-  var already = TICKET;
-  try{ already = already || localStorage.getItem(STORE_KEY) === GATE_HASH; }catch(e){}
-  if(already){ unlock(); return; }
+  /* L'appareil garde le mot de passe lui-même — la plateforme tickets en a
+     besoin pour interroger Supabase. Il n'est jamais cru sur parole : on le
+     repasse au hash avant d'ouvrir. Le jeton d'avant cette version (le hash
+     seul) ne s'ouvre plus : le mot de passe est redemandé une fois. */
+  var stored = null;
+  try{ stored = localStorage.getItem(STORE_KEY); }catch(e){}
+
+  function ask(){
+    gate.style.visibility = "";
+    input.focus();
+  }
+
+  if(stored){
+    gate.style.visibility = "hidden";   // pas de garde qui clignote à chaque visite
+    sha256(normalize(stored)).then(function(h){
+      if(h === GATE_HASH) return unlock(normalize(stored));
+      try{ localStorage.removeItem(STORE_KEY); }catch(e){}
+      ask();
+    }, ask);
+  } else ask();
 
   form.addEventListener("submit", function(e){
     e.preventDefault();
     err.classList.remove("on");
-    sha256(normalize(input.value)).then(function(h){
+    var pass = normalize(input.value);
+    sha256(pass).then(function(h){
       if(h !== GATE_HASH) return fail();
-      try{ localStorage.setItem(STORE_KEY, GATE_HASH); }catch(e){}
-      unlock();
+      try{ localStorage.setItem(STORE_KEY, pass); }catch(e){}
+      unlock(pass);
     }, function(){
       fail("Navigateur non compatible : ouvrez le site en HTTPS.");
     });
   });
-
-  input.focus();
 })();
 </script>
 
@@ -2166,6 +2193,8 @@ function showTab(hash){
   document.querySelectorAll('.wrap>section').forEach(function(s){ s.classList.toggle('tab-on', s.id===id); });
   document.querySelectorAll('#nav a').forEach(function(a){ a.classList.toggle('active', a.getAttribute('href')==='#'+id); });
   var cp=document.getElementById('catPanel'); if(cp) cp.classList.remove('open');
+  // la plateforme tickets se charge à sa première ouverture, pas avant
+  if(id==='claims'){ try{ if(typeof clEnsureLoaded==='function') clEnsureLoaded(); }catch(e){} }
   try{ if(history&&history.replaceState) history.replaceState(null,'','#'+id); }catch(e){}
   try{ jumpTo(id); }catch(e){}
 }
@@ -2213,10 +2242,15 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeSearc
    docs/claims-supabase.md.
    ================================================================== */
 
-/* Le technicien saisit la phrase une fois par appareil, comme pour le hub.
-   Seul le niveau « claims » est mémorisé : la phrase du bulletin de commande,
-   qui ouvre les prix d'achat, est redemandée à chaque visite. */
+/* La plateforme des tickets n'a plus de phrase à elle : le mot de passe du
+   hub — celui de l'écran de garde — l'ouvre, et le script de garde le dépose
+   sous cette clé. Le bulletin de commande garde la sienne, parce qu'il montre
+   les prix d'achat, et elle est redemandée à chaque visite. */
 const CL_PASS_KEY = "bewtr_claims_pass";
+
+/* « aqtiv duo », « AQTiV  DUO » … : même normalisation que l'écran de garde,
+   sinon la phrase enregistrée en base ne serait jamais retrouvée. */
+const clNormPass = v => String(v||"").trim().replace(/\s+/g," ").toUpperCase();
 
 const CLAIMS_URL = "https://hgjitagsffudcvqwakwk.supabase.co";
 const CLAIMS_KEY = "sb_publishable_SCtyYXfzE2i-D4CfIoeBPw__u1pB0Dk";
@@ -2225,8 +2259,8 @@ const CLAIMS_KEY = "sb_publishable_SCtyYXfzE2i-D4CfIoeBPw__u1pB0Dk";
 const CL_I18N = {
   fr:{
     "t":"Tickets de réparation & pièces détachées","sub":"Suivi des retours machines et commande des pièces, de la déclaration au bon fournisseur.",
-    "gate.t":"Espace protégé","gate.sub":"Saisissez la phrase de passe pour ouvrir la plateforme des tickets de réparation.","gate.go":"Ouvrir",
-    "gate.bad":"Phrase de passe incorrecte.","gate.net":"Connexion impossible. Vérifiez votre réseau puis réessayez.",
+    "gate.t":"Espace protégé","gate.sub":"Saisissez le mot de passe d'accès du hub pour ouvrir la plateforme des tickets de réparation.","gate.go":"Ouvrir",
+    "gate.bad":"Mot de passe incorrect.","gate.net":"Connexion impossible. Vérifiez votre réseau puis réessayez.",
     "anon.unlock":"Accès équipe","scope.country":"Pays","scope.hint":"S'applique à tous les onglets.",
     "tab.board":"Tickets à qualifier","tab.withparts":"Tickets avec pièces","tab.supplier":"Renvoi fournisseur","d.tosupplier":"Renvoyer au fournisseur","board.none.supplier":"Aucun renvoi fournisseur en cours.","kpi.toqualify":"À qualifier","kpi.withparts":"Avec pièces","board.none.toqualify":"Tout est qualifié : chaque ticket ouvert porte au moins une pièce.","board.none.withparts":"Aucun ticket ne porte encore de pièce.","tab.new":"Nouveau ticket","tab.parts":"Pièces à commander","tab.order":"Bulletin de commande","tab.history":"Commandes passées","tab.report":"Rapport",
     "rep.sub":"Le périmètre est celui du filtre pays, tout en haut de la page.",
@@ -2271,8 +2305,8 @@ const CL_I18N = {
   },
   en:{
     "t":"Claims & spare parts","sub":"Machine returns and spare-part ordering, from the report to the supplier order form.",
-    "gate.t":"Protected area","gate.sub":"Enter the passphrase to open the claims platform.","gate.go":"Open",
-    "gate.bad":"Wrong passphrase.","gate.net":"Cannot connect. Check your network and try again.",
+    "gate.t":"Protected area","gate.sub":"Enter the hub access password to open the claims platform.","gate.go":"Open",
+    "gate.bad":"Wrong password.","gate.net":"Cannot connect. Check your network and try again.",
     "anon.unlock":"Team access","scope.country":"Country","scope.hint":"Applies to every tab.",
     "tab.board":"Claims to qualify","tab.withparts":"Claims with parts","tab.supplier":"Supplier return","d.tosupplier":"Send back to supplier","board.none.supplier":"No supplier return in progress.","kpi.toqualify":"To qualify","kpi.withparts":"With parts","board.none.toqualify":"Everything is qualified: every open claim carries at least one part.","board.none.withparts":"No claim carries a part yet.","tab.new":"New ticket","tab.parts":"Parts to order","tab.order":"Order form","tab.history":"Past orders","tab.report":"Report",
     "rep.sub":"The scope is the country filter at the top of the page.",
@@ -2317,8 +2351,8 @@ const CL_I18N = {
   },
   de:{
     "t":"Claims & Ersatzteile","sub":"Rückläufer und Ersatzteilbestellung, von der Meldung bis zum Lieferantenbeleg.",
-    "gate.t":"Geschützter Bereich","gate.sub":"Passphrase eingeben, um die Claims-Plattform zu öffnen.","gate.go":"Öffnen",
-    "gate.bad":"Falsche Passphrase.","gate.net":"Keine Verbindung. Netzwerk prüfen und erneut versuchen.",
+    "gate.t":"Geschützter Bereich","gate.sub":"Hub-Zugangspasswort eingeben, um die Claims-Plattform zu öffnen.","gate.go":"Öffnen",
+    "gate.bad":"Falsches Passwort.","gate.net":"Keine Verbindung. Netzwerk prüfen und erneut versuchen.",
     "anon.unlock":"Team-Zugang","scope.country":"Land","scope.hint":"Gilt für alle Reiter.",
     "tab.board":"Claims zu qualifizieren","tab.withparts":"Claims mit Teilen","tab.supplier":"Lieferantenrücksendung","d.tosupplier":"An Lieferant senden","board.none.supplier":"Keine laufende Rücksendung.","kpi.toqualify":"Zu qualifizieren","kpi.withparts":"Mit Teilen","board.none.toqualify":"Alles qualifiziert: jeder offene Claim trägt mindestens ein Teil.","board.none.withparts":"Noch kein Claim mit Teil.","tab.new":"Neues Ticket","tab.parts":"Zu bestellende Teile","tab.order":"Bestellbeleg","tab.history":"Frühere Bestellungen","tab.report":"Bericht",
     "rep.sub":"Der Umfang ist der Länderfilter oben auf der Seite.",
@@ -4337,7 +4371,13 @@ async function clOpenSubmitOnly(){
   return true;
 }
 
-/** Rouvre la plateforme sans ressaisie quand l'appareil a déjà la phrase. */
+/**
+ * Ouvre la plateforme avec le mot de passe du hub, sans rien redemander.
+ *
+ * Qui a franchi l'écran de garde est un technicien BE WTR : les tickets lui
+ * sont ouverts d'office. Seul le bulletin de commande — références
+ * fournisseur et prix d'achat — garde sa propre phrase.
+ */
 async function clAutoUnlock(){
   let pass = null;
   try{ pass = localStorage.getItem(CL_PASS_KEY); }catch(e){}
@@ -4350,8 +4390,8 @@ async function clAutoUnlock(){
     return;
   }
 
-  // Sans phrase mémorisée, le lien technicien ouvre le formulaire seul
-  // plutôt que l'écran de garde.
+  // Sans mot de passe mémorisé — navigateur qui l'a oublié, lien ouvert hors
+  // du hub — le lien technicien ouvre le formulaire seul plutôt que la garde.
   if(!pass){
     if(window.__clLanding === "new"){
       window.__clLanding = null;
@@ -4359,20 +4399,42 @@ async function clAutoUnlock(){
     }
     return;
   }
-  try {
-    const scope = await clRpc("hub_auth", { p_pass: pass });
-    if(!scope){                       // phrase changée depuis : on oublie
-      try{ localStorage.removeItem(CL_PASS_KEY); }catch(e){}
-      return;
+
+  clState.pass = pass;
+  document.getElementById("clGate").hidden = true;
+  document.getElementById("clApp").hidden = false;
+  clRevealNav();
+
+  // Les tickets ne s'appellent qu'à l'ouverture de l'onglet : consulter un
+  // tutoriel ne doit pas coûter le chargement de toute la plateforme.
+  const claimsSection = document.getElementById("claims");
+  if(window.__clLanding === "new" || (claimsSection && claimsSection.classList.contains("tab-on")))
+    await clEnsureLoaded();
+}
+
+/** Charge la plateforme une seule fois, à la première ouverture de l'onglet. */
+let clLoading = null;
+function clEnsureLoaded(){
+  if(!clState.pass || clState.loaded || clLoading) return clLoading || Promise.resolve();
+  clLoading = (async () => {
+    try {
+      const scope = await clRpc("hub_auth", { p_pass: clState.pass });
+      if(!scope){                     // mot de passe changé depuis : on oublie
+        try{ localStorage.removeItem(CL_PASS_KEY); }catch(e){}
+        clState.pass = "";
+        document.getElementById("clApp").hidden = true;
+        document.getElementById("clGate").hidden = false;
+        return;
+      }
+      await clRefreshAll();
+      clShowView(window.__clLanding === "new" ? "new" : "board");
+      window.__clLanding = null;
+    } catch(e){
+      // hors réseau : rien n'est cassé, la prochaine ouverture réessaie
+      clLoading = null;
     }
-    clState.pass = pass;
-    document.getElementById("clGate").hidden = true;
-    document.getElementById("clApp").hidden = false;
-    clRevealNav();
-    await clRefreshAll();
-    clShowView(window.__clLanding === "new" ? "new" : "board");
-    window.__clLanding = null;
-  } catch(e){ /* hors réseau : l'écran de garde reste, rien n'est cassé */ }
+  })();
+  return clLoading;
 }
 
 function clInit(){
@@ -4382,10 +4444,16 @@ function clInit(){
   document.getElementById("clGateForm").addEventListener("submit", async e => {
     e.preventDefault();
     const err = document.getElementById("clGateErr");
-    const pass = document.getElementById("clPass").value;
+    const typed = document.getElementById("clPass").value;
     err.innerHTML = '<span class="cl-spin"></span>';
     try {
-      const scope = await clRpc("hub_auth", { p_pass: pass });
+      // la phrase commande se saisit telle quelle ; le mot de passe du hub,
+      // lui, se tape comme on veut — on retente une fois, normalisé.
+      let pass = typed, scope = await clRpc("hub_auth", { p_pass: pass });
+      if(!scope && clNormPass(typed) !== typed){
+        pass = clNormPass(typed);
+        scope = await clRpc("hub_auth", { p_pass: pass });
+      }
       if(!scope){ err.textContent = clT("gate.bad"); return; }
       clState.pass = pass;
       if(scope === "order") clState.orderPass = pass;
