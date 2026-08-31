@@ -2268,7 +2268,7 @@ const CL_I18N = {
     "rep.none.parts":"Aucune pièce enregistrée sur les tickets fermés de ce périmètre.",
     "kpi.total":"Tickets ouverts","kpi.new":"À réparer","kpi.order":"Pièces à commander","kpi.supplier":"Chez le fournisseur","kpi.warranty":"Sous garantie",
     "filter.search":"Rechercher — titre, n° série, technicien, société…","filter.refresh":"Actualiser",
-    "filter.xlsx":"Exporter en Excel","x.none":"Aucun ticket à exporter.","x.sheet":"Tickets","x.filters":"Filtres","x.filter":"Filtre","x.value":"Valeur appliquée","x.date":"Date de l'export","x.tab":"Onglet","x.search":"Recherche","x.part":"Pièce","x.supplier":"Fournisseur","x.ordered":"Pièce commandée","x.exported":"Tickets exportés","x.lines":"Lignes du tableau","x.yes":"oui","x.no":"non",
+    "filter.xlsx":"Exporter en Excel","x.none":"Aucun ticket à exporter.","x.sheet":"Tickets",
     "filter.allstatus":"Tous les statuts","filter.allcountry":"Tous les pays","filter.allproduct":"Tous les produits","filter.allpart":"Toutes les pièces",
     "f.title":"Objet du ticket","f.desc":"Description du problème","f.product":"Produit","f.serial":"N° de série",
     "f.install":"Date d'installation","f.claimdate":"Date du ticket","f.country":"Pays","f.units":"Nb d'unités concernées",
@@ -2314,7 +2314,7 @@ const CL_I18N = {
     "rep.none.parts":"No part recorded on the closed tickets in this scope.",
     "kpi.total":"Open claims","kpi.new":"To repair","kpi.order":"Parts to order","kpi.supplier":"At supplier","kpi.warranty":"Under warranty",
     "filter.search":"Search — title, serial, technician, company…","filter.refresh":"Refresh",
-    "filter.xlsx":"Export to Excel","x.none":"No claim to export.","x.sheet":"Claims","x.filters":"Filters","x.filter":"Filter","x.value":"Applied value","x.date":"Export date","x.tab":"Tab","x.search":"Search","x.part":"Part","x.supplier":"Supplier","x.ordered":"Part ordered","x.exported":"Claims exported","x.lines":"Table rows","x.yes":"yes","x.no":"no",
+    "filter.xlsx":"Export to Excel","x.none":"No claim to export.","x.sheet":"Claims",
     "filter.allstatus":"All statuses","filter.allcountry":"All countries","filter.allproduct":"All products","filter.allpart":"All parts",
     "f.title":"Ticket subject","f.desc":"Problem description","f.product":"Product","f.serial":"Serial number",
     "f.install":"Installation date","f.claimdate":"Claim date","f.country":"Country","f.units":"Units impacted",
@@ -2360,7 +2360,7 @@ const CL_I18N = {
     "rep.none.parts":"Kein Teil auf den geschlossenen Tickets dieses Umfangs erfasst.",
     "kpi.total":"Offene Claims","kpi.new":"Zu reparieren","kpi.order":"Teile zu bestellen","kpi.supplier":"Beim Lieferanten","kpi.warranty":"In Garantie",
     "filter.search":"Suchen — Titel, Seriennummer, Techniker, Firma…","filter.refresh":"Aktualisieren",
-    "filter.xlsx":"Nach Excel exportieren","x.none":"Keine Tickets zum Exportieren.","x.sheet":"Tickets","x.filters":"Filter","x.filter":"Filter","x.value":"Angewendeter Wert","x.date":"Exportdatum","x.tab":"Registerkarte","x.search":"Suche","x.part":"Teil","x.supplier":"Lieferant","x.ordered":"Teil bestellt","x.exported":"Exportierte Tickets","x.lines":"Tabellenzeilen","x.yes":"ja","x.no":"nein",
+    "filter.xlsx":"Nach Excel exportieren","x.none":"Keine Tickets zum Exportieren.","x.sheet":"Tickets",
     "filter.allstatus":"Alle Status","filter.allcountry":"Alle Länder","filter.allproduct":"Alle Produkte","filter.allpart":"Alle Teile",
     "f.title":"Betreff","f.desc":"Problembeschreibung","f.product":"Produkt","f.serial":"Seriennummer",
     "f.install":"Installationsdatum","f.claimdate":"Claim-Datum","f.country":"Land","f.units":"Betroffene Einheiten",
@@ -2620,85 +2620,51 @@ function clDownload(blob, filename){
 /**
  * Les tickets affichés, avec leurs pièces, en classeur Excel.
  *
- * Le périmètre est exactement celui du tableau qu'on a sous les yeux :
- * onglet, pays, recherche et filtres compris. Une seconde feuille récapitule
- * ces filtres — trois semaines plus tard, un fichier qui ne dit pas ce qu'il
- * contient ne vaut pas grand-chose.
+ * Une feuille, onze colonnes, rien d'autre : ce fichier part tel quel chez
+ * un fournisseur ou un partenaire. Les notes de réparation, les coordonnées
+ * du technicien et la garantie restent au chaud dans le hub — elles ne
+ * regardent pas le destinataire.
+ *
+ * Le périmètre est celui du tableau qu'on a sous les yeux : onglet, pays,
+ * recherche et filtres compris.
  *
  * Une ligne par pièce, le ticket répété à chaque fois : c'est la forme qui
- * se trie et se croise dans un tableau croisé dynamique. Un ticket sans pièce
- * garde sa ligne, colonnes pièce vides, sinon il disparaîtrait de l'export.
+ * se trie et se croise. Un ticket sans pièce garde sa ligne, colonnes pièce
+ * vides, sinon il disparaîtrait de l'export.
  */
 function clExportClaims(){
   const rows = clFiltered();
   if(!rows.length){ alert(clT("x.none")); return; }
-  const war = v => v === true ? clT("war.yes") : v === false ? clT("war.no") : "";
   // un nombre illisible vaut mieux vide qu'en « NaN » au milieu du tableau
   const num = v => { const n = Number(v); return v == null || !isFinite(n) ? "" : n; };
 
   const table = [[
-    clT("col.code"), clT("f.title"), clT("d.status"), clT("f.product"),
-    clT("f.serial"), clT("f.country"), clT("f.company"), clT("f.tech"),
-    clT("f.mail"), clT("f.install"), clT("f.claimdate"), clT("col.warranty"),
-    clT("f.units"), clT("d.repairdate"), clT("d.restock"), clT("d.repair"),
-    clT("f.desc"),
-    clT("o.internal"), clT("o.desig"), clT("parts.qty"),
-    clT("x.supplier"), clT("x.ordered")
+    clT("col.code"), clT("f.title"), clT("f.product"), clT("f.serial"),
+    clT("f.country"), clT("f.claimdate"), clT("f.desc"),
+    clT("o.internal"), clT("o.ref"), clT("o.desig"), clT("parts.qty")
   ]];
   // Le tableau groupe par statut ; ici on trie sur la référence, la seule
   // clé stable une fois le fichier rouvert et retrié dans un tableur.
   rows.slice().sort((a, b) => String(a.code || "").localeCompare(String(b.code || "")))
       .forEach(c => {
     const head = [
-      c.code || "", c.title || "", clStatusLabel(c.status), c.product || "",
-      c.serial_number || "", c.country || "", c.company || "", c.technician_name || "",
-      c.technician_email || "", clXlDate(c.install_date), clXlDate(c.claim_date),
-      war(c.under_warranty),
-      num(c.units_impacted),
-      clXlDate(c.repair_date), c.restock_location || "", c.repair_notes || "",
-      c.description || ""
+      c.code || "", c.title || "", c.product || "", c.serial_number || "",
+      c.country || "", clXlDate(c.claim_date), c.description || ""
     ];
     const parts = c.parts || [];
-    if(!parts.length){ table.push(head.concat(["", "", "", "", ""])); return; }
+    if(!parts.length){ table.push(head.concat(["", "", "", ""])); return; }
     parts.forEach(x => table.push(head.concat([
       x.ref || "",
+      clPartSupplierRef(x.ref) || "",
       // la désignation catalogue en anglais, comme dans le bon de commande
       x.name || x.free_text || "",
-      num(x.qty),
-      clPartSupplier(x.ref) || "",
-      x.ordered ? clT("x.yes") : clT("x.no")
+      num(x.qty)
     ])));
   });
 
-  // Ce que le tableau montrait au moment du clic. Les valeurs sont les
-  // intitulés des menus eux-mêmes : « Tous les statuts » se relit comme à
-  // l'écran, sans avoir à deviner ce qu'une case vide voulait dire.
-  const pick = id => {
-    const el = document.getElementById(id);
-    return el && el.selectedIndex >= 0 ? el.options[el.selectedIndex].text : "";
-  };
-  const tab = { withparts:"tab.withparts", supplier:"tab.supplier" }[clState.boardMode]
-            || "tab.board";
-  const scope = [
-    [clT("x.filter"), clT("x.value")],
-    [clT("x.date"), clXlDate(clToday())],
-    [clT("x.tab"), clT(tab)],
-    [clT("scope.country"), pick("clCountry")],
-    [clT("x.search"), (document.getElementById("clSearch").value || "").trim()],
-    [clT("d.status"), pick("clFStatus")],
-    [clT("f.product"), pick("clFProduct")],
-    [clT("x.part"), pick("clFPart")],
-    [clT("x.supplier"), pick("clFSupplier")],
-    [clT("filter.archived"),
-     document.getElementById("clShowArchived").checked ? clT("x.yes") : clT("x.no")],
-    [clT("x.exported"), rows.length],
-    [clT("x.lines"), table.length - 1]
-  ];
-
   clDownload(clWorkbook([
     { name:clT("x.sheet"), rows:table, head:true,
-      cols:[13, 44, 22, 24, 16, 9, 22, 20, 26, 13, 13, 15, 9, 13, 18, 40, 50, 13, 34, 6, 18, 15] },
-    { name:clT("x.filters"), rows:scope, head:true, cols:[26, 46] }
+      cols:[13, 44, 24, 16, 9, 13, 50, 13, 16, 34, 6] }
   ]), "BEWTR_tickets_" + clToday() + ".xlsx");
 }
 
@@ -3047,6 +3013,19 @@ function clPartSupplier(ref){
   const p = clState.parts.find(x => x.ref === ref);
   return (p && p.supplier) || null;
 }
+/**
+ * La référence de commande chez le fournisseur.
+ *
+ * Le catalogue ne la renvoie qu'à la phrase « order » — c'est une donnée
+ * commerciale, au même titre que les prix. Sans ce niveau d'accès elle est
+ * absente, et la colonne reste vide plutôt que de mentir.
+ */
+function clPartSupplierRef(ref){
+  if(!ref) return null;
+  const p = clState.parts.find(x => x.ref === ref);
+  return (p && p.supplier_ref) || null;
+}
+
 /**
  * Le fournisseur d'une machine, déduit du catalogue : une machine et ses
  * pièces détachées viennent du même fournisseur. On retient le plus
