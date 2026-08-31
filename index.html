@@ -3394,15 +3394,39 @@ async function clEditSave(){
 
 /* ------------------------------------------------------------- rapport */
 
+/* Regroupements déclarés par l'équipe. Une variante de FINITION n'est pas un
+   autre produit : la PRO2 blanche, noire et argent sont la même machine, et
+   le « H » de l'AQTiV COMBI ne change pas la pièce qu'on y monte. Une
+   variante FONCTIONNELLE en est un : BOX 30 et BOX 30E, PRO2 et PRO2 HOT
+   restent séparées. On ne regroupe donc que ce qui est écrit ici — deviner
+   par préfixe fondrait la BOX 30E dans la BOX 30 et ferait mentir le
+   rapport. */
+const CL_PRODUCT_GROUPS = [
+  [/^AQTIV\s+COMBI(\s+H)?$/, "AQTiV COMBI"],
+  [/^PRO2\s+(WHITE|BLACK|SILVER)$/, "PRO2"]
+];
+
 /**
- * Le libellé de regroupement d'un produit. On retire le SKU de tête, rien de
- * plus : « BOX 30 » et « BOX 30E » sont deux machines, les confondre par
- * préfixe ferait mentir le rapport. Les variantes de couleur restent donc
- * distinctes elles aussi — c'est ce que le champ dit.
+ * Le libellé de regroupement d'un produit.
+ *
+ * Le champ Monday est une liste à choix multiple : une cellule peut porter
+ * deux machines (« AQTiV COMBI H, BW-0042 AQTiV COMBI », un ticket DK sur un
+ * robinet PRO1 et son groupe froid). On découpe, on retire le SKU de chaque
+ * morceau, on regroupe, et on ne garde qu'une occurrence de chaque — ce qui
+ * fait tomber les doublons de variante sur une seule étiquette.
  */
 function clProductLabel(v){
-  const t = String(v || "").replace(/^BW-[\d.]+\s*/, "").trim();
-  return t || "—";
+  const out = [];
+  String(v || "").split(",").forEach(function(part){
+    const t = part.replace(/^\s*BW-[\d.]+\s*/, "").trim();
+    if(!t) return;
+    let g = t, u = t.toUpperCase();
+    for(let i = 0; i < CL_PRODUCT_GROUPS.length; i++){
+      if(CL_PRODUCT_GROUPS[i][0].test(u)){ g = CL_PRODUCT_GROUPS[i][1]; break; }
+    }
+    if(out.indexOf(g) < 0) out.push(g);
+  });
+  return out.length ? out.join(" + ") : "—";
 }
 
 /**

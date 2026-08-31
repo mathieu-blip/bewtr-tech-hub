@@ -525,13 +525,29 @@ sinon la page devient un mur. Les lignes dépliées ne se cliquent pas : elles
 se lisent, et leur survol reste neutre pour ne pas promettre une action qui
 n'existe pas.
 
-### Les produits ne sont pas regroupés par famille
+### Les regroupements de produits sont déclarés, pas devinés
 
-On retire le SKU de tête (`BW-0596 BOX 20 Home` → `BOX 20 Home`) et rien de
-plus. `BOX 30` et `BOX 30E` sont deux machines : les rapprocher par préfixe
-ferait mentir le rapport. Les variantes de couleur restent distinctes pour la
-même raison — c'est ce que le champ dit. Si tu préfères un regroupement par
-famille, c'est un choix à faire, pas une évidence.
+On retire le SKU de tête (`BW-0596 BOX 20 Home` → `BOX 20 Home`), puis on
+applique la liste `CL_PRODUCT_GROUPS` — et rien d'autre.
+
+| Regroupé | Devient | Pourquoi |
+|---|---|---|
+| `PRO2 White` · `PRO2 Black` · `PRO2 Silver` | **PRO2** | variante de finition, même machine |
+| `AQTiV COMBI` · `AQTiV COMBI H` | **AQTiV COMBI** | le « H » ne change pas les pièces |
+
+Tout le reste reste séparé, volontairement. `BOX 30` et `BOX 30E`, `PRO2` et
+`PRO2 HOT` sont des variantes **fonctionnelles** : les rapprocher par préfixe
+ferait mentir le rapport. Pour regrouper autre chose, il faut l'ajouter à la
+liste — c'est une décision d'équipe, pas une règle que le code peut deviner.
+
+### Une cellule Monday peut porter deux machines
+
+Le champ produit est une liste à choix multiple. On trouve
+`AQTiV COMBI H, BW-0042 AQTiV COMBI` — deux libellés du même produit, qui
+retombent sur une seule étiquette — et `PRO1 Black, BW-0072 BOX 30E`, un
+ticket danois sur un robinet **et** son groupe froid. Le second s'affiche
+`PRO1 Black + BOX 30E` : deux machines, on ne choisit pas à la place du
+technicien.
 
 ### Les pièces reprises de Monday sont en texte libre
 
