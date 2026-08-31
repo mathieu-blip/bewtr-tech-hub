@@ -334,6 +334,10 @@ avec le rôle `anon`, celui du navigateur :
    pièce utilisée. Après 09, dont il complète les claims.
 4. `docs/supabase/12-pieces-deduites.sql` — 23 pièces de plus, déduites du
    texte des tickets. Voir ci-dessous.
+5. `docs/supabase/13-pieces-deduites-2.sql` — 23 autres, second passage.
+6. `docs/supabase/14-retirer-le-suffixe-deduit.sql` — retire le
+   « (déduit) » des lignes déjà écrites. Sans objet si 12 et 13 sont passés
+   après cette mise à jour, les scripts n'écrivant plus le suffixe.
 
 ### Les pièces déduites du texte — script 12
 
@@ -366,12 +370,21 @@ Deux règles métier viennent de Mathieu, pas du texte :
 
 Elles ont fait passer la justesse moyenne de 83 % à 93 %.
 
-Les pièces entrent en « commandée » — elles ont été *posées*, pas demandées —
-et portent le suffixe `(déduit)` pour se distinguer d'un relevé à l'écran.
-Pour tout annuler :
+Les pièces entrent en « commandée » : elles ont été *posées*, pas demandées.
+
+Elles portent le nom de la famille, **sans suffixe** — à l'écran on veut lire
+« Ventilateur », pas « Ventilateur (déduit) », répété sur chaque ligne. Ce qui
+les distingue d'un relevé n'a pas besoin d'être écrit : une pièce nommée par
+Monday ou choisie dans le hub porte une **référence catalogue**, une pièce lue
+dans le texte n'en a pas.
 
 ```sql
-delete from public.claim_parts where free_text like '%(déduit)';
+-- les pièces déduites, celles sans référence
+select free_text, count(*) from public.claim_parts
+ where part_ref is null and free_text is not null group by 1 order by 2 desc;
+
+-- pour toutes les retirer
+delete from public.claim_parts where part_ref is null and ordered_manual;
 ```
 
 Le détail ticket par ticket est dans `docs/estimation.csv`.
@@ -629,6 +642,21 @@ ouvert sur l'établi se termine avant qu'on en entame un autre.
 La liste déroulante d'un ticket, elle, garde l'ordre du cycle — on y choisit
 une étape, on n'y trie rien. C'est `CL_BOARD_ORDER` qui porte l'ordre
 d'affichage, séparément de `CL_STATUS`.
+
+### Filtrer les claims par pièce et par produit
+
+Le tableau porte deux listes déroulantes qui parlent le langage de l'équipe :
+
+- **Produit** — les noms de `CL_PRODUCT_GROUPS`, pas les libellés Monday.
+  Choisir « PRO2 V2 » ramène la noire *et* l'argent ; « BOX 80 B » ne ramène
+  pas les Italbedis.
+- **Pièce** — les pièces réellement portées par des claims, désignation
+  traduite, référence catalogue et texte libre confondus. Le texte libre est
+  dédoublonné sans la casse : « Ventilateur » et « ventilateur » font une
+  seule entrée.
+
+Les deux se croisent, et se croisent avec le pays, le statut, le fournisseur
+et la recherche. Le filtre pièce se masque tant qu'aucun claim n'en porte.
 
 ### Trier vite
 
