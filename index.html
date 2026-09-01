@@ -149,7 +149,16 @@
   .itut-card .ic-t{font-weight:600;font-size:13.5px}
   .itut-card .ic-s{font-size:11.5px;color:var(--ink-soft);margin-top:4px;display:flex;gap:9px;flex-wrap:wrap;align-items:center}
   .itut-card .ic-v{color:var(--orange);font-weight:600}
-  .itut-draft{font-size:10px;background:#fdf3e3;color:var(--amber);padding:2px 7px;border-radius:999px}
+  .itut-draft{font-size:10px;background:#fdf3e3;color:var(--amber);padding:2px 7px;border-radius:999px;white-space:nowrap}
+  /* Dans la bibliothèque, le tuto pas à pas prend la place de la fiche PDF :
+     sa vignette remplace l'icône de type et la ligne du dessous dit ce qu'on
+     y trouve (étapes, photos, vidéo). */
+  button.tut{width:100%;text-align:left;font:inherit;cursor:pointer}
+  button.tut:hover{border-color:var(--orange);box-shadow:var(--shadow);transform:translateY(-1px)}
+  .tut .ti.ph{width:42px;height:42px;padding:0;overflow:hidden;background:var(--bg);color:#aab4c0;font-size:16px}
+  .tut .ti.ph img{width:100%;height:100%;object-fit:cover;display:block}
+  .tut .ic-s{font-size:11px;color:var(--ink-soft);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .tut .ic-s .ic-v{color:var(--orange);font-weight:600}
   #imgbox .img-scroll .itut{text-align:left;max-width:960px;margin:0 auto;padding:2px 2px 30px}
   #imgbox .img-scroll .itut img{border-radius:8px}
   .itut-top{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
@@ -867,7 +876,6 @@
         <div data-i18n="s3.tools"></div>
         <div data-i18n="s3.drill"></div>
         <div data-i18n="s3.body"></div>
-        <div id="g-install"></div>
       </section>
 
       <section id="settings">
@@ -1252,7 +1260,7 @@ const catIcon = {install:"▤",maintenance:"↻",troubleshoot:"⚠",measure:"◔
 
 /* ============ I18N DICTIONARY ============ */
 const I18N = {
-  fr:{"nav.home":"Accueil","machine.t":"Quelle machine avez-vous\u00a0?","machine.sub":"Sélectionnez votre modèle pour ouvrir toute sa documentation.","machine.taps":"Taps (robinets)","machine.disc":"discontinué","chip.water":"Ligne d'eau","chip.elec":"Élec","chip.parts":"Pièces","chip.tech":"Fiche","chip.maint":"Maintenance","chip.bec":"BeConnect","chip.tuto":"Tutos","search.global":"Rechercher dans tout le guide…","search.ph":"Mot-clé, réf (BW-…), symptôme…","search.hint":"Tapez au moins 2 caractères.","search.none":"Aucun résultat.","search.g.sec":"Sections","search.g.part":"Pièces détachées","search.g.tuto":"Tutos","goto.parts":"Voir les vues éclatées & pièces","goto.install":"Voir les tutos vidéo d'installation","goto.maintenance":"Voir les tutos vidéo de maintenance","goto.troubleshoot":"Voir les tutos vidéo de dépannage","nav.g.tutos":"Tutos","nav.g.form":"Formation","home.t":"Que voulez-vous faire\u00a0?","home.sub":"Choisissez une catégorie — tout le contenu est rangé par tâche.",
+  fr:{"nav.home":"Accueil","machine.t":"Quelle machine avez-vous\u00a0?","machine.sub":"Sélectionnez votre modèle pour ouvrir toute sa documentation.","machine.taps":"Taps (robinets)","machine.disc":"discontinué","chip.water":"Ligne d'eau","chip.elec":"Élec","chip.parts":"Pièces","chip.tech":"Fiche","chip.maint":"Maintenance","chip.bec":"BeConnect","chip.tuto":"Tutos","search.global":"Rechercher dans tout le guide…","search.ph":"Mot-clé, réf (BW-…), symptôme…","search.hint":"Tapez au moins 2 caractères.","search.none":"Aucun résultat.","search.g.sec":"Sections","search.g.part":"Pièces détachées","search.g.tuto":"Tutos","goto.parts":"Voir les vues éclatées & pièces","goto.install":"Voir les tutos d'installation pas à pas","goto.maintenance":"Voir les tutos vidéo de maintenance","goto.troubleshoot":"Voir les tutos vidéo de dépannage","nav.g.tutos":"Tutos","nav.g.form":"Formation","home.t":"Que voulez-vous faire\u00a0?","home.sub":"Choisissez une catégorie — tout le contenu est rangé par tâche.",
     "brand.sub":"Guide Technicien","nav.start":"Démarrer","nav.overview":"Vue d'ensemble","nav.beconnect":"Be Connect (IoT)",
     "nav.field":"Sur le terrain","nav.install":"Installation","nav.settings":"Réglages & valeurs","nav.maintenance":"Maintenance",
     "nav.troubleshoot":"Dépannage","nav.client":"Client","nav.experience":"Expérience client","nav.library":"Bibliothèque",
@@ -1380,7 +1388,7 @@ const I18N = {
     "fb.done.d":"Votre retour est enregistré. L'équipe le relit et l'intègre dans une prochaine mise à jour du guide.",
     "fb.again":"Envoyer un autre retour",
   },
-  en:{"nav.home":"Home","machine.t":"Which machine do you have?","machine.sub":"Select your model to open all its documentation.","machine.taps":"Taps","machine.disc":"phased off","chip.water":"Water line","chip.elec":"Elec","chip.parts":"Parts","chip.tech":"Datasheet","chip.maint":"Maintenance","chip.bec":"BeConnect","chip.tuto":"Tutorials","search.global":"Search the whole guide…","search.ph":"Keyword, ref (BW-…), symptom…","search.hint":"Type at least 2 characters.","search.none":"No results.","search.g.sec":"Sections","search.g.part":"Spare parts","search.g.tuto":"Tutorials","goto.parts":"Open exploded views & parts","goto.install":"Watch the installation video tutorials","goto.maintenance":"Watch the maintenance video tutorials","goto.troubleshoot":"Watch the troubleshooting video tutorials","nav.g.tutos":"Tutorials","nav.g.form":"Training","home.t":"What do you need?","home.sub":"Pick a category — all content is organised by task.",
+  en:{"nav.home":"Home","machine.t":"Which machine do you have?","machine.sub":"Select your model to open all its documentation.","machine.taps":"Taps","machine.disc":"phased off","chip.water":"Water line","chip.elec":"Elec","chip.parts":"Parts","chip.tech":"Datasheet","chip.maint":"Maintenance","chip.bec":"BeConnect","chip.tuto":"Tutorials","search.global":"Search the whole guide…","search.ph":"Keyword, ref (BW-…), symptom…","search.hint":"Type at least 2 characters.","search.none":"No results.","search.g.sec":"Sections","search.g.part":"Spare parts","search.g.tuto":"Tutorials","goto.parts":"Open exploded views & parts","goto.install":"Open the step-by-step installation tutorials","goto.maintenance":"Watch the maintenance video tutorials","goto.troubleshoot":"Watch the troubleshooting video tutorials","nav.g.tutos":"Tutorials","nav.g.form":"Training","home.t":"What do you need?","home.sub":"Pick a category — all content is organised by task.",
     "brand.sub":"Technician Guide","nav.start":"Get started","nav.overview":"System overview","nav.beconnect":"Be Connect (IoT)",
     "nav.field":"Field operations","nav.install":"Installation","nav.settings":"Settings & values","nav.maintenance":"Maintenance",
     "nav.troubleshoot":"Troubleshooting","nav.client":"Client","nav.experience":"Customer experience","nav.library":"Library",
@@ -1508,7 +1516,7 @@ const I18N = {
     "fb.done.d":"Your report is recorded. The team reviews it and folds it into a future update of the guide.",
     "fb.again":"Send another report",
   },
-  de:{"nav.home":"Start","machine.t":"Welche Maschine haben Sie?","machine.sub":"Wählen Sie Ihr Modell für die gesamte Dokumentation.","machine.taps":"Taps","machine.disc":"eingestellt","chip.water":"Wasserlinie","chip.elec":"Elektrik","chip.parts":"Teile","chip.tech":"Datenblatt","chip.maint":"Wartung","chip.bec":"BeConnect","chip.tuto":"Tutorials","search.global":"Im ganzen Leitfaden suchen…","search.ph":"Stichwort, Referenz (BW-…), Symptom…","search.hint":"Mind. 2 Zeichen eingeben.","search.none":"Keine Treffer.","search.g.sec":"Bereiche","search.g.part":"Ersatzteile","search.g.tuto":"Tutorials","goto.parts":"Explosionszeichnungen & Teile öffnen","goto.install":"Installations-Videotutorials ansehen","goto.maintenance":"Wartungs-Videotutorials ansehen","goto.troubleshoot":"Störungs-Videotutorials ansehen","nav.g.tutos":"Tutorials","nav.g.form":"Schulung","home.t":"Was möchten Sie tun?","home.sub":"Wählen Sie eine Kategorie — alles ist nach Aufgabe geordnet.",
+  de:{"nav.home":"Start","machine.t":"Welche Maschine haben Sie?","machine.sub":"Wählen Sie Ihr Modell für die gesamte Dokumentation.","machine.taps":"Taps","machine.disc":"eingestellt","chip.water":"Wasserlinie","chip.elec":"Elektrik","chip.parts":"Teile","chip.tech":"Datenblatt","chip.maint":"Wartung","chip.bec":"BeConnect","chip.tuto":"Tutorials","search.global":"Im ganzen Leitfaden suchen…","search.ph":"Stichwort, Referenz (BW-…), Symptom…","search.hint":"Mind. 2 Zeichen eingeben.","search.none":"Keine Treffer.","search.g.sec":"Bereiche","search.g.part":"Ersatzteile","search.g.tuto":"Tutorials","goto.parts":"Explosionszeichnungen & Teile öffnen","goto.install":"Schritt-für-Schritt-Installationstutorials öffnen","goto.maintenance":"Wartungs-Videotutorials ansehen","goto.troubleshoot":"Störungs-Videotutorials ansehen","nav.g.tutos":"Tutorials","nav.g.form":"Schulung","home.t":"Was möchten Sie tun?","home.sub":"Wählen Sie eine Kategorie — alles ist nach Aufgabe geordnet.",
     "brand.sub":"Techniker-Leitfaden","nav.start":"Loslegen","nav.overview":"Systemübersicht","nav.beconnect":"Be Connect (IoT)",
     "nav.field":"Vor Ort","nav.install":"Installation","nav.settings":"Einstellungen & Werte","nav.maintenance":"Wartung",
     "nav.troubleshoot":"Fehlerbehebung","nav.client":"Kunde","nav.experience":"Kundenerlebnis","nav.library":"Bibliothek",
@@ -1676,8 +1684,12 @@ function renderLibrary(){
   const groups = {}; let count = 0;
   tutorials.forEach(t=>{
     if(activeFilter!=="all" && t.cat!==activeFilter) return;
-    const title = t.t[lang], gname = t.g[lang];
-    if(q && !(title.toLowerCase().includes(q) || gname.toLowerCase().includes(q) || t.cat.includes(q))) return;
+    const title = t.t[lang], gname = t.g[lang], f = installFiche(t);
+    /* Un tuto pas à pas se cherche aussi par le texte de ses étapes :
+       « scie cloche » doit sortir les produits qu'on perce, pas que les
+       deux astuces de perçage. */
+    if(q && !(title.toLowerCase().includes(q) || gname.toLowerCase().includes(q) || t.cat.includes(q)
+              || (f && ficheSearchText(f).includes(q)))) return;
     (groups[gname] = groups[gname] || []).push(t); count++;
   });
   const lib = document.getElementById("library");
@@ -1691,12 +1703,21 @@ function renderLibrary(){
     wrap.innerHTML = `<h3><span class="gi">${gi}</span>${gname}</h3><div class="tut-grid"></div>`;
     const grid = wrap.querySelector(".tut-grid");
     items.forEach(t=>{
-      const title = t.t[lang];
+      const title = t.t[lang], f = installFiche(t);
       if(t.type==="soon"){
         const el = document.createElement("div");
         el.className = "tut disabled";
         el.innerHTML = `<span class="ti">…</span><div><div class="tt">${title}</div><div class="ts2">${d["tut.word"]}</div></div><span class="badge-soon">${d["soon.badge"]}</span>`;
         grid.appendChild(el);
+      }else if(f){
+        /* La carte ouvre le tuto du portail, sans quitter la page. */
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "tut";
+        b.dataset.gf = `installation|${f.gi}|${f.pi}`;
+        b.innerHTML = `<span class="ti ph">${f.p.cover ? `<img loading="lazy" alt="" src="${f.p.cover}">` : "▤"}</span>`
+          + `<div><div class="tt">${title}</div><div class="ic-s">${guideBits(f.p)}</div></div>`
+          + `<span class="ext">›</span>`;
+        grid.appendChild(b);
       }else{
         const a = document.createElement("a");
         a.className = "tut"; a.href = (t.url[lang]||t.url.fr); a.target = "_blank"; a.rel = "noopener";
@@ -1721,7 +1742,8 @@ const PORTAL_GUIDE = [{"id":"installation","type":"problems","t":{"fr":"Installa
 
 /* Quelle catégorie va dans quelle section du guide. */
 const GUIDE_PLACEMENT = {
-  "g-install":      ["installation"],
+  /* « installation » n'a pas de bloc à lui : ses fiches sont les cartes
+     d'installation de la bibliothèque — voir INSTALL_FICHE. */
   "g-settings":     ["memo-reglages", "mesures"],
   "g-maintenance":  ["maintenance", "memo-maintenance"],
   "g-troubleshoot": ["pannes", "no-water", "no-still", "no-sparkling", "low-flow",
@@ -1754,6 +1776,7 @@ const ITUT_LABELS = {
   "itut.fiches":  {fr:"fiches", en:"entries", de:"Einträge"},
   "itut.refs":    {fr:"références", en:"references", de:"Referenzen"},
   "itut.measures":{fr:"Cotes", en:"Dimensions", de:"Maße"},
+  "itut.pdf":     {fr:"Guide PDF (SharePoint)", en:"PDF guide (SharePoint)", de:"PDF-Anleitung (SharePoint)"},
   "itut.src":     {fr:"Contenu repris du portail technicien.", en:"Content taken from the technician portal.", de:"Inhalt aus dem Technikerportal."},
   "view.front":   {fr:"Face", en:"Front", de:"Vorne"},
   "view.back":    {fr:"Arrière", en:"Back", de:"Hinten"},
@@ -1773,6 +1796,59 @@ function guideFiches(c){
   var out=[];
   (c.groups||[]).forEach(function(g,gi){ (g.items||[]).forEach(function(p,pi){ out.push({g:g,gi:gi,pi:pi,p:p}); }); });
   return out;
+}
+
+/* La bibliothèque listait un PDF SharePoint par produit ; le portail en donne
+   le tuto pas à pas, plus complet. Le tuto prend donc la place du PDF dans la
+   bibliothèque, et le PDF redescend dans « À voir aussi » au bas du tuto.
+   La table dit quel tuto remplace quelle fiche — par son titre, pour survivre
+   à une reprise du portail qui rangerait les fiches autrement. AQTiV Duo et
+   PRO 2 n'ont de tuto ni ici ni là : ils restent « bientôt ». */
+const INSTALL_FICHE = {
+  "AQTiV Combi":                        "AQTiV COMBI",
+  "AQTiV One":                          "AQTiV ONE",
+  "AQTiV Tower":                        "AQTiV TOWER",
+  "BAR 1":                              "BAR 1",
+  "BAR 2":                              "BAR 2",
+  "PRO 3":                              "PRO 3",
+  "BOX 20 — Home":                      "BOX 20 - HOME",
+  "BOX 30":                             "BOX 30",
+  "BOX 80 / 120 / 150":                 "BOX 80/120/150",
+  "BOX avec recirculation":             "BOX avec recirculation",
+  "Kit Mullex":                         "KIT MULLEX",
+  "Be Connect (schéma, pannes & infos)": "BE CONNECT (schéma, pannes et informations)",
+  "BOX 80 — Kit de ventilation":        "BOX 80 - kit de ventilation"
+};
+function installFiche(t){
+  var want = INSTALL_FICHE[t && t.t && t.t.fr]; if(!want) return null;
+  var c = guideCat("installation"); if(!c) return null;
+  var hit = null;
+  guideFiches(c).forEach(function(f){ if(f.p.t && f.p.t.fr === want) hit = f; });
+  return hit;
+}
+/* Le PDF que ce tuto remplace, s'il en remplace un. */
+function installFichePdf(catId, gi, pi){
+  if(catId !== "installation") return null;
+  var url = null;
+  tutorials.forEach(function(t){
+    var f = installFiche(t);
+    if(f && f.gi === gi && f.pi === pi && t.url) url = t.url;
+  });
+  return url;
+}
+
+/* Le texte cherchable d'un tuto — ses étapes, pas seulement son titre. */
+var _ficheTxt = {};
+function ficheSearchText(f){
+  var k = f.gi + "|" + f.pi + "|" + lang;
+  if(_ficheTxt[k] != null) return _ficheTxt[k];
+  var p = f.p, body = [itutTr(p.t)];
+  (p.mats||[]).forEach(function(m){ (m.items||[]).forEach(function(it){ body.push(itutTr(it.n)); }); });
+  (p.chapters||[]).forEach(function(c){
+    body.push(itutTr(c.h));
+    (c.steps||[]).forEach(function(s){ body.push(itutTr(s.d)); });
+  });
+  return (_ficheTxt[k] = body.join(" ").toLowerCase());
 }
 function itutCount(p, what){
   var n = 0;
@@ -1983,9 +2059,11 @@ function openGuideFiche(catId, gi, pi){
        + (items.length ? '<ul>' + items.map(function(x){ return '<li>' + itutEsc(x) + '</li>'; }).join("") + '</ul>' : '')
        + '</div>';
   });
-  if((p.related||[]).length){
+  var rel = (p.related||[]).slice(), pdf = installFichePdf(catId, gi, pi);
+  if(pdf) rel.push({url:(pdf[lang] || pdf.fr), label:{fr:d["itut.pdf"], en:d["itut.pdf"], de:d["itut.pdf"]}});
+  if(rel.length){
     h += '<div class="itut-sec"><h4>' + d["itut.related"] + '</h4><div class="itut-rel">'
-       + p.related.map(function(r){
+       + rel.map(function(r){
            var label = itutEsc(itutTr(r.label));
            return r.url
              ? '<a href="' + r.url + '" target="_blank" rel="noopener">↗ ' + label + '</a>'
@@ -2574,7 +2652,7 @@ function buildSearchIndex(){ var idx=[];
   SECT_IDS.forEach(function(id){ var el=document.getElementById(id); if(!el)return; var a=document.querySelector('#nav a[href="#'+id+'"]'); var lab=a?a.textContent.trim():id;
     idx.push({type:'sec',id:id,label:lab,text:(el.innerText||el.textContent||'').toLowerCase()}); });
   if(typeof SPAREPARTS!=='undefined') Object.keys(SPAREPARTS).forEach(function(p){ SPAREPARTS[p].forEach(function(x){ if(x.sep)return; idx.push({type:'part',product:p,ref:x.ref,name:x.name,label:x.ref+' — '+(typeof partName==='function'?partName(x.name):x.name),text:(x.ref+' '+x.name+' '+(typeof partName==='function'?partName(x.name):'')).toLowerCase()}); }); });
-  document.querySelectorAll('#tutorials .tut').forEach(function(t){ var tt=t.querySelector('.tt'); if(tt) idx.push({type:'tuto',label:tt.textContent.trim(),text:tt.textContent.toLowerCase()}); });
+  document.querySelectorAll('#tutorials .tut:not([data-gf])').forEach(function(t){ var tt=t.querySelector('.tt'); if(tt) idx.push({type:'tuto',label:tt.textContent.trim(),text:tt.textContent.toLowerCase()}); });
   /* Les tutos d'installation pas a pas : leurs etapes sont cherchables, pas
      seulement leur titre. */
   if(typeof PORTAL_GUIDE!=='undefined') PORTAL_GUIDE.forEach(function(c){
