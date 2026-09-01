@@ -1,0 +1,627 @@
+{
+ "rev": 6,
+ "at": "2026-09-01T10:41:33.842Z",
+ "data": {
+  "years": {
+   "2024": [
+    {
+     "id": "v1",
+     "tech": "SIMONE MARE",
+     "model": "Citroen eJumpy",
+     "plate": "VD535659",
+     "card": "Carte Shell Recharge n° CH-TNM-117580-3",
+     "km": {
+      "0": 70500,
+      "1": 79169,
+      "2": 83400,
+      "3": 85452,
+      "4": 87100,
+      "5": 90567,
+      "6": 94522,
+      "7": 97462,
+      "8": 98900,
+      "9": 102884,
+      "10": 107633,
+      "11": 108500
+     },
+     "notes": {
+      "0": {
+       "fr": "Mardi 30.01.24 — léger accrochage sur le flanc arrière gauche (Anthony Viret), photo dans le dossier",
+       "en": "Tuesday 30.01.24 — minor scrape on the left rear side (Anthony Viret), photo in the folder",
+       "de": "Dienstag 30.01.24 — leichter Streifschaden hinten links (Anthony Viret), Foto im Ordner"
+      },
+      "10": {
+       "fr": "Entretien fait",
+       "en": "Service done",
+       "de": "Service erledigt"
+      }
+     },
+     "next": 126000,
+     "every": 20000,
+     "noCar": false,
+     "checks": {
+      "tyreSpring": "2024-03-15",
+      "tyreStore": "Emil Frey Crissier"
+     }
+    },
+    {
+     "id": "v2",
+     "tech": "CHARLES EPERT",
+     "model": "Citroen Jumpy",
+     "plate": "VD630731",
+     "card": "Carte Shell N°7002231321000437145 - 10/27",
+     "km": {
+      "0": 8500,
+      "1": 14342,
+      "2": 18000,
+      "3": 22044,
+      "4": 25056,
+      "5": 26492,
+      "6": 31411,
+      "7": 33200,
+      "8": 35227,
+      "9": 37570,
+      "10": 40000,
+      "11": 41300
+     },
+     "notes": {
+      "7": {
+       "fr": "Entretien fait à 33 000 km, le 26.08.24",
+       "en": "Service done at 33,000 km, on 26.08.24",
+       "de": "Service bei 33 000 km, am 26.08.24"
+      }
+     },
+     "next": 71000,
+     "every": 40000,
+     "noCar": false,
+     "checks": {
+      "tyreSpring": "2024-03-15"
+     }
+    },
+    {
+     "id": "v3",
+     "tech": "LEVENT KAYA",
+     "model": "Citoen Jumpy",
+     "plate": "VD191041",
+     "card": "Carte Shell Recharge n°CH-TNM-117594-4",
+     "km": {
+      "0": 27381,
+      "1": 31574,
+      "2": 34376,
+      "3": 36980,
+      "4": 40000,
+      "5": 42636,
+      "6": 44002,
+      "7": 47857,
+      "8": 51205,
+      "9": 53104,
+      "10": 55521,
+      "11": 57200
+     },
+     "notes": {
+      "4": {
+       "fr": "Entretien des 40 000 km, fait le 29.05.24",
+       "en": "40,000 km service, done on 29.05.24",
+       "de": "Service bei 40 000 km, erledigt am 29.05.24"
+      }
+     },
+     "next": 80000,
+     "every": 40000,
+     "noCar": false,
+     "checks": {
+      "tyreSpring": "2024-03-15",
+      "tyreStore": "Emil Frey Acacias"
+     }
+    },
+    {
+     "id": "v4",
+     "tech": "ANTHONY VIRET",
+     "model": "Citoen Jumpy",
+     "plate": "VD 261 839",
+     "card": "Carte Shell n°7002231321000457929\nMDP : 3603",
+     "km": {
+      "3": 0,
+      "4": 4895,
+      "5": 7313,
+      "6": 12680,
+      "7": 17054,
+      "8": 22694,
+      "9": 27583,
+      "10": 31316,
+      "11": 33000
+     },
+     "notes": {},
+     "next": null,
+     "every": 40000,
+     "noCar": false,
+     "checks": {
+      "tyreSpring": "2024-03-15"
+     }
+    },
+    {
+     "id": "v5",
+     "tech": "ATTA HARIRI",
+     "model": "Citoen Jumpy",
+     "plate": "VD 225 393",
+     "card": "Carte Shell n°7002231321000437152",
+     "km": {
+      "3": 56000,
+      "4": 59476,
+      "5": 63843,
+      "6": 67766,
+      "7": 69450,
+      "8": 71200,
+      "9": 73155,
+      "10": 74200,
+      "11": 75400
+     },
+     "notes": {},
+     "next": null,
+     "every": 40000,
+     "noCar": false,
+     "checks": {
+      "tyreSpring": "2024-03-15",
+      "tyreStore": "Zurich"
+     }
+    }
+   ],
+   "2025": [
+    {
+     "id": "v6",
+     "tech": "SAMY KACHOU",
+     "model": "Citroen eJumpy",
+     "plate": "VD535659",
+     "card": "Carte Shell Recharge n° CH-TNM-117580-3\n\nPolice no. T309111426",
+     "km": {
+      "0": 110473,
+      "1": 112167,
+      "2": 114512,
+      "3": 116266,
+      "4": 119399,
+      "5": 120376,
+      "6": 122340,
+      "7": 125126,
+      "8": 125865,
+      "9": 126066,
+      "10": 130091
+     },
+     "notes": {
+      "10": {
+       "fr": "Changement de véhicule : Samy récupère le VD630731 le 27.11.25 à 12h, à 64 100 km",
+       "en": "Vehicle change: Samy collects VD630731 on 27.11.25 at 12:00, at 64,100 km",
+       "de": "Fahrzeugwechsel: Samy holt VD630731 am 27.11.25 um 12 Uhr ab, bei 64 100 km"
+      }
+     },
+     "next": 147000,
+     "every": 40000,
+     "noCar": false,
+     "checks": {
+      "vignette": "2025-01-15",
+      "tyreSpring": "2025-03-15"
+     }
+    },
+    {
+     "id": "v7",
+     "tech": "CHARLES EPERT",
+     "model": "Citroen Jumpy",
+     "plate": "VD630731",
+     "card": "Carte Shell N°7002231321000437145 - 10/27 \nMDP : 8657\n\nPolice no. T301215474",
+     "km": {
+      "0": 43376,
+      "1": 45400,
+      "2": 46400,
+      "3": 48559,
+      "4": 51183,
+      "5": 53467,
+      "6": 56348,
+      "7": 60139,
+      "8": 61321,
+      "9": 62483,
+      "10": 63896
+     },
+     "notes": {
+      "10": {
+       "fr": "Changement de véhicule : Samy récupère le VD630731 le 27.11.25 à 12h, à 64 100 km",
+       "en": "Vehicle change: Samy collects VD630731 on 27.11.25 at 12:00, at 64,100 km",
+       "de": "Fahrzeugwechsel: Samy holt VD630731 am 27.11.25 um 12 Uhr ab, bei 64 100 km"
+      },
+      "11": {
+       "fr": "Pas de véhicule",
+       "en": "No car",
+       "de": "Kein Fahrzeug"
+      }
+     },
+     "next": 71000,
+     "every": 40000,
+     "noCar": false,
+     "checks": {
+      "vignette": "2025-01-15",
+      "tyreSpring": "2025-03-15"
+     }
+    },
+    {
+     "id": "v8",
+     "tech": "LEVENT KAYA",
+     "model": "Citoen Jumpy",
+     "plate": "VD191041",
+     "card": "Carte Shell Recharge n°CH-TNM-117594-4\n\nPolice no. T309567477",
+     "km": {
+      "0": 60448,
+      "1": 62417,
+      "2": 64365,
+      "3": 64842,
+      "4": 66875,
+      "5": 69456,
+      "6": 71650,
+      "7": 73936,
+      "8": 76398,
+      "9": 79409,
+      "10": 82932,
+      "11": 84293
+     },
+     "notes": {},
+     "next": 80000,
+     "every": 40000,
+     "noCar": false,
+     "checks": {
+      "vignette": "2025-01-15",
+      "tyreSpring": "2025-03-15"
+     }
+    },
+    {
+     "id": "v9",
+     "tech": "EDMOND AJETI",
+     "model": "Citoen Jumpy",
+     "plate": "VD 261 839",
+     "card": "Carte Shell n°7002231321000457929\nMDP : 3603\n\nPolice no. T301428536",
+     "km": {
+      "0": 39272,
+      "1": 44400,
+      "2": 48027,
+      "3": 49978,
+      "4": 54109,
+      "5": 56412,
+      "6": 59427,
+      "7": 63383,
+      "8": 68574,
+      "9": 72504,
+      "10": 76561,
+      "11": 82876
+     },
+     "notes": {
+      "4": {
+       "fr": "Entretien fait le 23.04.25 (48 786 km)",
+       "en": "Service done on 23.04.25 (48,786 km)",
+       "de": "Service erledigt am 23.04.25 (48 786 km)"
+      }
+     },
+     "next": 90000,
+     "every": 40000,
+     "noCar": false,
+     "checks": {
+      "vignette": "2025-01-15",
+      "tyreSpring": "2025-03-15",
+      "tyreAutumn": "2025-11-15"
+     }
+    },
+    {
+     "id": "v10",
+     "tech": "ATTA HARIRI",
+     "model": "Citoen Jumpy",
+     "plate": "VD 225 393",
+     "card": "Carte Shell n°7002231321000437152\nMDP : 8544\n\nPolice no. T309565270",
+     "km": {
+      "0": 84531,
+      "1": 88254,
+      "2": 92000,
+      "3": 96103,
+      "4": 100026,
+      "5": 102125,
+      "6": 106845,
+      "7": 110135,
+      "8": 113750,
+      "9": 116560,
+      "11": 122947
+     },
+     "notes": {
+      "0": {
+       "fr": "E-vignette CH (OK)\nEntretien fait — 84 000 km",
+       "en": "CH e-vignette (OK)\nService done — 84,000 km",
+       "de": "E-Vignette CH (OK)\nService erledigt — 84 000 km"
+      },
+      "4": {
+       "fr": "Pneus — à vérifier",
+       "en": "Tires — to be checked",
+       "de": "Reifen — zu prüfen"
+      }
+     },
+     "next": 124000,
+     "every": 40000,
+     "noCar": false,
+     "checks": {
+      "vignette": "2025-01-15",
+      "tyreSpring": "2025-03-15",
+      "tyreAutumn": "2025-11-15"
+     }
+    },
+    {
+     "id": "v11",
+     "tech": "TEC 6",
+     "model": "",
+     "plate": "",
+     "card": "",
+     "km": {},
+     "notes": {},
+     "next": null,
+     "every": 40000,
+     "noCar": false,
+     "checks": {
+      "tyreSpring": "2025-03-15"
+     }
+    }
+   ],
+   "2026": [
+    {
+     "id": "v12",
+     "tech": "SAMY KACHOU",
+     "model": "Citroen Jumpy",
+     "plate": "VD630731",
+     "card": "Carte Shell N°7002231321000437145 - 10/27 \nMDP : 8657\n\nPolice no. T301215474",
+     "km": {
+      "0": 69106,
+      "1": 71806,
+      "2": 79764,
+      "3": 83768,
+      "4": 86403,
+      "5": 90402,
+      "6": 95840,
+      "7": 98790
+     },
+     "notes": {
+      "1": {
+       "fr": "Entretien le 27.02.26\n77 939 km",
+       "en": "Service on 27.02.26\n77,939 km",
+       "de": "Service am 27.02.26\n77 939 km"
+      }
+     },
+     "next": 118000,
+     "every": 40000,
+     "noCar": false,
+     "checks": {
+      "vignette": "2026-01-15",
+      "tyreSpring": "2026-04-15",
+      "customs": "2026-11-17"
+     }
+    },
+    {
+     "id": "v13",
+     "tech": "CHARLES EPERT",
+     "model": "Citroen Jumpy",
+     "plate": "",
+     "card": "Carte Shell N°\nMDP : \n\nPolice no.",
+     "km": {},
+     "notes": {},
+     "next": null,
+     "every": 40000,
+     "noCar": true,
+     "checks": {
+      "tyreSpring": "2026-04-15"
+     }
+    },
+    {
+     "id": "v14",
+     "tech": "LEVENT KAYA",
+     "model": "Citoen Jumpy",
+     "plate": "VD191041",
+     "card": "Carte Shell Recharge n°CH-TNM-117594-4\n\nPolice no. T309567477",
+     "km": {
+      "0": 84669,
+      "1": 86680,
+      "2": 88335,
+      "3": 90252,
+      "4": 91596,
+      "5": 94001,
+      "6": 96632,
+      "7": 98865
+     },
+     "notes": {
+      "1": {
+       "fr": "Entretien fait — 86 340 km",
+       "en": "Service done — 86,340 km",
+       "de": "Service erledigt — 86 340 km"
+      }
+     },
+     "next": 126000,
+     "every": 40000,
+     "noCar": false,
+     "checks": {
+      "vignette": "2026-01-15",
+      "tyreSpring": "2026-04-15",
+      "customs": "2026-11-17"
+     }
+    },
+    {
+     "id": "v15",
+     "tech": "EDMOND AJETI",
+     "model": "Citoen Jumpy",
+     "plate": "VD 261 839",
+     "card": "Carte Shell n°7002237370220119466\nMDP : 5391\n\nPolice no. T301428536",
+     "km": {
+      "0": 82876,
+      "1": 91813,
+      "2": 97867,
+      "3": 104020,
+      "4": 107417,
+      "5": 109816,
+      "6": 116677,
+      "7": 123463,
+      "8": 123877
+     },
+     "notes": {
+      "1": {
+       "fr": "Entretien fait — 89 500 km",
+       "en": "Service done — 89,500 km",
+       "de": "Service erledigt — 89 500 km"
+      },
+      "8": {
+       "fr": "Pneus avant : Bon etat · Pneus arrière : Bon etat",
+       "en": "Pneus avant : Bon etat · Pneus arrière : Bon etat",
+       "de": "Pneus avant : Bon etat · Pneus arrière : Bon etat"
+      }
+     },
+     "next": 129500,
+     "every": 40000,
+     "noCar": false,
+     "checks": {
+      "vignette": "2026-01-15",
+      "tyreSpring": "2026-04-15",
+      "wearFront": "ok",
+      "wearAt": "2026-09-01T10:01:16.719Z",
+      "wearRear": "ok"
+     },
+     "at": {
+      "8": "2026-09-01T10:01:16.719Z"
+     }
+    },
+    {
+     "id": "v16",
+     "tech": "ATTA HARIRI",
+     "model": "Citoen Jumpy",
+     "plate": "VD 225 393",
+     "card": "Carte Shell n°7002231321000437152\nMDP : 8544\n\nPolice no. T309565270",
+     "km": {
+      "0": 122297,
+      "1": 129580,
+      "2": 133988,
+      "3": 137307,
+      "4": 140093,
+      "5": 142435,
+      "6": 145356
+     },
+     "notes": {
+      "2": {
+       "fr": "Entretien fait le 31.03.26 (134 000 km)",
+       "en": "Service done on 31.03.26 (134,000 km)",
+       "de": "Service erledigt am 31.03.26 (134 000 km)"
+      }
+     },
+     "next": 154000,
+     "every": 40000,
+     "noCar": false,
+     "checks": {
+      "vignette": "2026-01-15",
+      "tyreSpring": "2026-04-15"
+     }
+    },
+    {
+     "id": "v17",
+     "tech": "BELLAL MANSERI",
+     "model": "",
+     "plate": "",
+     "card": "",
+     "km": {},
+     "notes": {},
+     "next": null,
+     "every": 40000,
+     "noCar": true,
+     "checks": {
+      "tyreSpring": "2026-04-15"
+     }
+    }
+   ],
+   "2027": [
+    {
+     "id": "vao4txe",
+     "tech": "SAMY KACHOU",
+     "model": "Citroen Jumpy",
+     "plate": "VD630731",
+     "card": "Carte Shell N°7002231321000437145 - 10/27 \nMDP : 8657\n\nPolice no. T301215474",
+     "km": {},
+     "notes": {},
+     "next": 118000,
+     "every": 40000,
+     "noCar": false,
+     "checks": {
+      "customs": "2026-11-17"
+     },
+     "at": {}
+    },
+    {
+     "id": "vqw43lj",
+     "tech": "CHARLES EPERT",
+     "model": "Citroen Jumpy",
+     "plate": "",
+     "card": "Carte Shell N°\nMDP : \n\nPolice no.",
+     "km": {},
+     "notes": {},
+     "next": null,
+     "every": 40000,
+     "noCar": true,
+     "checks": {},
+     "at": {}
+    },
+    {
+     "id": "vt5id84",
+     "tech": "LEVENT KAYA",
+     "model": "Citoen Jumpy",
+     "plate": "VD191041",
+     "card": "Carte Shell Recharge n°CH-TNM-117594-4\n\nPolice no. T309567477",
+     "km": {},
+     "notes": {},
+     "next": 126000,
+     "every": 40000,
+     "noCar": false,
+     "checks": {
+      "customs": "2026-11-17"
+     },
+     "at": {}
+    },
+    {
+     "id": "vimwj0b",
+     "tech": "EDMOND AJETI",
+     "model": "Citoen Jumpy",
+     "plate": "VD 261 839",
+     "card": "Carte Shell n°7002237370220119466\nMDP : 5391\n\nPolice no. T301428536",
+     "km": {},
+     "notes": {},
+     "next": 129500,
+     "every": 40000,
+     "noCar": false,
+     "checks": {},
+     "at": {}
+    },
+    {
+     "id": "v2n07v0",
+     "tech": "ATTA HARIRI",
+     "model": "Citoen Jumpy",
+     "plate": "VD 225 393",
+     "card": "Carte Shell n°7002231321000437152\nMDP : 8544\n\nPolice no. T309565270",
+     "km": {},
+     "notes": {},
+     "next": 154000,
+     "every": 40000,
+     "noCar": false,
+     "checks": {},
+     "at": {}
+    },
+    {
+     "id": "v7g4igl",
+     "tech": "BELLAL MANSERI",
+     "model": "",
+     "plate": "",
+     "card": "",
+     "km": {},
+     "notes": {},
+     "next": null,
+     "every": 40000,
+     "noCar": true,
+     "checks": {},
+     "at": {}
+    }
+   ]
+  },
+  "requests": [],
+  "_chk": 1,
+  "_chk2": 1
+ }
+}
