@@ -49,7 +49,17 @@ canal, sont devenues `img/inline-*.jpg`.
 
 ## Ce que le hub en reprend
 
-La constante `INSTALL_TUTOS` de `index.html` reprend la catégorie
-**Installation** de `guide.json` : 13 produits, leur outillage, leur matériel,
-chaque étape avec ses photos, la vidéo et les schémas, dans les trois langues.
-Les autres catégories du guide ne sont pas reprises pour l'instant.
+La constante `PORTAL_GUIDE` de `index.html` reprend **tout le guide technique**
+de `guide.json` : les 22 catégories, 76 fiches, 180 références produits, les
+trois mémos, les 7 vidéos client et l'arbre des pannes, dans les trois langues.
+Les photos sont copiées dans le dossier `img/` du dépôt ; les quelques images
+ajoutées après la mise en ligne du portail, encore stockées en clair dans le
+canal, sont devenues `img/inline-*.jpg`.
+
+`GUIDE_PLACEMENT`, juste en dessous, dit dans quelle section du hub chaque
+catégorie est affichée.
+
+Les rubriques **« Outils technicien »** et **« Techniciens Suisse »** du portail
+ne sont pas reprises : ce sont des menus de liens vers d'autres applications
+(carte des interventions, stock), pas du contenu de guide. Elles vivent dans la
+constante `PORTAL_SECTIONS` de la page du portail, pas dans `guide.json`.
