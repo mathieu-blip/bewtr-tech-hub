@@ -224,6 +224,41 @@
   .gtree{display:flex;flex-wrap:wrap;gap:9px}
   .gsym{background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 16px;font:inherit;font-size:13px;color:var(--ink);cursor:pointer;transition:.15s}
   .gsym:hover{border-color:var(--orange);color:var(--orange)}
+
+  /* ---- Un tuto s'ouvre dans la page ----
+     La fiche se déplie sous la carte cliquée : la liste reste sous les yeux
+     et il n'y a pas de fenêtre à refermer pour revenir. Le panneau prend
+     toute la largeur de la grille où il s'insère. */
+  .gf-panel{grid-column:1/-1;background:#fff;border:1px solid var(--orange);border-radius:12px;margin:2px 0 8px;box-shadow:var(--shadow);overflow:hidden;text-align:left}
+  /* Un tuto d'installation fait cinquante étapes : son titre et sa croix
+     restent en haut du panneau pendant qu'on le descend. */
+  .gf-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid #ffd9c7;background:var(--orange-soft)}
+  .gf-head b{font-size:14px;color:#8a3d18;flex:1;min-width:0}
+  .gf-head .gf-cat{font-size:11px;color:#a4653f;white-space:nowrap}
+  .gf-close{border:1px solid #ffd0bb;background:#fff;color:#8a3d18;border-radius:9px;width:30px;height:30px;font:inherit;font-size:14px;line-height:1;cursor:pointer;flex:none}
+  .gf-close:hover{background:var(--orange);color:#fff;border-color:var(--orange)}
+  .gf-panel .itut{padding:14px 16px 4px;max-width:none;margin:0}
+  .gf-panel .itut-sec{background:transparent;border:0;border-radius:0;padding:0;margin-bottom:16px}
+  .gf-panel .itut-sec+.itut-sec{border-top:1px solid var(--line);padding-top:14px}
+  .gf-panel .itut-src{margin-bottom:10px}
+  .tut.on,.gfiche.on,.itut-card.on{border-color:var(--orange)}
+  .gfiche.on{background:var(--orange-soft)}
+
+  /* ---- Dépannage : on part du symptôme ---- */
+  .sym-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(228px,1fr));gap:10px;margin:10px 0 4px}
+  .sym{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 15px;font:inherit;text-align:left;color:var(--ink);cursor:pointer;transition:.15s}
+  .sym:hover{border-color:var(--orange);box-shadow:var(--shadow);transform:translateY(-1px)}
+  .sym.on{border-color:var(--orange);background:var(--orange-soft)}
+  .sym .sy-ic{width:34px;height:34px;border-radius:10px;background:var(--orange-soft);color:var(--orange);display:grid;place-items:center;font-size:15px;flex:none}
+  .sym.on .sy-ic{background:var(--orange);color:#fff}
+  .sym .sy-t{display:block;font-weight:600;font-size:13.5px;line-height:1.3}
+  .sym .sy-n{display:block;font-size:11px;color:var(--ink-soft);margin-top:3px}
+  .ts-more{margin-top:26px;border-top:1px solid var(--line);padding-top:14px}
+  .ts-more>summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--ink-soft);list-style:none;display:flex;align-items:center;gap:8px}
+  .ts-more>summary::-webkit-details-marker{display:none}
+  .ts-more>summary::before{content:"›";color:var(--orange);font-size:16px;transition:.15s}
+  .ts-more[open]>summary::before{transform:rotate(90deg)}
+  .ts-more>summary:hover{color:var(--orange)}
   .mz-figs{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start}
   .itut .mz-fig{margin:0}
   .itut .mz-stage img{max-height:280px}
@@ -909,8 +944,8 @@
         <p class="sec-sub" data-i18n="s6.sub"></p>
         <a class="goto-tutos" href="#tutorials" data-tf="troubleshoot"><span class="gt-ic">▶</span> <span data-i18n="goto.troubleshoot"></span></a>
         <a class="goto-tutos goto-parts" href="#schemas" data-parts="1"><span class="gt-ic">▦</span> <span data-i18n="goto.parts"></span></a>
-        <div data-i18n="s6.body"></div>
         <div id="g-troubleshoot"></div>
+        <details class="ts-more"><summary data-i18n="s6.more"></summary><div data-i18n="s6.body"></div></details>
       </section>
 
       <section id="experience">
@@ -1315,7 +1350,7 @@ const I18N = {
     <div class="note small">Avant de partir : <b>faire goûter l'eau au client</b> et remplir le rapport d'intervention.</div></div>
     <div class="card"><h3>Nettoyage & finition</h3><p class="small muted">Chaque maintenance inclut la remise en état esthétique du système :</p><ul class="small"><li><b>Nettoyer les robinets</b> (taps) — retirer traces et salissures</li><li><b>Poncer les AQTiV au papier abrasif</b> pour enlever la <b>rouille</b> et les <b>rayures</b></li><li>Pour rayures & taches de rouille : utiliser la <b>petite éponge abrasive verte</b>. Profiter des <b>10 min d'attente</b> (Javel dans le système) pour nettoyer.</li><li><b>Retirer toutes les traces de calcaire</b> sur l'ensemble du système</li></ul><div class="callout small" style="margin-bottom:10px">⚠ Le papier abrasif s'utilise <b>uniquement sur les AQTiV (inox)</b>. Sur les robinets chromés (BAR, PRO) et le plastique : détartrant doux + chiffon microfibre, jamais d'abrasif.</div><div class="note small">Un système propre, sans rouille ni calcaire, rassure le client et prolonge la durée de vie des pièces.</div></div>
     <div class="card"><h3>Filtres — manipulation & hygiène</h3><ul class="small"><li>Toujours manipuler le filtre avec les <b>mains propres</b>.</li><li>Ne <b>jamais toucher le haut du filtre</b> à la main (risque de contamination).</li><li>Filtres « event » (usage 1–2 semaines) : ne pas gaspiller, <b>réinstaller sous 24 h maximum</b>.</li><li>Au retrait : toujours poser un <b>bouchon</b> ; ne jamais dépasser 24 h avant réinstallation (sécurité & hygiène).</li><li>Au-delà de 24 h : ce filtre devient <b>prioritaire</b> à réinstaller ; ne jamais utiliser un filtre hors délai.</li><li>Filtres sans marquage BE WTR : les <b>recouvrir des stickers BE WTR</b> avant usage.</li></ul></div>`,
-    "s6.t":"Dépannage","s6.sub":"Symptômes courants et points à vérifier — cliquez pour déplier. Tutos vidéo dans la bibliothèque.",
+    "s6.more":"Autres points à vérifier & dépannages par produit","s6.t":"Dépannage","s6.sub":"Partez du symptôme : un clic n'affiche que les tutos qui le concernent, et ils s'ouvrent dans la page.",
     "s6.body":`<div class="ts-general"><details class="ts"><summary><span class="sy" style="background:#1f6feb"></span>Faible débit d'eau plate<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Filtre saturé → changer le filtre</li><li>Préfiltre saturé → nettoyer le préfiltre</li><li>Faible pression à l'arrivée d'eau</li><li>Si l'arrivée d'eau est aussi connectée à un lave-vaisselle : vérifier si le débit ne baisse <b>que</b> quand le lave-vaisselle tourne.</li></ul><p class="small" style="margin:8px 0 0"><a href="https://www.youtube.com/watch?v=Q39QwJxmyTw" target="_blank" rel="noopener">▶ Vidéo</a></p></div></details><details class="ts"><summary><span class="sy" style="background:#d5432f"></span>Pas d'eau plate<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Fuite détectée / arrivée d'eau fermée</li><li>Préfiltre ou filtre saturé (le débit a-t-il baissé progressivement ?)</li><li>BOX gelée → éteindre 12h & baisser le thermostat</li><li>Réducteur de pression monté à l'envers</li><li>Tuyau plié ou écrasé.</li></ul><p class="small" style="margin:8px 0 0"><a href="https://www.youtube.com/watch?feature=shared&v=1cuKtIg8uas" target="_blank" rel="noopener">▶ Vidéo</a></p></div></details><details class="ts"><summary><span class="sy" style="background:#e39a17"></span>Faible intensité pétillante<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Vérifier que l'eau est bien froide</li><li>Vérifier le réglage du gaz (≈ 3,5–4 Bar)</li><li>Vérifier que le débit pétillant n'est pas trop élevé</li><li><b>Reset des réglages :</b> éteindre la BOX, tirer de l'eau pétillante jusqu'à ce que <b>seul du gaz</b> sorte, puis rallumer la BOX.</li></ul><p class="small" style="margin:8px 0 0"><a href="https://www.youtube.com/watch?feature=shared&v=yE6NOTAi46s" target="_blank" rel="noopener">▶ Vidéo</a></p></div></details><details class="ts"><summary><span class="sy" style="background:#d5432f"></span>Pas d'eau pétillante<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Vérifier dans la webapp que la bouteille CO₂ n'est pas vide.</li><li><b>Si seulement du gaz sort</b> en pétillant : reset de la BOX (éteindre, attendre 10s, rallumer).</li><li><b>Si de l'eau plate sort</b> : vérifier que le gaz est bien entre <b>3,5 et 4 Bar</b> ; sinon <b>changer la bouteille</b>.</li></ul><p class="small" style="margin:8px 0 0"><a href="https://www.youtube.com/watch?v=7sTSrk8bVhU" target="_blank" rel="noopener">▶ Vidéo</a></p></div></details><details class="ts"><summary><span class="sy" style="background:#54606f"></span>Changement de système / BOX / bouteille<span class="arw">›</span></summary><div class="body"><ul class="small"><li>En cas de changement de système ou de BOX, <b>bien purger la BOX</b> (plate + pétillante) : tirer jusqu'à ce que <b>seul du gaz</b> sorte.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f9d55"></span>Alarme du bidon de récupération en continu<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Le bidon n'est pas mouillé mais l'alarme sonne : la <b>pile est HS</b> — la remplacer.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f9d55"></span>Changement de bouteille de gaz<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Suivre les étapes de remplacement de la bouteille CO₂.</li></ul><p class="small" style="margin:8px 0 0"><a href="https://www.youtube.com/watch?v=XMefi2eSYYY" target="_blank" rel="noopener">▶ Vidéo</a></p></div></details></div><p class="ts-sub">Dépannages spécifiques par produit</p><div class="ts-tabs"><button class="ts-tab" data-g="box">BOX</button><button class="ts-tab" data-g="tap">Robinets & gearbox</button><button class="ts-tab" data-g="pro">Pro2 / Pro3</button><button class="ts-tab" data-g="beconnect">BE CONNECT</button><button class="ts-tab" data-g="divers">Divers</button></div><div class="ts-groups"><div class="ts-group" data-g="box" hidden><details class="ts"><summary><span class="sy" style="background:#e39a17"></span>La machine se met en défaut et empire chaque jour<span class="arw">›</span></summary><div class="body"><ul class="small"><li><b>Indice clé :</b> une dégradation progressive jour après jour = très probablement un <b>filtre</b> (une pompe ne se dégrade pas progressivement, un filtre qui se colmate si).</li><li>Remplacer / contrôler le filtre.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f6feb"></span>Débordement du bac à glace<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Mettre le bac de glace au <b>minimum</b>.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f6feb"></span>La BOX ne refroidit pas<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Éteindre la BOX, attendre 10 min, rebrancher</li><li>Si ça ne fonctionne toujours pas → changer la BOX</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f6feb"></span>Box 30 B&O refroidit en continu / givre<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Ouvrir la façade avant de la box et <b>appuyer sur le bouton reset</b> : la box redémarre et refonctionne.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f6feb"></span>Box Italbedis 80 / 120 gelée<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Cause : capteur du thermostat mal positionné.</li><li>Repositionner le capteur au bon endroit et le <b>fixer avec du scotch</b>.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f6feb"></span>Pompe Box 30 — problème de condensation<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Condensation interne affectant la sonde / la pompe.</li><li>Appliquer le <b>vernis d'isolation</b> à l'intérieur selon la procédure <b>PR-0067</b> (sonde de niveau de carbonatation).</li><li>Coller ensuite l'étiquette « PROBE PROTECTION OK » (50×30) pour tracer l'intervention.</li></ul></div></details></div><div class="ts-group" data-g="tap" hidden><details class="ts"><summary><span class="sy" style="background:#1f6feb"></span>Plate & pétillante ne sortent plus en même temps (Bar2 / Aqtiv Duo)<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Normal : le débit d'eau plate baisse pendant la carbonatation — l'expliquer d'abord au client.</li><li>Cause réelle : un filtre qui commence à se colmater amplifie fortement le phénomène.</li><li>Vérifier si la maintenance est en retard, remplacer / entretenir le filtre et remettre la maintenance à jour.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#d5432f"></span>Fuite de Gearbox<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Remplacement général → vidéo 1</li><li>Fuite sous le chapeau → vidéo 2</li><li>Fuite vers le bas → vidéo 3</li><li>Piston bloqué → vidéo 4</li></ul><a class="small" href="#tutorials">→ Tutos vidéo Gearbox</a><div class="note small" style="margin-top:8px">Changer la gearbox par une <b>gearbox fonctionnelle</b> et refaire les joints <b>à l'atelier</b>. Ne pas prendre une gearbox neuve en stock.</div></div></details><details class="ts"><summary><span class="sy" style="background:#e39a17"></span>Doses du BAR2 qui se dérèglent<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Suivre la vidéo de réglage des doses</li><li>Dérèglement récurrent → reset : débrancher le BAR2, attendre 10s, rebrancher</li></ul><p class="small" style="margin:8px 0 0"><a href="https://www.youtube.com/watch?feature=shared&v=bI7o3Im66xE" target="_blank" rel="noopener">▶ Vidéo</a></p></div></details><details class="ts"><summary><span class="sy" style="background:#e39a17"></span>Levier BAR1 de plus en plus dur<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Le levier se démonte facilement sur place : appliquer de la <b>graisse alimentaire</b> et faire jouer le mécanisme d'avant en arrière — résout le problème la plupart du temps.</li><li>Emporter <b>deux têtes de robinet</b> en prévention. Casse répétée du kit de branding → voir le commercial pour passer à un Aqtiv one.</li></ul></div></details></div><div class="ts-group" data-g="pro" hidden><details class="ts"><summary><span class="sy" style="background:#d5432f"></span>Pro2 / Pro3 — panne après mise à jour firmware<span class="arw">›</span></summary><div class="body"><ul class="small"><li><b>Unité morte pendant l'upgrade Pro2</b> (ne redémarre plus, une pulsation toutes les 3 s) : défaut matériel possible même si la procédure est bien suivie → remplacer l'unité entière, ou seulement le panneau de porte tactile.</li><li><b>Comportement anormal quelques semaines après un upgrade</b> : recharger un nouveau programme (re-flash firmware) en premier ; si possible, échanger avec un autre Pro2 pour isoler l'unité.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#d5432f"></span>⚠ Cartes électroniques Pro2 / Pro3 — risque d'incendie<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Les cartes des Pro2 / Pro3 peuvent être défectueuses et <b>prendre feu</b> (plusieurs quasi-incendies constatés avant upgrade).</li><li>Les <b>remplacer impérativement</b> pendant la maintenance (cases « Tap PRO2 Upgrade ») ; traiter les maintenances avec upgrade en <b>priorité absolue</b>.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#e39a17"></span>Pro2 / Pro3 sans gaz — alerte intempestive<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Fonctionnement voulu sans gaz mais alerte de manque de gaz.</li><li>Saisir un <b>grand chiffre au niveau du poids CO₂</b> pour ne pas déclencher l'alerte.</li></ul></div></details></div><div class="ts-group" data-g="beconnect" hidden><details class="ts"><summary><span class="sy" style="background:#e39a17"></span>EcoSmart ne se désactive pas (message d'erreur)<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Le changement est bien appliqué : rafraîchir la page et l'effet sera visible.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#54606f"></span>Connecteur interne du BE CONNECT qui se débranche<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Remplacer le connecteur (on peut récupérer le petit <b>clip plastique</b> sur un connecteur neuf). Après remplacement, il ne se débranche plus.</li></ul></div></details></div><div class="ts-group" data-g="divers" hidden><details class="ts"><summary><span class="sy" style="background:#e39a17"></span>Détection de fuite de gaz<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Appliquer de l'<b>eau savonneuse</b> sur tous les raccords gaz : des bulles révèlent la fuite.</li><li>Resserrer ou remplacer le raccord / le régulateur concerné, puis recontrôler.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f9d55"></span>Aqtiv Duo — changer la capacité / dose de bouteille<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Se règle pendant la programmation BE CONNECT : une fois le setup terminé, une nouvelle interface permet de programmer les doses.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#54606f"></span>Ancien système tiers totalement mort<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Sur un vieux système qui ne nous appartient pas : nous ne stockons pas de pièces détachées.</li><li>Faire établir rapidement un devis (commercial) pour remplacer par un de nos produits — ne pas chercher à sourcer des pièces.</li></ul></div></details></div></div>`,
     "s7.t":"Expérience client & remise","s7.sub":"Ce qu'il faut présenter à la fin de chaque installation.",
     "s7.body":`<div class="grid two"><div class="card"><h4>Général</h4><ul class="small"><li>Goûter l'eau plate & pétillante avec le client</li><li>Préciser que le pétillant sera meilleur dans 24h (la machine doit refroidir)</li><li>Faire une démonstration du système (plate filtrée + pétillante filtrée)</li></ul>
@@ -1443,7 +1478,7 @@ const I18N = {
     <div class="note small">Before leaving: <b>let the client taste the water</b> and complete the intervention report.</div></div>
     <div class="card"><h3>Cleaning & finishing</h3><p class="small muted">Every maintenance includes restoring the system's finish:</p><ul class="small"><li><b>Clean the taps</b> — remove marks and grime</li><li><b>Sand the AQTiV taps with abrasive paper</b> to remove <b>rust</b> and <b>scratches</b></li><li>For scratches & rust spots: use the <b>small green abrasive sponge</b>. Use the <b>10-min wait</b> (bleach in the system) to clean.</li><li><b>Remove all limescale traces</b> across the whole system</li></ul><div class="callout small" style="margin-bottom:10px">⚠ Abrasive paper is <b>only for AQTiV (stainless steel)</b>. On chrome taps (BAR, PRO) and plastic: gentle descaler + microfibre cloth, never abrasive.</div><div class="note small">A clean, rust- and scale-free system reassures the client and extends part life.</div></div>
     <div class="card"><h3>Filters — handling & hygiene</h3><ul class="small"><li>Always handle the filter with <b>clean hands</b>.</li><li><b>Never touch the top of the filter</b> by hand (contamination risk).</li><li>Event filters (1–2 week use): don't waste them, <b>reinstall within 24 h maximum</b>.</li><li>On removal: always fit a <b>cap/plug</b>; never exceed 24 h before reinstalling (safety & hygiene).</li><li>Beyond 24 h: that filter becomes <b>priority</b> to reinstall; never use an out-of-window filter.</li><li>Filters supplied without BE WTR branding: <b>cover them with BE WTR stickers</b> before use.</li></ul></div>`,
-    "s6.t":"Troubleshooting","s6.sub":"Common symptoms and what to check — click to expand. Video tutorials in the library.",
+    "s6.more":"Other checks & product-specific troubleshooting","s6.t":"Troubleshooting","s6.sub":"Start from the symptom: one click shows only the tutorials that apply, and they open right on the page.",
     "s6.body":`<div class="ts-general"><details class="ts"><summary><span class="sy" style="background:#1f6feb"></span>Low still-water flow<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Saturated filter → change the filter</li><li>Saturated pre-filter → clean the pre-filter</li><li>Low pressure at the water inlet</li><li>If the water supply is also connected to a dishwasher: check whether the flow drops <b>only</b> when the dishwasher runs.</li></ul><p class="small" style="margin:8px 0 0"><a href="https://www.youtube.com/watch?feature=shared&v=CP0XPwvBcp8" target="_blank" rel="noopener">▶ Video</a></p></div></details><details class="ts"><summary><span class="sy" style="background:#d5432f"></span>No still water<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Leak detected / water inlet closed</li><li>Pre-filter or filter saturated (did flow drop gradually?)</li><li>BOX frozen → switch off 12h & lower thermostat</li><li>Pressure reducer mounted upside down</li><li>Kinked or crushed tube.</li></ul><p class="small" style="margin:8px 0 0"><a href="https://www.youtube.com/watch?v=1cuKtIg8uas" target="_blank" rel="noopener">▶ Video</a></p></div></details><details class="ts"><summary><span class="sy" style="background:#e39a17"></span>Weak sparkling intensity<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Make sure the water is cold</li><li>Check gas is set correctly (≈3.5–4 Bar)</li><li>Check sparkling flow is not too high</li><li><b>Reset the settings:</b> turn off the BOX, dispense sparkling water until <b>only gas</b> comes out, then turn the BOX back on.</li></ul><p class="small" style="margin:8px 0 0"><a href="https://www.youtube.com/watch?v=iYfDT50DT58" target="_blank" rel="noopener">▶ Video</a></p></div></details><details class="ts"><summary><span class="sy" style="background:#d5432f"></span>No sparkling water<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Check in the webapp that the CO₂ cylinder is not empty.</li><li><b>If only gas comes out</b> sparkling: reset the BOX (switch off, wait 10s, switch back on).</li><li><b>If still water comes out</b>: check the gas is between <b>3.5 and 4 Bar</b>; otherwise <b>change the bottle</b>.</li></ul><p class="small" style="margin:8px 0 0"><a href="https://www.youtube.com/watch?feature=shared&v=aeVKaI1Zlwk" target="_blank" rel="noopener">▶ Video</a></p></div></details><details class="ts"><summary><span class="sy" style="background:#54606f"></span>Changing system / BOX / gas bottle<span class="arw">›</span></summary><div class="body"><ul class="small"><li>When swapping the system or BOX, <b>purge the BOX thoroughly</b> (still + sparkling): dispense until <b>only gas</b> comes out.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f9d55"></span>Waste-water canister alarm sounding continuously<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Canister isn't wet but the alarm sounds: the <b>battery is dead</b> — replace it.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f9d55"></span>Gas bottle change<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Follow the CO₂ bottle replacement steps.</li></ul><p class="small" style="margin:8px 0 0"><a href="https://www.youtube.com/watch?v=svVxQkMFZcM" target="_blank" rel="noopener">▶ Video</a></p></div></details></div><p class="ts-sub">Product-specific troubleshooting</p><div class="ts-tabs"><button class="ts-tab" data-g="box">BOX</button><button class="ts-tab" data-g="tap">Taps & gearbox</button><button class="ts-tab" data-g="pro">Pro2 / Pro3</button><button class="ts-tab" data-g="beconnect">BE CONNECT</button><button class="ts-tab" data-g="divers">Other</button></div><div class="ts-groups"><div class="ts-group" data-g="box" hidden><details class="ts"><summary><span class="sy" style="background:#e39a17"></span>Machine faults and gets worse every day<span class="arw">›</span></summary><div class="body"><ul class="small"><li><b>Key clue:</b> progressive day-by-day degradation = most likely the <b>filter</b> (a pump doesn't degrade gradually, a clogging filter does).</li><li>Replace / check the filter.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f6feb"></span>Ice bank overflow<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Set the ice bank to <b>minimum</b>.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f6feb"></span>BOX not cooling<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Switch the BOX off, wait 10 min, plug back in</li><li>If it still fails → replace the BOX</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f6feb"></span>Box 30 B&O cools continuously / frosts up<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Open the box front panel and <b>press the reset button</b>: the box restarts and works again.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f6feb"></span>Box Italbedis 80 / 120 frozen<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Cause: thermostat sensor mispositioned.</li><li>Reposition the sensor correctly and <b>fix it with tape</b>.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f6feb"></span>Box 30 pump — condensation issue<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Internal condensation affecting the probe / pump.</li><li>Apply the <b>insulating varnish</b> inside per procedure <b>PR-0067</b> (carbonation level probe).</li><li>Then apply the "PROBE PROTECTION OK" label (50×30) to trace the work.</li></ul></div></details></div><div class="ts-group" data-g="tap" hidden><details class="ts"><summary><span class="sy" style="background:#1f6feb"></span>Still & sparkling no longer dispense together (Bar2 / Aqtiv Duo)<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Normal: the still-water flow drops during carbonation — explain this to the customer first.</li><li>Real cause: a filter starting to clog greatly amplifies the effect.</li><li>Check whether maintenance is overdue, replace / service the filter and bring maintenance up to date.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#d5432f"></span>Gearbox leak<span class="arw">›</span></summary><div class="body"><ul class="small"><li>General replacement → video 1</li><li>Leak under the cap → video 2</li><li>Leak downwards → video 3</li><li>Blocked piston → video 4</li></ul><a class="small" href="#tutorials">→ Gearbox video tutorials</a><div class="note small" style="margin-top:8px">Swap the gearbox for a <b>working gearbox</b> and redo the seals <b>at the workshop</b>. Do not take a new gearbox from stock.</div></div></details><details class="ts"><summary><span class="sy" style="background:#e39a17"></span>BAR2 doses drifting<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Follow the dose-setting video</li><li>Recurring drift → reset: unplug BAR2, wait 10s, plug back in</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#e39a17"></span>BAR1 lever getting stiffer<span class="arw">›</span></summary><div class="body"><ul class="small"><li>The lever comes apart easily on site: apply <b>food-grade grease</b> and work the mechanism back and forth — fixes it most of the time.</li><li>Carry <b>two tap heads</b> as backup. Repeated branding-kit breakage → ask sales to switch to an Aqtiv one.</li></ul></div></details></div><div class="ts-group" data-g="pro" hidden><details class="ts"><summary><span class="sy" style="background:#d5432f"></span>Pro2 / Pro3 — failure after firmware upgrade<span class="arw">›</span></summary><div class="body"><ul class="small"><li><b>Unit dies during a Pro2 upgrade</b> (won't power back on, one pulse every 3 s): a hardware fault can happen even when the procedure is done correctly → replace the whole unit, or just the touch-sensitive door panel.</li><li><b>Misbehaving a few weeks after an upgrade</b>: re-flash a new program (firmware) first; if possible, swap in another Pro2 to isolate the unit.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#d5432f"></span>⚠ Pro2 / Pro3 electronic cards — fire risk<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Pro2 / Pro3 cards can be faulty and <b>catch fire</b> (several near-fires seen before upgrade).</li><li><b>Replace them during maintenance</b> ("Tap PRO2 Upgrade" cases); treat upgrade maintenances as <b>top priority</b>.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#e39a17"></span>Pro2 / Pro3 gas-free — spurious alert<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Intended gas-free operation but a low-gas alert fires.</li><li>Enter a <b>large number for the CO₂ weight</b> so the alert doesn't trigger.</li></ul></div></details></div><div class="ts-group" data-g="beconnect" hidden><details class="ts"><summary><span class="sy" style="background:#e39a17"></span>EcoSmart won't deactivate (error message)<span class="arw">›</span></summary><div class="body"><ul class="small"><li>The change IS applied: refresh the page and you'll see it took effect.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#54606f"></span>BE CONNECT internal connector unplugging<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Replace the connector (you can reuse the small <b>plastic clip</b> from a new one). After replacement it no longer unplugs.</li></ul></div></details></div><div class="ts-group" data-g="divers" hidden><details class="ts"><summary><span class="sy" style="background:#e39a17"></span>Gas leak detection<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Apply <b>soapy water</b> to all gas fittings: bubbles reveal the leak.</li><li>Tighten or replace the affected fitting / regulator, then re-check.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f9d55"></span>Aqtiv Duo — change bottle capacity / dose<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Done during BE CONNECT programming: once setup is complete, a new interface lets you program the doses.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#54606f"></span>Old third-party system completely dead<span class="arw">›</span></summary><div class="body"><ul class="small"><li>On an old system that isn't ours: we do not stock spare parts.</li><li>Have a sales rep quickly prepare a quote to replace it with one of our products — do not try to source parts.</li></ul></div></details></div></div>`,
     "s7.t":"Customer experience & handover","s7.sub":"What to present at the end of every installation.",
     "s7.body":`<div class="grid two"><div class="card"><h4>General</h4><ul class="small"><li>Taste still & sparkling water with the client</li><li>Tell them sparkling improves after 24h (machine needs to cool)</li><li>Demonstrate the system (filtered still + filtered sparkling)</li></ul>
@@ -1571,7 +1606,7 @@ const I18N = {
     <div class="note small">Vor dem Gehen: <b>Kunden das Wasser probieren lassen</b> und den Einsatzbericht ausfüllen.</div></div>
     <div class="card"><h3>Reinigung & Finish</h3><p class="small muted">Jede Wartung umfasst die optische Instandsetzung des Systems:</p><ul class="small"><li><b>Zapfhähne reinigen</b> — Spuren und Schmutz entfernen</li><li><b>AQTiV-Zapfhähne mit Schleifpapier abschleifen</b>, um <b>Rost</b> und <b>Kratzer</b> zu entfernen</li><li>Bei Kratzern & Rostflecken: den <b>kleinen grünen Scheuerschwamm</b> verwenden. Die <b>10-Min-Wartezeit</b> (Chlor im System) zum Reinigen nutzen.</li><li><b>Alle Kalkspuren</b> am gesamten System entfernen</li></ul><div class="callout small" style="margin-bottom:10px">⚠ Schleifpapier nur <b>für AQTiV (Edelstahl)</b> verwenden. Bei verchromten Zapfhähnen (BAR, PRO) und Kunststoff: milder Entkalker + Mikrofasertuch, nie Schleifmittel.</div><div class="note small">Ein sauberes, rost- und kalkfreies System beruhigt den Kunden und verlängert die Lebensdauer der Teile.</div></div>
     <div class="card"><h3>Filter — Handhabung & Hygiene</h3><ul class="small"><li>Den Filter immer mit <b>sauberen Händen</b> handhaben.</li><li>Die <b>Oberseite des Filters</b> nie mit der Hand berühren (Kontaminationsgefahr).</li><li>Event-Filter (1–2 Wochen Nutzung): nicht verschwenden, <b>innerhalb von max. 24 h wieder einbauen</b>.</li><li>Beim Ausbau: immer eine <b>Kappe/Stopfen</b> anbringen; nie länger als 24 h bis zum Wiedereinbau (Sicherheit & Hygiene).</li><li>Nach 24 h: dieser Filter hat <b>Priorität</b> beim Wiedereinbau; nie einen überfälligen Filter verwenden.</li><li>Filter ohne BE WTR-Kennzeichnung: vor Gebrauch <b>mit BE WTR-Stickern überkleben</b>.</li></ul></div>`,
-    "s6.t":"Fehlerbehebung","s6.sub":"Häufige Symptome und was zu prüfen ist — zum Aufklappen klicken. Video-Tutorials in der Bibliothek.",
+    "s6.more":"Weitere Prüfpunkte & produktspezifische Fehlerbehebung","s6.t":"Fehlerbehebung","s6.sub":"Vom Symptom ausgehen: Ein Klick zeigt nur die passenden Tutorials, und sie öffnen sich direkt auf der Seite.",
     "s6.body":`<div class="ts-general"><details class="ts"><summary><span class="sy" style="background:#1f6feb"></span>Geringer Stillwasser-Durchfluss<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Filter gesättigt → Filter wechseln</li><li>Vorfilter gesättigt → Vorfilter reinigen</li><li>Geringer Druck am Wasserzulauf</li><li>Wenn der Wasserzulauf auch mit einer Spülmaschine verbunden ist: prüfen, ob der Durchfluss <b>nur</b> sinkt, wenn die Spülmaschine läuft.</li></ul><p class="small" style="margin:8px 0 0"><a href="https://youtu.be/ux3DHprubNM?feature=shared" target="_blank" rel="noopener">▶ Video</a></p></div></details><details class="ts"><summary><span class="sy" style="background:#d5432f"></span>Kein Stillwasser<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Leck erkannt / Wasserzulauf geschlossen</li><li>Vorfilter oder Filter gesättigt (Durchfluss allmählich gesunken?)</li><li>BOX vereist → 12h ausschalten & Thermostat senken</li><li>Druckminderer verkehrt herum montiert</li><li>Geknickter oder gequetschter Schlauch.</li></ul><p class="small" style="margin:8px 0 0"><a href="https://youtu.be/2_5D25bHIgw?feature=shared" target="_blank" rel="noopener">▶ Video</a></p></div></details><details class="ts"><summary><span class="sy" style="background:#e39a17"></span>Schwache Sprudelintensität<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Sicherstellen, dass das Wasser kalt ist</li><li>Gaseinstellung prüfen (≈ 3,5–4 Bar)</li><li>Prüfen, dass der Sprudel-Durchfluss nicht zu hoch ist</li><li><b>Einstellungen zurücksetzen:</b> BOX ausschalten, Sprudelwasser ziehen, bis <b>nur noch Gas</b> austritt, dann BOX wieder einschalten.</li></ul><p class="small" style="margin:8px 0 0"><a href="https://youtu.be/9DsurwBAKoA?feature=shared" target="_blank" rel="noopener">▶ Video</a></p></div></details><details class="ts"><summary><span class="sy" style="background:#d5432f"></span>Kein Sprudelwasser<span class="arw">›</span></summary><div class="body"><ul class="small"><li>In der Webapp prüfen, dass die CO₂-Flasche nicht leer ist.</li><li><b>Wenn nur Gas austritt</b> beim Sprudel: BOX zurücksetzen (ausschalten, 10s warten, wieder einschalten).</li><li><b>Wenn Stillwasser austritt</b>: prüfen, dass das Gas zwischen <b>3,5 und 4 Bar</b> liegt; sonst <b>Flasche wechseln</b>.</li></ul><p class="small" style="margin:8px 0 0"><a href="https://youtu.be/kLT35ySjjcE?feature=shared" target="_blank" rel="noopener">▶ Video</a></p></div></details><details class="ts"><summary><span class="sy" style="background:#54606f"></span>Wechsel von System / BOX / Gasflasche<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Beim Tausch von System oder BOX die <b>BOX gründlich spülen</b> (still + Sprudel): ziehen, bis <b>nur noch Gas</b> austritt.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f9d55"></span>Abwasserkanister-Alarm dauerhaft<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Kanister ist nicht nass, aber der Alarm ertönt: die <b>Batterie ist leer</b> — ersetzen.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f9d55"></span>Gasflasche wechseln<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Den Schritten zum CO₂-Flaschenwechsel folgen.</li></ul><p class="small" style="margin:8px 0 0"><a href="https://youtu.be/J8vuQ9ejjSg?feature=shared" target="_blank" rel="noopener">▶ Video</a></p></div></details></div><p class="ts-sub">Produktspezifische Fehlerbehebung</p><div class="ts-tabs"><button class="ts-tab" data-g="box">BOX</button><button class="ts-tab" data-g="tap">Zapfhähne & Gearbox</button><button class="ts-tab" data-g="pro">Pro2 / Pro3</button><button class="ts-tab" data-g="beconnect">BE CONNECT</button><button class="ts-tab" data-g="divers">Sonstiges</button></div><div class="ts-groups"><div class="ts-group" data-g="box" hidden><details class="ts"><summary><span class="sy" style="background:#e39a17"></span>Maschine fällt aus und wird täglich schlechter<span class="arw">›</span></summary><div class="body"><ul class="small"><li><b>Schlüsselindiz:</b> tägliche fortschreitende Verschlechterung = höchstwahrscheinlich der <b>Filter</b> (eine Pumpe verschlechtert sich nicht allmählich, ein verstopfender Filter schon).</li><li>Filter ersetzen / prüfen.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f6feb"></span>Eisbank-Überlauf<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Eisbank auf <b>Minimum</b> stellen.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f6feb"></span>BOX kühlt nicht<span class="arw">›</span></summary><div class="body"><ul class="small"><li>BOX ausschalten, 10 Min warten, wieder einstecken</li><li>Wenn es weiterhin nicht funktioniert → BOX austauschen</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f6feb"></span>Box 30 B&O kühlt dauerhaft / vereist<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Frontblende der Box öffnen und <b>Reset-Taste drücken</b>: Die Box startet neu und funktioniert wieder.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f6feb"></span>Box Italbedis 80 / 120 vereist<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Ursache: Thermostatfühler falsch positioniert.</li><li>Fühler korrekt positionieren und <b>mit Klebeband fixieren</b>.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f6feb"></span>Box 30 Pumpe — Kondensationsproblem<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Interne Kondensation beeinträchtigt Sonde / Pumpe.</li><li><b>Isolierlack</b> innen gemäß Verfahren <b>PR-0067</b> auftragen (Karbonisierungs-Niveausonde).</li><li>Anschließend das Etikett „PROBE PROTECTION OK" (50×30) anbringen, um die Arbeit zu dokumentieren.</li></ul></div></details></div><div class="ts-group" data-g="tap" hidden><details class="ts"><summary><span class="sy" style="background:#1f6feb"></span>Still & Sprudel kommen nicht mehr gleichzeitig (Bar2 / Aqtiv Duo)<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Normal: Der Stillwasser-Durchfluss sinkt während der Karbonisierung — dem Kunden zuerst erklären.</li><li>Echte Ursache: Ein beginnend verstopfter Filter verstärkt den Effekt stark.</li><li>Prüfen, ob die Wartung überfällig ist, Filter tauschen / warten und die Wartung aktualisieren.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#d5432f"></span>Gearbox-Leck<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Allgemeiner Austausch → Video 1</li><li>Leck unter der Kappe → Video 2</li><li>Leck nach unten → Video 3</li><li>Blockierter Kolben → Video 4</li></ul><a class="small" href="#tutorials">→ Gearbox-Video-Tutorials</a><div class="note small" style="margin-top:8px">Die Gearbox durch eine <b>funktionierende Gearbox</b> ersetzen und die Dichtungen <b>in der Werkstatt</b> erneuern. Keine neue Gearbox aus dem Lager nehmen.</div></div></details><details class="ts"><summary><span class="sy" style="background:#e39a17"></span>BAR2-Dosen verstellen sich<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Dem Dosis-Einstellvideo folgen</li><li>Wiederkehrende Abweichung → Reset: BAR2 ausstecken, 10s warten, wieder einstecken</li></ul><p class="small" style="margin:8px 0 0"><a href="https://youtu.be/ZYBbgWznqHI?feature=shared" target="_blank" rel="noopener">▶ Video</a></p></div></details><details class="ts"><summary><span class="sy" style="background:#e39a17"></span>BAR1-Hebel wird immer schwergängiger<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Der Hebel lässt sich vor Ort leicht zerlegen: <b>lebensmittelechtes Fett</b> auftragen und den Mechanismus vor und zurück bewegen — löst das Problem meist.</li><li><b>Zwei Zapfhahn-Köpfe</b> als Ersatz mitnehmen. Wiederholter Bruch des Branding-Kits → mit Vertrieb auf Aqtiv one wechseln.</li></ul></div></details></div><div class="ts-group" data-g="pro" hidden><details class="ts"><summary><span class="sy" style="background:#d5432f"></span>Pro2 / Pro3 — Ausfall nach Firmware-Update<span class="arw">›</span></summary><div class="body"><ul class="small"><li><b>Gerät stirbt während des Pro2-Updates</b> (startet nicht mehr, ein Impuls alle 3 s): Ein Hardwarefehler kann auch bei korrekt durchgeführtem Vorgang auftreten → gesamte Einheit tauschen oder nur das berührungsempfindliche Türpaneel.</li><li><b>Fehlverhalten einige Wochen nach einem Update</b>: zuerst ein neues Programm aufspielen (Firmware neu flashen); wenn möglich, ein anderes Pro2 einsetzen, um die Einheit einzugrenzen.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#d5432f"></span>⚠ Pro2 / Pro3 Elektronikkarten — Brandgefahr<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Pro2 / Pro3-Karten können defekt sein und <b>Feuer fangen</b> (mehrere Beinahe-Brände vor Upgrade festgestellt).</li><li><b>Während der Wartung ersetzen</b> („Tap PRO2 Upgrade"-Fälle); Upgrade-Wartungen mit <b>höchster Priorität</b> behandeln.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#e39a17"></span>Pro2 / Pro3 ohne Gas — Fehlalarm<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Betrieb bewusst ohne Gas, aber ein Gasmangel-Alarm wird ausgelöst.</li><li>Eine <b>große Zahl beim CO₂-Gewicht</b> eingeben, damit der Alarm nicht auslöst.</li></ul></div></details></div><div class="ts-group" data-g="beconnect" hidden><details class="ts"><summary><span class="sy" style="background:#e39a17"></span>EcoSmart lässt sich nicht deaktivieren (Fehlermeldung)<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Die Änderung IST übernommen: Seite aktualisieren, dann ist sie sichtbar.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#54606f"></span>BE CONNECT interner Stecker löst sich<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Stecker ersetzen (den kleinen <b>Kunststoff-Clip</b> von einem neuen kann man wiederverwenden). Danach löst er sich nicht mehr.</li></ul></div></details></div><div class="ts-group" data-g="divers" hidden><details class="ts"><summary><span class="sy" style="background:#e39a17"></span>Gasleck-Erkennung<span class="arw">›</span></summary><div class="body"><ul class="small"><li><b>Seifenwasser</b> auf alle Gasverbindungen auftragen: Blasen zeigen das Leck.</li><li>Betroffene Verbindung / Regler nachziehen oder ersetzen, dann erneut prüfen.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#1f9d55"></span>Aqtiv Duo — Flaschenkapazität / Dosis ändern<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Wird während der BE CONNECT-Programmierung eingestellt: Nach abgeschlossenem Setup erscheint eine neue Oberfläche zum Programmieren der Dosen.</li></ul></div></details><details class="ts"><summary><span class="sy" style="background:#54606f"></span>Altes Fremdsystem komplett tot<span class="arw">›</span></summary><div class="body"><ul class="small"><li>Bei einem alten System, das nicht uns gehört: Wir halten keine Ersatzteile vor.</li><li>Vom Vertrieb schnell ein Angebot erstellen lassen, um es durch eines unserer Produkte zu ersetzen — nicht versuchen, Teile zu beschaffen.</li></ul></div></details></div></div>`,
     "s7.t":"Kundenerlebnis & Übergabe","s7.sub":"Was am Ende jeder Installation vorzustellen ist.",
     "s7.body":`<div class="grid two"><div class="card"><h4>Allgemein</h4><ul class="small"><li>Still- & Sprudelwasser mit dem Kunden probieren</li><li>Hinweisen, dass Sprudel nach 24h besser wird (Maschine muss kühlen)</li><li>System vorführen (gefiltert still + gefiltert Sprudel)</li></ul>
@@ -1794,8 +1829,8 @@ const GUIDE_PLACEMENT = {
      d'installation de la bibliothèque — voir INSTALL_FICHE. */
   "g-settings":     ["memo-reglages", "mesures"],
   "g-maintenance":  ["maintenance", "memo-maintenance"],
-  "g-troubleshoot": ["pannes", "no-water", "no-still", "no-sparkling", "low-flow",
-                     "taste-temp", "noise", "leak", "restart", "system-hot", "reglage", "videos"],
+  /* Le dépannage ne s'empile pas : on clique un symptôme, on n'a que ses
+     fiches — voir renderTrouble. */
   "g-experience":   ["memo-client"],
   "g-tutorials":    ["astuces", "programmation", "evenementiel"],
   "g-refs":         ["references"]
@@ -1822,6 +1857,12 @@ const ITUT_LABELS = {
   "itut.actorTech":{fr:"Technicien", en:"Technician", de:"Techniker"},
   "itut.empty":   {fr:"Rien d'enregistré pour l'instant.", en:"Nothing recorded yet.", de:"Noch nichts erfasst."},
   "itut.fiches":  {fr:"fiches", en:"entries", de:"Einträge"},
+  "itut.fiche":   {fr:"fiche", en:"entry", de:"Eintrag"},
+  "itut.videos":  {fr:"vidéos", en:"videos", de:"Videos"},
+  "itut.video1":  {fr:"vidéo", en:"video", de:"Video"},
+  "gf.close":     {fr:"Fermer", en:"Close", de:"Schließen"},
+  "ts.pick":      {fr:"Quel est le problème\u00a0?", en:"What is the problem?", de:"Was ist das Problem?"},
+  "ts.pick.sub":  {fr:"Cliquez sur le symptôme : vous n'aurez que les tutos qui le concernent.", en:"Click the symptom: you only get the tutorials that apply to it.", de:"Auf das Symptom klicken: Sie sehen nur die passenden Tutorials."},
   "itut.refs":    {fr:"références", en:"references", de:"Referenzen"},
   "itut.measures":{fr:"Cotes", en:"Dimensions", de:"Maße"},
   "itut.pdf":     {fr:"Guide PDF (SharePoint)", en:"PDF guide (SharePoint)", de:"PDF-Anleitung (SharePoint)"},
@@ -2004,6 +2045,72 @@ function guideTreeHtml(c){
   }).join("");
 }
 
+/* ---- Dépannage : du symptôme aux tutos ----
+   Le portail donne un arbre : dix symptômes en langage de client, chacun
+   rattaché à une catégorie de fiches. On les montre en tuiles ; un clic
+   n'affiche que les fiches du symptôme choisi, et une fiche se déplie sur
+   place. Rien ne s'empile : un non-initié lit dix intitulés, pas cent. */
+var TROUBLE_CATS = ["no-water", "no-still", "no-sparkling", "low-flow", "taste-temp",
+                    "noise", "leak", "restart", "system-hot", "reglage", "videos"];
+var troubleOpen = null;
+
+function troubleCount(c){
+  if(!c) return 0;
+  if(c.type === "videos") return (c.videos||[]).length;
+  return guideFiches(c).length;
+}
+function renderTrouble(){
+  var root = document.getElementById("g-troubleshoot"); if(!root) return;
+  var d = I18N[lang], hub = guideCat("pannes");
+  var html = '<div class="gcat"><h3><span class="gi">⚠</span>' + d["ts.pick"] + '</h3>'
+           + '<p class="sec-sub">' + d["ts.pick.sub"] + '</p>';
+  (hub ? (hub.tree||[]) : []).forEach(function(g){
+    html += '<h4 class="gcat-g">' + itutEsc(itutTr(g.h)) + '</h4><div class="sym-grid">'
+      + (g.items||[]).map(function(it){ return symTile(it.cat, itutTr(it.label)); }).join("")
+      + '</div>';
+  });
+  /* Les vidéos à envoyer au client sont un symptôme comme un autre : elles
+     méritent leur tuile plutôt qu'une liste de plus en bas de page. */
+  var vid = guideCat("videos");
+  if(vid) html += '<h4 class="gcat-g">' + itutEsc(itutTr(vid.t)) + '</h4><div class="sym-grid">'
+                + symTile("videos", itutTr(vid.sub) || itutTr(vid.t)) + '</div>';
+  html += '<div id="troubleBody"></div></div>';
+  root.className = "itut-wrap";
+  root.innerHTML = html;
+  root.querySelectorAll('.sym').forEach(function(b){
+    b.addEventListener('click', function(){ openTrouble(b.dataset.sym === troubleOpen ? null : b.dataset.sym); });
+  });
+  renderTroubleBody();
+}
+function symTile(cat, label){
+  var c = guideCat(cat), n = troubleCount(c), d = I18N[lang];
+  return '<button type="button" class="sym' + (cat === troubleOpen ? ' on' : '') + '" data-sym="' + cat + '">'
+       + '<span class="sy-ic">' + (cat === "videos" ? "▶" : "⚠") + '</span>'
+       + '<span><span class="sy-t">' + itutEsc(label) + '</span>'
+       + '<span class="sy-n">' + (n ? n + ' ' + d[(c && c.type === "videos")
+              ? (n > 1 ? "itut.videos" : "itut.video1")
+              : (n > 1 ? "itut.fiches" : "itut.fiche")] : d["itut.empty"]) + '</span></span></button>';
+}
+function openTrouble(cat){
+  if(cat && cat === troubleOpen) return;
+  troubleOpen = cat || null;
+  closeFichePanel();
+  document.querySelectorAll('#g-troubleshoot .sym').forEach(function(b){
+    b.classList.toggle('on', b.dataset.sym === troubleOpen);
+  });
+  renderTroubleBody();
+}
+function renderTroubleBody(){
+  var box = document.getElementById("troubleBody"); if(!box) return;
+  var c = troubleOpen ? guideCat(troubleOpen) : null;
+  if(!c){ box.innerHTML = ""; return; }
+  var d = I18N[lang];
+  box.innerHTML = '<div class="gcat" id="gcat-' + c.id + '">'
+    + '<h3><span class="gi">▤</span>' + itutEsc(itutTr(c.t)) + '</h3>'
+    + (c.sub ? '<p class="sec-sub">' + itutEsc(itutTr(c.sub)) + '</p>' : '')
+    + (c.type === "videos" ? guideVideosHtml(c) : guideCardsHtml(c)) + '</div>';
+}
+
 function renderGuideBlocks(){
   var d = I18N[lang];
   Object.keys(GUIDE_PLACEMENT).forEach(function(rootId){
@@ -2053,7 +2160,7 @@ function guideMeasureHtml(b){
     + '</div></div>';
 }
 
-function openGuideFiche(catId, gi, pi){
+function openGuideFiche(catId, gi, pi, card){
   var c = guideCat(catId); if(!c) return;
   var g = (c.groups||[])[gi]; if(!g) return;
   var p = (g.items||[])[pi]; if(!p) return;
@@ -2120,13 +2227,65 @@ function openGuideFiche(catId, gi, pi){
        + '</div></div>';
   }
   h += '<p class="itut-src">' + d["itut.src"] + '</p></div>';
-  var lb = ensureImgbox();
-  lb.querySelector('.img-title').textContent = itutTr(p.t);
-  var nt = lb.querySelector('.img-note');
-  if(nt){ nt.textContent = itutTr(c.t); nt.style.display = ''; }
-  var sc = lb.querySelector('.img-scroll');
-  sc.innerHTML = h; sc.scrollTop = 0;
-  lockScroll(); lb.style.display = 'flex';
+  openFichePanel(catId + "|" + gi + "|" + pi, itutTr(p.t), itutTr(c.t), h, card);
+}
+
+/* Le panneau se glisse dans la grille de la carte, après la dernière carte de
+   sa rangée : la fiche s'ouvre sous ce qu'on vient de cliquer, sans rien
+   recouvrir. Recliquer la même carte le referme. */
+function closeFichePanel(){
+  var open = document.querySelector('.gf-panel');
+  if(open) open.parentNode.removeChild(open);
+  document.querySelectorAll('[data-gf].on').forEach(function(x){ x.classList.remove('on'); });
+}
+function openFichePanel(key, title, cat, html, card){
+  var wasOpen = card && card.classList.contains('on');
+  closeFichePanel();
+  if(wasOpen) return;
+  var panel = document.createElement('div');
+  panel.className = 'gf-panel';
+  panel.dataset.for = key;
+  panel.innerHTML = '<div class="gf-head"><b>' + itutEsc(title) + '</b>'
+    + (cat ? '<span class="gf-cat">' + itutEsc(cat) + '</span>' : '')
+    + '<button type="button" class="gf-close" aria-label="' + itutEsc(I18N[lang]["gf.close"]) + '">✕</button></div>' + html;
+  panel.querySelector('.gf-close').addEventListener('click', closeFichePanel);
+  if(card){
+    card.classList.add('on');
+    /* la dernière carte de la rangée : dans une liste c'est la carte elle-même */
+    var last = card, sib = card;
+    while((sib = sib.nextElementSibling)){
+      if(!sib.hasAttribute('data-gf') || sib.offsetTop !== card.offsetTop) break;
+      last = sib;
+    }
+    last.parentNode.insertBefore(panel, last.nextSibling);
+  }else{
+    /* venue de la recherche : pas de carte sous la main, la fiche se pose en
+       tête de la section */
+    var host = document.querySelector('.wrap>section.tab-on') || document.body;
+    host.insertBefore(panel, host.firstChild ? host.firstChild.nextSibling : null);
+  }
+  panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+/* Depuis la recherche : ouvrir la bonne section, déplier le bon symptôme, et
+   n'ouvrir la fiche qu'ensuite — sinon sa carte n'existe pas encore. */
+function ficheSection(catId){
+  if(catId === "installation") return "tutorials";
+  if(TROUBLE_CATS.indexOf(catId) >= 0) return "troubleshoot";
+  var sec = null;
+  Object.keys(GUIDE_PLACEMENT).forEach(function(rootId){
+    if(GUIDE_PLACEMENT[rootId].indexOf(catId) < 0) return;
+    var el = document.getElementById(rootId), s = el && el.closest('section');
+    if(s) sec = s.id;
+  });
+  return sec;
+}
+function gotoFiche(catId, gi, pi){
+  var sec = ficheSection(catId);
+  if(sec) showTab('#' + sec);
+  if(TROUBLE_CATS.indexOf(catId) >= 0) openTrouble(catId);
+  var card = document.querySelector('[data-gf="' + catId + '|' + gi + '|' + pi + '"]');
+  openGuideFiche(catId, gi, pi, card);
 }
 
 /* Une photo s'agrandit par-dessus la fiche, sans la fermer. */
@@ -2143,20 +2302,21 @@ function itutZoom(src){
 document.addEventListener('click', function(e){
   if(!e.target.closest) return;
   var go = e.target.closest('[data-gf]');
-  if(go){ var k = go.dataset.gf.split('|'); openGuideFiche(k[0], +k[1], +k[2]); return; }
+  if(go){ var k = go.dataset.gf.split('|'); openGuideFiche(k[0], +k[1], +k[2], go); return; }
   var sym = e.target.closest('.gsym');
   if(sym){
     var el = document.getElementById('gcat-' + sym.dataset.gcat);
     if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
     return;
   }
-  var im = e.target.closest('#imgbox .itut-ph img, #imgbox .itut-dg img, #imgbox .itut-mat img, #imgbox .mz-stage img');
+  var im = e.target.closest('.itut .itut-ph img, .itut .itut-dg img, .itut .itut-mat img, .itut .mz-stage img');
   if(im) itutZoom(im.getAttribute('src'));
 });
 document.addEventListener('keydown', function(e){
   if(e.key !== 'Escape') return;
   var z = document.getElementById('itzoom');
-  if(z && z.style.display === 'flex'){ z.style.display = 'none'; }
+  if(z && z.style.display === 'flex'){ z.style.display = 'none'; return; }
+  closeFichePanel();
 });
 
 function setLang(l){
@@ -2165,6 +2325,7 @@ function setLang(l){
   applyI18n();
   renderLibrary();
   renderGuideBlocks();
+  renderTrouble();
   renderSchemas();
   renderResources();
   renderCatMenu();
@@ -2761,7 +2922,7 @@ function doSearch(){ var q=(document.getElementById('gq').value||'').trim().toLo
   if(!html) html='<p class="small muted" style="padding:12px">'+(d['search.none']||'')+'</p>';
   box.innerHTML=html;
   box.querySelectorAll('.sr-item').forEach(function(b){ b.addEventListener('click',function(){ var g=b.dataset.go; closeSearch();
-    if(g.indexOf('sec:')===0) showTab('#'+g.slice(4)); else if(g.indexOf('part:')===0) openSpare(decodeURIComponent(g.slice(5))); else if(g.indexOf('gf:')===0){ var k=g.slice(3).split('|'); openGuideFiche(k[0],+k[1],+k[2]); } else if(g==='tuto') showTab('#tutorials'); }); }); }
+    if(g.indexOf('sec:')===0) showTab('#'+g.slice(4)); else if(g.indexOf('part:')===0) openSpare(decodeURIComponent(g.slice(5))); else if(g.indexOf('gf:')===0){ var k=g.slice(3).split('|'); gotoFiche(k[0],+k[1],+k[2]); } else if(g==='tuto') showTab('#tutorials'); }); }); }
 function openSearch(){ var m=document.getElementById('searchbox'); m.style.display='flex'; var q=document.getElementById('gq'); q.value=''; q.placeholder=(I18N[lang]['search.ph']||''); doSearch(); setTimeout(function(){q.focus();},30); }
 function closeSearch(){ document.getElementById('searchbox').style.display='none'; }
 // tab router
@@ -2814,6 +2975,7 @@ window.addEventListener('hashchange',function(){
 applyI18n();
 renderLibrary();
 renderGuideBlocks();
+renderTrouble();
 renderSchemas();
 renderResources();
 renderCatMenu();
