@@ -417,6 +417,12 @@
   #imgbox .img-title{flex:1;min-width:0;font-weight:600;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   #imgbox .img-note{font-size:11.5px;color:var(--orange);background:var(--orange-soft);padding:3px 8px;border-radius:7px;white-space:nowrap;flex:none}
   @media(max-width:640px){#imgbox .img-note{display:none!important}}
+  /* Sur téléphone, la croix passe à gauche du titre : le bouton flottant des
+     réglages occupe déjà le coin haut-droit, et le titre reprend la largeur. */
+  @media(max-width:760px){
+    .gf-head .gf-cat{display:none}
+    .gf-head .gf-close{order:-1}
+  }
   #imgbox .img-close{margin-left:auto;border:none;background:var(--orange-soft);color:var(--orange);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:15px}
   #imgbox .img-scroll{flex:1;overflow:auto;background:#f6f8fa;text-align:center;padding:10px}
   #imgbox .img-scroll img{width:100%;max-width:1100px;height:auto;display:block;margin:0 auto;border-radius:4px}
@@ -942,9 +948,9 @@
       <section id="troubleshoot">
         <div class="sec-head"><span class="num">6</span><h2 data-i18n="s6.t"></h2></div>
         <p class="sec-sub" data-i18n="s6.sub"></p>
+        <div id="g-troubleshoot"></div>
         <a class="goto-tutos" href="#tutorials" data-tf="troubleshoot"><span class="gt-ic">▶</span> <span data-i18n="goto.troubleshoot"></span></a>
         <a class="goto-tutos goto-parts" href="#schemas" data-parts="1"><span class="gt-ic">▦</span> <span data-i18n="goto.parts"></span></a>
-        <div id="g-troubleshoot"></div>
         <details class="ts-more"><summary data-i18n="s6.more"></summary><div data-i18n="s6.body"></div></details>
       </section>
 
@@ -1863,6 +1869,7 @@ const ITUT_LABELS = {
   "gf.close":     {fr:"Fermer", en:"Close", de:"Schließen"},
   "ts.pick":      {fr:"Quel est le problème\u00a0?", en:"What is the problem?", de:"Was ist das Problem?"},
   "ts.pick.sub":  {fr:"Cliquez sur le symptôme : vous n'aurez que les tutos qui le concernent.", en:"Click the symptom: you only get the tutorials that apply to it.", de:"Auf das Symptom klicken: Sie sehen nur die passenden Tutorials."},
+  "ts.back":      {fr:"Tous les symptômes", en:"All symptoms", de:"Alle Symptome"},
   "itut.refs":    {fr:"références", en:"references", de:"Referenzen"},
   "itut.measures":{fr:"Cotes", en:"Dimensions", de:"Maße"},
   "itut.pdf":     {fr:"Guide PDF (SharePoint)", en:"PDF guide (SharePoint)", de:"PDF-Anleitung (SharePoint)"},
@@ -2062,7 +2069,7 @@ function troubleCount(c){
 function renderTrouble(){
   var root = document.getElementById("g-troubleshoot"); if(!root) return;
   var d = I18N[lang], hub = guideCat("pannes");
-  var html = '<div class="gcat"><h3><span class="gi">⚠</span>' + d["ts.pick"] + '</h3>'
+  var html = '<div class="gcat" id="troubleSym"><h3><span class="gi">⚠</span>' + d["ts.pick"] + '</h3>'
            + '<p class="sec-sub">' + d["ts.pick.sub"] + '</p>';
   (hub ? (hub.tree||[]) : []).forEach(function(g){
     html += '<h4 class="gcat-g">' + itutEsc(itutTr(g.h)) + '</h4><div class="sym-grid">'
@@ -2074,7 +2081,7 @@ function renderTrouble(){
   var vid = guideCat("videos");
   if(vid) html += '<h4 class="gcat-g">' + itutEsc(itutTr(vid.t)) + '</h4><div class="sym-grid">'
                 + symTile("videos", itutTr(vid.sub) || itutTr(vid.t)) + '</div>';
-  html += '<div id="troubleBody"></div></div>';
+  html += '</div><div id="troubleBody"></div>';
   root.className = "itut-wrap";
   root.innerHTML = html;
   root.querySelectorAll('.sym').forEach(function(b){
@@ -2095,20 +2102,33 @@ function openTrouble(cat){
   if(cat && cat === troubleOpen) return;
   troubleOpen = cat || null;
   closeFichePanel();
-  document.querySelectorAll('#g-troubleshoot .sym').forEach(function(b){
-    b.classList.toggle('on', b.dataset.sym === troubleOpen);
-  });
   renderTroubleBody();
+  troubleTop();
+}
+/* Une étape occupe l'écran, pas le bas de la page : choisir un symptôme
+   remplace la liste des symptômes par ses fiches, et on remonte en haut du
+   bloc. Sur un téléphone, la réponse est donc là où on regarde. */
+function troubleTop(){
+  var el = document.getElementById("g-troubleshoot"); if(!el) return;
+  var he = document.documentElement, prev = he.style.scrollBehavior;
+  he.style.scrollBehavior = 'auto';
+  var y = el.getBoundingClientRect().top + (window.pageYOffset || he.scrollTop || 0) - 12;
+  window.scrollTo(0, Math.max(0, y));
+  setTimeout(function(){ he.style.scrollBehavior = prev || ''; }, 0);
 }
 function renderTroubleBody(){
-  var box = document.getElementById("troubleBody"); if(!box) return;
+  var box = document.getElementById("troubleBody"), sym = document.getElementById("troubleSym");
+  if(!box) return;
   var c = troubleOpen ? guideCat(troubleOpen) : null;
+  if(sym) sym.hidden = !!c;
   if(!c){ box.innerHTML = ""; return; }
   var d = I18N[lang];
-  box.innerHTML = '<div class="gcat" id="gcat-' + c.id + '">'
-    + '<h3><span class="gi">▤</span>' + itutEsc(itutTr(c.t)) + '</h3>'
+  box.innerHTML = '<div class="gcat" id="gcat-' + c.id + '" style="margin-top:14px">'
+    + '<button type="button" class="schema-back ts-back">← ' + d["ts.back"] + '</button>'
+    + '<h3 style="margin-top:8px"><span class="gi">⚠</span>' + itutEsc(itutTr(c.t)) + '</h3>'
     + (c.sub ? '<p class="sec-sub">' + itutEsc(itutTr(c.sub)) + '</p>' : '')
     + (c.type === "videos" ? guideVideosHtml(c) : guideCardsHtml(c)) + '</div>';
+  box.querySelector('.ts-back').addEventListener('click', function(){ openTrouble(null); });
 }
 
 function renderGuideBlocks(){
@@ -2264,7 +2284,9 @@ function openFichePanel(key, title, cat, html, card){
     var host = document.querySelector('.wrap>section.tab-on') || document.body;
     host.insertBefore(panel, host.firstChild ? host.firstChild.nextSibling : null);
   }
-  panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+  /* Sur téléphone la fiche prend tout l'écran : on la cale en haut. Sur un
+     grand écran, on ne bouge que si elle dépasse. */
+  panel.scrollIntoView({behavior:'smooth', block: window.innerWidth < 760 ? 'start' : 'nearest'});
 }
 
 /* Depuis la recherche : ouvrir la bonne section, déplier le bon symptôme, et
