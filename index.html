@@ -97,7 +97,8 @@
   .led .d{font-size:12px;color:var(--ink-soft)}
   /* Les trois voyants qui bougent respirent en continu au lieu de s'allumer et
      s'éteindre d'un coup : l'éclat et la taille montent et redescendent en
-     douceur, au rythme réel de la LED. */
+     douceur. Le rythme reprend celui de la LED, joué deux fois plus lentement
+     pour rester lisible à l'écran. */
   @keyframes bwLedPulse{0%,100%{opacity:.2;transform:scale(.74)}50%{opacity:1;transform:scale(1)}}
   @keyframes bwLedBurst{
     0%{opacity:.2;transform:scale(.74)}      4.545%{opacity:1;transform:scale(1)}
@@ -107,12 +108,12 @@
     36.364%{opacity:.2;transform:scale(.74)} 40.909%{opacity:1;transform:scale(1)}
     45.455%,100%{opacity:.2;transform:scale(.74)}
   }
-  /* Pulsation : 1 battement par seconde — distribution en cours */
-  .dot.is-pulse,.gm-dot.is-pulse::after{animation:bwLedPulse 1s ease-in-out infinite}
+  /* Pulsation : 1 battement par seconde sur l'appareil — distribution en cours */
+  .dot.is-pulse,.gm-dot.is-pulse::after{animation:bwLedPulse 2s ease-in-out infinite}
   /* Clignotant lent : 1 battement toutes les 3 secondes — hors réseau */
-  .dot.is-slow,.gm-dot.is-slow::after{animation:bwLedPulse 3s ease-in-out infinite}
+  .dot.is-slow,.gm-dot.is-slow::after{animation:bwLedPulse 6s ease-in-out infinite}
   /* 5 clignotements : 5 battements de 0,5 s puis 3 s de pause — reset usine */
-  .dot.is-burst,.gm-dot.is-burst::after{animation:bwLedBurst 5.5s ease-in-out infinite}
+  .dot.is-burst,.gm-dot.is-burst::after{animation:bwLedBurst 11s ease-in-out infinite}
   @media (prefers-reduced-motion:reduce){
     .dot.is-pulse,.dot.is-slow,.dot.is-burst,
     .gm-dot.is-pulse::after,.gm-dot.is-slow::after,.gm-dot.is-burst::after{animation:none}
@@ -231,8 +232,8 @@
   .gm-vn{font-size:11.5px;color:var(--ink-soft);line-height:1.4}
   .gm-leds{display:grid;gap:7px}
   .gm-led{display:flex;align-items:center;gap:9px;font-size:13px}
-  .gm-dot{position:relative;width:15px;height:15px;border-radius:50%;background:#1c232b;border:1px solid rgba(0,0,0,.2);flex:none;display:grid;place-items:center;color:var(--led,#ccc)}
-  .gm-dot::after{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 5px currentColor}
+  .gm-dot{position:relative;width:14px;height:14px;border-radius:50%;background:#5b656f;border:1px solid rgba(0,0,0,.16);flex:none;display:grid;place-items:center;color:var(--led,#ccc)}
+  .gm-dot::after{content:"";width:11px;height:11px;border-radius:50%;background:currentColor;box-shadow:0 0 4px currentColor}
   .gref-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0 12px}
   .gref-all{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 15px;font:inherit;font-size:12.5px;color:var(--ink-soft);cursor:pointer;transition:.15s}
   .gref-all:hover{border-color:var(--orange);color:var(--orange)}
