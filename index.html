@@ -210,6 +210,18 @@
   .gm-leds{display:grid;gap:7px}
   .gm-led{display:flex;align-items:center;gap:9px;font-size:13px}
   .gm-dot{width:13px;height:13px;border-radius:50%;border:1px solid var(--line);flex:none}
+  .gref-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0 12px}
+  .gref-all{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 15px;font:inherit;font-size:12.5px;color:var(--ink-soft);cursor:pointer;transition:.15s}
+  .gref-all:hover{border-color:var(--orange);color:var(--orange)}
+  .gref-grp{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:8px}
+  .gref-grp>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:10px;padding:13px 16px;font-size:13.5px;font-weight:700}
+  .gref-grp>summary::-webkit-details-marker{display:none}
+  .gref-grp>summary::before{content:"›";color:var(--orange);font-size:17px;line-height:1;transition:.15s}
+  .gref-grp[open]>summary::before{transform:rotate(90deg)}
+  .gref-grp>summary:hover{color:var(--orange)}
+  .gref-cnt{margin-left:auto;font-weight:400;font-size:11.5px;color:var(--ink-soft)}
+  .gref-grp .gref-grid{padding:0 14px 14px}
+  .gref-empty{padding:18px 4px}
   .gref-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
   .gref{display:flex;gap:11px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px 11px}
   .gref img{width:52px;height:52px;object-fit:contain;background:var(--bg);border-radius:8px;flex:none}
@@ -1284,7 +1296,6 @@ const tutorials = [
   {cat:"install", g:{fr:"Kits",en:"Kits",de:"Kits"}, t:{fr:"Be Connect (schéma, pannes & infos)",en:"Be Connect (schema, faults & info)",de:"Be Connect (Schema, Störungen & Infos)"}, type:"pdf", url:{fr:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQBqgqc4Gw26TJtn9G9ypuTHAX7RyzE8C5Yb2VZHHDggIdA?e=SeI1GH",en:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQB6olLsckpUSYMEbG6DfXArAUSkwEV3wvEZVCtxRx1aIaY?e=379lv0",de:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQBzmZeP03SIRqhuSV-Rm0OXAZPSc7l63nStrVewYW3WMmg?e=cKeSla"}},
   {cat:"install", g:{fr:"Kits",en:"Kits",de:"Kits"}, t:{fr:"BOX 80 — Kit de ventilation",en:"BOX 80 — Ventilation kit",de:"BOX 80 — Belüftungskit"}, type:"pdf", url:{fr:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQBOo8a_UoI8R5sImeuqGab1AYrJgVT8LknH-MnrIXoCa1c?e=cXfB70",en:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQDV0E3-CfifSIu6LnNruqLhAeJIqkgX1-gucFaTDhyyZHY?e=VVceif",de:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQCH18JNAt4pTZ4Ls1abytC1AeqNGXMTbV9opsxGavFGYyE?e=rpq6m1"}},
   {cat:"maintenance", g:{fr:"Maintenance & mise en service",en:"Maintenance & commissioning",de:"Wartung & Inbetriebnahme"}, t:{fr:"Faire une maintenance (avec Be Connect)",en:"Perform a maintenance (with Be Connect)",de:"Wartung durchführen (mit Be Connect)"}, type:"pdf", url:{fr:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQD39TnJ2kZdS6Z-da7b2PL0AVQ72M97HAxRDjUh1NkFYM4?e=y7FGcK",en:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQCoInktpzP4QoylXkEQVz1bAUD0ydhDRWIWOPwgwb7sF2s?e=UzTpep",de:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQDnM_HieEJgR6AyHXg0GXQ7AXNGouVNZsH7TTmlq5Vimj8?e=FbAvQ1"}},
-  {cat:"maintenance", g:{fr:"Maintenance & mise en service",en:"Maintenance & commissioning",de:"Wartung & Inbetriebnahme"}, t:{fr:"Explications client après mise en service",en:"Client explanation after commissioning",de:"Kundenerklärung nach Inbetriebnahme"}, type:"pdf", url:{fr:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQCBT_PG93V6Sq7xNOALzpOHATaueEaoRsBlXQ4oJZqxO-s?e=eZg5Q0",en:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQDJbZgdQVnKTom-Vqvj29EmAXrho-taCLUdUtgSAWPQUwQ?e=5wjuBn",de:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQCemSw6LydzSZQgrAV9uyvZAffRKooUvRPfVYnVlTM-GxY?e=X77h3E"}},
   {cat:"troubleshoot", g:{fr:"Gearbox (technique)",en:"Gearbox (technical)",de:"Gearbox (technisch)"}, t:{fr:"Montage Air System",en:"Air System assembly",de:"Air System Montage"}, type:"pdf", url:{fr:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQDXBsAdiXKMR4MW8P-ofOvFAaXoN1E-xXCcoKZ9-EHMZFQ?e=lrtfVX",en:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQDXBsAdiXKMR4MW8P-ofOvFAaXoN1E-xXCcoKZ9-EHMZFQ?e=lrtfVX",de:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQDXBsAdiXKMR4MW8P-ofOvFAaXoN1E-xXCcoKZ9-EHMZFQ?e=lrtfVX"}},
   {cat:"troubleshoot", g:{fr:"Gearbox (technique)",en:"Gearbox (technical)",de:"Gearbox (technisch)"}, t:{fr:"Remplacement Gearbox",en:"Gearbox replacement",de:"Gearbox-Austausch"}, type:"pdf", url:{fr:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQBI_RXvMB73TKFhn0yplFV_AX-Afn5ZZYP46gnRskr7_HI?e=vPtMMM",en:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQCbKzC8Y8nJSIiASMXu77bwAZ2f-dKNH7t6xrbKMt7q8DI?e=hs934Q",de:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQAMsG1dmiskRY3TPrnP8rCRAVYUpK5iGPK1Fsz65tv9Myw?e=ki8h5s"}},
   {cat:"troubleshoot", g:{fr:"Gearbox (technique)",en:"Gearbox (technical)",de:"Gearbox (technisch)"}, t:{fr:"Remplacement joints",en:"Seals replacement",de:"Dichtungswechsel"}, type:"pdf", url:{fr:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQCM42vFgvXJTJoTnGoEXC6kAScKTUIBPYPPKoufImxyJwk?e=yTEKAm",en:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQBkvhImrg9dSp79VD3oIXnHAaOGKHbqWdsX0fsxqsuxNx0?e=rbi94P",de:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQD_tiHvn0vYS5ZmyTce0wXdATTeJsopbdwnXE2lSWZBx70?e=gsSPma"}},
@@ -1364,7 +1375,8 @@ const I18N = {
     <div class="card"><h4>3 · Bien s'en servir au quotidien</h4><ul class="small"><li><b>Laisser couler quelques centilitres avant de servir</b> — Entre le froid et le robinet il y a une longueur de tuyau : les premiers centilitres sont l'eau restée dans les conduits, ni vraiment froide ni correctement gazéifiée. Laisser couler jusqu'à obtenir une eau bien fraîche.</li><li><b>Préparer l'eau gazeuse juste avant de la servir</b> — Une eau gazeuse se sert le plus tôt possible après sa production, et très froide : le service à la demande reste le plus efficace. Si le client doit produire à l'avance, rappeler que les bouteilles ne conservent pas la bulle longtemps et doivent être stockées au frais. Produire en continu dégrade aussi la gazéification — le système n'a plus le temps de refroidir — et l'expose à la surchauffe.</li><li><b>Attendre 15 secondes entre deux bouteilles</b> — Le réservoir doit se remplir entre deux bouteilles gazeuses : 15 secondes au minimum. Sans cette pause, le système se met en sécurité pour protéger la pompe et ne délivre plus que du CO₂ sans eau. Le mieux est d'alterner une bouteille sur deux, plate puis gazeuse. Sur un système qui remplit deux bouteilles à la fois : un cycle plate + gazeuse, puis un cycle plate seul, puis à nouveau plate + gazeuse.</li></ul></div>
     <div class="card"><h4>4 · En cas de problème</h4><ul class="small"><li><b>Le water stop</b> — Sur les systèmes BE CONNECT : la signification des voyants, le rôle de la sonde de détection de fuite et la procédure de réarmement — simuler une fuite et montrer le réarmement, bouton LED orange pressé 3 secondes. Sur les anciennes générations : le principe et ce qu'il faut faire en cas de déclenchement.</li><li><b>Couper l'eau en cas de fuite</b> — Montrer où se trouve le point de coupure d'eau du système et comment l'utiliser. En cas de fuite importante en amont du water stop, c'est ce geste qui limite les dégâts.</li><li><b>Redémarrer après une mise en sécurité</b> — Indiquer l'emplacement de l'interrupteur principal. S'il est difficile d'accès, montrer comment débrancher puis rebrancher l'alimentation, ou utiliser l'interrupteur du BE CONNECT quand il y en a un. Cas courant : s'il ne sort plus que du gaz en pétillant, éteindre la BOX 10 secondes puis la rallumer.</li><li><b>Changer la bouteille de CO₂</b> — Faire la démonstration du remplacement, et vérifier la pression de CO₂ devant le client. Lui rappeler que s'il oublie la procédure, la hotline ou l'application lui renverra la vidéo ou le tutoriel.</li></ul></div>
     <div class="card"><h4>5 · BE CONNECT</h4><ul class="small"><li><b>Le QR code</b> — Il ouvre l'interface : compteur de consommation d'eau plate et pétillante, au jour ou au mois, prochaines dates de maintenance et impact écologique du système.</li><li><b>L'interrupteur LED</b> — Aucun voyant : le système est en veille. Blanc fixe : il fonctionne. Blanc clignotant : une distribution est en cours. Jaune : scanner le QR code identifie l'erreur détectée et donne le protocole de remise en service.</li><li><b>L'interface</b> — En faire une présentation rapide avec le client. Elle suit la consommation plate et pétillante, affiche l'impact écologique et l'empreinte carbone, offre une veille programmable — ECO Smart, veille de nuit —, montre les capacités restantes du filtre et du gaz, aide à diagnostiquer certaines pannes, donne accès aux notices, aux prochaines maintenances et aux passages déjà faits, et met en relation avec le service après-vente. Si le système n'est pas encore connecté, faire la démo via la webapp, sans toucher aux réglages ; l'accès est disponible sous 1 h à 72 h selon le réseau.</li></ul></div>
-    <div class="card"><h4>6 · Suivi, contact et commandes</h4><ul class="small"><li><b>La fréquence des passages</b> — En général 12 mois en B2C, 6 mois en B2B et en HoReCa. Se référer aux règles locales, qui valent aussi pour ce que le service comprend.</li><li><b>Nous contacter et commander</b> — Une hotline est accessible par QR code dans tous les pays : elle met en relation avec un assistant WhatsApp qui répond à la plupart des questions et, si une intervention est nécessaire, ouvre automatiquement un ticket chez nous. Les commandes passent généralement par la même interface — le client peut commander son gaz directement —, mais vérifier les règles locales, en particulier pour le CO₂.</li></ul></div>`,
+    <div class="card"><h4>6 · Suivi, contact et commandes</h4><ul class="small"><li><b>La fréquence des passages</b> — En général 12 mois en B2C, 6 mois en B2B et en HoReCa. Se référer aux règles locales, qui valent aussi pour ce que le service comprend.</li><li><b>Nous contacter et commander</b> — Une hotline est accessible par QR code dans tous les pays : elle met en relation avec un assistant WhatsApp qui répond à la plupart des questions et, si une intervention est nécessaire, ouvre automatiquement un ticket chez nous. Les commandes passent généralement par la même interface — le client peut commander son gaz directement —, mais vérifier les règles locales, en particulier pour le CO₂.</li></ul></div>
+    <p class="small muted" style="margin-top:14px"><a href="https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQCBT_PG93V6Sq7xNOALzpOHATaueEaoRsBlXQ4oJZqxO-s?e=eZg5Q0" target="_blank" rel="noopener">↗ Le mémo d'origine, en PDF</a></p>`,
     "s8.t":"Bibliothèque de tutos","s8.sub":"Tous les tutoriels existants, organisés et cherchables. Chaque tuto d'installation contient un schéma de raccordement, une vidéo et un tutoriel photo — disponibles en FR / EN / DE.",
     "nav.glossary":"Glossaire & repères",
     "nav.schemas":"Documentation",
@@ -1487,7 +1499,8 @@ const I18N = {
     <div class="card"><h4>3 · Everyday use</h4><ul class="small"><li><b>Run off a few centilitres before serving</b> — There is a length of hose between the cooling unit and the tap: the first centilitres are the water left in the lines, neither properly chilled nor properly carbonated. Run it off until the water is nicely cold.</li><li><b>Prepare sparkling water just before serving</b> — Sparkling water should be served as soon as possible after it is made, and very cold: dispensing on demand stays the most effective. If the customer has to prepare in advance, remind them that bottles do not hold the fizz for long and must be kept cold. Continuous production also degrades carbonation — the system no longer has time to cool — and exposes it to overheating.</li><li><b>Wait 15 seconds between two bottles</b> — The tank has to refill between two sparkling bottles: 15 seconds minimum. Without that pause the system goes into protection mode to safeguard the pump and then delivers CO₂ without water. Best practice is to alternate, one bottle still then one sparkling. On a system that fills two bottles at once: one still + sparkling cycle, then a still-only cycle, then still + sparkling again.</li></ul></div>
     <div class="card"><h4>4 · If something goes wrong</h4><ul class="small"><li><b>The water stop</b> — On BE CONNECT systems: what the indicator lights mean, what the leak detection probe does and how to reset it — simulate a leak and show the reset, orange LED button held for 3 seconds. On earlier generations: the principle and what to do if it triggers.</li><li><b>Shutting off the water in the event of a leak</b> — Show where the system's water shut-off point is and how to use it. If a major leak happens upstream of the water stop, this is the action that limits the damage.</li><li><b>Restarting after protection mode</b> — Point out the main switch. If it is hard to reach, show how to unplug and plug the power back in, or use the BE CONNECT switch where there is one. Common case: if only gas comes out on sparkling, switch the BOX off for 10 seconds then back on.</li><li><b>Changing the CO₂ cylinder</b> — Demonstrate the change, and check the CO₂ pressure in front of the customer. Remind them that if they forget the procedure, the hotline or the app will send them the video or the tutorial.</li></ul></div>
     <div class="card"><h4>5 · BE CONNECT</h4><ul class="small"><li><b>The QR code</b> — It opens the interface: a consumption counter for still and sparkling water, daily or monthly, upcoming service dates and the environmental impact of the system.</li><li><b>The LED switch</b> — No light: the system is on standby. Steady white: it is running. Flashing white: water is being dispensed. Yellow: scanning the QR code identifies the fault detected and gives the recommissioning procedure.</li><li><b>The interface</b> — Give the customer a short walkthrough. It tracks still and sparkling consumption, shows the environmental impact and carbon footprint, offers programmable standby — ECO Smart, night standby —, shows the remaining filter and gas capacity, helps diagnose certain faults, gives access to the manuals, to upcoming services and to visits already made, and puts the customer in touch with after-sales. If the system is not connected yet, demo it through the webapp without touching the settings; access comes through in 1 h to 72 h depending on the network.</li></ul></div>
-    <div class="card"><h4>6 · Servicing, contact and orders</h4><ul class="small"><li><b>How often servicing takes place</b> — Generally every 12 months for B2C, every 6 months for B2B and HoReCa. Check the local rules, which also apply to what the service covers.</li><li><b>Getting in touch and ordering</b> — A hotline is reachable by QR code in every country: it connects to a WhatsApp assistant that answers most questions and, if a visit is needed, automatically opens a ticket on our side. Orders usually go through the same interface — the customer can order gas directly — but check the local rules, particularly for CO₂.</li></ul></div>`,
+    <div class="card"><h4>6 · Servicing, contact and orders</h4><ul class="small"><li><b>How often servicing takes place</b> — Generally every 12 months for B2C, every 6 months for B2B and HoReCa. Check the local rules, which also apply to what the service covers.</li><li><b>Getting in touch and ordering</b> — A hotline is reachable by QR code in every country: it connects to a WhatsApp assistant that answers most questions and, if a visit is needed, automatically opens a ticket on our side. Orders usually go through the same interface — the customer can order gas directly — but check the local rules, particularly for CO₂.</li></ul></div>
+    <p class="small muted" style="margin-top:14px"><a href="https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQDJbZgdQVnKTom-Vqvj29EmAXrho-taCLUdUtgSAWPQUwQ?e=5wjuBn" target="_blank" rel="noopener">↗ The original memo, as a PDF</a></p>`,
     "s8.t":"Tutorial library","s8.sub":"Every existing tutorial, organised and searchable. Each install tutorial includes a connection schema, a video and a photo tutorial — available in FR / EN / DE.",
     "nav.glossary":"Glossary & reference",
     "nav.schemas":"Documentation",
@@ -1610,7 +1623,8 @@ const I18N = {
     <div class="card"><h4>3 · Im Alltag richtig nutzen</h4><ul class="small"><li><b>Vor dem Einschenken einige Zentiliter ablaufen lassen</b> — Zwischen Kühlung und Zapfhahn liegt eine Schlauchlänge: Die ersten Zentiliter sind das in den Leitungen stehende Wasser, weder richtig kalt noch richtig karbonisiert. Ablaufen lassen, bis das Wasser schön kalt ist.</li><li><b>Sprudelwasser kurz vor dem Servieren zubereiten</b> — Sprudelwasser sollte möglichst bald nach der Zubereitung und sehr kalt serviert werden: Die Ausgabe auf Abruf bleibt am wirksamsten. Muss im Voraus zubereitet werden, daran erinnern, dass Flaschen die Perlage nicht lange halten und kühl zu lagern sind. Durchgehende Produktion verschlechtert ebenfalls die Karbonisierung — das System kann nicht mehr abkühlen — und birgt Überhitzungsgefahr.</li><li><b>15 Sekunden zwischen zwei Flaschen warten</b> — Zwischen zwei Sprudelflaschen muss sich der Tank wieder füllen: mindestens 15 Sekunden. Ohne diese Pause geht das System zum Schutz der Pumpe in den Sicherheitsmodus und gibt nur noch CO₂ ohne Wasser ab. Am besten abwechselnd füllen, eine Flasche still, eine mit Sprudel. Bei Systemen, die zwei Flaschen gleichzeitig füllen: ein Zyklus still + Sprudel, dann ein Zyklus nur still, dann wieder still + Sprudel.</li></ul></div>
     <div class="card"><h4>4 · Wenn etwas nicht stimmt</h4><ul class="small"><li><b>Der Wasserstopp</b> — Bei BE CONNECT Systemen: die Bedeutung der Anzeigen, die Rolle der Lecksonde und das Zurücksetzen — ein Leck simulieren und das Zurücksetzen zeigen, orange LED-Taste 3 Sekunden gedrückt. Bei älteren Generationen: das Prinzip und das Vorgehen im Auslösefall.</li><li><b>Wasser bei einem Leck abstellen</b> — Zeigen, wo sich der Absperrpunkt des Systems befindet und wie er zu bedienen ist. Bei einem größeren Leck vor dem Wasserstopp begrenzt dieser Handgriff den Schaden.</li><li><b>Neustart nach einer Sicherheitsabschaltung</b> — Den Hauptschalter zeigen. Ist er schwer zugänglich, das Trennen und Wiederherstellen der Stromversorgung zeigen oder den Schalter des BE CONNECT nutzen, sofern vorhanden. Häufiger Fall: Kommt beim Sprudeln nur noch Gas, die BOX 10 Sekunden ausschalten und wieder einschalten.</li><li><b>Die CO₂-Flasche wechseln</b> — Den Wechsel vorführen und den CO₂-Druck vor den Augen des Kunden prüfen. Ihn daran erinnern, dass Hotline oder App ihm das Video oder die Anleitung schicken, falls er die Schritte vergisst.</li></ul></div>
     <div class="card"><h4>5 · BE CONNECT</h4><ul class="small"><li><b>Der QR-Code</b> — Er öffnet die Oberfläche: Verbrauchszähler für stilles und Sprudelwasser, täglich oder monatlich, nächste Wartungstermine und Ökobilanz des Systems.</li><li><b>Der LED-Schalter</b> — Keine Anzeige: Standby. Weißes Dauerlicht: in Betrieb. Weißes Blinken: laufende Entnahme. Gelb: Das Scannen des QR-Codes identifiziert den erkannten Fehler und liefert die Anleitung zur Wiederinbetriebnahme.</li><li><b>Die Oberfläche</b> — Dem Kunden eine kurze Führung geben. Sie verfolgt den Verbrauch von stillem und Sprudelwasser, zeigt Ökobilanz und CO₂-Fußabdruck, bietet programmierbaren Standby — ECO Smart, Nachtabsenkung —, zeigt die Restkapazität von Filter und Gas, hilft bei der Diagnose bestimmter Störungen, gibt Zugang zu den Anleitungen, zu anstehenden Wartungen und bereits erfolgten Besuchen und stellt die Verbindung zum Kundendienst her. Ist das System noch nicht verbunden, die Demo über die Webapp machen, ohne Einstellungen zu ändern; der Zugang steht je nach Netz in 1 bis 72 Stunden bereit.</li></ul></div>
-    <div class="card"><h4>6 · Wartung, Kontakt und Bestellungen</h4><ul class="small"><li><b>Die Wartungsintervalle</b> — In der Regel alle 12 Monate im B2C, alle 6 Monate im B2B und in der HoReCa. Die lokalen Regeln beachten, die auch für den Leistungsumfang gelten.</li><li><b>Kontakt aufnehmen und bestellen</b> — In jedem Land ist eine Hotline über QR-Code erreichbar: Sie verbindet mit einem WhatsApp-Assistenten, der die meisten Fragen beantwortet und bei Bedarf automatisch ein Ticket bei uns anlegt. Bestellungen laufen meist über dieselbe Oberfläche — der Kunde kann sein Gas direkt bestellen —, die lokalen Regeln sind jedoch zu prüfen, besonders bei CO₂.</li></ul></div>`,
+    <div class="card"><h4>6 · Wartung, Kontakt und Bestellungen</h4><ul class="small"><li><b>Die Wartungsintervalle</b> — In der Regel alle 12 Monate im B2C, alle 6 Monate im B2B und in der HoReCa. Die lokalen Regeln beachten, die auch für den Leistungsumfang gelten.</li><li><b>Kontakt aufnehmen und bestellen</b> — In jedem Land ist eine Hotline über QR-Code erreichbar: Sie verbindet mit einem WhatsApp-Assistenten, der die meisten Fragen beantwortet und bei Bedarf automatisch ein Ticket bei uns anlegt. Bestellungen laufen meist über dieselbe Oberfläche — der Kunde kann sein Gas direkt bestellen —, die lokalen Regeln sind jedoch zu prüfen, besonders bei CO₂.</li></ul></div>
+    <p class="small muted" style="margin-top:14px"><a href="https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQCemSw6LydzSZQgrAV9uyvZAffRKooUvRPfVYnVlTM-GxY?e=X77h3E" target="_blank" rel="noopener">↗ Das ursprüngliche Memo als PDF</a></p>`,
     "s8.t":"Tutorial-Bibliothek","s8.sub":"Alle vorhandenen Tutorials, organisiert und durchsuchbar. Jedes Installations-Tutorial enthält ein Anschlussschema, ein Video und ein Foto-Tutorial — verfügbar in FR / EN / DE.",
     "nav.glossary":"Glossar & Referenz",
     "nav.schemas":"Dokumentation",
@@ -1784,6 +1798,18 @@ const PORTAL_GUIDE = [{"id":"installation","type":"problems","t":{"fr":"Installa
    BOX. La documentation les veut produit par produit — un bloc de cotes est
    un produit — alors on éclate les deux fiches ici, et elles sortent du
    guide pour ne pas s'y retrouver en double. */
+/* La remise au client a sa section, écrite en entier : le tuto du portail qui
+   la répétait sort de « Maintenance » et de la bibliothèque. Son PDF d'origine
+   reste en lien au bas de la section. */
+(function(){
+  var c = null;
+  PORTAL_GUIDE.forEach(function(x){ if(x.id === "maintenance") c = x; });
+  if(!c) return;
+  c.groups = (c.groups||[]).filter(function(g){
+    return !(g.items||[]).some(function(p){ return p.t && p.t.fr.indexOf("Explications client") === 0; });
+  });
+})();
+
 var PRODUCT_DIMS = [];
 (function(){
   var c = null;
@@ -1860,6 +1886,11 @@ const ITUT_LABELS = {
   "itut.empty":   {fr:"Rien d'enregistré pour l'instant.", en:"Nothing recorded yet.", de:"Noch nichts erfasst."},
   "itut.fiches":  {fr:"fiches", en:"entries", de:"Einträge"},
   "itut.fiche":   {fr:"fiche", en:"entry", de:"Eintrag"},
+  "refs.search":  {fr:"Rechercher une référence ou un nom de produit…", en:"Search a reference or a product name…", de:"Referenz oder Produktname suchen…"},
+  "refs.none":    {fr:"Aucune référence trouvée", en:"No reference found", de:"Keine Referenz gefunden"},
+  "refs.count":   {fr:"référence(s)", en:"reference(s)", de:"Referenz(en)"},
+  "refs.open":    {fr:"Tout ouvrir", en:"Expand all", de:"Alle öffnen"},
+  "refs.close":   {fr:"Tout fermer", en:"Collapse all", de:"Alle schliessen"},
   "itut.videos":  {fr:"vidéos", en:"videos", de:"Videos"},
   "itut.video1":  {fr:"vidéo", en:"video", de:"Video"},
   "gf.close":     {fr:"Fermer", en:"Close", de:"Schließen"},
@@ -1924,7 +1955,6 @@ const LIB_FICHE = {
   "Be Connect (schéma, pannes & infos)":  ["installation", "BE CONNECT (schéma, pannes et informations)"],
   "BOX 80 — Kit de ventilation":         ["installation", "BOX 80 - kit de ventilation"],
   "Faire une maintenance (avec Be Connect)":     ["maintenance", "Faire une maintenance (avec BE CONNECT)"],
-  "Explications client après mise en service":   ["maintenance", "Explications client après mise en service du système"],
   "Mesure de tension":                          ["mesures", "Mesure de tension"],
   "Test fusible / continuité":                  ["mesures", "Test fusible ou continuité"],
   "Mesurer le taux de CO₂ dans l'eau":          ["mesures", "Mesurer le taux de CO2 dans l'eau"],
@@ -2068,18 +2098,54 @@ function guideMemoHtml(c){
   }).join("");
 }
 
+/* Cent quatre-vingts références : les dérouler toutes revient à faire défiler
+   dix écrans. Elles se rangent donc par catégorie de produit, repliées comme
+   sur le portail, avec le compte en bout de ligne et une recherche qui ouvre
+   les catégories qui répondent. */
 function guideRefsHtml(c){
-  return (c.refGroups||[]).map(function(g){
-    return '<h4 class="gcat-g">' + itutEsc(itutTr(g.h)) + '</h4><div class="gref-grid">'
-      + (g.items||[]).map(function(it){
-          return '<div class="gref">' + (it.img ? '<img loading="lazy" alt="" src="' + it.img + '">' : '<div class="gref-none">▦</div>')
-               + '<div class="gref-b"><div class="gref-r">' + itutEsc(it.ref || "") + '</div>'
-               + '<div class="gref-n">' + itutEsc(itutTr(it.name)) + '</div>'
-               + (it.desc ? '<div class="gref-d">' + itutEsc(itutTr(it.desc)) + '</div>' : '') + '</div></div>';
-        }).join("")
-      + '</div>';
-  }).join("");
+  var d = I18N[lang];
+  return '<div class="gref-tools">'
+    + '<div class="search"><span class="mag">⌕</span><input id="refq" type="text" placeholder="' + itutEsc(d["refs.search"]) + '"></div>'
+    + '<button type="button" class="gref-all" data-open="1">' + d["refs.open"] + '</button>'
+    + '<button type="button" class="gref-all" data-open="0">' + d["refs.close"] + '</button></div>'
+    + (c.refGroups||[]).map(function(g){
+        var items = g.items || [];
+        return '<details class="gref-grp"><summary>' + itutEsc(itutTr(g.h))
+          + '<span class="gref-cnt">' + items.length + ' ' + d["refs.count"] + '</span></summary>'
+          + '<div class="gref-grid">'
+          + items.map(function(it){
+              var key = ((it.ref || "") + " " + itutTr(it.name) + " " + itutTr(it.desc)).toLowerCase();
+              return '<div class="gref" data-ref="' + itutEsc(key) + '">'
+                   + (it.img ? '<img loading="lazy" alt="" src="' + it.img + '">' : '<div class="gref-none">▦</div>')
+                   + '<div class="gref-b"><div class="gref-r">' + itutEsc(it.ref || "") + '</div>'
+                   + '<div class="gref-n">' + itutEsc(itutTr(it.name)) + '</div>'
+                   + (it.desc ? '<div class="gref-d">' + itutEsc(itutTr(it.desc)) + '</div>' : '') + '</div></div>';
+            }).join("")
+          + '</div></details>';
+      }).join("")
+    + '<p class="gref-empty small muted hidden">' + d["refs.none"] + '</p>';
 }
+
+function refFilter(){
+  var box = document.getElementById("refq"); if(!box) return;
+  var q = box.value.trim().toLowerCase(), d = I18N[lang], total = 0;
+  document.querySelectorAll('#g-refs .gref-grp').forEach(function(g){
+    var n = 0, all = g.querySelectorAll('.gref');
+    all.forEach(function(el){
+      var hit = !q || el.dataset.ref.indexOf(q) >= 0;
+      el.classList.toggle('hidden', !hit);
+      if(hit) n++;
+    });
+    g.classList.toggle('hidden', !!q && !n);
+    if(q) g.open = n > 0;
+    var cnt = g.querySelector('.gref-cnt');
+    if(cnt) cnt.textContent = (q ? n : all.length) + ' ' + d["refs.count"];
+    total += n;
+  });
+  var em = document.querySelector('#g-refs .gref-empty');
+  if(em) em.classList.toggle('hidden', !q || total > 0);
+}
+document.addEventListener('input', function(e){ if(e.target && e.target.id === 'refq') refFilter(); });
 
 function guideVideosHtml(c){
   return '<div class="gvid-list">' + (c.videos||[]).map(function(v){
@@ -2370,6 +2436,11 @@ function itutZoom(src){
 }
 document.addEventListener('click', function(e){
   if(!e.target.closest) return;
+  var all = e.target.closest('.gref-all');
+  if(all){
+    document.querySelectorAll('#g-refs .gref-grp').forEach(function(g){ g.open = all.dataset.open === "1"; });
+    return;
+  }
   var go = e.target.closest('[data-gf]');
   if(go){ var k = go.dataset.gf.split('|'); openGuideFiche(k[0], +k[1], +k[2], go); return; }
   var sym = e.target.closest('.gsym');
