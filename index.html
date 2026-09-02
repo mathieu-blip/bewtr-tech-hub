@@ -1333,6 +1333,16 @@ var HUB_STORE = {
 </div>
 
 <script>
+/* ============ LES SECTIONS DU HUB ====================================
+   Le menu est la source de vérité, et la seule. Trois listes d'identifiants
+   étaient tenues à la main en parallèle — le <nav>, SECT_IDS et FB_AREAS —
+   et elles avaient déjà divergé : SECT_IDS portait un « overview » qui
+   n'existait nulle part. Ajouter une section demande maintenant d'ajouter
+   un lien au menu, et rien d'autre.
+   ------------------------------------------------------------------ */
+var SECT_IDS = [].map.call(document.querySelectorAll('#nav a'),
+                           function(a){ return a.getAttribute('href').slice(1); });
+
 /* ============ CONFIG — COLLECTE DES RETOURS =========================
    Colle ici l'URL /exec de ton Google Apps Script (voir FEEDBACK-SETUP.md).
    Tant que cette valeur est vide, l'onglet « Signaler / suggérer » affiche
@@ -1393,10 +1403,10 @@ const catIcon = {install:"▤",maintenance:"↻",troubleshoot:"⚠",measure:"◔
 
 /* ============ I18N DICTIONARY ============ */
 const I18N = {
-  fr:{"nav.home":"Accueil","machine.t":"Quelle machine avez-vous\u00a0?","machine.sub":"Sélectionnez votre modèle pour ouvrir toute sa documentation.","machine.taps":"Taps (robinets)","machine.disc":"discontinué","chip.water":"Ligne d'eau","chip.elec":"Élec","chip.parts":"Pièces","chip.tech":"Fiche","chip.maint":"Maintenance","chip.bec":"BeConnect","chip.tuto":"Tutos","search.global":"Rechercher — tutos, pièces, sections…","search.ph":"Mot-clé, réf (BW-…), symptôme…","search.hint":"Tapez au moins 2 caractères.","search.none":"Aucun résultat.","search.g.sec":"Sections","search.g.part":"Pièces détachées","search.g.tuto":"Tutos","goto.parts":"Voir les vues éclatées & pièces","goto.experience":"Terminer par la remise au client","goto.begin":"Commencer par l'installation","goto.install":"Voir les tutos d'installation pas à pas","goto.maintenance":"Voir les tutos vidéo de maintenance","goto.troubleshoot":"Voir les tutos vidéo de dépannage","nav.g.tutos":"Tutos","nav.g.form":"Formation","home.t":"Que voulez-vous faire\u00a0?","home.sub":"Choisissez une catégorie — tout le contenu est rangé par tâche.",
+  fr:{"nav.home":"Accueil","machine.t":"Quelle machine avez-vous\u00a0?","machine.sub":"Sélectionnez votre modèle pour ouvrir toute sa documentation.","machine.taps":"Taps (robinets)","machine.disc":"discontinué","chip.water":"Ligne d'eau","chip.elec":"Élec","chip.parts":"Pièces","chip.tech":"Fiche","chip.maint":"Maintenance","chip.bec":"BeConnect","chip.tuto":"Tutos","search.global":"Rechercher — tutos, pièces, sections…","search.ph":"Mot-clé, réf (BW-…), symptôme…","search.hint":"Tapez au moins 2 caractères.","search.none":"Aucun résultat.","search.g.sec":"Sections","search.g.part":"Pièces détachées","search.g.tuto":"Tutos","goto.parts":"Voir les vues éclatées & pièces","goto.experience":"Terminer par la remise au client","goto.begin":"Commencer par l'installation","goto.install":"Voir les tutos d'installation pas à pas","goto.maintenance":"Voir les tutos vidéo de maintenance","goto.troubleshoot":"Voir les tutos vidéo de dépannage","home.t":"Que voulez-vous faire\u00a0?","home.sub":"Choisissez une catégorie — tout le contenu est rangé par tâche.",
     "brand.sub":"Guide Technicien","nav.start":"Démarrer","nav.overview":"Vue d'ensemble","nav.beconnect":"Be Connect (IoT)",
     "nav.field":"Sur le terrain","nav.install":"Installation","nav.settings":"Réglages & valeurs","nav.maintenance":"Maintenance",
-    "nav.troubleshoot":"Dépannage","nav.client":"Client","nav.experience":"Expérience client","nav.library":"Bibliothèque",
+    "nav.troubleshoot":"Dépannage","nav.experience":"Expérience client","nav.library":"Bibliothèque",
     "nav.tutorials":"Bibliothèque de tutos",
     "hero.title":"BE WTR — Guide d'installation technicien",
     "hero.desc":"Le document unique pour installer, mettre en service, entretenir et dépanner un système BE WTR en autonomie. Toutes les procédures, les valeurs de réglage et chaque tutoriel, au même endroit.",
@@ -1453,7 +1463,6 @@ const I18N = {
     "s11.sub":"Schémas d'eau et électriques, pièces détachées et vues éclatées, mesures produits, fiches techniques. Choisissez une catégorie, puis un produit — l'aperçu s'ouvre au clic, à consulter à l'écran (sans téléchargement).",
     "schema.water":"Ligne d'eau",
     "schema.elec":"Schéma électrique",
-    "schema.none":"Non disponible pour ce produit",
     "schema.back":"Catégories",
     "schema.previewonly":"Aper\u00e7u \u00e0 l'\u00e9cran \u2014 sans t\u00e9l\u00e9chargement",
     "tech.fronly":"Document en fran\u00e7ais \u2014 traduction \u00e0 venir",
@@ -1471,22 +1480,18 @@ const I18N = {
     "s14.body":`<div class="card"><h3>Hygiène</h3><ul class="small"><li>Manipuler tap, filtre et composants avec les <b>mains propres et sèches</b>.</li><li><b>Ne jamais toucher le haut du filtre</b> (risque de contamination).</li><li>Filtre déposé : poser un bouchon et <b>réinstaller sous 24 h</b> max.</li><li>Nettoyer le système à chaque maintenance (robinets, calcaire) ; utiliser le désinfectant prévu.</li><li>Faire <b>goûter l'eau</b> au client après l'intervention.</li></ul></div><div class="card"><h3>Sécurité électrique</h3><ul class="small"><li>Ne <b>jamais toucher</b> l'appareil ou le câble avec les <b>mains mouillées</b> (choc électrique).</li><li>Aucun autre équipement électrique sur la <b>même prise</b> ni sous le meuble près du système.</li></ul></div><div class="card"><h3>Sécurité CO₂</h3><ul class="small"><li>Bouteille toujours <b>verticale</b>, contre un mur, <b>fixée par la sangle</b> (anti-chute), à <b>&gt; 50 cm</b> de toute source de chaleur.</li><li>Dimensionner la bouteille selon le <b>volume de la pièce</b>, la ventilation et la réglementation locale. Si la capacité dépasse les limites locales : <b>alerte de sécurité + ventilation</b> obligatoires. Pièce ventilée ou équipée d'un <b>détecteur CO₂</b>.</li><li>Toujours raccorder la bouteille au <b>détendeur</b> — <b>jamais directement à la BOX</b> (risque d'explosion). Ne jamais dévisser les raccords des contenants.</li><li>Détecter les fuites à l'<b>eau savonneuse</b> ; si non réparable, contacter le service client.</li><li>CO₂ <b>alimentaire E290</b>. Poser la consigne de sécurité CO₂ près de la bouteille, bien visible.</li></ul></div>`,
     "res.title":"Ressources techniques",
     "res.tools":"Liste des outils (stock véhicule)",
-    "res.exploded":"Vues explosées (pièces détachées)",
     "nav.gaps":"À compléter",
     "nav.claims":"Tickets de réparation",
     "s12.t":"À compléter — feuille de route de la base",
     "s12.sub":"État de complétude par domaine — ce qu'il reste à produire pour une database service 100 % complète.",
     "s12.body":`<div class="grid two"><div class="card"><h4>Installation <span class="gap-badge part">Partiel</span></h4><ul class="small"><li>Tutos AQTiV Duo & PRO 2 (gen 2026)</li><li>Tuto « trou scie cloche »</li></ul></div><div class="card"><h4>Dépannage <span class="gap-badge part">Partiel</span></h4><ul class="small"><li>Arbre de décision symptôme → cause</li></ul></div></div><div class="note small">Légende : <b>Complet</b> = présent dans cette base · <b>Partiel</b> = existe mais incomplet · <b>À créer</b> = document à produire.</div>`,
     "start.body":`<h3>🧭 Première installation BE WTR ? Commencez ici</h3><p class="small muted" style="margin:0 0 4px">Suivez ce parcours dans l'ordre — chaque étape ouvre sa section :</p><div class="path"><a href="#home"><span class="stp">①</span>Identifier la machine</a><a href="#install"><span class="stp">②</span>Outils &amp; prérequis</a><a href="#tutorials"><span class="stp">③</span>Ouvrir le bon tuto</a><a href="#install"><span class="stp">④</span>Suivre les 9 étapes</a><a href="#settings"><span class="stp">⑤</span>Régler les valeurs</a><a href="#experience"><span class="stp">⑥</span>Remise client</a></div><p class="small muted" style="margin:12px 0 0">Un mot inconnu (Gearbox, Mullex, carbonateur…) ? Voir le <a href="#glossary">Glossaire</a>. Bloqué ? Voir <a href="#troubleshoot">Dépannage</a>, puis ouvrir un <a href="#claims">ticket de réparation</a>.</p>`,
-    "s1.capElements":`Schéma d'assemblage type (config comptoir). 1 arrivée d'eau potable ⌀½" · 2 tube d'arrivée (réduction ⌀5/16") · 3 Be Connect (tête de filtre) · 4 filtre · 6 bouteille CO₂ + sangle de sécurité · 7 détendeur CO₂ ⌀¼" · 8 tube CO₂ (« T » vers BOX et Be Connect) · 9 BOX (chiller / carbonateur) · 12 tap · 14 réducteur de pression d'eau.`,
-    "s2.capPorts":`Repérage des ports du Be Connect — les numéros correspondent au tableau ci-dessous.`,
     "s1.legend":`<li><span class="ln">1</span><span>Arrivée d'eau potable — ⌀ ½"</span></li><li><span class="ln">2</span><span>Tube d'arrivée (réduction ⌀ 5/16")</span></li><li><span class="ln">3</span><span>Be Connect — tête de filtre</span></li><li><span class="ln">4</span><span>Filtre</span></li><li><span class="ln">5</span><span>Tube d'eau filtrée ⌀ 5/16"</span></li><li><span class="ln">6</span><span>Bouteille CO₂ + sangle de sécurité</span></li><li><span class="ln">7</span><span>Détendeur CO₂ ⌀ ¼"</span></li><li><span class="ln">8</span><span>Tube CO₂ (« T » vers BOX et Be Connect) ⌀ ¼"</span></li><li><span class="ln">9</span><span>BOX — chiller / carbonateur</span></li><li><span class="ln">10</span><span>Tube eau plate (via Be Connect) ⌀ 5/16"</span></li><li><span class="ln">11</span><span>Tube eau pétillante (via Be Connect) ⌀ 5/16"</span></li><li><span class="ln">12</span><span>Tap ⌀ 5/16"</span></li><li><span class="ln">13</span><span>Sticker CO₂</span></li><li><span class="ln">14</span><span>Réducteur de pression d'eau ⌀ 5/16"</span></li>`,
     "s2.legend":`<li><span class="ln">1</span><span>Entrée alimentation — C14</span></li><li><span class="ln">2</span><span>Sortie alimentation — C13</span></li><li><span class="ln">3</span><span>Bouton — voir table LED</span></li><li><span class="ln">4</span><span>Arrivée d'eau ⌀ 5/16"</span></li><li><span class="ln">5</span><span>Eau filtrée ⌀ 5/16"</span></li><li><span class="ln">6</span><span>Capteur de fuite — à poser au sol</span></li><li><span class="ln">7</span><span>Capteur CO₂ ⌀ ¼"</span></li><li><span class="ln">8</span><span>Entrée pétillante ⌀ 5/16"</span></li><li><span class="ln">9</span><span>Sortie pétillante ⌀ 5/16"</span></li><li><span class="ln">10</span><span>Entrée plate ⌀ 5/16"</span></li><li><span class="ln">11</span><span>Sortie plate ⌀ 5/16"</span></li><li><span class="ln">12</span><span>QR code — scan webapp</span></li><li><span class="ln">13</span><span>Plaque de montage — avec vis</span></li>`,
     "s3.map":`<div class="card"><h3>① Reconnaître la machine & l'usage</h3><p class="small muted">La BOX (unité de froid) et le tap changent selon l'usage. Repérez votre configuration :</p><table><thead><tr><th>Usage</th><th>BOX</th><th>Espace requis</th></tr></thead><tbody><tr><td>Home (résidentiel)</td><td>BOX 20</td><td>60 × 60 cm</td></tr><tr><td>Bureau / Office</td><td>BOX 30 (+ kit ventilation)</td><td>60 × 60 cm</td></tr><tr><td>HoReCa</td><td>BOX 80</td><td>60 × 60 cm</td></tr><tr><td>HoReCa XL</td><td>BOX 150</td><td>80 cm de largeur</td></tr></tbody></table><div class="note small"><b>Tuto correspondant :</b> dans la bibliothèque, ouvrez le tuto au nom exact de votre modèle.</div></div>`,
     "s3.capLayouts":`Disposition type (vue de dessus, 60 × 60 cm ; haut = mur, bas = utilisateur) selon l'usage. La BOX et le gaz se posent en dernier.`,
     "s3.tools":`<div class="card"><h3>② Préparer : outils & prérequis</h3><div class="grid two"><div><h4>À prévoir</h4><p class="small" style="margin:-2px 0 10px"><a href="javascript:void(0)" onclick="openToolsList();return false;">▤ Liste complète des outils du véhicule ↗</a></p><ul class="small"><li>Perceuse + scie cloche ⌀35 mm (⌀50 mm pour BAR 2)</li><li>Clés, tournevis, coupe-tube</li><li>Téflon / joints, clé de serrage</li><li>Manomètre & multimètre</li><li>Papier abrasif (AQTiV), détartrant & chiffon microfibre</li><li>Lunettes & gants de protection</li></ul></div><div><h4>Sur site, vérifier</h4><ul class="small"><li>Arrivée d'eau potable ⌀½" avec vanne d'arrêt</li><li>Prise électrique dédiée (rien d'autre dessus)</li><li>Espace ventilé 60 × 60 cm (80 cm pour BOX 150)</li><li>Accès pour la purge / l'écoulement (si pas d'évacuation, prévoir un bidon avec alarme)</li><li>Intérieur, à l'abri du gel et de la chaleur</li></ul></div></div></div><div class="callout small" style="margin-top:12px">⚠ Sécurité CO₂ : la bouteille est sous pression. Toujours poser la <b>sangle de sécurité</b>, la manipuler debout et attachée, ne jamais la laisser tomber. Lunettes + gants obligatoires pour percer.</div>`,
     "s3.drill":`<div class="card"><h3>③ Perçage selon le tap</h3><table><thead><tr><th>Tap</th><th>Trou comptoir</th><th>Bac d'égouttage</th><th>Raccord élec.</th></tr></thead><tbody><tr><td>AQTiV Combi / Combi H</td><td>⌀ 35 mm</td><td>–</td><td>–</td></tr><tr><td>AQTiV One / One S</td><td>⌀ 35 mm</td><td>Oui (One)</td><td>–</td></tr><tr><td>AQTiV Duo</td><td>⌀ 35 mm</td><td>Oui</td><td>Oui si pas de BE CONNECT</td></tr><tr><td>BAR 1</td><td>⌀ 35 mm</td><td>Oui</td><td>–</td></tr><tr><td>BAR 2</td><td>⌀ 50 mm</td><td>Oui</td><td>Oui</td></tr><tr><td>PRO 2</td><td>Pas de trou</td><td>Oui</td><td>Oui</td></tr><tr><td>PRO 3</td><td>Pas de trou</td><td>Oui</td><td>Oui</td></tr></tbody></table><p class="small muted" style="margin-top:8px">AQTiV Combi / Combi H distribuent aussi de l'eau tempérée / chaude non filtrée. PRO 2 : chiller intégré (pas de BOX séparée). BAR 2 : réglage des portions dans le manuel utilisateur. AQTiV Duo : le raccord électrique n'est nécessaire que <b>sans BE CONNECT</b> (sinon inclus avec le BE CONNECT).</p></div>`,
-    "s3.capTaps":`Modèles de tap et diamètres de perçage du plan de travail.`,
     "s3.layoutcap":`<div><b>Home</b><span>1 · BOX 20 Home<br>2 · Be Connect<br>3 · Bouteille CO₂<br>4 · Poubelle (option)</span></div><div><b>Office</b><span>1 · BOX 30 (kit ventilation)<br>2 · Be Connect<br>3 · Bouteille CO₂</span></div><div><b>HoReCa</b><span>1 · BOX 80<br>2 · Be Connect<br>3 · Bouteille CO₂</span></div><div><b>HoReCa XL</b><span>1 · BOX 150 (largeur 80 cm)<br>2 · Be Connect<br>3 · Bouteille CO₂</span></div>`,
     "s10.t":"Glossaire & repères produits","s10.sub":"Le vocabulaire BE WTR décodé — à lire avant votre première installation.",
     "s10.body":`<div class="grid two"><div class="card"><h4>Gammes & modèles</h4><ul class="small"><li><b>AQTiV Combi / Combi H</b> — tap col-de-cygne ; Combi = aussi eau tempérée / chaude non filtrée</li><li><b>AQTiV One / One S</b> — tap compact, plate + pétillante</li><li><b>AQTiV Tower</b> — colonne tout-en-un (BOX + gaz intégrés)</li><li><b>BAR 1 / BAR 2</b> — taps type bar ; BAR 2 = doses / portions programmables</li><li><b>PRO 2 / PRO 3</b> — unités pro ; PRO 2 = chiller intégré, sans perçage</li><li><b>BOX 20 / 30 / 80 / 150</b> — unité de froid (chiller / carbonateur), taille selon l'usage (Home → HoReCa XL)</li></ul></div><div class="card"><h4>Pièces & termes techniques</h4><ul class="small"><li><b>Be Connect</b> — tête de filtre connectée (IoT) : filtre l'eau, détecte fuite / CO₂, alimente la webapp client</li><li><b>BOX / carbonateur</b> — refroidit l'eau et la gazéifie (carbonatation)</li><li><b>Gearbox</b> — mécanisme des <b>AQTiV tap</b> qui distribue l'eau plate et pétillante ; pièce d'usure (joints, piston)</li><li><b>Compensateur (BW-0158)</b> — restricteur qui règle le débit en jet laminaire (2,2 L/min)</li><li><b>Détendeur / réducteur de pression</b> — ramène la pression réseau à 3 Bar</li><li><b>Bac à glace (ice bank)</b> — réserve de froid dans la BOX ; niveau « min »</li><li><b>Kit Mullex</b> — kit poubelle pour le B2C</li><li><b>Python</b> — gaine de tubes entre la Box et le tap, pour les recirculations</li><li><b>Service / Intervention (Case)</b> — Service = maintenance ; Intervention = réparation / dépannage (terminologie carte & app)</li><li><b>EcoSmart</b> — réglage éco / énergie de l'unité</li></ul></div></div>`,
@@ -1515,12 +1520,12 @@ const I18N = {
     "fb.mailto":"Envoyer par email à la place",
     "fb.done.t":"Merci, c'est envoyé\u00a0!",
     "fb.done.d":"Votre retour est enregistré. L'équipe le relit et l'intègre dans une prochaine mise à jour du guide.",
-    "fb.again":"Envoyer un autre retour",
+    "fb.again":"Envoyer un autre retour"
   },
-  en:{"nav.home":"Home","machine.t":"Which machine do you have?","machine.sub":"Select your model to open all its documentation.","machine.taps":"Taps","machine.disc":"phased off","chip.water":"Water line","chip.elec":"Elec","chip.parts":"Parts","chip.tech":"Datasheet","chip.maint":"Maintenance","chip.bec":"BeConnect","chip.tuto":"Tutorials","search.global":"Search — tutorials, parts, sections…","search.ph":"Keyword, ref (BW-…), symptom…","search.hint":"Type at least 2 characters.","search.none":"No results.","search.g.sec":"Sections","search.g.part":"Spare parts","search.g.tuto":"Tutorials","goto.parts":"Open exploded views & parts","goto.experience":"Finish with the customer handover","goto.begin":"Start with the installation","goto.install":"Open the step-by-step installation tutorials","goto.maintenance":"Watch the maintenance video tutorials","goto.troubleshoot":"Watch the troubleshooting video tutorials","nav.g.tutos":"Tutorials","nav.g.form":"Training","home.t":"What do you need?","home.sub":"Pick a category — all content is organised by task.",
+  en:{"nav.home":"Home","machine.t":"Which machine do you have?","machine.sub":"Select your model to open all its documentation.","machine.taps":"Taps","machine.disc":"phased off","chip.water":"Water line","chip.elec":"Elec","chip.parts":"Parts","chip.tech":"Datasheet","chip.maint":"Maintenance","chip.bec":"BeConnect","chip.tuto":"Tutorials","search.global":"Search — tutorials, parts, sections…","search.ph":"Keyword, ref (BW-…), symptom…","search.hint":"Type at least 2 characters.","search.none":"No results.","search.g.sec":"Sections","search.g.part":"Spare parts","search.g.tuto":"Tutorials","goto.parts":"Open exploded views & parts","goto.experience":"Finish with the customer handover","goto.begin":"Start with the installation","goto.install":"Open the step-by-step installation tutorials","goto.maintenance":"Watch the maintenance video tutorials","goto.troubleshoot":"Watch the troubleshooting video tutorials","home.t":"What do you need?","home.sub":"Pick a category — all content is organised by task.",
     "brand.sub":"Technician Guide","nav.start":"Get started","nav.overview":"System overview","nav.beconnect":"Be Connect (IoT)",
     "nav.field":"Field operations","nav.install":"Installation","nav.settings":"Settings & values","nav.maintenance":"Maintenance",
-    "nav.troubleshoot":"Troubleshooting","nav.client":"Client","nav.experience":"Customer experience","nav.library":"Library",
+    "nav.troubleshoot":"Troubleshooting","nav.experience":"Customer experience","nav.library":"Library",
     "nav.tutorials":"Tutorial library",
     "hero.title":"BE WTR — Technician Installation Guide",
     "hero.desc":"The single document to install, commission, service and troubleshoot a BE WTR system on your own. Every procedure, every setting value and every tutorial, in one place.",
@@ -1577,7 +1582,6 @@ const I18N = {
     "s11.sub":"Water and electrical schemas, spare parts and exploded views, product measurements, technical sheets. Choose a category, then a product — the preview opens on click, on screen only (no download).",
     "schema.water":"Water line",
     "schema.elec":"Electrical schema",
-    "schema.none":"Not available for this product",
     "schema.back":"Categories",
     "schema.previewonly":"On-screen preview \u2014 no download",
     "tech.fronly":"French document \u2014 translation pending",
@@ -1595,22 +1599,18 @@ const I18N = {
     "s14.body":`<div class="card"><h3>Hygiene</h3><ul class="small"><li>Handle tap, filter and components with <b>clean, dry hands</b>.</li><li><b>Never touch the top of the filter</b> (contamination risk).</li><li>Removed filter: fit a cap and <b>reinstall within 24 h</b> max.</li><li>Clean the system at every maintenance (taps, limescale); use the provided disinfectant.</li><li>Let the client <b>taste the water</b> after the visit.</li></ul></div><div class="card"><h3>Electrical safety</h3><ul class="small"><li><b>Never touch</b> the device or the cable with <b>wet hands</b> (electric shock).</li><li>No other electrical equipment on the <b>same socket</b> or under the counter near the system.</li></ul></div><div class="card"><h3>CO₂ safety</h3><ul class="small"><li>Cylinder always <b>vertical</b>, against a wall, <b>secured by the strap</b> (anti-fall), <b>&gt; 50 cm</b> from any heat source.</li><li>Size the cylinder to the <b>room volume</b>, ventilation and local regulations. If capacity exceeds local limits: <b>safety alert + ventilation</b> mandatory. Room ventilated or fitted with a <b>CO₂ detector</b>.</li><li>Always connect the cylinder to the <b>regulator</b> — <b>never directly to the BOX</b> (explosion risk). Never unscrew fittings from containers.</li><li>Detect leaks with <b>soapy water</b>; if not repairable, contact customer service.</li><li><b>Food-grade CO₂ E290</b>. Place the CO₂ safety instruction near the cylinder, clearly visible.</li></ul></div>`,
     "res.title":"Technical resources",
     "res.tools":"Tools list (car stock)",
-    "res.exploded":"Exploded views (spare parts)",
     "nav.gaps":"To complete",
     "nav.claims":"Claims",
     "s12.t":"To complete — knowledge-base roadmap",
     "s12.sub":"Completeness status by domain — what's left to produce for a fully complete service database.",
     "s12.body":`<div class="grid two"><div class="card"><h4>Installation <span class="gap-badge part">Partial</span></h4><ul class="small"><li>AQTiV Duo & PRO 2 tutorials (gen 2026)</li><li>"Hole-saw cut" tutorial</li></ul></div><div class="card"><h4>Troubleshooting <span class="gap-badge part">Partial</span></h4><ul class="small"><li>Symptom → cause decision tree</li></ul></div></div><div class="note small">Key: <b>Complete</b> = present in this base · <b>Partial</b> = exists but incomplete · <b>To create</b> = document to produce.</div>`,
     "start.body":`<h3>🧭 First BE WTR install? Start here</h3><p class="small muted" style="margin:0 0 4px">Follow this path in order — each step opens its section:</p><div class="path"><a href="#home"><span class="stp">①</span>Identify the machine</a><a href="#install"><span class="stp">②</span>Tools &amp; prerequisites</a><a href="#tutorials"><span class="stp">③</span>Open the right tutorial</a><a href="#install"><span class="stp">④</span>Follow the 9 steps</a><a href="#settings"><span class="stp">⑤</span>Set the values</a><a href="#experience"><span class="stp">⑥</span>Client handover</a></div><p class="small muted" style="margin:12px 0 0">Unfamiliar word (Gearbox, Mullex, carbonator…)? See the <a href="#glossary">Glossary</a>. Stuck? See <a href="#troubleshoot">Troubleshooting</a>, then open a <a href="#claims">repair ticket</a>.</p>`,
-    "s1.capElements":`Typical assembly (counter config). 1 potable water supply ⌀½" · 2 incoming tube (reduction to ⌀5/16") · 3 Be Connect (filter head) · 4 filter · 6 CO₂ bottle + safety belt · 7 CO₂ regulator ⌀¼" · 8 CO₂ tubing ("T" to BOX and Be Connect) · 9 BOX (chiller / carbonator) · 12 tap · 14 water pressure regulator.`,
-    "s2.capPorts":`Be Connect port map — numbers match the table below.`,
     "s1.legend":`<li><span class="ln">1</span><span>Potable water supply — ⌀ ½"</span></li><li><span class="ln">2</span><span>Incoming water tube (reduction ⌀ 5/16")</span></li><li><span class="ln">3</span><span>Be Connect — filter head</span></li><li><span class="ln">4</span><span>Filter</span></li><li><span class="ln">5</span><span>Filtered water tubing ⌀ 5/16"</span></li><li><span class="ln">6</span><span>CO₂ bottle + safety belt</span></li><li><span class="ln">7</span><span>CO₂ regulator ⌀ ¼"</span></li><li><span class="ln">8</span><span>CO₂ tubing ("T" to BOX and Be Connect) ⌀ ¼"</span></li><li><span class="ln">9</span><span>BOX — chiller / carbonator</span></li><li><span class="ln">10</span><span>Still tubing (through Be Connect) ⌀ 5/16"</span></li><li><span class="ln">11</span><span>Sparkling tubing (through Be Connect) ⌀ 5/16"</span></li><li><span class="ln">12</span><span>Tap ⌀ 5/16"</span></li><li><span class="ln">13</span><span>CO₂ sticker</span></li><li><span class="ln">14</span><span>Water pressure regulator ⌀ 5/16"</span></li>`,
     "s2.legend":`<li><span class="ln">1</span><span>Power input — C14</span></li><li><span class="ln">2</span><span>Power output — C13</span></li><li><span class="ln">3</span><span>Button — see LED table</span></li><li><span class="ln">4</span><span>Incoming water ⌀ 5/16"</span></li><li><span class="ln">5</span><span>Filtered water ⌀ 5/16"</span></li><li><span class="ln">6</span><span>Leak sensor — lay on the floor</span></li><li><span class="ln">7</span><span>CO₂ sensor ⌀ ¼"</span></li><li><span class="ln">8</span><span>Sparkling input ⌀ 5/16"</span></li><li><span class="ln">9</span><span>Sparkling output ⌀ 5/16"</span></li><li><span class="ln">10</span><span>Still input ⌀ 5/16"</span></li><li><span class="ln">11</span><span>Still output ⌀ 5/16"</span></li><li><span class="ln">12</span><span>QR code — webapp scan</span></li><li><span class="ln">13</span><span>Mounting plate — with screws</span></li>`,
     "s3.map":`<div class="card"><h3>① Identify the machine & use case</h3><p class="small muted">The BOX (cooling unit) and the tap change with the use case. Find your configuration:</p><table><thead><tr><th>Use case</th><th>BOX</th><th>Space required</th></tr></thead><tbody><tr><td>Home (residential)</td><td>BOX 20</td><td>60 × 60 cm</td></tr><tr><td>Office</td><td>BOX 30 (+ ventilation kit)</td><td>60 × 60 cm</td></tr><tr><td>HoReCa</td><td>BOX 80</td><td>60 × 60 cm</td></tr><tr><td>HoReCa XL</td><td>BOX 150</td><td>80 cm width</td></tr></tbody></table><div class="note small"><b>Matching tutorial:</b> in the library, open the tutorial named exactly after your model.</div></div>`,
     "s3.capLayouts":`Typical layout (top view, 60 × 60 cm; top = wall, bottom = user) per use case. BOX and gas go in last.`,
     "s3.tools":`<div class="card"><h3>② Prepare: tools & prerequisites</h3><div class="grid two"><div><h4>Bring</h4><p class="small" style="margin:-2px 0 10px"><a href="javascript:void(0)" onclick="openToolsList();return false;">▤ Full vehicle tools list ↗</a></p><ul class="small"><li>Drill + hole saw ⌀35 mm (⌀50 mm for BAR 2)</li><li>Wrenches, screwdrivers, tube cutter</li><li>Teflon / seals, tightening wrench</li><li>Pressure gauge & multimeter</li><li>Abrasive paper (AQTiV), descaler & microfibre cloth</li><li>Protective glasses & gloves</li></ul></div><div><h4>On site, check</h4><ul class="small"><li>Potable water supply ⌀½" with shut-off valve</li><li>Dedicated power socket (nothing else on it)</li><li>Ventilated space 60 × 60 cm (80 cm for BOX 150)</li><li>Access for purging / drainage (if no drain, provide a canister with alarm)</li><li>Indoor, away from frost and heat</li></ul></div></div></div><div class="callout small" style="margin-top:12px">⚠ CO₂ safety: the bottle is pressurised. Always fit the <b>safety belt</b>, handle it upright and secured, never drop it. Glasses + gloves are mandatory for drilling.</div>`,
     "s3.drill":`<div class="card"><h3>③ Drilling per tap</h3><table><thead><tr><th>Tap</th><th>Counter hole</th><th>Drip tray</th><th>Electric conn.</th></tr></thead><tbody><tr><td>AQTiV Combi / Combi H</td><td>⌀ 35 mm</td><td>–</td><td>–</td></tr><tr><td>AQTiV One / One S</td><td>⌀ 35 mm</td><td>Yes (One)</td><td>–</td></tr><tr><td>AQTiV Duo</td><td>⌀ 35 mm</td><td>Yes</td><td>Yes if no BE CONNECT</td></tr><tr><td>BAR 1</td><td>⌀ 35 mm</td><td>Yes</td><td>–</td></tr><tr><td>BAR 2</td><td>⌀ 50 mm</td><td>Yes</td><td>Yes</td></tr><tr><td>PRO 2</td><td>No hole</td><td>Yes</td><td>Yes</td></tr><tr><td>PRO 3</td><td>No hole</td><td>Yes</td><td>Yes</td></tr></tbody></table><p class="small muted" style="margin-top:8px">AQTiV Combi / Combi H also dispense ambient / warm non-filtered water. PRO 2: integrated chiller (no separate BOX). BAR 2: portion settings in the user manual. AQTiV Duo: electrical connection only needed <b>without BE CONNECT</b> (otherwise included with the BE CONNECT).</p></div>`,
-    "s3.capTaps":`Tap models and counter-drilling diameters.`,
     "s3.layoutcap":`<div><b>Home</b><span>1 · BOX 20 Home<br>2 · Be Connect<br>3 · Gas cylinder<br>4 · Trash (option)</span></div><div><b>Office</b><span>1 · BOX 30 (ventilation kit)<br>2 · Be Connect<br>3 · Gas cylinder</span></div><div><b>HoReCa</b><span>1 · BOX 80<br>2 · Be Connect<br>3 · Gas cylinder</span></div><div><b>HoReCa XL</b><span>1 · BOX 150 (80 cm width)<br>2 · Be Connect<br>3 · Gas cylinder</span></div>`,
     "s10.t":"Glossary & product reference","s10.sub":"BE WTR vocabulary decoded — read before your first installation.",
     "s10.body":`<div class="grid two"><div class="card"><h4>Ranges & models</h4><ul class="small"><li><b>AQTiV Combi / Combi H</b> — gooseneck tap; Combi = also ambient / warm non-filtered water</li><li><b>AQTiV One / One S</b> — compact tap, still + sparkling</li><li><b>AQTiV Tower</b> — all-in-one column (BOX + gas integrated)</li><li><b>BAR 1 / BAR 2</b> — bar-style taps; BAR 2 = programmable doses / portions</li><li><b>PRO 2 / PRO 3</b> — pro units; PRO 2 = integrated chiller, no drilling</li><li><b>BOX 20 / 30 / 80 / 150</b> — cooling unit (chiller / carbonator), sized to the use case (Home → HoReCa XL)</li></ul></div><div class="card"><h4>Parts & technical terms</h4><ul class="small"><li><b>Be Connect</b> — connected filter head (IoT): filters water, senses leak / CO₂, feeds the client webapp</li><li><b>BOX / carbonator</b> — cools the water and carbonates it</li><li><b>Gearbox</b> — mechanism of the <b>AQTiV taps</b> dispensing still & sparkling water; wear part (seals, piston)</li><li><b>Compensator (BW-0158)</b> — restrictor that sets the laminar flow (2.2 L/min)</li><li><b>Pressure reducer / regulator</b> — brings mains pressure down to 3 Bar</li><li><b>Ice bank</b> — cold reserve inside the BOX; level "min"</li><li><b>Kit Mullex</b> — bin kit for B2C</li><li><b>Python</b> — the tubing run between the Box and the tap, for recirculation setups</li><li><b>Service / Intervention (Case)</b> — Service = maintenance; Intervention = repair / troubleshooting (map & app terminology)</li><li><b>EcoSmart</b> — eco / power setting on the unit</li></ul></div></div>`,
@@ -1639,12 +1639,12 @@ const I18N = {
     "fb.mailto":"Send by email instead",
     "fb.done.t":"Thank you, it has been sent!",
     "fb.done.d":"Your report is recorded. The team reviews it and folds it into a future update of the guide.",
-    "fb.again":"Send another report",
+    "fb.again":"Send another report"
   },
-  de:{"nav.home":"Start","machine.t":"Welche Maschine haben Sie?","machine.sub":"Wählen Sie Ihr Modell für die gesamte Dokumentation.","machine.taps":"Taps","machine.disc":"eingestellt","chip.water":"Wasserlinie","chip.elec":"Elektrik","chip.parts":"Teile","chip.tech":"Datenblatt","chip.maint":"Wartung","chip.bec":"BeConnect","chip.tuto":"Tutorials","search.global":"Suchen — Tutorials, Teile, Abschnitte…","search.ph":"Stichwort, Referenz (BW-…), Symptom…","search.hint":"Mind. 2 Zeichen eingeben.","search.none":"Keine Treffer.","search.g.sec":"Bereiche","search.g.part":"Ersatzteile","search.g.tuto":"Tutorials","goto.parts":"Explosionszeichnungen & Teile öffnen","goto.experience":"Mit der Kundenübergabe abschließen","goto.begin":"Mit der Installation beginnen","goto.install":"Schritt-für-Schritt-Installationstutorials öffnen","goto.maintenance":"Wartungs-Videotutorials ansehen","goto.troubleshoot":"Störungs-Videotutorials ansehen","nav.g.tutos":"Tutorials","nav.g.form":"Schulung","home.t":"Was möchten Sie tun?","home.sub":"Wählen Sie eine Kategorie — alles ist nach Aufgabe geordnet.",
+  de:{"nav.home":"Start","machine.t":"Welche Maschine haben Sie?","machine.sub":"Wählen Sie Ihr Modell für die gesamte Dokumentation.","machine.taps":"Taps","machine.disc":"eingestellt","chip.water":"Wasserlinie","chip.elec":"Elektrik","chip.parts":"Teile","chip.tech":"Datenblatt","chip.maint":"Wartung","chip.bec":"BeConnect","chip.tuto":"Tutorials","search.global":"Suchen — Tutorials, Teile, Abschnitte…","search.ph":"Stichwort, Referenz (BW-…), Symptom…","search.hint":"Mind. 2 Zeichen eingeben.","search.none":"Keine Treffer.","search.g.sec":"Bereiche","search.g.part":"Ersatzteile","search.g.tuto":"Tutorials","goto.parts":"Explosionszeichnungen & Teile öffnen","goto.experience":"Mit der Kundenübergabe abschließen","goto.begin":"Mit der Installation beginnen","goto.install":"Schritt-für-Schritt-Installationstutorials öffnen","goto.maintenance":"Wartungs-Videotutorials ansehen","goto.troubleshoot":"Störungs-Videotutorials ansehen","home.t":"Was möchten Sie tun?","home.sub":"Wählen Sie eine Kategorie — alles ist nach Aufgabe geordnet.",
     "brand.sub":"Techniker-Leitfaden","nav.start":"Loslegen","nav.overview":"Systemübersicht","nav.beconnect":"Be Connect (IoT)",
     "nav.field":"Vor Ort","nav.install":"Installation","nav.settings":"Einstellungen & Werte","nav.maintenance":"Wartung",
-    "nav.troubleshoot":"Fehlerbehebung","nav.client":"Kunde","nav.experience":"Kundenerlebnis","nav.library":"Bibliothek",
+    "nav.troubleshoot":"Fehlerbehebung","nav.experience":"Kundenerlebnis","nav.library":"Bibliothek",
     "nav.tutorials":"Tutorial-Bibliothek",
     "hero.title":"BE WTR — Techniker-Installationsleitfaden",
     "hero.desc":"Das eine Dokument, um ein BE WTR-System eigenständig zu installieren, in Betrieb zu nehmen, zu warten und Störungen zu beheben. Jede Prozedur, jeder Einstellwert und jedes Tutorial an einem Ort.",
@@ -1701,7 +1701,6 @@ const I18N = {
     "s11.sub":"Wasser- und Elektroschemata, Ersatzteile und Explosionszeichnungen, Produktmaße, technische Datenblätter. Kategorie wählen, dann ein Produkt — die Vorschau öffnet sich per Klick, nur am Bildschirm (kein Download).",
     "schema.water":"Wasserlinie",
     "schema.elec":"Elektroschema",
-    "schema.none":"Für dieses Produkt nicht verfügbar",
     "schema.back":"Kategorien",
     "schema.previewonly":"Bildschirm-Vorschau \u2014 kein Download",
     "tech.fronly":"Dokument auf Franz\u00f6sisch \u2014 \u00dcbersetzung folgt",
@@ -1719,22 +1718,18 @@ const I18N = {
     "s14.body":`<div class="card"><h3>Hygiene</h3><ul class="small"><li>Zapfhahn, Filter und Komponenten mit <b>sauberen, trockenen Händen</b> handhaben.</li><li><b>Die Oberseite des Filters nie berühren</b> (Kontaminationsgefahr).</li><li>Ausgebauter Filter: Kappe anbringen und <b>innerhalb von 24 h</b> wieder einbauen.</li><li>Das System bei jeder Wartung reinigen (Zapfhähne, Kalk); das vorgesehene Desinfektionsmittel verwenden.</li><li>Den Kunden nach dem Einsatz das <b>Wasser probieren</b> lassen.</li></ul></div><div class="card"><h3>Elektrische Sicherheit</h3><ul class="small"><li>Gerät oder Kabel <b>nie mit nassen Händen</b> berühren (Stromschlag).</li><li>Kein weiteres Elektrogerät an <b>derselben Steckdose</b> oder unter der Theke nahe dem System.</li></ul></div><div class="card"><h3>CO₂-Sicherheit</h3><ul class="small"><li>Flasche immer <b>senkrecht</b>, an einer Wand, <b>mit Gurt gesichert</b> (Fallschutz), <b>&gt; 50 cm</b> von jeder Wärmequelle.</li><li>Flasche nach <b>Raumvolumen</b>, Belüftung und lokalen Vorschriften dimensionieren. Überschreitet die Kapazität lokale Grenzwerte: <b>Sicherheitsalarm + Belüftung</b> Pflicht. Raum belüftet oder mit <b>CO₂-Detektor</b> ausgestattet.</li><li>Flasche immer an den <b>Regler</b> anschließen — <b>nie direkt an die BOX</b> (Explosionsgefahr). Verbindungen an Behältern nie abschrauben.</li><li>Lecks mit <b>Seifenwasser</b> erkennen; wenn nicht reparierbar, Kundendienst kontaktieren.</li><li><b>Lebensmittel-CO₂ E290</b>. Die CO₂-Sicherheitsanweisung sichtbar an der Flasche anbringen.</li></ul></div>`,
     "res.title":"Technische Ressourcen",
     "res.tools":"Werkzeugliste (Fahrzeugbestand)",
-    "res.exploded":"Explosionszeichnungen (Ersatzteile)",
     "nav.gaps":"Zu ergänzen",
     "nav.claims":"Claims",
     "s12.t":"Zu vervollständigen — Wissensdatenbank-Roadmap",
     "s12.sub":"Vollständigkeitsstatus je Bereich — was noch zu erstellen ist für eine vollständige Service-Datenbank.",
     "s12.body":`<div class="grid two"><div class="card"><h4>Installation <span class="gap-badge part">Teilweise</span></h4><ul class="small"><li>Tutorials AQTiV Duo & PRO 2 (Gen 2026)</li><li>Tutorial „Lochsägen-Bohrung"</li></ul></div><div class="card"><h4>Fehlerbehebung <span class="gap-badge part">Teilweise</span></h4><ul class="small"><li>Entscheidungsbaum Symptom → Ursache</li></ul></div></div><div class="note small">Legende: <b>Komplett</b> = in dieser Basis vorhanden · <b>Teilweise</b> = vorhanden, aber unvollständig · <b>Zu erstellen</b> = zu produzierendes Dokument.</div>`,
     "start.body":`<h3>🧭 Erste BE WTR-Installation? Hier starten</h3><p class="small muted" style="margin:0 0 4px">Folgen Sie diesem Weg der Reihe nach — jeder Schritt öffnet seinen Abschnitt:</p><div class="path"><a href="#home"><span class="stp">①</span>Maschine erkennen</a><a href="#install"><span class="stp">②</span>Werkzeug &amp; Voraussetzungen</a><a href="#tutorials"><span class="stp">③</span>Passendes Tutorial öffnen</a><a href="#install"><span class="stp">④</span>Den 9 Schritten folgen</a><a href="#settings"><span class="stp">⑤</span>Werte einstellen</a><a href="#experience"><span class="stp">⑥</span>Kundenübergabe</a></div><p class="small muted" style="margin:12px 0 0">Unbekanntes Wort (Gearbox, Mullex, Karbonator…)? Siehe <a href="#glossary">Glossar</a>. Festgefahren? Siehe <a href="#troubleshoot">Fehlerbehebung</a> und dann ein <a href="#claims">Reparaturticket</a> öffnen.</p>`,
-    "s1.capElements":`Typischer Aufbau (Thekenkonfiguration). 1 Trinkwasserzulauf ⌀½" · 2 Zulaufschlauch (Reduktion auf ⌀5/16") · 3 Be Connect (Filterkopf) · 4 Filter · 6 CO₂-Flasche + Sicherheitsgurt · 7 CO₂-Regler ⌀¼" · 8 CO₂-Schlauch („T" zu BOX und Be Connect) · 9 BOX (Chiller / Karbonator) · 12 Zapfhahn · 14 Wasserdruckregler.`,
-    "s2.capPorts":`Be Connect Anschluss-Übersicht — die Nummern entsprechen der Tabelle unten.`,
     "s1.legend":`<li><span class="ln">1</span><span>Trinkwasserzulauf — ⌀ ½"</span></li><li><span class="ln">2</span><span>Zulaufschlauch (Reduktion ⌀ 5/16")</span></li><li><span class="ln">3</span><span>Be Connect — Filterkopf</span></li><li><span class="ln">4</span><span>Filter</span></li><li><span class="ln">5</span><span>Schlauch gefiltertes Wasser ⌀ 5/16"</span></li><li><span class="ln">6</span><span>CO₂-Flasche + Sicherheitsgurt</span></li><li><span class="ln">7</span><span>CO₂-Regler ⌀ ¼"</span></li><li><span class="ln">8</span><span>CO₂-Schlauch („T" zu BOX und Be Connect) ⌀ ¼"</span></li><li><span class="ln">9</span><span>BOX — Chiller / Karbonator</span></li><li><span class="ln">10</span><span>Stillwasser-Schlauch (über Be Connect) ⌀ 5/16"</span></li><li><span class="ln">11</span><span>Sprudel-Schlauch (über Be Connect) ⌀ 5/16"</span></li><li><span class="ln">12</span><span>Zapfhahn ⌀ 5/16"</span></li><li><span class="ln">13</span><span>CO₂-Sticker</span></li><li><span class="ln">14</span><span>Wasserdruckregler ⌀ 5/16"</span></li>`,
     "s2.legend":`<li><span class="ln">1</span><span>Stromeingang — C14</span></li><li><span class="ln">2</span><span>Stromausgang — C13</span></li><li><span class="ln">3</span><span>Taste — siehe LED-Tabelle</span></li><li><span class="ln">4</span><span>Wasserzulauf ⌀ 5/16"</span></li><li><span class="ln">5</span><span>Gefiltertes Wasser ⌀ 5/16"</span></li><li><span class="ln">6</span><span>Lecksensor — auf den Boden legen</span></li><li><span class="ln">7</span><span>CO₂-Sensor ⌀ ¼"</span></li><li><span class="ln">8</span><span>Sprudel-Eingang ⌀ 5/16"</span></li><li><span class="ln">9</span><span>Sprudel-Ausgang ⌀ 5/16"</span></li><li><span class="ln">10</span><span>Still-Eingang ⌀ 5/16"</span></li><li><span class="ln">11</span><span>Still-Ausgang ⌀ 5/16"</span></li><li><span class="ln">12</span><span>QR-Code — Webapp-Scan</span></li><li><span class="ln">13</span><span>Montageplatte — mit Schrauben</span></li>`,
     "s3.map":`<div class="card"><h3>① Maschine & Anwendungsfall erkennen</h3><p class="small muted">Die BOX (Kühleinheit) und der Zapfhahn ändern sich je nach Anwendung. Finden Sie Ihre Konfiguration:</p><table><thead><tr><th>Anwendung</th><th>BOX</th><th>Platzbedarf</th></tr></thead><tbody><tr><td>Home (Wohnbereich)</td><td>BOX 20</td><td>60 × 60 cm</td></tr><tr><td>Büro / Office</td><td>BOX 30 (+ Belüftungskit)</td><td>60 × 60 cm</td></tr><tr><td>HoReCa</td><td>BOX 80</td><td>60 × 60 cm</td></tr><tr><td>HoReCa XL</td><td>BOX 150</td><td>80 cm Breite</td></tr></tbody></table><div class="note small"><b>Passendes Tutorial:</b> Öffnen Sie in der Bibliothek das Tutorial mit dem genauen Namen Ihres Modells.</div></div>`,
     "s3.capLayouts":`Typische Anordnung (Draufsicht, 60 × 60 cm; oben = Wand, unten = Nutzer) je Anwendung. BOX und Gas kommen zuletzt.`,
     "s3.tools":`<div class="card"><h3>② Vorbereiten: Werkzeug & Voraussetzungen</h3><div class="grid two"><div><h4>Mitbringen</h4><p class="small" style="margin:-2px 0 10px"><a href="javascript:void(0)" onclick="openToolsList();return false;">▤ Komplette Fahrzeug-Werkzeugliste ↗</a></p><ul class="small"><li>Bohrmaschine + Lochsäge ⌀35 mm (⌀50 mm für BAR 2)</li><li>Schlüssel, Schraubendreher, Rohrschneider</li><li>Teflon / Dichtungen, Anzugsschlüssel</li><li>Manometer & Multimeter</li><li>Schleifpapier (AQTiV), Entkalker & Mikrofasertuch</li><li>Schutzbrille & Handschuhe</li></ul></div><div><h4>Vor Ort prüfen</h4><ul class="small"><li>Trinkwasserzulauf ⌀½" mit Absperrventil</li><li>Dedizierte Steckdose (nichts anderes daran)</li><li>Belüfteter Platz 60 × 60 cm (80 cm für BOX 150)</li><li>Zugang zum Spülen / Ablauf (falls kein Ablauf, Kanister mit Alarm vorsehen)</li><li>Innenbereich, frost- und hitzegeschützt</li></ul></div></div></div><div class="callout small" style="margin-top:12px">⚠ CO₂-Sicherheit: Die Flasche steht unter Druck. Immer den <b>Sicherheitsgurt</b> anlegen, aufrecht und gesichert handhaben, nie fallen lassen. Brille + Handschuhe beim Bohren Pflicht.</div>`,
     "s3.drill":`<div class="card"><h3>③ Bohren je Zapfhahn</h3><table><thead><tr><th>Zapfhahn</th><th>Thekenbohrung</th><th>Tropfschale</th><th>Elektroanschl.</th></tr></thead><tbody><tr><td>AQTiV Combi / Combi H</td><td>⌀ 35 mm</td><td>–</td><td>–</td></tr><tr><td>AQTiV One / One S</td><td>⌀ 35 mm</td><td>Ja (One)</td><td>–</td></tr><tr><td>AQTiV Duo</td><td>⌀ 35 mm</td><td>Ja</td><td>Ja, falls kein BE CONNECT</td></tr><tr><td>BAR 1</td><td>⌀ 35 mm</td><td>Ja</td><td>–</td></tr><tr><td>BAR 2</td><td>⌀ 50 mm</td><td>Ja</td><td>Ja</td></tr><tr><td>PRO 2</td><td>Keine Bohrung</td><td>Ja</td><td>Ja</td></tr><tr><td>PRO 3</td><td>Keine Bohrung</td><td>Ja</td><td>Ja</td></tr></tbody></table><p class="small muted" style="margin-top:8px">AQTiV Combi / Combi H geben auch temperiertes / warmes ungefiltertes Wasser aus. PRO 2: integrierter Chiller (keine separate BOX). BAR 2: Portionseinstellungen im Benutzerhandbuch. AQTiV Duo: Elektroanschluss nur <b>ohne BE CONNECT</b> nötig (sonst mit dem BE CONNECT enthalten).</p></div>`,
-    "s3.capTaps":`Zapfhahn-Modelle und Thekenbohr-Durchmesser.`,
     "s3.layoutcap":`<div><b>Home</b><span>1 · BOX 20 Home<br>2 · Be Connect<br>3 · CO₂-Flasche<br>4 · Mülleimer (Option)</span></div><div><b>Office</b><span>1 · BOX 30 (Belüftungskit)<br>2 · Be Connect<br>3 · CO₂-Flasche</span></div><div><b>HoReCa</b><span>1 · BOX 80<br>2 · Be Connect<br>3 · CO₂-Flasche</span></div><div><b>HoReCa XL</b><span>1 · BOX 150 (80 cm Breite)<br>2 · Be Connect<br>3 · CO₂-Flasche</span></div>`,
     "s10.t":"Glossar & Produktreferenz","s10.sub":"BE WTR-Vokabular entschlüsselt — vor Ihrer ersten Installation lesen.",
     "s10.body":`<div class="grid two"><div class="card"><h4>Baureihen & Modelle</h4><ul class="small"><li><b>AQTiV Combi / Combi H</b> — Schwanenhals-Zapfhahn; Combi = auch temperiertes / warmes ungefiltertes Wasser</li><li><b>AQTiV One / One S</b> — kompakter Zapfhahn, still + Sprudel</li><li><b>AQTiV Tower</b> — All-in-One-Säule (BOX + Gas integriert)</li><li><b>BAR 1 / BAR 2</b> — Bar-Zapfhähne; BAR 2 = programmierbare Dosen / Portionen</li><li><b>PRO 2 / PRO 3</b> — Profi-Einheiten; PRO 2 = integrierter Chiller, ohne Bohrung</li><li><b>BOX 20 / 30 / 80 / 150</b> — Kühleinheit (Chiller / Karbonator), Größe je Anwendung (Home → HoReCa XL)</li></ul></div><div class="card"><h4>Teile & Fachbegriffe</h4><ul class="small"><li><b>Be Connect</b> — vernetzter Filterkopf (IoT): filtert Wasser, erkennt Leck / CO₂, versorgt die Kunden-Webapp</li><li><b>BOX / Karbonator</b> — kühlt das Wasser und versetzt es mit Kohlensäure</li><li><b>Gearbox</b> — Mechanismus der <b>AQTiV-Zapfhähne</b>, gibt Still- & Sprudelwasser aus; Verschleißteil (Dichtungen, Kolben)</li><li><b>Kompensator (BW-0158)</b> — Drossel, die den laminaren Durchfluss einstellt (2,2 L/min)</li><li><b>Druckminderer / Regler</b> — reduziert den Leitungsdruck auf 3 Bar</li><li><b>Eisbank</b> — Kältereserve in der BOX; Niveau „min"</li><li><b>Kit Mullex</b> — Mülleimer-Kit für B2C</li><li><b>Python</b> — die Schlauchstrecke zwischen Box und Zapfhahn, für Rezirkulationen</li><li><b>Service / Intervention (Case)</b> — Service = Wartung; Intervention = Reparatur / Fehlerbehebung (Karten- & App-Terminologie)</li><li><b>EcoSmart</b> — Eco-/Energieeinstellung der Einheit</li></ul></div></div>`,
@@ -1763,7 +1758,7 @@ const I18N = {
     "fb.mailto":"Stattdessen per E-Mail senden",
     "fb.done.t":"Danke, gesendet!",
     "fb.done.d":"Ihre Meldung ist gespeichert. Das Team prüft sie und berücksichtigt sie in einem künftigen Update des Leitfadens.",
-    "fb.again":"Weitere Meldung senden",
+    "fb.again":"Weitere Meldung senden"
   }
 };
 
@@ -2550,11 +2545,24 @@ document.addEventListener('click', function(e){
   var im = e.target.closest('.itut .itut-ph img, .itut .itut-dg img, .itut .itut-mat img, .itut .mz-stage img');
   if(im) itutZoom(im.getAttribute('src'));
 });
-document.addEventListener('keydown', function(e){
-  if(e.key !== 'Escape') return;
+/* Trois visionneuses cohabitaient avec trois comportements : Échap fermait le
+   zoom d'une fiche, mais ni le schéma ni les pièces — les deux plein écran,
+   avec le défilement de la page verrouillé. Il fallait trouver la croix.
+   Une seule fonction ferme ce qui est au-dessus, dans l'ordre où c'est empilé. */
+function hubCloseTop(){
   var z = document.getElementById('itzoom');
-  if(z && z.style.display === 'flex'){ z.style.display = 'none'; return; }
-  closeFichePanel();
+  if(z && z.style.display === 'flex'){ z.style.display = 'none'; return true; }
+  var sk = document.getElementById('schemabox');
+  if(sk && sk.style.display === 'flex'){ skClose(); return true; }
+  var im = document.getElementById('imgbox');
+  if(im && im.style.display === 'flex'){ closeImgbox(); return true; }
+  var sb = document.getElementById('searchbox');
+  if(sb && sb.style.display === 'flex'){ closeSearch(); return true; }
+  if(document.querySelector('.gf-panel')){ closeFichePanel(); return true; }
+  return false;
+}
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape') hubCloseTop();
 });
 
 function setLang(l){
@@ -2775,12 +2783,16 @@ function ensureImgbox(){
   if(!lb){lb=document.createElement('div');lb.id='imgbox';
     lb.innerHTML='<div class="img-wrap"><div class="img-bar"><span class="img-title"></span><span class="img-note"></span><button class="img-close">✕</button></div><div class="img-scroll"></div></div>';
     document.body.appendChild(lb);
-    lb.addEventListener('click',e=>{if(e.target===lb){lb.style.display='none';unlockScroll();waterSplash(e.clientX,e.clientY);
-      try{ clState.spareTarget=null; }catch(err){} lb.classList.remove('cl-over');}});
-    lb.querySelector('.img-close').addEventListener('click',(e)=>{lb.style.display='none';unlockScroll();waterSplash(e.clientX,e.clientY);
-      try{ clState.spareTarget=null; }catch(err){} lb.classList.remove('cl-over');});
+    lb.addEventListener('click',e=>{ if(e.target===lb) closeImgbox(e); });
+    lb.querySelector('.img-close').addEventListener('click',closeImgbox);
   }
   return lb;
+}
+function closeImgbox(e){
+  var lb=document.getElementById('imgbox'); if(!lb) return;
+  lb.style.display='none'; unlockScroll(); lb.classList.remove('cl-over');
+  if(e&&e.clientX) waterSplash(e.clientX,e.clientY);
+  try{ clState.spareTarget=null; }catch(err){}
 }
 function openImg(src,title,note){
   const lb=ensureImgbox();
@@ -2936,8 +2948,10 @@ var fbKind = 'bug', fbBusy = false;
 
 /* Sections proposées dans le menu « Section concernée » : on réutilise les
    libellés déjà traduits de la barre de navigation. */
-var FB_AREAS = ['home','install','maintenance','troubleshoot','tutorials','settings',
-                'experience','safety','beconnect','schemas','glossary','gaps'];
+/* Les sections proposées dans « Section concernée » : toutes, sauf le
+   formulaire lui-même — on ne signale pas un bug du formulaire depuis le
+   formulaire, on écrit. L'ordre est celui du menu. */
+var FB_AREAS = SECT_IDS.filter(function(id){ return id !== 'feedback'; });
 
 function fbAreaLabel(id){
   var a = document.querySelector('#nav a[href="#'+id+'"]');
@@ -3049,7 +3063,7 @@ function fbSubmit(e){
   var d = I18N[lang], p = fbPayload();
 
   if(!p.message){ fbSetStatus(d['fb.err.msg'], true); document.getElementById('fbMsg').focus(); return; }
-  if(p.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(p.email)){
+  if(p.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2}$/.test(p.email)){
     fbSetStatus(d['fb.err.mail'], true); document.getElementById('fbMail').focus(); return;
   }
   /* piège à robots : rempli => on fait comme si tout allait bien */
@@ -3185,7 +3199,6 @@ function jumpTo(id){
   window.scrollTo(0,y);
   setTimeout(function(){ he.style.scrollBehavior=prev||''; },0);
 }
-var SECT_IDS=['home','overview','beconnect','install','settings','maintenance','safety','troubleshoot','experience','tutorials','schemas','glossary','gaps','feedback','claims'];
 function showTab(hash){
   // Lien direct donné aux techniciens : ouvre l'onglet claims et, une fois
   // la phrase saisie, se pose sur le formulaire au lieu du tableau.
@@ -3246,7 +3259,7 @@ document.getElementById('openSearch').addEventListener('click',openSearch);
 document.getElementById('closeSearch').addEventListener('click',closeSearch);
 document.getElementById('gq').addEventListener('input',doSearch);
 document.getElementById('searchbox').addEventListener('click',function(e){ if(e.target.id==='searchbox') closeSearch(); });
-document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeSearch(); });
+/* Échap est traité en un seul endroit — voir hubCloseTop(). */
 /* ==================================================================
    Onglet Claims & pièces détachées — remplace le board Monday
    « Technical troubleshooting ».
@@ -3275,15 +3288,14 @@ const CL_I18N = {
     "gate.t":"Espace protégé","gate.sub":"Saisissez le mot de passe d'accès du hub pour ouvrir la plateforme des tickets de réparation.","gate.go":"Ouvrir",
     "gate.bad":"Mot de passe incorrect.","gate.net":"Connexion impossible. Vérifiez votre réseau puis réessayez.",
     "anon.unlock":"Accès équipe","scope.country":"Pays","scope.hint":"S'applique à tous les onglets.",
-    "tab.board":"Tickets à qualifier","tab.withparts":"Tickets avec pièces","tab.supplier":"Renvoi fournisseur","d.tosupplier":"Renvoyer au fournisseur","board.none.supplier":"Aucun renvoi fournisseur en cours.","kpi.toqualify":"À qualifier","kpi.withparts":"Avec pièces","board.none.toqualify":"Tout est qualifié : chaque ticket ouvert porte au moins une pièce.","board.none.withparts":"Aucun ticket ne porte encore de pièce.","tab.new":"Nouveau ticket","tab.parts":"Pièces à commander","tab.order":"Bulletin de commande","tab.history":"Commandes passées","tab.report":"Rapport",
+    "tab.board":"Tickets à qualifier","tab.withparts":"Tickets avec pièces","tab.supplier":"Renvoi fournisseur","d.tosupplier":"Renvoyer au fournisseur","kpi.toqualify":"À qualifier","kpi.withparts":"Avec pièces","tab.new":"Nouveau ticket","tab.parts":"Pièces à commander","tab.order":"Bulletin de commande","tab.history":"Commandes passées","tab.report":"Rapport",
     "rep.sub":"Le périmètre est celui du filtre pays, tout en haut de la page.",
     "rep.open":"Tickets ouverts","rep.closed":"Tickets fermés","rep.parts":"Pièces posées",
     "rep.byStatus":"Les tickets ouverts, par statut","rep.byProduct":"Tickets fermés, par produit",
     "rep.byPart":"Pièces utilisées sur les tickets fermés","rep.repaired":"Réparés","rep.binned":"Démontés",
     "rep.tickets":"Tickets","rep.click":"— cliquez une ligne pour voir ses tickets","rep.none.open":"Aucun ticket ouvert.","rep.none.closed":"Aucun ticket fermé.",
     "rep.none.parts":"Aucune pièce enregistrée sur les tickets fermés de ce périmètre.",
-    "kpi.total":"Tickets ouverts","kpi.new":"À réparer","kpi.order":"Pièces à commander","kpi.supplier":"Chez le fournisseur","kpi.warranty":"Sous garantie",
-    "filter.search":"Rechercher — titre, n° série, technicien, société…","filter.refresh":"Actualiser",
+    "kpi.order":"Pièces à commander","kpi.supplier":"Chez le fournisseur","filter.search":"Rechercher — titre, n° série, technicien, société…","filter.refresh":"Actualiser",
     "filter.xlsx":"Exporter en Excel","x.none":"Aucun ticket à exporter.","x.sheet":"Tickets",
     "filter.allstatus":"Tous les statuts","filter.allcountry":"Tous les pays","filter.allproduct":"Tous les produits","filter.allpart":"Toutes les pièces",
     "f.title":"Objet du ticket","f.desc":"Description du problème","f.product":"Produit","f.serial":"N° de série",
@@ -3299,7 +3311,7 @@ const CL_I18N = {
     "d.edit":"Modifier","d.editcancel":"Annuler",
     "d.editparts":"Ajouter ou retirer une pièce enregistre d'abord la fiche.",
     "d.restock":"Lieu de restockage","d.save":"Enregistrer","d.saved":"Enregistré.","d.parts":"Pièces demandées",
-    "d.addpart":"Ajouter une pièce","d.ordered":"commandée","d.none":"Aucune pièce demandée.",
+    "d.addpart":"Ajouter une pièce","d.none":"Aucune pièce demandée.",
     "parts.sub":"Toutes les pièces demandées et pas encore commandées, avec leur référence interne BE WTR. Une pièce quitte cette liste dès que le bon de commande est enregistré. Les références fournisseur et les prix sont dans le bulletin de commande.",
     "parts.none":"Aucune pièce en attente de commande.",
     "parts.ordered":"Commandée","parts.ordered.help":"Marque la pièce commandée pour ce ticket, sans passer par un bon de commande.","parts.qty":"Qté","parts.claims":"Tickets concernés",
@@ -3312,24 +3324,22 @@ const CL_I18N = {
     "o.ref":"Réf. fournisseur","o.internal":"Réf. interne","o.desig":"Désignation","o.qty":"Qté",
     "o.unit":"Prix unitaire","o.total":"Total","o.claim":"Ticket","o.sum":"Total commande",
     "h.none":"Aucune commande enregistrée.","h.on":"le","h.line":"ligne","h.lines":"lignes",
-    "spare.ticket":"Ticket","spare.add":"Ajouter","d.exploded":"Vue éclatée","filter.archived":"Voir les archivés","filter.allsupplier":"Tous les fournisseurs","f.sugg":"Suggestions","f.parts.hint":"Choisissez d'abord un produit pour ne voir que ses pièces.","d.archive":"Archiver le ticket","o.editprice":"Prix modifiable — enregistré pour les prochaines commandes","o.priced":"Prix enregistré pour %s.","o.pricelocal":"Prix appliqué à cette commande, mais pas enregistré : %s","kpi.archived":"Archivés",
-    "of.allcountry":"Tous les pays","of.allsupplier":"Tous les fournisseurs","of.none":"Aucune ligne ne correspond aux filtres.",
-    "err.load":"Chargement impossible : %s"
-  },
+    "spare.ticket":"Ticket","spare.add":"Ajouter","d.exploded":"Vue éclatée","filter.archived":"Voir les archivés","filter.allsupplier":"Tous les fournisseurs","f.sugg":"Suggestions","d.archive":"Archiver le ticket","o.editprice":"Prix modifiable — enregistré pour les prochaines commandes","o.priced":"Prix enregistré pour %s.","o.pricelocal":"Prix appliqué à cette commande, mais pas enregistré : %s","kpi.archived":"Archivés",
+    "of.allsupplier":"Tous les fournisseurs","of.none":"Aucune ligne ne correspond aux filtres."
+    },
   en:{
     "t":"Claims & spare parts","sub":"Machine returns and spare-part ordering, from the report to the supplier order form.",
     "gate.t":"Protected area","gate.sub":"Enter the hub access password to open the claims platform.","gate.go":"Open",
     "gate.bad":"Wrong password.","gate.net":"Cannot connect. Check your network and try again.",
     "anon.unlock":"Team access","scope.country":"Country","scope.hint":"Applies to every tab.",
-    "tab.board":"Claims to qualify","tab.withparts":"Claims with parts","tab.supplier":"Supplier return","d.tosupplier":"Send back to supplier","board.none.supplier":"No supplier return in progress.","kpi.toqualify":"To qualify","kpi.withparts":"With parts","board.none.toqualify":"Everything is qualified: every open claim carries at least one part.","board.none.withparts":"No claim carries a part yet.","tab.new":"New ticket","tab.parts":"Parts to order","tab.order":"Order form","tab.history":"Past orders","tab.report":"Report",
+    "tab.board":"Claims to qualify","tab.withparts":"Claims with parts","tab.supplier":"Supplier return","d.tosupplier":"Send back to supplier","kpi.toqualify":"To qualify","kpi.withparts":"With parts","tab.new":"New ticket","tab.parts":"Parts to order","tab.order":"Order form","tab.history":"Past orders","tab.report":"Report",
     "rep.sub":"The scope is the country filter at the top of the page.",
     "rep.open":"Open tickets","rep.closed":"Closed tickets","rep.parts":"Parts fitted",
     "rep.byStatus":"Open tickets, by status","rep.byProduct":"Closed tickets, by product",
     "rep.byPart":"Parts used on closed tickets","rep.repaired":"Repaired","rep.binned":"Stripped",
     "rep.tickets":"Tickets","rep.click":"— click a row to see its tickets","rep.none.open":"No open ticket.","rep.none.closed":"No closed ticket.",
     "rep.none.parts":"No part recorded on the closed tickets in this scope.",
-    "kpi.total":"Open claims","kpi.new":"To repair","kpi.order":"Parts to order","kpi.supplier":"At supplier","kpi.warranty":"Under warranty",
-    "filter.search":"Search — title, serial, technician, company…","filter.refresh":"Refresh",
+    "kpi.order":"Parts to order","kpi.supplier":"At supplier","filter.search":"Search — title, serial, technician, company…","filter.refresh":"Refresh",
     "filter.xlsx":"Export to Excel","x.none":"No claim to export.","x.sheet":"Claims",
     "filter.allstatus":"All statuses","filter.allcountry":"All countries","filter.allproduct":"All products","filter.allpart":"All parts",
     "f.title":"Ticket subject","f.desc":"Problem description","f.product":"Product","f.serial":"Serial number",
@@ -3345,7 +3355,7 @@ const CL_I18N = {
     "d.edit":"Edit","d.editcancel":"Cancel",
     "d.editparts":"Adding or removing a part saves the form first.",
     "d.restock":"Restocking location","d.save":"Save","d.saved":"Saved.","d.parts":"Parts requested",
-    "d.addpart":"Add a part","d.ordered":"ordered","d.none":"No parts requested.",
+    "d.addpart":"Add a part","d.none":"No parts requested.",
     "parts.sub":"Every part requested and not yet ordered, with its BE WTR internal reference. A part leaves this list as soon as the order is saved. Supplier references and prices live in the order form.",
     "parts.none":"No parts waiting to be ordered.",
     "parts.ordered":"Ordered","parts.ordered.help":"Marks the part ordered on this ticket, without going through an order form.","parts.qty":"Qty","parts.claims":"Related claims",
@@ -3358,24 +3368,22 @@ const CL_I18N = {
     "o.ref":"Supplier ref.","o.internal":"Internal ref.","o.desig":"Designation","o.qty":"Qty",
     "o.unit":"Unit price","o.total":"Total","o.claim":"Claim","o.sum":"Order total",
     "h.none":"No order recorded yet.","h.on":"on","h.line":"line","h.lines":"lines",
-    "spare.ticket":"Ticket","spare.add":"Add","d.exploded":"Exploded view","filter.archived":"Show archived","filter.allsupplier":"All suppliers","f.sugg":"Suggestions","f.parts.hint":"Pick a product first to narrow the list to its parts.","d.archive":"Archive ticket","o.editprice":"Editable price — saved for future orders","o.priced":"Price saved for %s.","o.pricelocal":"Price applied to this order but not saved: %s","kpi.archived":"Archived",
-    "of.allcountry":"All countries","of.allsupplier":"All suppliers","of.none":"No line matches the filters.",
-    "err.load":"Could not load: %s"
-  },
+    "spare.ticket":"Ticket","spare.add":"Add","d.exploded":"Exploded view","filter.archived":"Show archived","filter.allsupplier":"All suppliers","f.sugg":"Suggestions","d.archive":"Archive ticket","o.editprice":"Editable price — saved for future orders","o.priced":"Price saved for %s.","o.pricelocal":"Price applied to this order but not saved: %s","kpi.archived":"Archived",
+    "of.allsupplier":"All suppliers","of.none":"No line matches the filters."
+    },
   de:{
     "t":"Claims & Ersatzteile","sub":"Rückläufer und Ersatzteilbestellung, von der Meldung bis zum Lieferantenbeleg.",
     "gate.t":"Geschützter Bereich","gate.sub":"Hub-Zugangspasswort eingeben, um die Claims-Plattform zu öffnen.","gate.go":"Öffnen",
     "gate.bad":"Falsches Passwort.","gate.net":"Keine Verbindung. Netzwerk prüfen und erneut versuchen.",
     "anon.unlock":"Team-Zugang","scope.country":"Land","scope.hint":"Gilt für alle Reiter.",
-    "tab.board":"Claims zu qualifizieren","tab.withparts":"Claims mit Teilen","tab.supplier":"Lieferantenrücksendung","d.tosupplier":"An Lieferant senden","board.none.supplier":"Keine laufende Rücksendung.","kpi.toqualify":"Zu qualifizieren","kpi.withparts":"Mit Teilen","board.none.toqualify":"Alles qualifiziert: jeder offene Claim trägt mindestens ein Teil.","board.none.withparts":"Noch kein Claim mit Teil.","tab.new":"Neues Ticket","tab.parts":"Zu bestellende Teile","tab.order":"Bestellbeleg","tab.history":"Frühere Bestellungen","tab.report":"Bericht",
+    "tab.board":"Claims zu qualifizieren","tab.withparts":"Claims mit Teilen","tab.supplier":"Lieferantenrücksendung","d.tosupplier":"An Lieferant senden","kpi.toqualify":"Zu qualifizieren","kpi.withparts":"Mit Teilen","tab.new":"Neues Ticket","tab.parts":"Zu bestellende Teile","tab.order":"Bestellbeleg","tab.history":"Frühere Bestellungen","tab.report":"Bericht",
     "rep.sub":"Der Umfang ist der Länderfilter oben auf der Seite.",
     "rep.open":"Offene Tickets","rep.closed":"Geschlossene Tickets","rep.parts":"Verbaute Teile",
     "rep.byStatus":"Offene Tickets nach Status","rep.byProduct":"Geschlossene Tickets nach Produkt",
     "rep.byPart":"Teile in geschlossenen Tickets","rep.repaired":"Repariert","rep.binned":"Ausgeschlachtet",
     "rep.tickets":"Tickets","rep.click":"— eine Zeile anklicken, um ihre Tickets zu sehen","rep.none.open":"Kein offenes Ticket.","rep.none.closed":"Kein geschlossenes Ticket.",
     "rep.none.parts":"Kein Teil auf den geschlossenen Tickets dieses Umfangs erfasst.",
-    "kpi.total":"Offene Claims","kpi.new":"Zu reparieren","kpi.order":"Teile zu bestellen","kpi.supplier":"Beim Lieferanten","kpi.warranty":"In Garantie",
-    "filter.search":"Suchen — Titel, Seriennummer, Techniker, Firma…","filter.refresh":"Aktualisieren",
+    "kpi.order":"Teile zu bestellen","kpi.supplier":"Beim Lieferanten","filter.search":"Suchen — Titel, Seriennummer, Techniker, Firma…","filter.refresh":"Aktualisieren",
     "filter.xlsx":"Nach Excel exportieren","x.none":"Keine Tickets zum Exportieren.","x.sheet":"Tickets",
     "filter.allstatus":"Alle Status","filter.allcountry":"Alle Länder","filter.allproduct":"Alle Produkte","filter.allpart":"Alle Teile",
     "f.title":"Betreff","f.desc":"Problembeschreibung","f.product":"Produkt","f.serial":"Seriennummer",
@@ -3391,7 +3399,7 @@ const CL_I18N = {
     "d.edit":"Bearbeiten","d.editcancel":"Abbrechen",
     "d.editparts":"Ein Teil hinzuzufügen oder zu entfernen speichert zuerst das Formular.",
     "d.restock":"Einlagerungsort","d.save":"Speichern","d.saved":"Gespeichert.","d.parts":"Angeforderte Teile",
-    "d.addpart":"Teil hinzufügen","d.ordered":"bestellt","d.none":"Keine Teile angefordert.",
+    "d.addpart":"Teil hinzufügen","d.none":"Keine Teile angefordert.",
     "parts.sub":"Alle angeforderten und noch nicht bestellten Teile mit ihrer internen BE-WTR-Nummer. Ein Teil verlässt diese Liste, sobald die Bestellung gespeichert ist. Lieferantennummern und Preise stehen im Bestellbeleg.",
     "parts.none":"Keine Teile zur Bestellung offen.",
     "parts.ordered":"Bestellt","parts.ordered.help":"Markiert das Teil für dieses Ticket als bestellt, ohne Bestellschein.","parts.qty":"Menge","parts.claims":"Zugehörige Claims",
@@ -3404,10 +3412,9 @@ const CL_I18N = {
     "o.ref":"Lieferantennr.","o.internal":"Interne Nr.","o.desig":"Bezeichnung","o.qty":"Menge",
     "o.unit":"Einzelpreis","o.total":"Summe","o.claim":"Claim","o.sum":"Bestellsumme",
     "h.none":"Noch keine Bestellung erfasst.","h.on":"am","h.line":"Zeile","h.lines":"Zeilen",
-    "spare.ticket":"Ticket","spare.add":"Hinzufügen","d.exploded":"Explosionszeichnung","filter.archived":"Archivierte anzeigen","filter.allsupplier":"Alle Lieferanten","f.sugg":"Vorschläge","f.parts.hint":"Zuerst ein Produkt wählen, um nur dessen Teile zu sehen.","d.archive":"Ticket archivieren","o.editprice":"Preis änderbar — für künftige Bestellungen gespeichert","o.priced":"Preis für %s gespeichert.","o.pricelocal":"Preis für diese Bestellung übernommen, aber nicht gespeichert: %s","kpi.archived":"Archiviert",
-    "of.allcountry":"Alle Länder","of.allsupplier":"Alle Lieferanten","of.none":"Keine Zeile entspricht den Filtern.",
-    "err.load":"Laden fehlgeschlagen: %s"
-  }
+    "spare.ticket":"Ticket","spare.add":"Hinzufügen","d.exploded":"Explosionszeichnung","filter.archived":"Archivierte anzeigen","filter.allsupplier":"Alle Lieferanten","f.sugg":"Vorschläge","d.archive":"Ticket archivieren","o.editprice":"Preis änderbar — für künftige Bestellungen gespeichert","o.priced":"Preis für %s gespeichert.","o.pricelocal":"Preis für diese Bestellung übernommen, aber nicht gespeichert: %s","kpi.archived":"Archiviert",
+    "of.allsupplier":"Alle Lieferanten","of.none":"Keine Zeile entspricht den Filtern."
+    }
 };
 function clPl(n){ return n === 1 ? clT("h.line") : clT("h.lines"); }
 function clT(k, a){
