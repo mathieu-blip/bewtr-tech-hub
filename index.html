@@ -193,6 +193,9 @@
   .gfiche:hover{border-color:var(--orange);box-shadow:var(--shadow)}
   .gfiche .gf-t{font-weight:600;font-size:13.5px;flex:1;min-width:180px}
   .gfiche .ic-s{display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:11.5px;color:var(--ink-soft)}
+  .gf-sep{grid-column:1/-1;display:flex;align-items:center;gap:10px;margin:14px 0 2px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft)}
+  .gf-sep::after{content:"";flex:1;height:1px;background:var(--line)}
+  .gf-sep:first-child{margin-top:0}
   .gcat .itut-dg img{max-width:100%;max-height:320px;width:auto;border-radius:10px}
   .gf-actor{font-size:11px;background:var(--orange-soft);color:var(--orange);font-weight:600;padding:3px 9px;border-radius:999px}
   .itut-why{background:var(--orange-soft);border:1px solid #ffd9c7;border-radius:12px;padding:12px 15px;font-size:13.5px;color:#8a3d18;margin-bottom:14px}
@@ -1300,6 +1303,8 @@ const tutorials = [
   {cat:"tips", g:{fr:"Joints",en:"Seals",de:"Dichtungen"}, t:{fr:"Installer facilement un joint O-ring",en:"Easily install an O-ring joint",de:"O-Ring-Dichtung einfach einbauen"}, type:"yt", url:{fr:"https://youtu.be/ROzzJovr8bY?si=xOR40seeHa1ZaeBo",en:"https://youtu.be/ROzzJovr8bY?si=xOR40seeHa1ZaeBo",de:"https://youtu.be/ROzzJovr8bY?si=xOR40seeHa1ZaeBo"}},
   {cat:"tips", g:{fr:"Raccordements",en:"Connections",de:"Anschlüsse"}, t:{fr:"Raccordement en « T » (lave-vaisselle, machine à glaçons, machine à café)",en:'“T” connector (dishwasher, ice machine, coffee machine)',de:"„T\"-Verbinder (Geschirrspüler, Eismaschine, Kaffeemaschine)"}, type:"yt", url:{fr:"https://youtu.be/yDm_AHO-LYw?si=ozKG3R7mWi1VHRkD",en:"https://youtu.be/yDm_AHO-LYw?si=ozKG3R7mWi1VHRkD",de:"https://youtu.be/yDm_AHO-LYw?si=ozKG3R7mWi1VHRkD"}},
   {cat:"config", g:{fr:"Configuration",en:"Configuration",de:"Konfiguration"}, t:{fr:"Configuration Be Connect",en:"Be Connect configuration",de:"Be Connect Konfiguration"}, type:"pdf", url:{fr:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQCDzgpSk_RFRbrBwHnVSocsAYJCvojVvtd2v5kJTZGcROY?e=n9gMpn",en:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQDspvGqO6nwS6FkWN231pRpAZTWVg1dUsIv0D8kYBCJNuo?e=E2vCgz",de:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQBpuRfEUQZjR5RiI8Nf5Ii-AXTXTQ6I2dFuO5ZRq9BPtx0?e=Do82GP"}},
+  {cat:"config", g:{fr:"Programmation",en:"Scheduling",de:"Planung"}, t:{fr:"Dispatcher une maintenance / un case",en:"Dispatching a maintenance job / a case",de:"Einen Wartungsauftrag / Fall disponieren"}, type:"soon"},
+  {cat:"config", g:{fr:"Programmation",en:"Scheduling",de:"Planung"}, t:{fr:"Dispatcher une installation",en:"Dispatching an installation",de:"Eine Installation disponieren"}, type:"soon"},
   {cat:"config", g:{fr:"Configuration",en:"Configuration",de:"Konfiguration"}, t:{fr:"Configuration doses BAR 2",en:"BAR 2 dose configuration",de:"BAR 2 Dosis-Konfiguration"}, type:"pdf", url:{fr:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQCB27n1VbnWSa8MjRwGyC5XAZQzVW_IDcZjhKDi8GzkU30?e=v6UPlP",en:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQBGxgNLOIbfR5D6QK7DEaoJAQeUBWG3Q1-HnAheGMV8c_I?e=zfbGAw",de:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQBW1y0PO-6uSqxTBNDcJ1pCAU1HV8A0QkH8tTg9sWjnxvM?e=N7lSHI"}},
 ];
 const catIcon = {install:"▤",maintenance:"↻",troubleshoot:"⚠",measure:"◔",tips:"✎",config:"⚙"};
@@ -1750,7 +1755,7 @@ function renderLibrary(){
     const grid = wrap.querySelector(".tut-grid");
     items.forEach(t=>{
       const title = t.t[lang], f = installFiche(t);
-      if(t.type==="soon"){
+      if(t.type==="soon" && !f){
         const el = document.createElement("div");
         el.className = "tut disabled";
         el.innerHTML = `<span class="ti">…</span><div><div class="tt">${title}</div><div class="ts2">${d["tut.word"]}</div></div><span class="badge-soon">${d["soon.badge"]}</span>`;
@@ -1759,7 +1764,7 @@ function renderLibrary(){
         /* La carte ouvre le tuto du portail, sans quitter la page. */
         const b = document.createElement("button");
         b.type = "button"; b.className = "tut";
-        b.dataset.gf = `installation|${f.gi}|${f.pi}`;
+        b.dataset.gf = `${LIB_FICHE[t.t.fr][0]}|${f.gi}|${f.pi}`;
         b.innerHTML = `<span class="ti ph">${f.p.cover ? `<img loading="lazy" alt="" src="${f.p.cover}">` : "▤"}</span>`
           + `<div><div class="tt">${title}</div><div class="ic-s">${guideBits(f.p)}</div></div>`
           + `<span class="ext">›</span>`;
@@ -1838,7 +1843,10 @@ const GUIDE_PLACEMENT = {
   /* Le dépannage ne s'empile pas : on clique un symptôme, on n'a que ses
      fiches — voir renderTrouble. */
   "g-experience":   ["memo-client"],
-  "g-tutorials":    ["astuces", "programmation", "evenementiel"],
+  /* « astuces » et « programmation » ne forment plus un bloc à part : leurs
+     fiches sont les cartes « Astuces techniques » et « Configuration » de la
+     bibliothèque — voir LIB_FICHE. */
+  "g-tutorials":    ["evenementiel"],
   "g-refs":         ["references"]
 };
 
@@ -1894,41 +1902,70 @@ function guideFiches(c){
   return out;
 }
 
-/* La bibliothèque listait un PDF SharePoint par produit ; le portail en donne
-   le tuto pas à pas, plus complet. Le tuto prend donc la place du PDF dans la
-   bibliothèque, et le PDF redescend dans « À voir aussi » au bas du tuto.
-   La table dit quel tuto remplace quelle fiche — par son titre, pour survivre
-   à une reprise du portail qui rangerait les fiches autrement. AQTiV Duo et
-   PRO 2 n'ont de tuto ni ici ni là : ils restent « bientôt ». */
-const INSTALL_FICHE = {
-  "AQTiV Combi":                        "AQTiV COMBI",
-  "AQTiV One":                          "AQTiV ONE",
-  "AQTiV Tower":                        "AQTiV TOWER",
-  "BAR 1":                              "BAR 1",
-  "BAR 2":                              "BAR 2",
-  "PRO 3":                              "PRO 3",
-  "BOX 20 — Home":                      "BOX 20 - HOME",
-  "BOX 30":                             "BOX 30",
-  "BOX 80 / 120 / 150":                 "BOX 80/120/150",
-  "BOX avec recirculation":             "BOX avec recirculation",
-  "Kit Mullex":                         "KIT MULLEX",
-  "Be Connect (schéma, pannes & infos)": "BE CONNECT (schéma, pannes et informations)",
-  "BOX 80 — Kit de ventilation":        "BOX 80 - kit de ventilation"
+/* ---- Un tuto du portail à la place de l'ancienne fiche PDF ----
+   La bibliothèque listait un PDF SharePoint (parfois une vidéo) par sujet ; le
+   portail en donne le tuto pas à pas, plus complet — outillage, étapes en
+   photo, vidéo. Le tuto prend donc la place de l'ancien dans la bibliothèque,
+   et le PDF redescend dans « À voir aussi » au bas du tuto : rien ne se perd,
+   rien ne s'affiche deux fois.
+   La table dit quel tuto remplace quelle entrée — par son titre, pour survivre
+   à une reprise du portail qui rangerait les fiches autrement. Un titre qui ne
+   répondrait plus laisse simplement l'ancienne carte en place.
+   AQTiV Duo et PRO 2 n'ont de tuto ni ici ni là : ils restent « bientôt ». */
+const LIB_FICHE = {
+  "AQTiV Combi":                         ["installation", "AQTiV COMBI"],
+  "AQTiV One":                           ["installation", "AQTiV ONE"],
+  "AQTiV Tower":                         ["installation", "AQTiV TOWER"],
+  "BAR 1":                               ["installation", "BAR 1"],
+  "BAR 2":                               ["installation", "BAR 2"],
+  "PRO 3":                               ["installation", "PRO 3"],
+  "BOX 20 — Home":                       ["installation", "BOX 20 - HOME"],
+  "BOX 30":                              ["installation", "BOX 30"],
+  "BOX 80 / 120 / 150":                  ["installation", "BOX 80/120/150"],
+  "BOX avec recirculation":              ["installation", "BOX avec recirculation"],
+  "Kit Mullex":                          ["installation", "KIT MULLEX"],
+  "Be Connect (schéma, pannes & infos)":  ["installation", "BE CONNECT (schéma, pannes et informations)"],
+  "BOX 80 — Kit de ventilation":         ["installation", "BOX 80 - kit de ventilation"],
+  "Faire une maintenance (avec Be Connect)":     ["maintenance", "Faire une maintenance (avec BE CONNECT)"],
+  "Explications client après mise en service":   ["maintenance", "Explications client après mise en service du système"],
+  "Mesure de tension":                          ["mesures", "Mesure de tension"],
+  "Test fusible / continuité":                  ["mesures", "Test fusible ou continuité"],
+  "Mesurer le taux de CO₂ dans l'eau":          ["mesures", "Mesurer le taux de CO2 dans l'eau"],
+  "Faire un trou scie cloche (bois & métal)":   ["astuces", "Faire un trou à la scie cloche (bois et métal)"],
+  "Agrandir un trou de scie cloche":            ["astuces", "Agrandir un trou de scie cloche"],
+  "Transformation meuble coulissant avec charnières": ["astuces", "Transformation d'un meuble coulissant avec charnières"],
+  "Faire un joint téflon":                      ["astuces", "Faire un joint téflon"],
+  "Installer facilement un joint O-ring":       ["astuces", "Installer facilement un joint O-ring"],
+  "Raccordement en « T » (lave-vaisselle, machine à glaçons, machine à café)":
+      ["astuces", "Faire un raccordement avec un connecteur en « T » (lave-vaisselle, machine à glaçons, machine à café)"],
+  "Configuration Be Connect":                   ["programmation", "Configuration BE CONNECT"],
+  "Configuration doses BAR 2":                  ["programmation", "Configuration des doses BAR 2"],
+  "Dispatcher une maintenance / un case":       ["programmation", "Dispatcher une maintenance / un case"],
+  "Dispatcher une installation":                ["programmation", "Dispatcher une installation"]
 };
+/* Trois fiches du portail ne sont encore qu'un titre (« Configuration BE
+   CONNECT », le joint O-ring, le raccord en « T »). Une fiche vide ne remplace
+   pas un document qui existe : la carte garde son PDF ou sa vidéo, et passera
+   d'elle-même au tuto le jour où le portail l'aura écrit. */
+function ficheEmpty(p){
+  return !((p.chapters||[]).length || (p.diagrams||[]).length || (p.measures||[]).length
+        || (p.eblocks||[]).length || (p.mats||[]).length || p.sol || p.video || p.why);
+}
 function installFiche(t){
-  var want = INSTALL_FICHE[t && t.t && t.t.fr]; if(!want) return null;
-  var c = guideCat("installation"); if(!c) return null;
+  var want = LIB_FICHE[t && t.t && t.t.fr]; if(!want) return null;
+  var c = guideCat(want[0]); if(!c) return null;
   var hit = null;
-  guideFiches(c).forEach(function(f){ if(f.p.t && f.p.t.fr === want) hit = f; });
+  guideFiches(c).forEach(function(f){ if(f.p.t && f.p.t.fr === want[1]) hit = f; });
+  if(!hit || ficheEmpty(hit.p)) return null;
+  hit.cat = want[0];
   return hit;
 }
-/* Le PDF que ce tuto remplace, s'il en remplace un. */
+/* Le document que ce tuto remplace, s'il en remplace un. */
 function installFichePdf(catId, gi, pi){
-  if(catId !== "installation") return null;
   var url = null;
   tutorials.forEach(function(t){
     var f = installFiche(t);
-    if(f && f.gi === gi && f.pi === pi && t.url) url = t.url;
+    if(f && f.cat === catId && f.gi === gi && f.pi === pi && t.url) url = t.url;
   });
   return url;
 }
@@ -1958,7 +1995,7 @@ function itutCount(p, what){
 }
 
 /* La ligne de résumé d'une fiche : étapes, photos, vidéo, état. */
-function guideBits(p){
+function guideBits(p, noActor){
   var d = I18N[lang], st = itutCount(p,"steps"), ph = itutCount(p,"photos"), bits = [];
   if(st) bits.push('<span>' + st + ' ' + d[st > 1 ? "itut.steps" : "itut.step"] + '</span>');
   if(ph) bits.push('<span>' + ph + ' ' + d[ph > 1 ? "itut.photos" : "itut.photo"] + '</span>');
@@ -1967,7 +2004,7 @@ function guideBits(p){
     var nd = (p.diagrams||[]).length + (p.eblocks||[]).length + (p.measures||[]).length;
     if(nd) bits.push('<span>' + nd + ' ' + d["itut.schemas"] + '</span>');
   }
-  if(p.actor) bits.push('<span>' + d[p.actor === "technicien" ? "itut.actorTech" : "itut.actorUser"] + '</span>');
+  if(p.actor && !noActor) bits.push('<span>' + d[p.actor === "technicien" ? "itut.actorTech" : "itut.actorUser"] + '</span>');
   if(p.done === false) bits.push('<span class="itut-draft">' + d["itut.draft"] + '</span>');
   return bits.join("");
 }
@@ -1975,25 +2012,43 @@ function guideBits(p){
 function guideCardsHtml(c){
   var withCover = guideFiches(c).some(function(x){ return !!x.p.cover; }), html = "";
   (c.groups||[]).forEach(function(g, gi){
-    var items = g.items || [];
+    var items = (g.items||[]).map(function(p, pi){ return {p:p, pi:pi}; });
     if(!items.length) return;
     if(itutTr(g.h)) html += '<h4 class="gcat-g">' + itutEsc(itutTr(g.h)) + '</h4>';
     html += '<div class="' + (withCover ? "itut-grid" : "gfiche-list") + '">'
-      + items.map(function(p, pi){
-          var go = 'data-gf="' + c.id + '|' + gi + '|' + pi + '"';
-          if(withCover){
-            return '<button type="button" class="itut-card" ' + go + '>'
-              + (p.cover ? '<img class="ic-ph" loading="lazy" alt="" src="' + p.cover + '">' : '<div class="ic-ph none">▤</div>')
-              + '<div class="ic-b"><div class="ic-t">' + itutEsc(itutTr(p.t)) + '</div>'
-              + '<div class="ic-s">' + guideBits(p) + '</div></div></button>';
-          }
-          return '<button type="button" class="gfiche" ' + go + '>'
-            + '<span class="gf-t">' + itutEsc(itutTr(p.t)) + '</span>'
-            + '<span class="ic-s">' + guideBits(p) + '</span></button>';
+      + actorParts(items).map(function(part){
+          return (part.a ? '<div class="gf-sep"><span>' + I18N[lang][part.a === "technicien" ? "itut.actorTech" : "itut.actorUser"] + '</span></div>' : "")
+               + part.items.map(function(x){ return guideCardHtml(c, gi, x.pi, x.p, withCover, !!part.a); }).join("");
         }).join("")
       + '</div>';
   });
   return html || '<p class="small muted">' + I18N[lang]["itut.empty"] + '</p>';
+}
+
+/* Ce qu'un utilisateur peut faire seul d'abord, ce qui demande un technicien
+   ensuite, séparés par un trait : le client ne descend pas sans le voir dans
+   des étapes qui ne lui sont pas destinées. Quand la liste ne distingue pas
+   les deux, elle reste telle quelle. */
+function actorParts(items){
+  var u = [], t = [];
+  items.forEach(function(x){
+    if(x.p.actor === "technicien") t.push(x);
+    else if(x.p.actor === "utilisateur") u.push(x);
+  });
+  if(!u.length || !t.length || u.length + t.length !== items.length) return [{a:null, items:items}];
+  return [{a:"utilisateur", items:u}, {a:"technicien", items:t}];
+}
+function guideCardHtml(c, gi, pi, p, withCover, grouped){
+  var go = 'data-gf="' + c.id + '|' + gi + '|' + pi + '"';
+  if(withCover){
+    return '<button type="button" class="itut-card" ' + go + '>'
+      + (p.cover ? '<img class="ic-ph" loading="lazy" alt="" src="' + p.cover + '">' : '<div class="ic-ph none">▤</div>')
+      + '<div class="ic-b"><div class="ic-t">' + itutEsc(itutTr(p.t)) + '</div>'
+      + '<div class="ic-s">' + guideBits(p, grouped) + '</div></div></button>';
+  }
+  return '<button type="button" class="gfiche" ' + go + '>'
+    + '<span class="gf-t">' + itutEsc(itutTr(p.t)) + '</span>'
+    + '<span class="ic-s">' + guideBits(p, grouped) + '</span></button>';
 }
 
 function guideMemoHtml(c){
