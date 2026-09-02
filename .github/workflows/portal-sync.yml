@@ -1,10 +1,12 @@
 name: Le guide du portail dans le hub
 
-# Tous les jours à 6 h 15 (heure de Paris : 8 h 15 en été, 7 h 15 en hiver),
-# et à la demande depuis l'onglet Actions.
+# C'est Claude qui fait la tournée du matin, tous les jours à 6 h : deux
+# agents sur la même branche se marcheraient dessus. Ce workflow reste là
+# comme filet, à lancer à la main depuis l'onglet Actions — et il suffit de
+# rendre les deux lignes `schedule` ci-dessous pour qu'il reprenne le relais.
 on:
-  schedule:
-    - cron: "15 6 * * *"
+  # schedule:
+  #   - cron: "15 6 * * *"
   workflow_dispatch:
 
 permissions:

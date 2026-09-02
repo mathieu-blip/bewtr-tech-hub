@@ -1,10 +1,21 @@
 # L'agent qui suit le portail
 
 Le hub reprend le guide technique du portail technicien. Jusqu'ici, ce report se
-faisait à la main. `.github/workflows/portal-sync.yml` le fait maintenant tous
-les matins, à 6 h 15 UTC — 8 h 15 à Paris l'été, 7 h 15 l'hiver.
+faisait à la main.
 
-## Ce qu'il fait
+C'est **Claude** qui fait la tournée, tous les matins à 6 h (heure de Paris) :
+une routine réveille une session, qui lance le script, ouvre la proposition et
+envoie le courrier. L'intérêt d'une session plutôt qu'un robot : quand le
+portail apporte quelque chose que le script ne sait pas reporter — une catégorie
+à placer, une rubrique nouvelle comme le glossaire — elle peut écrire le bout de
+page qui manque, au lieu de seulement le signaler.
+
+`.github/workflows/portal-sync.yml` fait exactement le même travail sans Claude.
+Il reste là comme filet, à lancer à la main depuis l'onglet **Actions** ; son
+`schedule` est commenté pour que les deux ne se marchent pas dessus sur la même
+branche. Décommenter les deux lignes suffit à lui rendre la main.
+
+## Ce qu'il fait, chaque matin
 
 1. Il lit le canal `guide` du portail sur `tec-data` — le guide technique, et
    lui seul.
