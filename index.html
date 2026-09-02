@@ -522,6 +522,24 @@
   .sr-item:hover{background:var(--orange-soft)}
   .sr-item .sr-ic{color:var(--orange)}
   .sr-item .sr-sub{margin-left:auto;font-size:11px;color:var(--ink-soft)}
+  /* La réponse de Claude, au-dessus des correspondances mot à mot. */
+  #gai{display:none;padding:15px 16px 16px;border-bottom:1px solid var(--line);background:var(--orange-soft)}
+  #gai .ai-head{display:flex;align-items:center;gap:7px;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;font-weight:700;color:var(--orange)}
+  #gai .ai-ic{font-size:12px}
+  #gai .ai-answer{margin:9px 0 0;font-size:14px;line-height:1.55;color:var(--ink)}
+  #gai .ai-note{margin:9px 0 0;font-size:13.5px;color:var(--ink-soft)}
+  #gai .ai-wait{animation:aiPulse 1.2s ease-in-out infinite}
+  @keyframes aiPulse{0%,100%{opacity:1}50%{opacity:.45}}
+  #gai .ai-go{margin:14px 0 4px;font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--ink-soft)}
+  #gai .ai-hits{display:flex;flex-direction:column;gap:2px}
+  #gai .ai-hit{display:flex;align-items:baseline;gap:10px;width:100%;text-align:left;border:none;background:transparent;padding:8px 10px;border-radius:9px;cursor:pointer;font-family:inherit;font-size:14px;color:var(--ink)}
+  #gai .ai-hit:hover{background:#fff}
+  #gai .ai-hl{font-weight:600}
+  #gai .ai-why{margin-left:auto;flex:0 1 auto;text-align:right;font-size:11.5px;color:var(--ink-soft)}
+  @media (max-width:560px){
+    #gai .ai-hit{flex-direction:column;gap:2px}
+    #gai .ai-why{margin-left:0;text-align:left}
+  }
   /* ===== Signaler / suggerer ===== */
   .fb-card{max-width:720px}
   .fb-row{display:flex;flex-direction:column;gap:7px;margin-bottom:18px}
@@ -1259,6 +1277,7 @@
   <div id="searchbox">
       <div class="sb-wrap">
         <div class="sb-bar"><span class="mag">⌕</span><input id="gq" type="text"><button class="sb-close" id="closeSearch">✕</button></div>
+        <div id="gai"></div>
         <div id="gresults"></div>
       </div>
     </div>
@@ -1324,7 +1343,7 @@ const catIcon = {install:"▤",maintenance:"↻",troubleshoot:"⚠",measure:"◔
 
 /* ============ I18N DICTIONARY ============ */
 const I18N = {
-  fr:{"nav.home":"Accueil","machine.t":"Quelle machine avez-vous\u00a0?","machine.sub":"Sélectionnez votre modèle pour ouvrir toute sa documentation.","machine.taps":"Taps (robinets)","machine.disc":"discontinué","chip.water":"Ligne d'eau","chip.elec":"Élec","chip.parts":"Pièces","chip.tech":"Fiche","chip.maint":"Maintenance","chip.bec":"BeConnect","chip.tuto":"Tutos","search.global":"Rechercher dans tout le guide…","search.ph":"Mot-clé, réf (BW-…), symptôme…","search.hint":"Tapez au moins 2 caractères.","search.none":"Aucun résultat.","search.g.sec":"Sections","search.g.part":"Pièces détachées","search.g.tuto":"Tutos","goto.parts":"Voir les vues éclatées & pièces","goto.experience":"Terminer par la remise au client","goto.install":"Voir les tutos d'installation pas à pas","goto.maintenance":"Voir les tutos vidéo de maintenance","goto.troubleshoot":"Voir les tutos vidéo de dépannage","nav.g.tutos":"Tutos","nav.g.form":"Formation","home.t":"Que voulez-vous faire\u00a0?","home.sub":"Choisissez une catégorie — tout le contenu est rangé par tâche.",
+  fr:{"nav.home":"Accueil","machine.t":"Quelle machine avez-vous\u00a0?","machine.sub":"Sélectionnez votre modèle pour ouvrir toute sa documentation.","machine.taps":"Taps (robinets)","machine.disc":"discontinué","chip.water":"Ligne d'eau","chip.elec":"Élec","chip.parts":"Pièces","chip.tech":"Fiche","chip.maint":"Maintenance","chip.bec":"BeConnect","chip.tuto":"Tutos","search.global":"Poser une question sur tout le guide…","search.ph":"Décrivez le problème, ou tapez une réf BW-…","search.hint":"Tapez au moins 2 caractères — Entrée pour demander à Claude.","search.ai.t":"Réponse de Claude","search.ai.wait":"Claude lit le guide…","search.ai.go":"À ouvrir","search.ai.none":"Claude n'a rien trouvé là-dessus dans le guide.","search.ai.err":"Claude n'a pas répondu. Les correspondances mot à mot restent ci-dessous.","search.ai.quota":"Ce poste a posé toutes ses questions du jour. Les correspondances mot à mot restent ci-dessous.","search.ai.off":"La recherche par IA n'est pas ouverte sur ce poste. Les correspondances mot à mot restent ci-dessous.","search.none":"Aucun résultat.","search.g.sec":"Sections","search.g.part":"Pièces détachées","search.g.tuto":"Tutos","goto.parts":"Voir les vues éclatées & pièces","goto.experience":"Terminer par la remise au client","goto.install":"Voir les tutos d'installation pas à pas","goto.maintenance":"Voir les tutos vidéo de maintenance","goto.troubleshoot":"Voir les tutos vidéo de dépannage","nav.g.tutos":"Tutos","nav.g.form":"Formation","home.t":"Que voulez-vous faire\u00a0?","home.sub":"Choisissez une catégorie — tout le contenu est rangé par tâche.",
     "brand.sub":"Guide Technicien","nav.start":"Démarrer","nav.overview":"Vue d'ensemble","nav.beconnect":"Be Connect (IoT)",
     "nav.field":"Sur le terrain","nav.install":"Installation","nav.settings":"Réglages & valeurs","nav.maintenance":"Maintenance",
     "nav.troubleshoot":"Dépannage","nav.client":"Client","nav.experience":"Expérience client","nav.library":"Bibliothèque",
@@ -1448,7 +1467,7 @@ const I18N = {
     "fb.done.d":"Votre retour est enregistré. L'équipe le relit et l'intègre dans une prochaine mise à jour du guide.",
     "fb.again":"Envoyer un autre retour",
   },
-  en:{"nav.home":"Home","machine.t":"Which machine do you have?","machine.sub":"Select your model to open all its documentation.","machine.taps":"Taps","machine.disc":"phased off","chip.water":"Water line","chip.elec":"Elec","chip.parts":"Parts","chip.tech":"Datasheet","chip.maint":"Maintenance","chip.bec":"BeConnect","chip.tuto":"Tutorials","search.global":"Search the whole guide…","search.ph":"Keyword, ref (BW-…), symptom…","search.hint":"Type at least 2 characters.","search.none":"No results.","search.g.sec":"Sections","search.g.part":"Spare parts","search.g.tuto":"Tutorials","goto.parts":"Open exploded views & parts","goto.experience":"Finish with the customer handover","goto.install":"Open the step-by-step installation tutorials","goto.maintenance":"Watch the maintenance video tutorials","goto.troubleshoot":"Watch the troubleshooting video tutorials","nav.g.tutos":"Tutorials","nav.g.form":"Training","home.t":"What do you need?","home.sub":"Pick a category — all content is organised by task.",
+  en:{"nav.home":"Home","machine.t":"Which machine do you have?","machine.sub":"Select your model to open all its documentation.","machine.taps":"Taps","machine.disc":"phased off","chip.water":"Water line","chip.elec":"Elec","chip.parts":"Parts","chip.tech":"Datasheet","chip.maint":"Maintenance","chip.bec":"BeConnect","chip.tuto":"Tutorials","search.global":"Ask a question about the whole guide…","search.ph":"Describe the problem, or type a BW-… ref","search.hint":"Type at least 2 characters — Enter to ask Claude.","search.ai.t":"Claude's answer","search.ai.wait":"Claude is reading the guide…","search.ai.go":"Open","search.ai.none":"Claude found nothing about that in the guide.","search.ai.err":"Claude did not answer. The word-for-word matches are still below.","search.ai.quota":"This device has used up today's questions. The word-for-word matches are still below.","search.ai.off":"AI search is not open on this device. The word-for-word matches are still below.","search.none":"No results.","search.g.sec":"Sections","search.g.part":"Spare parts","search.g.tuto":"Tutorials","goto.parts":"Open exploded views & parts","goto.experience":"Finish with the customer handover","goto.install":"Open the step-by-step installation tutorials","goto.maintenance":"Watch the maintenance video tutorials","goto.troubleshoot":"Watch the troubleshooting video tutorials","nav.g.tutos":"Tutorials","nav.g.form":"Training","home.t":"What do you need?","home.sub":"Pick a category — all content is organised by task.",
     "brand.sub":"Technician Guide","nav.start":"Get started","nav.overview":"System overview","nav.beconnect":"Be Connect (IoT)",
     "nav.field":"Field operations","nav.install":"Installation","nav.settings":"Settings & values","nav.maintenance":"Maintenance",
     "nav.troubleshoot":"Troubleshooting","nav.client":"Client","nav.experience":"Customer experience","nav.library":"Library",
@@ -1572,7 +1591,7 @@ const I18N = {
     "fb.done.d":"Your report is recorded. The team reviews it and folds it into a future update of the guide.",
     "fb.again":"Send another report",
   },
-  de:{"nav.home":"Start","machine.t":"Welche Maschine haben Sie?","machine.sub":"Wählen Sie Ihr Modell für die gesamte Dokumentation.","machine.taps":"Taps","machine.disc":"eingestellt","chip.water":"Wasserlinie","chip.elec":"Elektrik","chip.parts":"Teile","chip.tech":"Datenblatt","chip.maint":"Wartung","chip.bec":"BeConnect","chip.tuto":"Tutorials","search.global":"Im ganzen Leitfaden suchen…","search.ph":"Stichwort, Referenz (BW-…), Symptom…","search.hint":"Mind. 2 Zeichen eingeben.","search.none":"Keine Treffer.","search.g.sec":"Bereiche","search.g.part":"Ersatzteile","search.g.tuto":"Tutorials","goto.parts":"Explosionszeichnungen & Teile öffnen","goto.experience":"Mit der Kundenübergabe abschließen","goto.install":"Schritt-für-Schritt-Installationstutorials öffnen","goto.maintenance":"Wartungs-Videotutorials ansehen","goto.troubleshoot":"Störungs-Videotutorials ansehen","nav.g.tutos":"Tutorials","nav.g.form":"Schulung","home.t":"Was möchten Sie tun?","home.sub":"Wählen Sie eine Kategorie — alles ist nach Aufgabe geordnet.",
+  de:{"nav.home":"Start","machine.t":"Welche Maschine haben Sie?","machine.sub":"Wählen Sie Ihr Modell für die gesamte Dokumentation.","machine.taps":"Taps","machine.disc":"eingestellt","chip.water":"Wasserlinie","chip.elec":"Elektrik","chip.parts":"Teile","chip.tech":"Datenblatt","chip.maint":"Wartung","chip.bec":"BeConnect","chip.tuto":"Tutorials","search.global":"Eine Frage zum ganzen Leitfaden stellen…","search.ph":"Problem beschreiben oder BW-Referenz eingeben","search.hint":"Mind. 2 Zeichen eingeben — mit Enter Claude fragen.","search.ai.t":"Claudes Antwort","search.ai.wait":"Claude liest den Leitfaden…","search.ai.go":"Öffnen","search.ai.none":"Claude hat dazu nichts im Leitfaden gefunden.","search.ai.err":"Claude hat nicht geantwortet. Die wörtlichen Treffer stehen weiterhin unten.","search.ai.quota":"Dieses Gerät hat seine Fragen für heute aufgebraucht. Die wörtlichen Treffer stehen weiterhin unten.","search.ai.off":"Die KI-Suche ist auf diesem Gerät nicht freigeschaltet. Die wörtlichen Treffer stehen weiterhin unten.","search.none":"Keine Treffer.","search.g.sec":"Bereiche","search.g.part":"Ersatzteile","search.g.tuto":"Tutorials","goto.parts":"Explosionszeichnungen & Teile öffnen","goto.experience":"Mit der Kundenübergabe abschließen","goto.install":"Schritt-für-Schritt-Installationstutorials öffnen","goto.maintenance":"Wartungs-Videotutorials ansehen","goto.troubleshoot":"Störungs-Videotutorials ansehen","nav.g.tutos":"Tutorials","nav.g.form":"Schulung","home.t":"Was möchten Sie tun?","home.sub":"Wählen Sie eine Kategorie — alles ist nach Aufgabe geordnet.",
     "brand.sub":"Techniker-Leitfaden","nav.start":"Loslegen","nav.overview":"Systemübersicht","nav.beconnect":"Be Connect (IoT)",
     "nav.field":"Vor Ort","nav.install":"Installation","nav.settings":"Einstellungen & Werte","nav.maintenance":"Wartung",
     "nav.troubleshoot":"Fehlerbehebung","nav.client":"Kunde","nav.experience":"Kundenerlebnis","nav.library":"Bibliothek",
@@ -3033,11 +3052,31 @@ function fbSend(payload){
 })();
 
 // ---- global search ----
-var _sidx=null;
-function buildSearchIndex(){ var idx=[];
+/* Deux recherches sur la même barre, et elles ne cherchent pas la même chose.
+
+   La littérale répond pendant la frappe : elle sait trouver « BW-0159 »
+   parce que ces neuf caractères sont écrits quelque part.
+
+   Celle de Claude part sur Entrée, ou d'elle-même après une pause. Elle lit
+   tout le guide et répond à « l'eau sort tiède » — une phrase qui n'est
+   écrite nulle part, et que la première ne trouvera jamais.
+
+   Le guide part vers la fonction edge une seule fois par mise en ligne :
+   ensuite le navigateur n'envoie que son empreinte, et le serveur retrouve
+   le texte qu'il a déposé. Voir supabase/functions/guide-search. */
+var _sidx=null, _scorpus=null, _shash=null, _scorpusBy=null;
+/* Ce qu'une rubrique donne à lire à Claude. Le détail des gestes est dans
+   les fiches, qui partent en entier : ici on veut de quoi reconnaître le
+   sujet, pas la rubrique recopiée. */
+var AI_SEC_CAP=4000;
+function buildSearchIndex(){ var idx=[], cor=[];
   SECT_IDS.forEach(function(id){ var el=document.getElementById(id); if(!el)return; var a=document.querySelector('#nav a[href="#'+id+'"]'); var lab=a?a.textContent.trim():id;
-    idx.push({type:'sec',id:id,label:lab,text:(el.innerText||el.textContent||'').toLowerCase()}); });
-  if(typeof SPAREPARTS!=='undefined') Object.keys(SPAREPARTS).forEach(function(p){ SPAREPARTS[p].forEach(function(x){ if(x.sep)return; idx.push({type:'part',product:p,ref:x.ref,name:x.name,label:x.ref+' — '+(typeof partName==='function'?partName(x.name):x.name),text:(x.ref+' '+x.name+' '+(typeof partName==='function'?partName(x.name):'')).toLowerCase()}); }); });
+    var txt=(el.innerText||el.textContent||'').replace(/\s+/g,' ').trim();
+    idx.push({type:'sec',id:id,label:lab,text:txt.toLowerCase()});
+    cor.push({k:'sec:'+id,l:lab,x:txt.slice(0,AI_SEC_CAP)}); });
+  if(typeof SPAREPARTS!=='undefined') Object.keys(SPAREPARTS).forEach(function(p){ SPAREPARTS[p].forEach(function(x){ if(x.sep)return; var nom=(typeof partName==='function'?partName(x.name):x.name); var lab=x.ref+' — '+nom;
+    idx.push({type:'part',product:p,ref:x.ref,name:x.name,label:lab,text:(x.ref+' '+x.name+' '+nom).toLowerCase()});
+    cor.push({k:'part:'+encodeURIComponent(p)+'|'+x.ref,l:lab,x:productLabel(p)+' · '+x.name}); }); });
   document.querySelectorAll('#tutorials .tut:not([data-gf])').forEach(function(t){ var tt=t.querySelector('.tt'); if(tt) idx.push({type:'tuto',label:tt.textContent.trim(),text:tt.textContent.toLowerCase()}); });
   /* Les tutos d'installation pas a pas : leurs etapes sont cherchables, pas
      seulement leur titre. */
@@ -3047,9 +3086,20 @@ function buildSearchIndex(){ var idx=[];
       var t=itutTr(p.t), body=[t,cat,itutTr(g.h),itutTr(p.why)];
       ((p.sol&&(p.sol[lang]||p.sol.fr))||[]).forEach(function(s){ body.push(s); });
       (p.chapters||[]).forEach(function(ch){ body.push(itutTr(ch.h)); (ch.steps||[]).forEach(function(s){ body.push(itutTr(s.d)); }); });
-      idx.push({type:'tuto',label:t,go:'gf:'+c.id+'|'+gi+'|'+pi,text:body.join(' ').toLowerCase()}); }); });
+      var txt=body.filter(Boolean).join(' · ');
+      idx.push({type:'tuto',label:t,go:'gf:'+c.id+'|'+gi+'|'+pi,text:txt.toLowerCase()});
+      cor.push({k:'gf:'+c.id+'|'+gi+'|'+pi,l:t+' — '+cat,x:txt}); }); });
   });
-  _sidx=idx; }
+  _sidx=idx; _scorpus=cor; _shash=null;
+  _scorpusBy={}; cor.forEach(function(e){ _scorpusBy[e.k]=e; }); }
+function sEsc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+/* Ouvrir ce qu'un résultat désigne — la clé est la même pour les deux
+   recherches, et « part:PRO1|BW-0159 » ouvre la vue éclatée du PRO1. */
+function searchGo(g){ closeSearch();
+  if(g.indexOf('sec:')===0) showTab('#'+g.slice(4));
+  else if(g.indexOf('part:')===0) openSpare(decodeURIComponent(g.slice(5).split('|')[0]));
+  else if(g.indexOf('gf:')===0){ var k=g.slice(3).split('|'); gotoFiche(k[0],+k[1],+k[2]); }
+  else if(g==='tuto') showTab('#tutorials'); }
 function doSearch(){ var q=(document.getElementById('gq').value||'').trim().toLowerCase(); var box=document.getElementById('gresults'); var d=I18N[lang];
   if(q.length<2){ box.innerHTML='<p class="small muted" style="padding:12px">'+(d['search.hint']||'')+'</p>'; return; }
   if(!_sidx) buildSearchIndex(); var secs=[],parts=[],tuts=[];
@@ -3059,12 +3109,76 @@ function doSearch(){ var q=(document.getElementById('gq').value||'').trim().toLo
   grp(d['search.g.sec']||'Sections',secs,function(e){return '<button class="sr-item" data-go="sec:'+e.id+'"><span class="sr-ic">▤</span>'+e.label+'</button>';});
   grp(d['search.g.part']||'Pieces',parts,function(e){return '<button class="sr-item" data-go="part:'+encodeURIComponent(e.product)+'"><span class="sr-ic">▦</span>'+e.label+' <span class="sr-sub">'+productLabel(e.product)+'</span></button>';});
   grp(d['search.g.tuto']||'Tutos',tuts,function(e){return '<button class="sr-item" data-go="'+(e.go||'tuto')+'"><span class="sr-ic">▶</span>'+e.label+'</button>';});
-  if(!html) html='<p class="small muted" style="padding:12px">'+(d['search.none']||'')+'</p>';
+  if(!html) html='<p class="small muted sr-empty" style="padding:12px">'+(d['search.none']||'')+'</p>';
   box.innerHTML=html;
-  box.querySelectorAll('.sr-item').forEach(function(b){ b.addEventListener('click',function(){ var g=b.dataset.go; closeSearch();
-    if(g.indexOf('sec:')===0) showTab('#'+g.slice(4)); else if(g.indexOf('part:')===0) openSpare(decodeURIComponent(g.slice(5))); else if(g.indexOf('gf:')===0){ var k=g.slice(3).split('|'); gotoFiche(k[0],+k[1],+k[2]); } else if(g==='tuto') showTab('#tutorials'); }); }); }
-function openSearch(){ var m=document.getElementById('searchbox'); m.style.display='flex'; var q=document.getElementById('gq'); q.value=''; q.placeholder=(I18N[lang]['search.ph']||''); doSearch(); setTimeout(function(){q.focus();},30); }
-function closeSearch(){ document.getElementById('searchbox').style.display='none'; }
+  box.querySelectorAll('.sr-item').forEach(function(b){ b.addEventListener('click',function(){ searchGo(b.dataset.go); }); }); }
+
+/* ---- la recherche de Claude ---- */
+var _aiCache={}, _aiSeq=0, _aiTimer=null;
+/* L'empreinte du guide : elle change quand le guide change, et c'est elle
+   qui dit au serveur s'il a déjà le texte sous la main. */
+function corpusHash(){ if(_shash) return Promise.resolve(_shash);
+  var s=lang+'\n'+JSON.stringify(_scorpus);
+  if(!(window.crypto&&crypto.subtle&&crypto.subtle.digest)){
+    var h=0; for(var i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))|0;
+    _shash='b'+(h>>>0).toString(36)+'-'+s.length; return Promise.resolve(_shash); }
+  return crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)).then(function(b){
+    _shash=Array.prototype.map.call(new Uint8Array(b),function(x){ return x.toString(16).padStart(2,'0'); }).join('');
+    return _shash; }); }
+function aiBox(){ return document.getElementById('gai'); }
+function aiClear(){ var b=aiBox(); if(b){ b.style.display='none'; b.innerHTML=''; } }
+function aiNote(txt,wait){ var b=aiBox(); if(!b)return; var d=I18N[lang];
+  b.style.display='block';
+  b.innerHTML='<div class="ai-head"><span class="ai-ic">✦</span>'+sEsc(d['search.ai.t']||'')+'</div>'
+            + '<p class="ai-note'+(wait?' ai-wait':'')+'">'+sEsc(txt)+'</p>'; }
+function aiRender(r){ var b=aiBox(); if(!b)return; var d=I18N[lang];
+  /* Le serveur écarte déjà les clés qu'il ne reconnaît pas ; on refait le
+     tri ici, pour qu'aucune ligne n'ouvre une page qui n'existe pas. */
+  var hits=(((r&&r.hits)||[]).filter(function(h){ return h&&_scorpusBy&&_scorpusBy[h.k]; }));
+  if(!r||(!r.answer&&!hits.length)){ aiNote(d['search.ai.none']||''); return; }
+  var html='<div class="ai-head"><span class="ai-ic">✦</span>'+sEsc(d['search.ai.t']||'')+'</div>';
+  if(r.answer) html+='<p class="ai-answer">'+sEsc(r.answer)+'</p>';
+  if(hits.length){ html+='<div class="ai-go">'+sEsc(d['search.ai.go']||'')+'</div><div class="ai-hits">'
+    + hits.map(function(h){
+        return '<button class="ai-hit" data-go="'+sEsc(h.k)+'"><span class="ai-hl">'+sEsc(_scorpusBy[h.k].l)+'</span>'
+             + (h.why?'<span class="ai-why">'+sEsc(h.why)+'</span>':'')+'</button>'; }).join('')
+    + '</div>'; }
+  b.style.display='block'; b.innerHTML=html;
+  /* Claude a répondu : « Aucun résultat » ne parle plus que de la recherche
+     mot à mot, et n'a plus rien à dire au technicien. */
+  var vide=document.querySelector('#gresults .sr-empty'); if(vide) vide.remove();
+  b.querySelectorAll('.ai-hit').forEach(function(x){ x.addEventListener('click',function(){ searchGo(x.dataset.go); }); }); }
+/* Une question, une réponse. Le corpus ne repart que si le serveur le
+   réclame — c'est-à-dire une fois, à la première question posée après une
+   mise en ligne du hub. */
+function aiSearch(q){ var d=I18N[lang], key=lang+'|'+q;
+  if(!_scorpus) buildSearchIndex();
+  if(_aiCache[key]){ aiRender(_aiCache[key]); return; }
+  var seq=++_aiSeq, pass='';
+  try{ pass=localStorage.getItem(CL_PASS_KEY)||''; }catch(e){}
+  aiNote(d['search.ai.wait']||'',true);
+  function post(h,avecCorpus){
+    return fetch(CLAIMS_URL+'/functions/v1/guide-search',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':CLAIMS_KEY,'Authorization':'Bearer '+CLAIMS_KEY},
+      body:JSON.stringify({pass:pass,q:q,lang:lang,hash:h,corpus:avecCorpus?_scorpus:null})
+    }).then(function(res){ return res.json().catch(function(){ return {}; }).then(function(j){
+      if(res.ok) return j;
+      var err=new Error(j.error||String(res.status)); err.code=j.error; throw err; }); }); }
+  corpusHash().then(function(h){
+    return post(h,false).then(function(r){ return (r&&r.besoin==='corpus')?post(h,true):r; }); })
+  .then(function(r){ if(seq!==_aiSeq) return; _aiCache[key]=r; aiRender(r); })
+  .catch(function(e){ if(seq!==_aiSeq) return;
+    var m=(e&&e.code==='quota') ? d['search.ai.quota']
+        : (e&&(e.code==='config'||e.code==='auth')) ? d['search.ai.off']
+        : d['search.ai.err'];
+    aiNote(m||''); }); }
+function aiMaybe(){ var q=(document.getElementById('gq').value||'').trim();
+  clearTimeout(_aiTimer);
+  if(q.length<3){ aiClear(); return; }
+  _aiTimer=setTimeout(function(){ aiSearch(q); },1400); }
+function openSearch(){ var m=document.getElementById('searchbox'); m.style.display='flex'; var q=document.getElementById('gq'); q.value=''; q.placeholder=(I18N[lang]['search.ph']||''); aiClear(); doSearch(); setTimeout(function(){q.focus();},30); }
+function closeSearch(){ clearTimeout(_aiTimer); document.getElementById('searchbox').style.display='none'; }
 // tab router
 // jump straight to the section body: no smooth scroll through the header on the way
 function jumpTo(id){
@@ -3129,7 +3243,10 @@ var _userScrolled=false;
 window.addEventListener('load',function(){ setTimeout(function(){ if(!_userScrolled) showTab(location.hash); },0); });
 document.getElementById('openSearch').addEventListener('click',openSearch);
 document.getElementById('closeSearch').addEventListener('click',closeSearch);
-document.getElementById('gq').addEventListener('input',doSearch);
+document.getElementById('gq').addEventListener('input',function(){ doSearch(); aiMaybe(); });
+document.getElementById('gq').addEventListener('keydown',function(e){
+  if(e.key!=='Enter') return; e.preventDefault(); clearTimeout(_aiTimer);
+  var q=(this.value||'').trim(); if(q.length>=2) aiSearch(q); });
 document.getElementById('searchbox').addEventListener('click',function(e){ if(e.target.id==='searchbox') closeSearch(); });
 document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeSearch(); });
 /* ==================================================================
