@@ -199,7 +199,6 @@
   .gcat .itut-dg img{max-width:100%;max-height:320px;width:auto;border-radius:10px}
   .gf-actor{font-size:11px;background:var(--orange-soft);color:var(--orange);font-weight:600;padding:3px 9px;border-radius:999px}
   .itut-why{background:var(--orange-soft);border:1px solid #ffd9c7;border-radius:12px;padding:12px 15px;font-size:13.5px;color:#8a3d18;margin-bottom:14px}
-  .itut-src{font-size:11px;color:var(--ink-soft);text-align:center;margin-top:6px}
   .gm-text{font-size:13.5px;line-height:1.55;color:var(--ink)}
   .gm-list{margin:0;padding-left:18px}
   .gm-list li{font-size:13.5px;line-height:1.6}
@@ -243,7 +242,6 @@
   .gf-panel .itut{padding:14px 16px 4px;max-width:none;margin:0}
   .gf-panel .itut-sec{background:transparent;border:0;border-radius:0;padding:0;margin-bottom:16px}
   .gf-panel .itut-sec+.itut-sec{border-top:1px solid var(--line);padding-top:14px}
-  .gf-panel .itut-src{margin-bottom:10px}
   .tut.on,.gfiche.on,.itut-card.on{border-color:var(--orange)}
   .gfiche.on{background:var(--orange-soft)}
 
@@ -1856,8 +1854,6 @@ const ITUT_LABELS = {
   "itut.sub":     {fr:"Produit par produit : l'outillage, le matériel, chaque étape en photo et la vidéo.", en:"Product by product: tools, material, every step in pictures and the video.", de:"Produkt für Produkt: Werkzeug, Material, jeder Schritt in Bildern und das Video."},
   "itut.steps":   {fr:"étapes", en:"steps", de:"Schritte"},
   "itut.step":    {fr:"étape", en:"step", de:"Schritt"},
-  "itut.photos":  {fr:"photos", en:"photos", de:"Fotos"},
-  "itut.photo":   {fr:"photo", en:"photo", de:"Foto"},
   "itut.hasvideo":{fr:"Vidéo", en:"Video", de:"Video"},
   "itut.video":   {fr:"Voir la vidéo", en:"Watch the video", de:"Video ansehen"},
   "itut.zoom":    {fr:"Cliquer sur une photo pour l'agrandir.", en:"Click a photo to enlarge it.", de:"Auf ein Foto klicken, um es zu vergrößern."},
@@ -1881,7 +1877,6 @@ const ITUT_LABELS = {
   "itut.refs":    {fr:"références", en:"references", de:"Referenzen"},
   "itut.measures":{fr:"Cotes", en:"Dimensions", de:"Maße"},
   "itut.pdf":     {fr:"Guide PDF (SharePoint)", en:"PDF guide (SharePoint)", de:"PDF-Anleitung (SharePoint)"},
-  "itut.src":     {fr:"Contenu repris du portail technicien.", en:"Content taken from the technician portal.", de:"Inhalt aus dem Technikerportal."},
   "view.front":   {fr:"Face", en:"Front", de:"Vorne"},
   "view.back":    {fr:"Arrière", en:"Back", de:"Hinten"},
   "view.top":     {fr:"Dessus", en:"Top", de:"Oben"},
@@ -1983,22 +1978,17 @@ function ficheSearchText(f){
   });
   return (_ficheTxt[k] = body.join(" ").toLowerCase());
 }
-function itutCount(p, what){
+function itutSteps(p){
   var n = 0;
-  (p.chapters||[]).forEach(function(c){ (c.steps||[]).forEach(function(s){
-    n += (what === "steps") ? 1 : (s.imgs||[]).length;
-  }); });
-  ((p.sol && p.sol.fr) || []).forEach(function(s, i){
-    n += (what === "steps") ? 1 : (((p.solImgs||[])[i])||[]).length;
-  });
+  (p.chapters||[]).forEach(function(c){ n += (c.steps||[]).length; });
+  n += ((p.sol && p.sol.fr) || []).length;
   return n;
 }
 
 /* La ligne de résumé d'une fiche : étapes, photos, vidéo, état. */
 function guideBits(p, noActor){
-  var d = I18N[lang], st = itutCount(p,"steps"), ph = itutCount(p,"photos"), bits = [];
+  var d = I18N[lang], st = itutSteps(p), bits = [];
   if(st) bits.push('<span>' + st + ' ' + d[st > 1 ? "itut.steps" : "itut.step"] + '</span>');
-  if(ph) bits.push('<span>' + ph + ' ' + d[ph > 1 ? "itut.photos" : "itut.photo"] + '</span>');
   if(p.video) bits.push('<span class="ic-v">▶ ' + d["itut.hasvideo"] + '</span>');
   if(!st){
     var nd = (p.diagrams||[]).length + (p.eblocks||[]).length + (p.measures||[]).length;
@@ -2301,7 +2291,7 @@ function openGuideFiche(catId, gi, pi, card){
          }).join("")
        + '</div></div>';
   }
-  h += '<p class="itut-src">' + d["itut.src"] + '</p></div>';
+  h += '</div>';
   openFichePanel(catId + "|" + gi + "|" + pi, itutTr(p.t), itutTr(c.t), h, card);
 }
 
