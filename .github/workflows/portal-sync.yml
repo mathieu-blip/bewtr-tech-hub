@@ -1,0 +1,120 @@
+name: Le portail dans le hub
+
+# Tous les jours à 6 h 15 (heure de Paris : 8 h 15 en été, 7 h 15 en hiver),
+# et à la demande depuis l'onglet Actions.
+on:
+  schedule:
+    - cron: "15 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: portal-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Aller voir le portail
+        run: |
+          python3 tools/portal-sync/sync.py \
+            --report "$RUNNER_TEMP/rapport.md" \
+            --summary "$RUNNER_TEMP/resume.json"
+          python3 - <<'PY' >> "$GITHUB_ENV"
+          import json, os
+          resume = json.load(open(os.environ["RUNNER_TEMP"] + "/resume.json"))
+          print("PORTAL_CHANGED=%s" % ("oui" if resume["changed"] else "non"))
+          print("PORTAL_HUB=%s" % resume["hub"])
+          print("PORTAL_HAND=%s" % ("oui" if resume["hand"] else "non"))
+          PY
+          cat "$RUNNER_TEMP/rapport.md" >> "$GITHUB_STEP_SUMMARY"
+
+      # La branche `portal-sync` est refaite chaque matin depuis `main`. Si
+      # quelqu'un y a posé un commit à la main, on ne la touche plus : le
+      # courrier partira quand même, avec le compte rendu.
+      - name: Déposer la mise à jour sur sa branche
+        if: env.PORTAL_CHANGED == 'oui'
+        run: |
+          git fetch --depth=50 origin main || true
+          git fetch --depth=50 origin portal-sync || true
+          if git rev-parse --verify -q origin/portal-sync >/dev/null; then
+            autres=$(git log origin/main..origin/portal-sync --format='%an' \
+              | { grep -v '^portal-sync$' || true; } | sort -u | paste -sd', ')
+            if [ -n "$autres" ]; then
+              {
+                echo
+                echo "## La branche est retenue"
+                echo
+                echo "La branche \`portal-sync\` porte des commits de $autres :"
+                echo "la mise à jour du jour n'a pas été déposée, pour ne pas les"
+                echo "effacer. Fusionner ou fermer la proposition en cours, puis"
+                echo "relancer le workflow depuis l'onglet Actions."
+              } >> "$RUNNER_TEMP/rapport.md"
+              cat "$RUNNER_TEMP/rapport.md" >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+          fi
+          git config user.name "portal-sync"
+          git config user.email "portal-sync@users.noreply.github.com"
+          git checkout -B portal-sync
+          git add -A docs/portal-snapshot img index.html
+          if git diff --cached --quiet; then
+            echo "rien à déposer"
+            exit 0
+          fi
+          python3 - <<'PY' > "$RUNNER_TEMP/message.txt"
+          import json, os
+          resume = json.load(open(os.environ["RUNNER_TEMP"] + "/resume.json"))
+          print("Le portail a bougé, le hub suit")
+          print()
+          for note in resume["notes"]:
+              print("- %s" % note)
+          PY
+          git commit --file "$RUNNER_TEMP/message.txt"
+          git push --force -u origin portal-sync
+          echo "PORTAL_PUSHED=oui" >> "$GITHUB_ENV"
+
+      - name: Ouvrir ou rafraîchir la proposition
+        if: env.PORTAL_PUSHED == 'oui'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          titre="Le portail a bougé — $(date +%d/%m/%Y)"
+          if gh pr view portal-sync --json number >/dev/null 2>&1; then
+            gh pr edit portal-sync --title "$titre" --body-file "$RUNNER_TEMP/rapport.md"
+          else
+            {
+              cat "$RUNNER_TEMP/rapport.md"
+              echo
+              echo "> Cette branche est refaite chaque matin depuis \`main\` :"
+              echo "> ne rien y ajouter à la main, le lendemain serait perdu."
+            } > "$RUNNER_TEMP/corps.md"
+            gh pr create --base main --head portal-sync \
+              --title "$titre" --body-file "$RUNNER_TEMP/corps.md"
+          fi
+          echo "PORTAL_PR=$(gh pr view portal-sync --json url --jq .url)" >> "$GITHUB_ENV"
+
+      - name: Prévenir par courrier
+        if: env.PORTAL_CHANGED == 'oui'
+        env:
+          MAIL_HOST: ${{ secrets.MAIL_HOST }}
+          MAIL_PORT: ${{ secrets.MAIL_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_FROM: ${{ secrets.MAIL_FROM }}
+          MAIL_TO: ${{ vars.MAIL_TO || 'mathieu@bewtr.com' }}
+        run: |
+          sujet="Le portail a bougé — $(date +%d/%m/%Y)"
+          if [ "$PORTAL_HAND" = "oui" ]; then
+            sujet="$sujet (une partie est à reprendre à la main)"
+          fi
+          python3 tools/portal-sync/send_mail.py \
+            --subject "$sujet" \
+            --body "$RUNNER_TEMP/rapport.md" \
+            --link "$PORTAL_PR"

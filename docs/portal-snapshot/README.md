@@ -17,6 +17,10 @@ fichier déposé : il le lit et l'enregistre sur un second service Cloudflare,
 Les canaux `tickets`, `claims` et `stock` répondent `{"rev":0,"data":null}` :
 ils n'ont jamais été alimentés.
 
+Depuis, ces fichiers ne se reprennent plus à la main : l'agent décrit dans
+[`docs/portal-sync.md`](../portal-sync.md) va voir le portail tous les matins et
+ouvre une proposition dès qu'il a bougé.
+
 ## Reprendre une copie fraîche
 
 ```sh
