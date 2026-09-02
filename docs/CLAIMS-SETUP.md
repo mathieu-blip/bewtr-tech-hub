@@ -254,7 +254,8 @@ de détail.
 
 ## Le parcours au quotidien
 
-1. **Nouveau ticket** — le technicien décrit la panne, choisit la machine et
+1. **Nouveau ticket** — le technicien décrit la panne en un seul champ (la
+   description ; il n'y a plus d'objet à saisir), choisit la machine et
    ajoute les pièces nécessaires (recherche par réf BW ou par désignation ;
    le bloc pièces suit le produit, dont il dépend). La garantie
    s'affiche en direct dès que les deux dates sont saisies. Un ticket créé
@@ -265,6 +266,8 @@ de détail.
    **Modifier**, à côté du numéro `CLM-`, rouvre la fiche telle que le
    technicien l'a remplie — machine, série, dates, pays, contact — pour un
    ticket saisi de travers. Demande `docs/supabase/08-editer-un-ticket.sql`.
+   Le suivi porte statut, date de réparation, **réparé par**, lieu de
+   restockage et note de réparation.
    Le bloc **pièces** est placé sous la description, sur la fiche comme en
    modification et comme sur un nouveau ticket : propositions collées à la description, vue éclatée, recherche et
    liste choisie. Tout suit ce qu'on corrige — changer la machine change ce
@@ -299,6 +302,11 @@ unitaire net, total ligne, claim d'origine — plus le total de la commande.
 
 Les quantités et les prix sont écrits comme de **vrais nombres**, pas du
 texte : les totaux se recalculent dans Excel sans retouche.
+
+L'export du tableau des tickets suit les mêmes filtres que l'écran, et porte
+réf, produit, n° de série, pays, date, **description**, **réparé par**, puis
+une ligne par pièce. Un ticket sans pièce garde sa ligne, colonnes pièce
+vides.
 
 ---
 
@@ -341,6 +349,7 @@ avec le rôle `anon`, celui du navigateur :
 | `hub_scope()` / `hub_require()` | refusées — fonctions internes |
 | Dépôt anonyme d'un claim | crée le claim et sa pièce, rejette une réf inventée |
 | `claim_edit()` | corrige, efface un champ vidé, garde titre et date de claim (NOT NULL), refuse une mauvaise phrase |
+| `claim_update()` | suit la réparation ; « réparé par » s'efface en arrivant vide |
 
 **À exécuter, dans cet ordre :**
 
@@ -357,6 +366,38 @@ avec le rôle `anon`, celui du navigateur :
 6. `docs/supabase/14-retirer-le-suffixe-deduit.sql` — retire le
    « (déduit) » des lignes déjà écrites. Sans objet si 12 et 13 sont passés
    après cette mise à jour, les scripts n'écrivant plus le suffixe.
+7. `docs/supabase/18-un-seul-texte-et-repare-par.sql` — l'objet du ticket
+   disparaît du formulaire au profit de la seule description, et le suivi
+   gagne un champ « réparé par ». Voir ci-dessous.
+
+### Un seul texte par ticket, et « réparé par » — script 18
+
+Le formulaire demandait un **objet** et une **description**. Les deux
+disaient la même chose : le technicien recopiait l'un dans l'autre, et le
+tableau n'affichait que le plus court des deux. L'objet a été retiré ; la
+description est le texte du ticket, à la création comme à la correction, et
+c'est elle que montrent le tableau, la fiche, le rapport et l'export.
+
+La colonne `title` reste en base : elle est `NOT NULL`, et elle porte
+l'intitulé Monday des 321 tickets repris. Elle est désormais **dérivée de la
+première ligne de la description** à la création, et laissée telle quelle
+ensuite — corriger une description n'efface pas l'intitulé d'origine.
+
+Le script fait aussi le rattrapage inverse : un ticket qui n'avait qu'un
+objet reçoit celui-ci comme description. Sans quoi sa ligne serait vide à
+l'écran. La page applique le même repli sans attendre le script, en lisant
+`description || title`.
+
+« **Réparé par** » est un champ du **formulaire de suivi**, jamais de la
+création : au moment d'ouvrir un ticket, personne ne l'a encore réparé. Il
+propose les noms déjà employés sur d'autres tickets, se relit dans le
+rapport et part dans l'export Excel. C'est le seul champ du suivi qu'on
+efface en le vidant — les autres gardent leur valeur quand ils arrivent
+vides, pour qu'un enregistrement partiel n'efface rien par mégarde.
+
+Ce script **supprime puis recrée** `claims_list()` : PostgreSQL refuse de
+remplacer une fonction dont le type de retour change, et elle rend une
+colonne de plus.
 
 ### Les pièces déduites du texte — script 12
 
@@ -573,9 +614,9 @@ n'a pas son propre sélecteur, sinon deux filtres se contrediraient à l'écran.
 
 ### Le détail d'un produit
 
-Cliquer une ligne du tableau déplie ses tickets sous elle : réf, objet,
-description, note de réparation, date du claim, date de réparation. Les plus
-récemment réparés d'abord, à défaut le claim le plus récent.
+Cliquer une ligne du tableau déplie ses tickets sous elle : réf,
+description, note de réparation, date du claim, date de réparation, réparé
+par. Les plus récemment réparés d'abord, à défaut le claim le plus récent.
 
 Un seul produit reste ouvert à la fois — en ouvrir un referme le précédent,
 sinon la page devient un mur. Les lignes dépliées ne se cliquent pas : elles
