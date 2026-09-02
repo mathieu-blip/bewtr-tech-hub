@@ -931,8 +931,9 @@
       <section id="settings">
         <div class="sec-head"><span class="num">4</span><h2 data-i18n="s4.t"></h2></div>
         <p class="sec-sub" data-i18n="s4.sub"></p>
-        <div data-i18n="s4.body"></div>
         <div id="g-settings"></div>
+        <div data-i18n="s4.body"></div>
+        <div id="g-mesures"></div>
       </section>
 
       <section id="maintenance">
@@ -1343,18 +1344,11 @@ const I18N = {
     <div class="card"><h3>Raccordement & étanchéité</h3><ul class="small"><li><b>Isoler les tuyaux plate & pétillante</b> — essentiel contre la condensation et pour préserver les performances.</li><li><b>Tuyau d'évacuation :</b> bien le fixer (risque de chute).</li><li><b>Grande distance Box → robinet :</b> aucun souci, mais utiliser impérativement le <b>Python</b> ; <b>2 techniciens recommandés</b> si passage dans des dalles béton.</li><li><b>Pompes de recirculation (BOX 80, BOX 80 I, BOX 120 I) :</b> prévues pour <b>5 m en vertical ou 10 m en horizontal</b> maximum. Au-delà, <b>l'installation n'est pas possible</b>. Une pompe de recirculation externe n'est pas une option : BE WTR serait responsable de la qualité, devrait gérer les pièces détachées, et elle tournerait 24h/24.</li></ul></div>
     <div class="card"><h3>Meuble, ventilation, perçage & repérage</h3><ul class="small"><li><b>Jamais dans un tiroir coulissant.</b> Le système doit rester immobile. En cas de tiroir coulissant, <b>transformer en porte avec charnières</b>.</li><li><b>Box 20 sous évier bas :</b> hauteur réductible (tutos BOX20 / BOX20 HOME).</li><li><b>Percer un mur / une paroi :</b> toujours <b>vérifier de l'autre côté</b> pour ne rien abîmer. Montage mur ou fontaine, gauche / droite selon le client.</li><li><b>Étiquette technique :</b> poser une étiquette n° machine (MA) + n° de série (robinet + box), <b>sur la porte ou à proximité (pas sur la box)</b>, à mettre à jour si les SN changent.</li></ul></div>`,
     "s4.t":"Réglages & valeurs de référence","s4.sub":"Les valeurs à atteindre pour un système correctement réglé.",
-    "s4.body":`<div class="card"><h4>Valeurs cibles</h4><div class="kv">
-    <div class="pill"><div class="lbl">Réducteur de pression</div><div class="val">3 <span>Bar · 44 PSI</span></div></div>
-    <div class="pill"><div class="lbl">Gaz vs pression d'eau</div><div class="val">+0,8–1,5 <span>Bar · +12–22 PSI</span></div></div>
-    <div class="pill"><div class="lbl">Thermostat</div><div class="val">5</div></div>
-    <div class="pill"><div class="lbl">Niveau bac à glace (BOX 80/150)</div><div class="val">Min</div></div>
-    <div class="pill"><div class="lbl">Débit eau pétillante</div><div class="val">2,2 <span>L/min · 0,58 gal/min</span></div></div></div></div>
-    <div class="grid two"><div class="card"><h3>Réglage CO₂ & pétillant</h3><p class="small muted">Régler la pression CO₂ 0,8–1,5 Bar au-dessus de la pression d'eau entrante, puis affiner le débit avec le compensateur :</p><ul class="small"><li><b>Pression gaz plus haute</b> → plus de CO₂, plus d'effort pompe, plus de turbulences donc dégazage en sortie de tap</li><li><b>Pression gaz plus basse</b> → CO₂ plus doux, moins d'effort, débit plus calme</li></ul><p class="small muted">Régler au débit laminaire minimum (~2,2 L/min = 20s/75 cL). La saturation en CO₂ augmente quand l'eau refroidit — juger la bulle sur une eau bien froide.</p><div class="callout small" style="margin-top:10px"><b>Bon à savoir — altitude & carbonatation :</b> en altitude, l'eau paraît moins pétillante. La pression de l'air est plus faible, le CO₂ se dissout moins bien et s'échappe plus vite (bulles plus grosses, disparaissant plus vite), même à quantité de CO₂ injectée identique. En résumé : altitude = moins de pression = moins de gaz dissous.</div></div>
-    <div class="card"><h3>Compensateur (BW-0158, 8 mm)</h3><table><thead><tr><th>BOX</th><th>Compensateur intégré</th></tr></thead><tbody>
+    "s4.body":`<div class="card"><h3>Compensateur (BW-0158, 8 mm)</h3><table><thead><tr><th>BOX</th><th>Compensateur intégré</th></tr></thead><tbody>
     <tr><td>BOX 20</td><td><span class="tag">Oui</span></td></tr><tr><td>BOX 30</td><td><span class="tag">Oui</span></td></tr>
     <tr><td>BOX 30B</td><td><span class="tag">Oui</span></td></tr><tr><td>BOX 80</td><td class="muted">BW-0158 externe</td></tr>
     <tr><td>BOX 150</td><td class="muted">BW-0158 externe</td></tr></tbody></table>
-    <p class="small muted" style="margin-top:8px">Sur les taps AQTiV, un compensateur 8 mm BW-0158 se pose sur la ligne plate, entre la sortie plate du Be Connect et le tap.</p></div></div>`,
+    <p class="small muted" style="margin-top:8px">Sur les taps AQTiV, un compensateur 8 mm BW-0158 se pose sur la ligne plate, entre la sortie plate du Be Connect et le tap.</p></div>`,
     "s5.t":"Protocole de maintenance","s5.sub":"Un service est dû tous les <b>6 mois</b> pour garantir la qualité de l'installation et le bon niveau d'hygiène.",
     "s5.body":`<div class="card"><h4>Checklist sur site</h4><div class="grid two" style="margin-top:4px">
     <ul class="small"><li>Régler les débits si nécessaire</li><li>Mettre le bac à glace sur « min » (BOX 80/150)</li><li>Régler le thermostat sur 5</li><li>Nettoyer le ventilateur de la BOX / enlever la poussière</li><li>Vérifier que la BOX ne chauffe pas trop</li></ul>
@@ -1471,18 +1465,11 @@ const I18N = {
     <div class="card"><h3>Connection & sealing</h3><ul class="small"><li><b>Insulate the still & sparkling tubes</b> — essential against condensation and to preserve performance.</li><li><b>Drain hose:</b> fix it well (risk of falling).</li><li><b>Very long Box → tap run:</b> no problem, but you MUST use the <b>Python</b>; <b>two technicians recommended</b> if pulled through concrete slabs.</li><li><b>Recirculation pumps (BOX 80, BOX 80 I, BOX 120 I):</b> rated for <b>5 m vertical or 10 m horizontal</b> maximum. Beyond that, <b>installation is not possible</b>. An external recirculation pump is not an option: BE WTR would be liable for the quality, would have to manage the spare parts, and it would run 24/7.</li></ul></div>
     <div class="card"><h3>Cabinet, ventilation, drilling & labelling</h3><ul class="small"><li><b>Never in a sliding drawer.</b> The system must stay still. If there's a sliding drawer, <b>convert it to a hinged door</b>.</li><li><b>Box 20 under a low sink:</b> height can be reduced (BOX20 / BOX20 HOME tutorials).</li><li><b>Drilling a wall / partition:</b> always <b>check the other side</b> to avoid damaging anything. Wall or fountain mount, left / right per the customer.</li><li><b>Technical label:</b> apply a label with machine no. (MA) + serial numbers (tap + box), <b>on the door or nearby (not on the box)</b>, update it if the SNs change.</li></ul></div>`,
     "s4.t":"Settings & reference values","s4.sub":"The numbers to hit for a correctly tuned system.",
-    "s4.body":`<div class="card"><h4>Target values</h4><div class="kv">
-    <div class="pill"><div class="lbl">Pressure reducer</div><div class="val">3 <span>Bar · 44 PSI</span></div></div>
-    <div class="pill"><div class="lbl">Gas vs. water pressure</div><div class="val">+0.8–1.5 <span>Bar · +12–22 PSI</span></div></div>
-    <div class="pill"><div class="lbl">Thermostat</div><div class="val">5</div></div>
-    <div class="pill"><div class="lbl">Ice bank level (BOX 80/150)</div><div class="val">Min</div></div>
-    <div class="pill"><div class="lbl">Sparkling flow</div><div class="val">2.2 <span>L/min · 0.58 gal/min</span></div></div></div></div>
-    <div class="grid two"><div class="card"><h3>CO₂ & sparkling tuning</h3><p class="small muted">Set CO₂ pressure 0.8–1.5 Bar above incoming water pressure, then fine-tune flow with the compensator:</p><ul class="small"><li><b>Higher gas pressure</b> → more CO₂, more pump effort, more turbulence, so degassing at the tap outlet</li><li><b>Lower gas pressure</b> → softer CO₂, less pump effort, calmer flow</li></ul><p class="small muted">Adjust to the minimum laminar flow (~2.2 L/min = 20s for 75 cL). CO₂ saturation rises as water gets colder — judge bubble quality on well-chilled water.</p><div class="callout small" style="margin-top:10px"><b>Good to know — altitude & carbonation:</b> at altitude, water seems less sparkling. Air pressure is lower, CO₂ dissolves less well and escapes faster (bigger bubbles that vanish sooner), even with the same amount of CO₂ injected. In short: altitude = less pressure = less dissolved gas.</div></div>
-    <div class="card"><h3>Compensator (BW-0158, 8 mm)</h3><table><thead><tr><th>BOX</th><th>Integrated compensator</th></tr></thead><tbody>
+    "s4.body":`<div class="card"><h3>Compensator (BW-0158, 8 mm)</h3><table><thead><tr><th>BOX</th><th>Integrated compensator</th></tr></thead><tbody>
     <tr><td>BOX 20</td><td><span class="tag">Yes</span></td></tr><tr><td>BOX 30</td><td><span class="tag">Yes</span></td></tr>
     <tr><td>BOX 30B</td><td><span class="tag">Yes</span></td></tr><tr><td>BOX 80</td><td class="muted">External BW-0158</td></tr>
     <tr><td>BOX 150</td><td class="muted">External BW-0158</td></tr></tbody></table>
-    <p class="small muted" style="margin-top:8px">On AQTiV taps, an 8 mm BW-0158 compensator goes on the still line between Be Connect still-out and the tap.</p></div></div>`,
+    <p class="small muted" style="margin-top:8px">On AQTiV taps, an 8 mm BW-0158 compensator goes on the still line between Be Connect still-out and the tap.</p></div>`,
     "s5.t":"Maintenance protocol","s5.sub":"A service is due every <b>6 months</b> to guarantee install quality and the right level of hygiene.",
     "s5.body":`<div class="card"><h4>On-site checklist</h4><div class="grid two" style="margin-top:4px">
     <ul class="small"><li>Adjust flow rates if needed</li><li>Set ice bank level to “min” (BOX 80/150)</li><li>Set thermostat to 5</li><li>Clean the BOX fan / remove dust</li><li>Check the BOX is not overheating</li></ul>
@@ -1599,18 +1586,11 @@ const I18N = {
     <div class="card"><h3>Anschluss & Abdichtung</h3><ul class="small"><li><b>Still- & Sprudelschläuche isolieren</b> — wesentlich gegen Kondensation und zur Erhaltung der Leistung.</li><li><b>Ablaufschlauch:</b> gut befestigen (Fallgefahr).</li><li><b>Sehr lange Strecke Box → Zapfhahn:</b> kein Problem, aber unbedingt den <b>Python</b> verwenden; <b>zwei Techniker empfohlen</b> bei Betondecken.</li><li><b>Umwälzpumpen (BOX 80, BOX 80 I, BOX 120 I):</b> ausgelegt für maximal <b>5 m vertikal oder 10 m horizontal</b>. Darüber hinaus ist <b>die Installation nicht möglich</b>. Eine externe Umwälzpumpe ist keine Option: BE WTR wäre für die Qualität verantwortlich, müsste die Ersatzteile verwalten, und sie würde rund um die Uhr laufen.</li></ul></div>
     <div class="card"><h3>Möbel, Belüftung, Bohren & Kennzeichnung</h3><ul class="small"><li><b>Nie in einer Schublade.</b> Das System muss unbeweglich bleiben. Bei einer Schublade <b>in eine Scharniertür umbauen</b>.</li><li><b>Box 20 unter niedriger Spüle:</b> Höhe reduzierbar (BOX20 / BOX20 HOME Tutorials).</li><li><b>Wand / Trennwand bohren:</b> immer <b>die andere Seite prüfen</b>, um nichts zu beschädigen. Wand- oder Säulenmontage, links / rechts je nach Kunde.</li><li><b>Technisches Etikett:</b> ein Etikett mit Maschinen-Nr. (MA) + Seriennummern (Zapfhahn + Box) anbringen, <b>an der Tür oder in der Nähe (nicht auf der Box)</b>, bei SN-Änderung aktualisieren.</li></ul></div>`,
     "s4.t":"Einstellungen & Referenzwerte","s4.sub":"Die Zielwerte für ein korrekt eingestelltes System.",
-    "s4.body":`<div class="card"><h4>Zielwerte</h4><div class="kv">
-    <div class="pill"><div class="lbl">Druckminderer</div><div class="val">3 <span>Bar · 44 PSI</span></div></div>
-    <div class="pill"><div class="lbl">Gas ggü. Wasserdruck</div><div class="val">+0,8–1,5 <span>Bar · +12–22 PSI</span></div></div>
-    <div class="pill"><div class="lbl">Thermostat</div><div class="val">5</div></div>
-    <div class="pill"><div class="lbl">Eisbank-Niveau (BOX 80/150)</div><div class="val">Min</div></div>
-    <div class="pill"><div class="lbl">Sprudel-Durchfluss</div><div class="val">2,2 <span>L/min · 0,58 gal/min</span></div></div></div></div>
-    <div class="grid two"><div class="card"><h3>CO₂- & Sprudel-Feinabstimmung</h3><p class="small muted">CO₂-Druck 0,8–1,5 Bar über dem zulaufenden Wasserdruck einstellen, dann den Durchfluss über den Kompensator feinjustieren:</p><ul class="small"><li><b>Höherer Gasdruck</b> → mehr CO₂, mehr Pumpenaufwand, mehr Turbulenz, also Entgasung am Zapfhahn-Auslauf</li><li><b>Niedrigerer Gasdruck</b> → weicheres CO₂, weniger Aufwand, ruhigerer Fluss</li></ul><p class="small muted">Auf den minimalen laminaren Durchfluss einstellen (~2,2 L/min = 20s für 75 cL). Die CO₂-Sättigung steigt mit kälterem Wasser — Blasenqualität an gut gekühltem Wasser beurteilen.</p><div class="callout small" style="margin-top:10px"><b>Gut zu wissen — Höhe & Karbonisierung:</b> In der Höhe wirkt das Wasser weniger sprudelnd. Der Luftdruck ist niedriger, CO₂ löst sich schlechter und entweicht schneller (größere Blasen, die schneller verschwinden), selbst bei gleicher injizierter CO₂-Menge. Kurz: Höhe = weniger Druck = weniger gelöstes Gas.</div></div>
-    <div class="card"><h3>Kompensator (BW-0158, 8 mm)</h3><table><thead><tr><th>BOX</th><th>Integrierter Kompensator</th></tr></thead><tbody>
+    "s4.body":`<div class="card"><h3>Kompensator (BW-0158, 8 mm)</h3><table><thead><tr><th>BOX</th><th>Integrierter Kompensator</th></tr></thead><tbody>
     <tr><td>BOX 20</td><td><span class="tag">Ja</span></td></tr><tr><td>BOX 30</td><td><span class="tag">Ja</span></td></tr>
     <tr><td>BOX 30B</td><td><span class="tag">Ja</span></td></tr><tr><td>BOX 80</td><td class="muted">Externer BW-0158</td></tr>
     <tr><td>BOX 150</td><td class="muted">Externer BW-0158</td></tr></tbody></table>
-    <p class="small muted" style="margin-top:8px">An AQTiV-Zapfhähnen kommt ein 8-mm-Kompensator BW-0158 an die Still-Leitung, zwischen Be Connect Still-Ausgang und Zapfhahn.</p></div></div>`,
+    <p class="small muted" style="margin-top:8px">An AQTiV-Zapfhähnen kommt ein 8-mm-Kompensator BW-0158 an die Still-Leitung, zwischen Be Connect Still-Ausgang und Zapfhahn.</p></div>`,
     "s5.t":"Wartungsprotokoll","s5.sub":"Ein Service ist alle <b>6 Monate</b> fällig, um die Installationsqualität und das richtige Hygieneniveau zu sichern.",
     "s5.body":`<div class="card"><h4>Checkliste vor Ort</h4><div class="grid two" style="margin-top:4px">
     <ul class="small"><li>Durchflüsse bei Bedarf anpassen</li><li>Eisbank-Niveau auf „min" stellen (BOX 80/150)</li><li>Thermostat auf 5 stellen</li><li>BOX-Lüfter reinigen / Staub entfernen</li><li>Prüfen, dass die BOX nicht überhitzt</li></ul>
@@ -1839,7 +1819,8 @@ function refImg(ref){ return (ref && REF_IMG[ref]) || null; }
 const GUIDE_PLACEMENT = {
   /* « installation » n'a pas de bloc à lui : ses fiches sont les cartes
      d'installation de la bibliothèque — voir INSTALL_FICHE. */
-  "g-settings":     ["memo-reglages", "mesures"],
+  "g-settings":     ["memo-reglages"],
+  "g-mesures":      ["mesures"],
   /* « memo-maintenance » et « memo-client » reprenaient mot pour mot le
      protocole de maintenance et la remise client déjà écrits dans le hub —
      en moins bien composé. Le hub garde les siens. */
