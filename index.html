@@ -202,7 +202,11 @@
   /* align-items : sans lui, les photos d'une rangée s'étirent toutes à la
      hauteur de la plus haute et perdent leur format d'origine. */
   .itut-ph{display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;margin-top:8px}
-  .itut .itut-ph img{width:192px;max-width:46%;height:auto;margin:0;display:block;border:1px solid var(--line);cursor:zoom-in}
+  /* Deux plafonds et aucune dimension imposée : le navigateur réduit la photo
+     proportionnellement pour tenir dans les deux, donc jamais d'étirement. Une
+     photo verticale — un tube de graisse debout — ne prend plus toute la page.
+     Un clic l'agrandit. */
+  .itut .itut-ph img{max-height:220px;max-width:46%;width:auto;height:auto;margin:0;display:block;border:1px solid var(--line);cursor:zoom-in}
   .itut .itut-dg img{width:100%;max-width:100%;margin:0 0 8px;cursor:zoom-in}
   .itut-bl ul{margin:8px 0 0;padding-left:18px}
   .itut-bl li{font-size:12.5px;line-height:1.55}
