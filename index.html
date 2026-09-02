@@ -351,6 +351,12 @@
   .nav-pin{background:#fff;border-top:1px solid var(--line);padding:12px 0 2px}
   .nav-fb{background:var(--orange-soft);color:var(--orange);font-weight:600}
   .nav-fb:hover{background:var(--orange);color:#fff}
+  /* Ouvrir un ticket est le geste le plus frequent depuis le terrain : il se
+     prend en pleine couleur, au-dessus du lien « Signaler / suggerer », et
+     non perdu au bas d'une liste de chapitres qu'il faut faire defiler. */
+  .nav-cl{background:var(--orange);color:#fff;font-weight:600;margin-bottom:6px}
+  .nav-cl:hover{background:#c8541f;color:#fff}
+  .nav-cl.active{background:#c8541f;color:#fff}
   /* Sous 880px la barre laterale est masquee et remplacee par le menu ☰ : ces
      regles sont donc reservees au bureau, sinon #nav rouvrirait le menu cache. */
   @media(min-width:881px){
@@ -704,6 +710,10 @@
   .cl-table.cl-sub tbody tr:hover{background:transparent}
   .cl-table .code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--ink-soft);white-space:nowrap}
   .cl-table .ttl{font-weight:600}
+  /* une description peut faire dix lignes : la cellule en montre trois,
+     le detail du ticket porte le texte entier */
+  .cl-table .ttl .clamp{max-width:44ch;white-space:pre-wrap;display:-webkit-box;
+    -webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
   .cl-wrap-x{overflow-x:auto;border-radius:12px}
 
   .cl-badge{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
@@ -900,9 +910,9 @@
       <a href="#schemas"><span class="ic">▦</span> <span data-i18n="nav.schemas"></span></a>
       <a href="#glossary"><span class="ic">▩</span> <span data-i18n="nav.glossary"></span></a>
       <a href="#gaps"><span class="ic">☑</span> <span data-i18n="nav.gaps"></span></a>
-      <a href="#claims" hidden><span class="ic">⚑</span> <span data-i18n="nav.claims"></span></a>
       </div>
       <div class="nav-pin">
+        <a class="nav-cl" href="#claims" hidden><span class="ic">⚑</span> <span data-i18n="nav.claims"></span></a>
         <a class="nav-fb" href="#feedback"><span class="ic">✎</span> <span data-i18n="nav.feedback"></span></a>
       </div>
     </nav>
@@ -1106,13 +1116,11 @@
           <!-- formulaire nouveau ticket -->
           <div id="clViewNew" hidden>
             <form class="card cl-form" id="clNewForm" novalidate>
+              <!-- Un seul texte : l'objet et la description disaient la meme
+                   chose, et le technicien recopiait l'un dans l'autre. -->
               <div>
-                <label class="cl-lbl" for="clnTitle"><span data-cl-i18n="f.title"></span> <span class="cl-req">*</span></label>
-                <input class="cl-in" id="clnTitle" maxlength="300" required>
-              </div>
-              <div>
-                <label class="cl-lbl" for="clnDesc" data-cl-i18n="f.desc"></label>
-                <textarea class="cl-in" id="clnDesc" rows="5" maxlength="4000"></textarea>
+                <label class="cl-lbl" for="clnDesc"><span data-cl-i18n="f.desc"></span> <span class="cl-req">*</span></label>
+                <textarea class="cl-in" id="clnDesc" rows="5" maxlength="4000" required></textarea>
                 <div class="cl-sugg" id="clnSugg" hidden></div>
               </div>
               <div class="two">
@@ -3235,19 +3243,19 @@ const CL_I18N = {
     "rep.tickets":"Tickets","rep.click":"— cliquez une ligne pour voir ses tickets","rep.none.open":"Aucun ticket ouvert.","rep.none.closed":"Aucun ticket fermé.",
     "rep.none.parts":"Aucune pièce enregistrée sur les tickets fermés de ce périmètre.",
     "kpi.total":"Tickets ouverts","kpi.new":"À réparer","kpi.order":"Pièces à commander","kpi.supplier":"Chez le fournisseur","kpi.warranty":"Sous garantie",
-    "filter.search":"Rechercher — titre, n° série, technicien, société…","filter.refresh":"Actualiser",
+    "filter.search":"Rechercher — description, n° série, technicien, société…","filter.refresh":"Actualiser",
     "filter.xlsx":"Exporter en Excel","x.none":"Aucun ticket à exporter.","x.sheet":"Tickets",
     "filter.allstatus":"Tous les statuts","filter.allcountry":"Tous les pays","filter.allproduct":"Tous les produits","filter.allpart":"Toutes les pièces",
-    "f.title":"Objet du ticket","f.desc":"Description du problème","f.product":"Produit","f.serial":"N° de série",
+    "f.desc":"Description du problème","f.product":"Produit","f.serial":"N° de série",
     "f.install":"Date d'installation","f.claimdate":"Date du ticket","f.country":"Pays","f.units":"Nb d'unités concernées",
     "f.tech":"Technicien","f.mail":"E-mail","f.company":"Société","f.parts":"Pièces nécessaires",
     "f.parts.search":"Chercher une pièce — réf BW ou désignation…","f.submit":"Créer le ticket",
-    "f.need.title":"L'objet du ticket est obligatoire.","f.need.claimdate":"La date du ticket ne peut pas être dans le futur.","f.saved":"Ticket %s créé.","f.err":"Enregistrement impossible : %s",
+    "f.need.desc":"La description du problème est obligatoire.","f.need.claimdate":"La date du ticket ne peut pas être dans le futur.","f.saved":"Ticket %s créé.","f.err":"Enregistrement impossible : %s",
     "war.yes":"Sous garantie","war.no":"Hors garantie","war.unknown":"Garantie inconnue",
     "war.hint":"Garantie = moins de 730 jours entre l'installation et le ticket.",
-    "col.code":"Réf.","col.title":"Objet","col.product":"Produit","col.serial":"N° série","col.country":"Pays",
+    "col.code":"Réf.","col.product":"Produit","col.serial":"N° série","col.country":"Pays",
     "col.tech":"Technicien","col.date":"Date ticket","col.warranty":"Garantie","col.parts":"Pièces",
-    "d.status":"Statut","d.repair":"Note de réparation","d.repairdate":"Date de réparation",
+    "d.status":"Statut","d.repair":"Note de réparation","d.repairdate":"Date de réparation","d.repairedby":"Réparé par",
     "d.edit":"Modifier","d.editcancel":"Annuler",
     "d.editparts":"Ajouter ou retirer une pièce enregistre d'abord la fiche.",
     "d.restock":"Lieu de restockage","d.save":"Enregistrer","d.saved":"Enregistré.","d.parts":"Pièces demandées",
@@ -3281,19 +3289,19 @@ const CL_I18N = {
     "rep.tickets":"Tickets","rep.click":"— click a row to see its tickets","rep.none.open":"No open ticket.","rep.none.closed":"No closed ticket.",
     "rep.none.parts":"No part recorded on the closed tickets in this scope.",
     "kpi.total":"Open claims","kpi.new":"To repair","kpi.order":"Parts to order","kpi.supplier":"At supplier","kpi.warranty":"Under warranty",
-    "filter.search":"Search — title, serial, technician, company…","filter.refresh":"Refresh",
+    "filter.search":"Search — description, serial, technician, company…","filter.refresh":"Refresh",
     "filter.xlsx":"Export to Excel","x.none":"No claim to export.","x.sheet":"Claims",
     "filter.allstatus":"All statuses","filter.allcountry":"All countries","filter.allproduct":"All products","filter.allpart":"All parts",
-    "f.title":"Ticket subject","f.desc":"Problem description","f.product":"Product","f.serial":"Serial number",
+    "f.desc":"Problem description","f.product":"Product","f.serial":"Serial number",
     "f.install":"Installation date","f.claimdate":"Claim date","f.country":"Country","f.units":"Units impacted",
     "f.tech":"Technician","f.mail":"E-mail","f.company":"Company","f.parts":"Parts needed",
     "f.parts.search":"Find a part — BW ref or designation…","f.submit":"Create ticket",
-    "f.need.title":"The ticket subject is required.","f.need.claimdate":"The claim date cannot be in the future.","f.saved":"Ticket %s created.","f.err":"Could not save: %s",
+    "f.need.desc":"The problem description is required.","f.need.claimdate":"The claim date cannot be in the future.","f.saved":"Ticket %s created.","f.err":"Could not save: %s",
     "war.yes":"Under warranty","war.no":"Out of warranty","war.unknown":"Warranty unknown",
     "war.hint":"Warranty = less than 730 days between installation and claim.",
-    "col.code":"Ref.","col.title":"Subject","col.product":"Product","col.serial":"Serial","col.country":"Country",
+    "col.code":"Ref.","col.product":"Product","col.serial":"Serial","col.country":"Country",
     "col.tech":"Technician","col.date":"Claim date","col.warranty":"Warranty","col.parts":"Parts",
-    "d.status":"Status","d.repair":"Repair note","d.repairdate":"Repair date",
+    "d.status":"Status","d.repair":"Repair note","d.repairdate":"Repair date","d.repairedby":"Repaired by",
     "d.edit":"Edit","d.editcancel":"Cancel",
     "d.editparts":"Adding or removing a part saves the form first.",
     "d.restock":"Restocking location","d.save":"Save","d.saved":"Saved.","d.parts":"Parts requested",
@@ -3327,19 +3335,19 @@ const CL_I18N = {
     "rep.tickets":"Tickets","rep.click":"— eine Zeile anklicken, um ihre Tickets zu sehen","rep.none.open":"Kein offenes Ticket.","rep.none.closed":"Kein geschlossenes Ticket.",
     "rep.none.parts":"Kein Teil auf den geschlossenen Tickets dieses Umfangs erfasst.",
     "kpi.total":"Offene Claims","kpi.new":"Zu reparieren","kpi.order":"Teile zu bestellen","kpi.supplier":"Beim Lieferanten","kpi.warranty":"In Garantie",
-    "filter.search":"Suchen — Titel, Seriennummer, Techniker, Firma…","filter.refresh":"Aktualisieren",
+    "filter.search":"Suchen — Beschreibung, Seriennummer, Techniker, Firma…","filter.refresh":"Aktualisieren",
     "filter.xlsx":"Nach Excel exportieren","x.none":"Keine Tickets zum Exportieren.","x.sheet":"Tickets",
     "filter.allstatus":"Alle Status","filter.allcountry":"Alle Länder","filter.allproduct":"Alle Produkte","filter.allpart":"Alle Teile",
-    "f.title":"Betreff","f.desc":"Problembeschreibung","f.product":"Produkt","f.serial":"Seriennummer",
+    "f.desc":"Problembeschreibung","f.product":"Produkt","f.serial":"Seriennummer",
     "f.install":"Installationsdatum","f.claimdate":"Claim-Datum","f.country":"Land","f.units":"Betroffene Einheiten",
     "f.tech":"Techniker","f.mail":"E-Mail","f.company":"Firma","f.parts":"Benötigte Teile",
     "f.parts.search":"Teil suchen — BW-Nr. oder Bezeichnung…","f.submit":"Ticket anlegen",
-    "f.need.title":"Der Betreff ist erforderlich.","f.need.claimdate":"Das Claim-Datum darf nicht in der Zukunft liegen.","f.saved":"Ticket %s angelegt.","f.err":"Speichern fehlgeschlagen: %s",
+    "f.need.desc":"Die Problembeschreibung ist erforderlich.","f.need.claimdate":"Das Claim-Datum darf nicht in der Zukunft liegen.","f.saved":"Ticket %s angelegt.","f.err":"Speichern fehlgeschlagen: %s",
     "war.yes":"In Garantie","war.no":"Außerhalb Garantie","war.unknown":"Garantie unbekannt",
     "war.hint":"Garantie = weniger als 730 Tage zwischen Installation und Claim.",
-    "col.code":"Nr.","col.title":"Betreff","col.product":"Produkt","col.serial":"Seriennr.","col.country":"Land",
+    "col.code":"Nr.","col.product":"Produkt","col.serial":"Seriennr.","col.country":"Land",
     "col.tech":"Techniker","col.date":"Claim-Datum","col.warranty":"Garantie","col.parts":"Teile",
-    "d.status":"Status","d.repair":"Reparaturnotiz","d.repairdate":"Reparaturdatum",
+    "d.status":"Status","d.repair":"Reparaturnotiz","d.repairdate":"Reparaturdatum","d.repairedby":"Repariert von",
     "d.edit":"Bearbeiten","d.editcancel":"Abbrechen",
     "d.editparts":"Ein Teil hinzuzufügen oder zu entfernen speichert zuerst das Formular.",
     "d.restock":"Einlagerungsort","d.save":"Speichern","d.saved":"Gespeichert.","d.parts":"Angeforderte Teile",
@@ -3607,8 +3615,8 @@ function clExportClaims(){
   const num = v => { const n = Number(v); return v == null || !isFinite(n) ? "" : n; };
 
   const table = [[
-    clT("col.code"), clT("f.title"), clT("f.product"), clT("f.serial"),
-    clT("f.country"), clT("f.claimdate"), clT("f.desc"),
+    clT("col.code"), clT("f.product"), clT("f.serial"),
+    clT("f.country"), clT("f.claimdate"), clT("f.desc"), clT("d.repairedby"),
     clT("o.internal"), clT("o.ref"), clT("o.desig"), clT("parts.qty")
   ]];
   // Le tableau groupe par statut ; ici on trie sur la référence, la seule
@@ -3616,8 +3624,8 @@ function clExportClaims(){
   rows.slice().sort((a, b) => String(a.code || "").localeCompare(String(b.code || "")))
       .forEach(c => {
     const head = [
-      c.code || "", c.title || "", c.product || "", c.serial_number || "",
-      c.country || "", clXlDate(c.claim_date), c.description || ""
+      c.code || "", c.product || "", c.serial_number || "",
+      c.country || "", clXlDate(c.claim_date), clSubject(c), c.repaired_by || ""
     ];
     const parts = c.parts || [];
     if(!parts.length){ table.push(head.concat(["", "", "", ""])); return; }
@@ -4062,6 +4070,23 @@ function clEsc(v){
     .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
     .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
 }
+/**
+ * Le texte d'un ticket. Le formulaire ne demande plus qu'une description ;
+ * les 321 tickets repris de Monday, eux, portent parfois un objet et rien
+ * d'autre — sans ce repli, leur ligne serait vide à l'écran. Le script SQL 18
+ * fait le même rattrapage en base ; celui-ci tient dès l'ouverture de la page.
+ */
+function clSubject(c){
+  const d = (c.description || "").trim();
+  return d || (c.title || "").trim();
+}
+/** Sa première ligne, courte : intitulé d'un tableau, titre d'une fiche. */
+function clSubjectLine(v, max){
+  const t = String(v || "").replace(/\r/g, "").split("\n")
+              .map(x => x.trim()).filter(Boolean)[0] || "";
+  const n = max || 300;
+  return t.length > n ? t.slice(0, n - 1).trimEnd() + "…" : t;
+}
 function clDate(d){
   if(!d) return "—";
   const p = String(d).slice(0,10).split("-");
@@ -4189,7 +4214,7 @@ function clRenderBoard(){
             : '<span class="muted small">—</span>');
       return '<tr data-id="'+c.id+'">'
         + '<td class="code">'+clEsc(c.code)+'</td>'
-        + '<td class="ttl">'+clEsc(c.title)+'</td>'
+        + '<td class="ttl"><div class="clamp">'+clEsc(clSubject(c))+'</div></td>'
         + '<td>'+clEsc(c.product || "—")+'</td>'
         + '<td class="code">'+clEsc(c.serial_number || "—")+'</td>'
         + '<td>'+clEsc(c.country || "—")+'</td>'
@@ -4203,13 +4228,20 @@ function clRenderBoard(){
       + '<h4><span class="sw" style="background:'+clStatusColor(k)+'"></span>'+clEsc(clStatusLabel(k))
       + ' <span class="c">· '+list.length+'</span></h4>'
       + '<div class="cl-wrap-x"><table class="cl-table"><thead><tr>'
-      + ['col.code','col.title','col.product','col.serial','col.country','col.tech','col.date','col.warranty','col.parts']
+      + ['col.code','f.desc','col.product','col.serial','col.country','col.tech','col.date','col.warranty','col.parts']
           .map(x => '<th>'+clEsc(clT(x))+'</th>').join("")
       + '</tr></thead><tbody>'+body+'</tbody></table></div></div>';
   }).join("");
 }
 
 /* -------------------------------------------------------- panneau détail */
+
+/** Les noms déjà portés par un ticket, proposés au lieu d'être retapés. */
+function clRepairedByOptions(){
+  const seen = Array.from(new Set(clState.claims
+                  .map(x => (x.repaired_by || "").trim()).filter(Boolean))).sort();
+  return seen.map(v => '<option value="'+clEsc(v)+'">').join("");
+}
 
 /** Statuts proposés à la saisie, plus celui du claim s'il n'y est plus. */
 function clStatusChoices(cur){
@@ -4219,10 +4251,14 @@ function clStatusChoices(cur){
 
 /** Le bloc d'identité en lecture : ce que le technicien a déclaré. */
 function clDetailHead(c){
-  return '<h3>'+clEsc(c.title)+'</h3>'
+  const full = clSubject(c), head = clSubjectLine(full, 140);
+  return '<h3>'+clEsc(head || c.code)+'</h3>'
     + '<p class="muted small code">'+clEsc(c.code)
     +   ' <button class="cl-btn ghost sm" type="button" id="clEdit">'+clT("d.edit")+'</button></p>'
-    + (c.description ? '<div class="card" style="white-space:pre-wrap;font-size:13.5px">'+clEsc(c.description)+'</div>' : '');
+    // le bloc ne s'ouvre que si le texte dit plus que le titre : sinon la
+    // même phrase apparaîtrait deux fois de suite
+    + (full && full !== head
+        ? '<div class="card" style="white-space:pre-wrap;font-size:13.5px">'+clEsc(full)+'</div>' : '');
 }
 
 /** La fiche déclarée : machine, série, dates, contact, garantie. */
@@ -4264,10 +4300,8 @@ function clDetailEditForm(c){
     // traduit et posé au même endroit, qui explique le refus — pas la bulle
     // native du navigateur.
     + '<form class="cl-form" id="clEditForm" novalidate data-claim="'+c.id+'">'
-    +   '<div><label class="cl-lbl">'+clT("f.title")+' <span class="cl-req">*</span></label>'
-    +     '<input class="cl-in" name="title" maxlength="300" value="'+clEsc(c.title)+'"></div>'
-    +   '<div><label class="cl-lbl">'+clT("f.desc")+'</label>'
-    +     '<textarea class="cl-in" name="description" rows="5" maxlength="4000">'+clEsc(c.description || "")+'</textarea>'
+    +   '<div><label class="cl-lbl">'+clT("f.desc")+' <span class="cl-req">*</span></label>'
+    +     '<textarea class="cl-in" name="description" rows="5" maxlength="4000">'+clEsc(clSubject(c))+'</textarea>'
               // Mêmes gestes que le nouveau ticket : les propositions collent
               // à la description, et la pièce se choisit dans la foulée.
     +     '<div class="cl-sugg" id="clEditSugg" hidden></div></div>'
@@ -4368,9 +4402,18 @@ function clOpenDetail(id, edit){
     +     '<div><label class="cl-lbl">'+clT("d.repairdate")+'</label>'
     +       '<input class="cl-in" type="date" name="repair_date" value="'+clEsc((c.repair_date||"").slice(0,10))+'"></div>'
     +   '</div>'
-    +   '<div><label class="cl-lbl">'+clT("d.restock")+'</label>'
-    +     '<select class="cl-in" name="restock_location"><option value=""></option>'
-    +     opt(CL_RESTOCK, c.restock_location)+'</select></div>'
+    +   '<div class="two">'
+          // Qui a réparé se sait en fin de course, pas à l'ouverture : le champ
+          // n'a donc rien à faire dans le formulaire de création.
+    +     '<div><label class="cl-lbl">'+clT("d.repairedby")+'</label>'
+    +       '<input class="cl-in" name="repaired_by" maxlength="120" autocomplete="name"'
+    +       ' list="clRepairedBy" value="'+clEsc(c.repaired_by || "")+'"></div>'
+    +     '<div><label class="cl-lbl">'+clT("d.restock")+'</label>'
+    +       '<select class="cl-in" name="restock_location"><option value=""></option>'
+    +       opt(CL_RESTOCK, c.restock_location)+'</select></div>'
+    +   '</div>'
+          // les noms déjà saisis se reproposent : « Levent » ne s'écrit qu'une fois
+    +   '<datalist id="clRepairedBy">'+clRepairedByOptions()+'</datalist>'
     +   '<div><label class="cl-lbl">'+clT("d.repair")+'</label>'
     +     '<textarea class="cl-in" name="repair_notes" rows="3">'+clEsc(c.repair_notes || "")+'</textarea></div>'
     +   '<div><button class="cl-btn" type="submit">'+clT("d.save")+'</button> '
@@ -4416,7 +4459,7 @@ function clOpenDetail(id, edit){
   // mêmes propositions que sur un nouveau ticket : cinq, sous la description
   const sg = document.getElementById("clDetailSugg");
   const already = (c.parts || []).map(x => x.ref);
-  const sugg = clSuggestParts((c.title || "") + " " + (c.description || ""), c.product, 5)
+  const sugg = clSuggestParts(clSubject(c), c.product, 5)
                  .filter(x => !already.includes(x.ref));
   sg.hidden = !sugg.length;
   if(sugg.length){
@@ -4471,6 +4514,8 @@ function clOpenDetail(id, edit){
     ["status","repair_date","restock_location","repair_notes"].forEach(k => {
       const v = f.elements[k].value.trim(); if(v) payload[k] = v;
     });
+    // envoyé même vide : c'est le seul champ du suivi qu'on efface en le vidant
+    payload.repaired_by = f.elements.repaired_by.value.trim();
     try {
       await clRpc("claim_update", { p_pass: clState.pass, p_id: c.id, p: payload });
       msg.textContent = clT("d.saved");
@@ -4558,8 +4603,7 @@ function clBindEditForm(c){
 
   const suggest = () => {
     const already = (c.parts || []).map(x => x.ref);
-    const list = clSuggestParts(
-      f.elements.title.value + " " + f.elements.description.value,
+    const list = clSuggestParts(f.elements.description.value,
       f.elements.product.value, 5).filter(x => !already.includes(x.ref));
     if(!list.length){ sg.hidden = true; sg.innerHTML = ""; return; }
     sg.hidden = false;
@@ -4571,7 +4615,7 @@ function clBindEditForm(c){
     });
   };
 
-  ["title","description"].forEach(k => { f.elements[k].oninput = suggest; });
+  f.elements.description.oninput = suggest;
   const ex = document.getElementById("clEditExploded");
   f.elements.product.onchange = () => {
     ex.hidden = !clSpareKey(f.elements.product.value);
@@ -4592,14 +4636,18 @@ function clBindEditForm(c){
  * Enregistre la fiche en cours de modification, si le panneau en montre une.
  * Attacher ou retirer une pièce recharge le claim depuis le serveur : sans
  * cet enregistrement, les anciennes valeurs écraseraient la correction en
- * cours. Rend faux si le titre manque — il est NOT NULL en base.
+ * cours. Rend faux si la description manque : c'est le seul texte du ticket.
+ *
+ * title n'est pas renvoyé : la colonne existe toujours (NOT NULL) et porte
+ * l'intitulé Monday des tickets repris. Le laisser tranquille garde cette
+ * trace, que corriger une description n'a aucune raison d'effacer.
  */
 async function clEditSave(){
   const f = document.getElementById("clEditForm");
   if(!f) return true;
   const msg = document.getElementById("clEditMsg");
-  if(!f.elements.title.value.trim()){
-    if(msg) msg.textContent = clT("f.need.title");
+  if(!f.elements.description.value.trim()){
+    if(msg) msg.textContent = clT("f.need.desc");
     return false;
   }
   // Un claim daté de demain fausse l'ancienneté comme la garantie.
@@ -4608,7 +4656,7 @@ async function clEditSave(){
     return false;
   }
   const p = {};
-  ["title","description","product","serial_number","install_date","claim_date",
+  ["description","product","serial_number","install_date","claim_date",
    "country","units_impacted","technician_name","technician_email","company"]
     .forEach(k => { p[k] = f.elements[k].value.trim(); });
   await clRpc("claim_edit",
@@ -4788,16 +4836,17 @@ function clReportTickets(list){
     ? '<div style="white-space:pre-wrap;max-width:38ch">'+clEsc(v)+'</div>'
     : '<span class="muted">—</span>';
   return '<div class="cl-wrap-x"><table class="cl-table cl-sub" style="margin:0">'
-    + '<thead><tr><th>'+clT("col.code")+'</th><th>'+clT("f.title")+'</th>'
+    + '<thead><tr><th>'+clT("col.code")+'</th>'
     +   '<th>'+clT("f.desc")+'</th><th>'+clT("d.repair")+'</th>'
-    +   '<th>'+clT("f.claimdate")+'</th><th>'+clT("d.repairdate")+'</th></tr></thead><tbody>'
+    +   '<th>'+clT("f.claimdate")+'</th><th>'+clT("d.repairdate")+'</th>'
+    +   '<th>'+clT("d.repairedby")+'</th></tr></thead><tbody>'
     + sorted.map(c => '<tr style="cursor:default">'
         + '<td class="code">'+clEsc(c.code)+'</td>'
-        + '<td class="ttl">'+clEsc(c.title)+'</td>'
-        + '<td>'+cell(c.description)+'</td>'
+        + '<td>'+cell(clSubject(c))+'</td>'
         + '<td>'+cell(c.repair_notes)+'</td>'
         + '<td>'+clDate(c.claim_date)+'</td>'
-        + '<td>'+clDate(c.repair_date)+'</td></tr>').join("")
+        + '<td>'+clDate(c.repair_date)+'</td>'
+        + '<td>'+cell(c.repaired_by)+'</td></tr>').join("")
     + '</tbody></table></div>';
 }
 
@@ -4867,8 +4916,7 @@ function clRenderNewForm(){
 function clRenderSuggestions(){
   const host = document.getElementById("clnSugg");
   if(!host) return;
-  const txt  = (document.getElementById("clnTitle").value || "") + " " +
-               (document.getElementById("clnDesc").value  || "");
+  const txt  = document.getElementById("clnDesc").value || "";
   const prod = document.getElementById("clnProduct").value;
   const list = clSuggestParts(txt, prod, 5)
     .filter(p => !clState.newParts.some(x => x.ref === p.ref));
@@ -5472,8 +5520,7 @@ function clInit(){
   });
 
   // la suggestion suit ce que le technicien écrit
-  ["clnTitle","clnDesc"].forEach(id =>
-    document.getElementById(id).addEventListener("input", clRenderSuggestions));
+  document.getElementById("clnDesc").addEventListener("input", clRenderSuggestions);
   document.getElementById("clnProduct").addEventListener("change", clRenderSuggestions);
 
   // la vue éclatée n'a de sens qu'une fois la machine choisie
@@ -5505,12 +5552,14 @@ function clInit(){
     e.preventDefault();
     const msg = document.getElementById("clnMsg"), btn = document.getElementById("clnSubmit");
     const val = id => document.getElementById(id).value.trim();
-    if(!val("clnTitle")){ msg.textContent = clT("f.need.title"); return; }
+    if(!val("clnDesc")){ msg.textContent = clT("f.need.desc"); return; }
     if(val("clnClaim") > clToday()){ msg.textContent = clT("f.need.claimdate"); return; }
     btn.disabled = true; msg.innerHTML = '<span class="cl-spin"></span>';
     try {
       const payload = {
-        title: val("clnTitle"), description: val("clnDesc"),
+        // title reste NOT NULL en base et sert d'intitulé court aux exports :
+        // il se déduit de la première ligne, le technicien n'a plus à l'écrire
+        title: clSubjectLine(val("clnDesc")), description: val("clnDesc"),
         technician_name: val("clnTech"), technician_email: val("clnMail"),
         company: val("clnCompany"), country: val("clnCountry"),
         product: val("clnProduct"), serial_number: val("clnSerial"),
@@ -5544,7 +5593,10 @@ function clTicketFor(ref, machine){
   const lb = document.getElementById("imgbox");
   if(lb){ lb.style.display = "none"; try{ unlockScroll(); }catch(e){} }
   try{ showTab("#claims"); }catch(e){}
-  if(clState.pass) clApplyPrefill();
+  // La plateforme s'ouvre désormais avec le mot de passe du hub : au premier
+  // clic, le catalogue est encore en vol. Appliquer tout de suite ouvrirait un
+  // formulaire vide, que le chargement remplacerait ensuite par le tableau.
+  if(clState.pass) Promise.resolve(clEnsureLoaded()).then(function(){ clApplyPrefill(); });
   // sinon l'écran de garde s'affiche : clApplyPrefill() sera rappelé après
 }
 
@@ -5563,12 +5615,13 @@ function clApplyPrefill(){
     clRenderNewParts();
   }
 
-  const t = document.getElementById("clnTitle");
+  const t = document.getElementById("clnDesc");
   if(t){
-    // un objet par défaut vaut mieux qu'un champ obligatoire vide ; il est
-    // pré-sélectionné pour que le technicien le remplace en tapant
-    if(!t.value) t.value = (part ? part.name : p.ref) + " (" + p.ref + ")";
+    // une description par défaut vaut mieux qu'un champ obligatoire vide ;
+    // elle est pré-sélectionnée pour que le technicien la remplace en tapant
+    if(!t.value) t.value = (part ? partName(part.name) : p.ref) + " (" + p.ref + ")";
     t.focus(); t.select();
+    clRenderSuggestions();
   }
 }
 
