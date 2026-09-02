@@ -24,8 +24,10 @@
   body.ticket-only .shell{grid-template-columns:1fr}
   body.ticket-only aside,
   body.ticket-only .hsearch,
+  body.ticket-only .cat-btn,
+  body.ticket-only .cat-panel,
   body.ticket-only #clRefresh,
-  body.ticket-only #clXls{display:none}
+  body.ticket-only #clXls{display:none!important}
   /* grid items default to min-width:auto, which lets wide content stretch the page past the viewport */
   .shell>*{min-width:0}
   aside{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;background:#fff;border-right:1px solid var(--line);padding:26px 18px;}
@@ -756,12 +758,31 @@
 </style>
 </head>
 <body class="gate-locked">
+<script>
+/* Les cinq clés que le hub pose dans le stockage local du navigateur, en un
+   seul endroit : l'écran de garde et le bloc Claims se partagent la deuxième,
+   et ils vivent à quatre mille lignes d'écart. Deux littéraux identiques
+   auraient fini par diverger — et la plateforme des tickets aurait redemandé
+   le mot de passe sans qu'on comprenne pourquoi. */
+var HUB_STORE = {
+  gate:       "bewtr_gate_ok",     // le mot de passe d'accès, pour ne pas le redemander
+  claimsPass: "bewtr_claims_pass", // le même, relu par le bloc Claims pour Supabase
+  lang:       "bewtr_lang",        // la langue choisie
+  fontScale:  "bewtr_fs",          // la taille du texte, réglée depuis l'engrenage
+  orderBy:    "bewtr_order_by"     // le nom qui signe les bulletins de commande
+};
+</script>
 <!-- ============ ÉCRAN DE VERROUILLAGE ============
      Le hub n'est visible qu'après saisie du mot de passe d'accès.
      GATE_HASH = SHA-256 du mot de passe normalisé (trim, espaces réduits, majuscules).
      Pour changer le mot de passe :
        printf '%s' "NOUVEAU MOT" | sha256sum
-     puis coller la valeur dans GATE_HASH ci-dessous.
+     puis coller la valeur dans GATE_HASH ci-dessous, et rejouer
+     docs/supabase/16-phrase-claims-mot-de-passe-du-hub.sql avec la même phrase :
+     c'est elle qui ouvre aussi la plateforme des tickets.
+
+     Ne jamais écrire le mot de passe en clair ici. Cette page est servie
+     publiquement : un commentaire est aussi lisible que le texte de la page.
      ------------------------------------------------------------------ -->
 <div class="gate" id="gate">
   <div class="gate-card" id="gateCard">
@@ -780,19 +801,21 @@
 <script>
 (function(){
   var GATE_HASH = "95f6796b8fc04a72a55a4c74f7a84ae467d52bf0201a866432894859dfa509b1";
-  var STORE_KEY = "bewtr_gate_ok";
+  var STORE_KEY = HUB_STORE.gate;
   /* Ce mot de passe ouvre aussi la plateforme des tickets : elle n'a plus de
      phrase à elle. On le dépose sous la clé que lit le bloc Claims, qui
      l'enverra à Supabase à l'ouverture (voir clAutoUnlock). Les prix d'achat
-     gardent, eux, la phrase « commande ». */
-  var CLAIMS_PASS_KEY = "bewtr_claims_pass";
+     gardent, eux, leur propre phrase. */
+  var CLAIMS_PASS_KEY = HUB_STORE.claimsPass;
   var gate = document.getElementById("gate");
   var card = document.getElementById("gateCard");
   var form = document.getElementById("gateForm");
   var input = document.getElementById("gateIn");
   var err  = document.getElementById("gateErr");
 
-  /* « aqtiv duo », « AQTiV  DUO » … tout est accepté */
+  /* La casse et les espaces en trop ne comptent pas : « mot secret »,
+     « Mot  Secret » et « MOT SECRET » ouvrent la même porte. C'est cette forme
+     normalisée qui est passée au hash, ici comme dans hub_scope() côté base. */
   function normalize(v){ return String(v||"").trim().replace(/\s+/g," ").toUpperCase(); }
 
   function sha256(txt){
@@ -1300,7 +1323,7 @@
 const FEEDBACK_ENDPOINT = "https://script.google.com/macros/s/AKfycbwR82m4ltExX8VLpcXsw26-1h5F_Bhogw-2Ord0ONCfp-xu9ANflUcLuHJKrrmMQzUK/exec";
 /* Doit être identique à SHARED_TOKEN dans le script Apps Script.
    Laisse les deux vides pour désactiver la vérification. */
-const FEEDBACK_TOKEN = "";
+const FEEDBACK_TOKEN = "bewtr-fb-x_j2flsjppp_-ybVO-oP_XnU";
 /* Adresse de repli proposée si l'envoi échoue ("" = pas de repli). */
 const FEEDBACK_MAILTO = "";
 
@@ -1728,7 +1751,7 @@ const I18N = {
 
 /* ============ RENDER ============ */
 let lang = "fr", activeFilter = "all", query = "";
-try{ const s = localStorage.getItem("bewtr_lang"); if(s && I18N[s]) lang = s; }catch(e){}
+try{ const s = localStorage.getItem(HUB_STORE.lang); if(s && I18N[s]) lang = s; }catch(e){}
 
 const typeCls = {pdf:"type-pdf", yt:"type-yt"};
 const typeIc = {pdf:"▤", yt:"▶", soon:"…"};
@@ -2518,7 +2541,7 @@ document.addEventListener('keydown', function(e){
 
 function setLang(l){
   lang = l;
-  try{ localStorage.setItem("bewtr_lang", l); }catch(e){}
+  try{ localStorage.setItem(HUB_STORE.lang, l); }catch(e){}
   applyI18n();
   renderLibrary();
   renderGuideBlocks();
@@ -2777,7 +2800,11 @@ function openToolsList(){ if(typeof openImg==='function') openImg(TOOLS, I18N[la
 
 function renderCatMenu(){
   const panel=document.getElementById('catPanel'); if(!panel) return;
-  panel.innerHTML=[...document.querySelectorAll('#nav a')].map(a=>'<a href="'+a.getAttribute('href')+'">'+a.textContent.trim()+'</a>').join('');
+  /* Les entrées masquées le restent ici : la plateforme des tickets n'apparaît
+     qu'une fois la phrase acceptée, et le menu flottant est le seul menu sous
+     880 px — il ne doit pas montrer ce que la barre latérale cache. */
+  panel.innerHTML=[...document.querySelectorAll('#nav a')].filter(a=>!a.hidden)
+    .map(a=>'<a href="'+a.getAttribute('href')+'">'+a.textContent.trim()+'</a>').join('');
   panel.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>panel.classList.remove('open')));
 }
 (function(){
@@ -2789,13 +2816,13 @@ function renderCatMenu(){
 })();
 
 var fontScale=1, _fsBase=null;
-try{var _fs=parseFloat(localStorage.getItem('bewtr_fs')); if(_fs&&_fs>=0.85&&_fs<=1.7) fontScale=_fs;}catch(e){}
+try{var _fs=parseFloat(localStorage.getItem(HUB_STORE.fontScale)); if(_fs&&_fs>=0.85&&_fs<=1.7) fontScale=_fs;}catch(e){}
 function _fsCollect(rules){ for(var i=0;i<rules.length;i++){ var r=rules[i]; try{ if(r.style&&r.style.fontSize&&/px$/.test(r.style.fontSize)) _fsBase.push({r:r,px:parseFloat(r.style.fontSize)}); }catch(e){} if(r.cssRules) _fsCollect(r.cssRules); } }
 function applyFontScale(){
   if(document.body.style.zoom) document.body.style.zoom='';
   if(!_fsBase){ _fsBase=[]; var sh=document.styleSheets||[]; for(var i=0;i<sh.length;i++){ var rs; try{rs=sh[i].cssRules;}catch(e){continue;} if(rs) _fsCollect(rs); } }
   for(var i=0;i<_fsBase.length;i++){ _fsBase[i].r.style.fontSize=(_fsBase[i].px*fontScale).toFixed(2)+'px'; }
-  try{localStorage.setItem('bewtr_fs',String(fontScale));}catch(e){}
+  try{localStorage.setItem(HUB_STORE.fontScale,String(fontScale));}catch(e){}
 }
 (function(){
   var minus=document.getElementById('fsMinus'),plus=document.getElementById('fsPlus'),reset=document.getElementById('fsReset');
@@ -3146,6 +3173,11 @@ function showTab(hash){
   }
   var id=(hash||'#home').replace('#','');
   if(SECT_IDS.indexOf(id)<0) id='home';
+  /* Le lien #ticket sert aux externes — installateurs, clients, prestataires.
+     Le CSS retire le menu latéral et le bouton flottant, mais le CSS n'est
+     qu'un habillage : le routeur, lui, refuse de poser autre chose que le
+     formulaire, même si on l'appelle à la main depuis la console. */
+  if(document.body.classList.contains('ticket-only')) id='claims';
   document.querySelectorAll('.wrap>section').forEach(function(s){ s.classList.toggle('tab-on', s.id===id); });
   document.querySelectorAll('#nav a').forEach(function(a){ a.classList.toggle('active', a.getAttribute('href')==='#'+id); });
   var cp=document.getElementById('catPanel'); if(cp) cp.classList.remove('open');
@@ -3197,14 +3229,14 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeSearc
    par quiconque ouvre la page. Elle ne donne accès à rien seule —
    toutes les tables sont fermées (RLS sans policy) et l'accès passe
    par des fonctions qui exigent la phrase de passe. Voir
-   docs/claims-supabase.md.
+   docs/CLAIMS-SETUP.md.
    ================================================================== */
 
 /* La plateforme des tickets n'a plus de phrase à elle : le mot de passe du
    hub — celui de l'écran de garde — l'ouvre, et le script de garde le dépose
    sous cette clé. Le bulletin de commande garde la sienne, parce qu'il montre
    les prix d'achat, et elle est redemandée à chaque visite. */
-const CL_PASS_KEY = "bewtr_claims_pass";
+const CL_PASS_KEY = HUB_STORE.claimsPass;
 
 
 const CLAIMS_URL = "https://hgjitagsffudcvqwakwk.supabase.co";
@@ -5146,9 +5178,9 @@ async function clSaveOrder(sup, btn){
   if(!ids.length){ msg.textContent = clT("order.pick"); return; }
   btn.disabled = true;
   try {
-    const by = (localStorage.getItem("bewtr_order_by") || "").trim()
+    const by = (localStorage.getItem(HUB_STORE.orderBy) || "").trim()
             || (prompt(clT("order.by")) || "").trim();
-    if(by) localStorage.setItem("bewtr_order_by", by);
+    if(by) localStorage.setItem(HUB_STORE.orderBy, by);
     const o = await clRpc("order_create",
       { p_pass: clState.orderPass, p_supplier: sup, p_line_ids: ids, p_by: by || null });
     const code = Array.isArray(o) ? (o[0] || {}).code : (o || {}).code;
@@ -5379,7 +5411,7 @@ function clInit(){
     e.preventDefault();
     const err = document.getElementById("clGateErr");
     // hub_auth normalise comme l'écran de garde (trim, espaces réduits,
-    // majuscules) : « aqtiv duo » se tape comme on veut.
+    // majuscules) : la phrase du hub se tape comme on veut.
     const pass = document.getElementById("clPass").value;
     err.innerHTML = '<span class="cl-spin"></span>';
     try {
@@ -5610,7 +5642,10 @@ function clOpenSpareFor(product, target){
 /** L'onglet reste hors du menu tant que la phrase n'a pas été saisie. */
 function clRevealNav(){
   const a = document.querySelector('#nav a[href="#claims"]');
-  if(a) a.hidden = false;
+  if(!a || !a.hidden) return;
+  a.hidden = false;
+  /* le menu flottant a été construit sans cette entrée : il faut le refaire */
+  try{ renderCatMenu(); }catch(e){}
 }
 
 clInit();

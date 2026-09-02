@@ -16,6 +16,13 @@ d'envoyer.
 2. Rien d'autre à faire : l'onglet `Retours` et sa ligne d'en-têtes sont créés
    automatiquement au premier envoi.
 
+> **Si le script est déjà déployé, il faut le redéployer une fois.** Le dépôt
+> porte désormais un jeton partagé dans `feedback-apps-script.gs` **et** dans
+> `index.html`. Tant que la version déployée garde l'ancien `SHARED_TOKEN`
+> vide, elle ignore le jeton et les retours continuent d'arriver — mais le
+> service reste ouvert à qui a lu l'URL dans la page. Recoller le `.gs` et
+> redéployer ferme la porte, sans rien changer pour les techniciens.
+
 ## 2. Coller le script
 
 1. Dans le classeur : **Extensions ▸ Apps Script**.
@@ -58,7 +65,7 @@ Trois réglages facultatifs, à modifier des deux côtés quand c'est indiqué.
 | Réglage | Où | Effet |
 |---|---|---|
 | `NOTIFY_EMAIL` | script `.gs` | Envoie un email à chaque nouveau retour. `''` = aucun email. |
-| `SHARED_TOKEN` / `FEEDBACK_TOKEN` | script `.gs` **et** `index.html` | Mot de passe partagé qui décourage les envois automatisés. Les deux valeurs doivent être **identiques**. Les deux vides = vérification désactivée. |
+| `SHARED_TOKEN` / `FEEDBACK_TOKEN` | script `.gs` **et** `index.html` | Jeton partagé qui ferme le service aux envois automatisés. Les deux valeurs doivent être **identiques** — elles le sont déjà dans le dépôt. Les deux vides = vérification désactivée. |
 | `FEEDBACK_MAILTO` | `index.html` | Adresse de repli. Si l'envoi échoue (technicien hors réseau), le formulaire propose « Envoyer par email à la place » avec un message pré-rempli. `""` = pas de repli. |
 
 ## Après une modification du script

@@ -22,9 +22,32 @@ create table hub.secrets (
 -- comme index.html le normalise (trim, espaces réduits, majuscules) : la
 -- plateforme des tickets n'a pas de phrase à elle. 'order' garde la sienne,
 -- parce qu'elle seule ouvre les réfs fournisseur et les prix d'achat.
+--
+-- Les deux phrases ne sont PAS écrites ici. Ce dépôt est public : une phrase
+-- posée dans un fichier versionné est une phrase publiée, et le rester même
+-- après l'avoir retirée — l'historique la garde. Remplacer les deux
+-- marqueurs ci-dessous au moment de jouer le script, dans l'éditeur SQL de
+-- Supabase, et ne pas recoller le résultat dans le dépôt.
+--
+--   'claims' doit valoir le mot de passe du hub NORMALISÉ : sans espaces aux
+--            bords, espaces intérieurs réduits à un, tout en majuscules.
+--            C'est cette forme-là qu'index.html envoie.
+--   'order'  est libre, et gagne à être longue : elle seule ouvre les prix.
 insert into hub.secrets(scope, pass_hash) values
-  ('claims', extensions.crypt('AQTIV DUO', extensions.gen_salt('bf', 10))),
-  ('order',  extensions.crypt('order',     extensions.gen_salt('bf', 10)));
+  ('claims', extensions.crypt('REMPLACER-phrase-du-hub',  extensions.gen_salt('bf', 10))),
+  ('order',  extensions.crypt('REMPLACER-phrase-commande', extensions.gen_salt('bf', 10)));
+
+-- Garde-fou : le script joué sans remplacer les marqueurs laisserait une base
+-- ouverte à qui a lu le dépôt. Mieux vaut qu'il échoue bruyamment.
+do $$
+begin
+  if exists (select 1 from hub.secrets
+              where pass_hash = extensions.crypt('REMPLACER-phrase-du-hub', pass_hash)
+                 or pass_hash = extensions.crypt('REMPLACER-phrase-commande', pass_hash))
+  then
+    raise exception 'les phrases de passe n''ont pas été remplacées dans 01-schema.sql';
+  end if;
+end $$;
 
 -- ------------------------------------------------------------ catalogue
 create table public.parts (

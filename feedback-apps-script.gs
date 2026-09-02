@@ -12,8 +12,13 @@
 var SHEET_NAME = 'Retours';
 
 /** Doit correspondre a FEEDBACK_TOKEN dans index.html.
- *  Laisser '' des deux cotes pour desactiver la verification. */
-var SHARED_TOKEN = '';
+ *  Laisser '' des deux cotes pour desactiver la verification.
+ *
+ *  Sans jeton, l'URL du service — qui est lisible dans la page — suffit a
+ *  ecrire ce qu'on veut dans la feuille. Le pot de miel du formulaire ne vit
+ *  que dans le navigateur : il ne protege rien de qui construit l'URL a la
+ *  main. Ce jeton-la, si. */
+var SHARED_TOKEN = 'bewtr-fb-x_j2flsjppp_-ybVO-oP_XnU';
 
 /** Adresse prevenue a chaque nouveau retour ('' = aucune notification). */
 var NOTIFY_EMAIL = '';

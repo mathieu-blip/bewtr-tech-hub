@@ -15,20 +15,24 @@ première ouverture de l'onglet.
 
 | Phrase | Ce qu'elle ouvre |
 |---|---|
-| Le mot de passe du hub (`aqtiv duo`) | Les claims, le formulaire, la liste des pièces à commander et l'export Excel des tickets — avec la référence interne BW **et le code de commande du fournisseur**. |
-| `order` | Tout ce qui précède **plus** le bulletin de commande : prix d'achat, remises, désignation fournisseur, historique des commandes. |
+| **La phrase du hub** — celle de l'écran de garde | Les claims, le formulaire, la liste des pièces à commander et l'export Excel des tickets — avec la référence interne BW **et le code de commande du fournisseur**. |
+| **La phrase commande** | Tout ce qui précède **plus** le bulletin de commande : prix d'achat, remises, désignation fournisseur, historique des commandes. |
 
-`order` ouvre aussi le niveau `claims` — inutile de saisir les deux.
+La phrase commande ouvre aussi le niveau `claims` — inutile de saisir les deux.
+
+> Les deux phrases ne sont écrites nulle part dans ce dépôt, qui est public.
+> `claims` et `order` sont les noms des deux **niveaux** (la colonne `scope`
+> de `hub.secrets`), pas les phrases.
 
 Le niveau `claims` n'a plus de phrase à lui : qui a franchi l'écran de garde
 du hub est un technicien BE WTR, les tickets lui sont ouverts d'office. La
 garde dépose le mot de passe saisi dans `localStorage`
 (`bewtr_claims_pass`) et le bloc Claims l'envoie aux fonctions Supabase. En
 base, la ligne `claims` porte donc ce mot de passe **normalisé comme
-`index.html` le normalise** : `trim`, espaces réduits, majuscules —
-`AQTIV DUO`. `hub_scope` applique la même normalisation à ce qu'on lui
-présente : `aqtiv duo` saisi à la main ouvre les tickets, quelle que soit la
-casse.
+`index.html` le normalise** : `trim`, espaces réduits, majuscules.
+`hub_scope` applique la même normalisation à ce qu'on lui présente : la
+phrase tapée en minuscules, ou avec un espace en trop, ouvre les tickets
+tout de même.
 
 ### Changer une phrase de passe
 
@@ -67,20 +71,24 @@ Vérification faite en base, avec le rôle `anon` (celui du navigateur) :
 |---|---|
 | `select * from parts` en direct | 0 ligne |
 | `select * from claims` en direct | 0 ligne |
-| `parts_catalog('AQTIV DUO')` | 293 lignes, 283 réfs fournisseur, **0 prix** |
-| `parts_catalog('order')` | 293 lignes, 283 réfs fournisseur, 182 prix |
-| `order_pending('AQTIV DUO')` | refusé — `order passphrase required` |
+| `parts_catalog(<phrase du hub>)` | 293 lignes, 283 réfs fournisseur, **0 prix** |
+| `parts_catalog(<phrase commande>)` | 293 lignes, 283 réfs fournisseur, 182 prix |
+| `order_pending(<phrase du hub>)` | refusé — `order passphrase required` |
 | `claims_list('mauvaise phrase')` | refusé — `unauthorized` |
 
-> **Le point à garder en tête.** Une phrase courte comme `order` résiste mal
-> à quelqu'un qui aurait la clé et voudrait la deviner par force brute. Le
-> niveau `claims` partage désormais le mot de passe du hub, dont le SHA-256
-> est lisible dans `index.html` : deviner « aqtiv duo » à partir de ce hash
-> est à la portée du premier venu outillé, et ouvre alors les tickets — noms
-> de clients et adresses e-mail compris. Tant
-> que l'URL du hub reste interne, c'est proportionné. Si la plateforme
-> s'ouvre plus largement, passez à des phrases longues (voir ci-dessus) —
-> le changement prend une requête SQL et ne touche pas au code.
+> **Le point à garder en tête.** Le SHA-256 du mot de passe du hub est
+> lisible dans `index.html` — il faut bien que le navigateur puisse vérifier
+> la saisie hors ligne. Une phrase courte ou devinable se retrouve donc à
+> partir de ce hash en quelques minutes, et ouvre alors les tickets : noms de
+> clients et adresses e-mail compris. Le niveau `claims` partageant cette
+> phrase, elle porte à elle seule les deux portes.
+>
+> D'où la seule règle qui compte ici : **des phrases longues, propres au
+> hub, qui ne ressemblent à rien d'autre**. Trois ou quatre mots sans rapport
+> valent mieux qu'un mot du métier. La phrase commande, qui ouvre les prix
+> d'achat, mérite la plus longue des deux. Le changement prend une requête
+> SQL et, pour le hub, une ligne de `GATE_HASH` — il ne touche à rien
+> d'autre.
 
 ---
 

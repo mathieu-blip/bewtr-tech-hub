@@ -40,4 +40,4 @@ end $$;
 -- et le niveau claims continue de ne voir aucun prix.
 -- select count(*) filter (where supplier_ref is not null) as refs,
 --        count(*) filter (where price is not null)        as prix
---   from public.parts_catalog('aqtiv duo');
+--   from public.parts_catalog('<phrase du hub>');

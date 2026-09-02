@@ -5,7 +5,7 @@
 
 -- La phrase exacte est essayée d'abord — « order » ne coûte rien. Sinon on
 -- retente normalisé comme l'écran de garde du hub normalise (trim, espaces
--- réduits, majuscules), pour que « aqtiv duo » ouvre les tickets quelle que
+-- réduits, majuscules), pour que la phrase du hub ouvre les tickets quelle que
 -- soit la casse saisie.
 create or replace function public.hub_scope(p_pass text)
 returns text
