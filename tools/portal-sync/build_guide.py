@@ -299,6 +299,8 @@ def build(snapshot):
         for rgs in _aligned(cats, "refGroups"):
             group = {}
             _put(group, "h", _tr(rgs, "heading"))
+            # l'image que le portail met sur la catégorie, pas seulement sur ses articles
+            _put(group, "img", rgs[0].get("image"))
             items = []
             for its in _aligned(rgs, "items"):
                 item = {}
