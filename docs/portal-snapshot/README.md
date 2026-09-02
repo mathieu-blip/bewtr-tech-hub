@@ -17,9 +17,11 @@ fichier déposé : il le lit et l'enregistre sur un second service Cloudflare,
 Les canaux `tickets`, `claims` et `stock` répondent `{"rev":0,"data":null}` :
 ils n'ont jamais été alimentés.
 
-Depuis, ces fichiers ne se reprennent plus à la main : l'agent décrit dans
-[`docs/portal-sync.md`](../portal-sync.md) va voir le portail tous les matins et
-ouvre une proposition dès qu'il a bougé.
+Depuis, `guide.json` ne se reprend plus à la main : l'agent décrit dans
+[`docs/portal-sync.md`](../portal-sync.md) va voir le guide du portail tous les
+matins et ouvre une proposition dès qu'il a bougé. Les trois autres fichiers
+sont de l'organisation interne — le hub ne les affiche pas, l'agent n'y touche
+pas : ils restent la copie du 1er septembre 2026.
 
 ## Reprendre une copie fraîche
 

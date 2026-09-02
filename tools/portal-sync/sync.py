@@ -2,8 +2,10 @@
 """Va voir le portail technicien et met le hub à jour de ce qui a changé.
 
 Le portail `tec-portal` enregistre son contenu sur un second service Cloudflare,
-`tec-data`, canal par canal. Ce script en reprend une copie, la compare à celle
-du dépôt (`docs/portal-snapshot/`), et quand elle a bougé :
+`tec-data`, canal par canal. Ce script ne regarde que le guide technique — le
+planning des congés, le parc véhicules et les retours sont de l'organisation
+interne, et le hub ne les reprend pas. Il compare le guide à la copie du dépôt
+(`docs/portal-snapshot/guide.json`), et quand elle a bougé :
 
   * il enregistre la nouvelle copie ;
   * il rapatrie les photos qui manquent au dépôt ;
@@ -33,7 +35,10 @@ import urllib.request
 
 DATA_URL = "https://tec-data.tec-bewtr.workers.dev/state/%s"
 PORTAL_URL = "https://tec-portal.tec-bewtr.workers.dev/"
-CHANNELS = ("guide", "planning", "fleet", "suggestions")
+# Le hub ne suit que la donnée technique. Les canaux `planning`, `fleet` et
+# `suggestions` du portail sont de l'organisation interne : l'agent n'y touche
+# pas, et leur copie du 1er septembre reste telle quelle dans le dépôt.
+CHANNELS = ("guide",)
 # Cloudflare renvoie 403 aux agents anonymes : on dit qui appelle.
 USER_AGENT = "bewtr-tech-hub portal-sync (+https://github.com/mathieu-blip/bewtr-tech-hub)"
 
@@ -328,18 +333,6 @@ def describe_guide(old, new):
     return lines, hand
 
 
-def describe_simple(name, old, new):
-    """Pour les canaux que le hub ne reprend pas : juste l'ampleur du changement."""
-    if old == new:
-        return []
-    before = json.dumps(old, sort_keys=True, ensure_ascii=False)
-    after = json.dumps(new, sort_keys=True, ensure_ascii=False)
-    quoi = {"planning": "Le planning des congés a changé",
-            "fleet": "Le parc véhicules a changé",
-            "suggestions": "Les retours envoyés depuis le portail ont changé"}[name]
-    return ["%s (%d caractères contre %d)." % (quoi, len(after), len(before))]
-
-
 # --- Le compte rendu --------------------------------------------------------
 
 def french_date(stamp):
@@ -351,14 +344,12 @@ def french_date(stamp):
 
 def report(changes, revisions, images, hub, hand, check=False):
     if not any(r["changed"] for r in revisions.values()):
-        return "# Le portail n'a pas bougé\n\nRien à reprendre aujourd'hui.\n"
-    out = ["# Le portail a bougé", ""]
-    for name in CHANNELS:
-        rev = revisions.get(name)
-        if rev and rev["changed"]:
-            out.append("- **%s** : révision %s, enregistrée sur le portail le %s"
-                       % (name, rev["rev"], french_date(rev["at"])))
-    out.append("")
+        return ("# Le guide du portail n'a pas bougé\n\n"
+                "Rien à reprendre aujourd'hui.\n")
+    rev = revisions["guide"]
+    out = ["# Le guide du portail a bougé", "",
+           "Révision %s, enregistrée sur le portail le %s."
+           % (rev["rev"], french_date(rev["at"])), ""]
     if changes:
         out.append("## Ce qui a changé")
         out.append("")
@@ -421,12 +412,9 @@ def main():
                            "changed": data != before}
         if data == before:
             continue
-        if name == "guide":
-            notes, needs = describe_guide(before, data)
-            changes += notes
-            hand += needs
-        else:
-            changes += describe_simple(name, before, data)
+        notes, needs = describe_guide(before, data)
+        changes += notes
+        hand += needs
 
     changed = [n for n in CHANNELS if revisions[n]["changed"]]
     guide_data, guide_sources, guide_before = fresh["guide"]

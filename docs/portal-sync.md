@@ -6,11 +6,11 @@ les matins, à 6 h 15 UTC — 8 h 15 à Paris l'été, 7 h 15 l'hiver.
 
 ## Ce qu'il fait
 
-1. Il lit les quatre canaux du portail sur `tec-data` : `guide`, `planning`,
-   `fleet`, `suggestions`.
+1. Il lit le canal `guide` du portail sur `tec-data` — le guide technique, et
+   lui seul.
 2. Il remet les photos à leur place : le portail ne garde en ligne qu'une
    empreinte, le dépôt veut le chemin du fichier (`img/0123.webp`).
-3. Il compare le tout à `docs/portal-snapshot/`, la copie de référence.
+3. Il le compare à `docs/portal-snapshot/guide.json`, la copie de référence.
 4. S'il n'y a rien de neuf, il s'arrête là, sans bruit.
 5. Sinon il enregistre la nouvelle copie, rapatrie les photos qui manquent,
    recompose la constante `PORTAL_GUIDE` d'`index.html`, ouvre une proposition
@@ -18,6 +18,15 @@ les matins, à 6 h 15 UTC — 8 h 15 à Paris l'été, 7 h 15 l'hiver.
 
 Rien ne part en ligne tout seul : c'est la fusion de la proposition qui met le
 hub à jour.
+
+## Ce qu'il ne regarde pas
+
+Le portail tient trois autres canaux sur `tec-data` : `planning` (les congés),
+`fleet` (le parc véhicules) et `suggestions` (les retours envoyés depuis le
+portail). C'est de l'organisation interne, pas de la donnée technique : le hub
+ne les affiche pas, et l'agent n'y touche pas. Leur copie du 1er septembre 2026
+reste dans `docs/portal-snapshot/` comme référence, et ne bougera plus toute
+seule.
 
 ## Ce qu'il ne fera jamais tout seul
 

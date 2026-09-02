@@ -1,4 +1,4 @@
-name: Le portail dans le hub
+name: Le guide du portail dans le hub
 
 # Tous les jours à 6 h 15 (heure de Paris : 8 h 15 en été, 7 h 15 en hiver),
 # et à la demande depuis l'onglet Actions.
@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Aller voir le portail
+      - name: Aller voir le guide du portail
         run: |
           python3 tools/portal-sync/sync.py \
             --report "$RUNNER_TEMP/rapport.md" \
@@ -63,7 +63,7 @@ jobs:
           git config user.name "portal-sync"
           git config user.email "portal-sync@users.noreply.github.com"
           git checkout -B portal-sync
-          git add -A docs/portal-snapshot img index.html
+          git add -A docs/portal-snapshot/guide.json img index.html
           if git diff --cached --quiet; then
             echo "rien à déposer"
             exit 0
@@ -71,7 +71,7 @@ jobs:
           python3 - <<'PY' > "$RUNNER_TEMP/message.txt"
           import json, os
           resume = json.load(open(os.environ["RUNNER_TEMP"] + "/resume.json"))
-          print("Le portail a bougé, le hub suit")
+          print("Le guide du portail a bougé, le hub suit")
           print()
           for note in resume["notes"]:
               print("- %s" % note)
@@ -85,7 +85,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          titre="Le portail a bougé — $(date +%d/%m/%Y)"
+          titre="Le guide du portail a bougé — $(date +%d/%m/%Y)"
           if gh pr view portal-sync --json number >/dev/null 2>&1; then
             gh pr edit portal-sync --title "$titre" --body-file "$RUNNER_TEMP/rapport.md"
           else
@@ -110,7 +110,7 @@ jobs:
           MAIL_FROM: ${{ secrets.MAIL_FROM }}
           MAIL_TO: ${{ vars.MAIL_TO || 'mathieu@bewtr.com' }}
         run: |
-          sujet="Le portail a bougé — $(date +%d/%m/%Y)"
+          sujet="Le guide du portail a bougé — $(date +%d/%m/%Y)"
           if [ "$PORTAL_HAND" = "oui" ]; then
             sujet="$sujet (une partie est à reprendre à la main)"
           fi
