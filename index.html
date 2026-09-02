@@ -217,6 +217,9 @@
   .gref-grp>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:10px;padding:13px 16px;font-size:13.5px;font-weight:700}
   .gref-grp>summary::-webkit-details-marker{display:none}
   .gref-grp>summary::before{content:"›";color:var(--orange);font-size:17px;line-height:1;transition:.15s}
+  .gref-grp>summary .gi{width:26px;height:26px;border-radius:8px;background:var(--orange-soft);color:var(--orange);display:grid;place-items:center;font-size:13px;flex:none;overflow:hidden}
+  .gref-grp>summary .gi.ph{background:#fff;border:1px solid var(--line);padding:2px}
+  .gref-grp>summary .gi img{width:100%;height:100%;object-fit:contain;display:block}
   .gref-grp[open]>summary::before{transform:rotate(90deg)}
   .gref-grp>summary:hover{color:var(--orange)}
   .gref-cnt{margin-left:auto;font-weight:400;font-size:11.5px;color:var(--ink-soft)}
@@ -945,7 +948,6 @@
         <p class="sec-sub" data-i18n="s4.sub"></p>
         <div id="g-settings"></div>
         <div data-i18n="s4.body"></div>
-        <div id="g-mesures"></div>
       </section>
 
       <section id="maintenance">
@@ -1306,6 +1308,8 @@ const tutorials = [
   {cat:"troubleshoot", g:{fr:"Dépannage courant (vidéos)",en:"Common troubleshooting (videos)",de:"Häufige Fehlerbehebung (Videos)"}, t:{fr:"Pas d'eau pétillante",en:"No sparkling water",de:"Kein Sprudelwasser"}, type:"yt", url:{fr:"https://www.youtube.com/watch?v=7sTSrk8bVhU",en:"https://www.youtube.com/watch?feature=shared&v=aeVKaI1Zlwk",de:"https://youtu.be/kLT35ySjjcE?feature=shared"}},
   {cat:"troubleshoot", g:{fr:"Dépannage courant (vidéos)",en:"Common troubleshooting (videos)",de:"Häufige Fehlerbehebung (Videos)"}, t:{fr:"Changement de bouteille de gaz",en:"Gas bottle change",de:"Gasflasche wechseln"}, type:"yt", url:{fr:"https://www.youtube.com/watch?v=XMefi2eSYYY",en:"https://www.youtube.com/watch?v=svVxQkMFZcM",de:"https://youtu.be/J8vuQ9ejjSg?feature=shared"}},
   {cat:"troubleshoot", g:{fr:"Dépannage courant (vidéos)",en:"Common troubleshooting (videos)",de:"Häufige Fehlerbehebung (Videos)"}, t:{fr:"Réglage des doses BAR2",en:"BAR2 dose adjustment",de:"BAR2-Dosen einstellen"}, type:"yt", url:{fr:"https://www.youtube.com/watch?feature=shared&v=bI7o3Im66xE",de:"https://youtu.be/ZYBbgWznqHI?feature=shared"}},
+  {cat:"measure", g:{fr:"Mesures des produits",en:"Product measurements",de:"Produktmessungen"}, t:{fr:"Mesures bouteilles CO2 (par pays)",en:"CO2 bottle measurements (by country)",de:"CO2-Flaschenmessungen (nach Land)"}, type:"soon"},
+  {cat:"measure", g:{fr:"Mesures des produits",en:"Product measurements",de:"Produktmessungen"}, t:{fr:"Visite technique B2C — BOX 20 + Mullex",en:"B2C technical visit — BOX 20 + Mullex",de:"B2C-Technikbesuch — BOX 20 + Mullex"}, type:"soon"},
   {cat:"measure", g:{fr:"Tests électriques",en:"Electrical tests",de:"Elektrische Tests"}, t:{fr:"Mesure de tension",en:"Voltage measurement",de:"Spannungsmessung"}, type:"pdf", url:{fr:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQDPfGfoSOivTaziHLMXLoRZAS2ny6RbcYwj8hFYua9DqJo?e=zJnBcs",en:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQAP1HwLqZKMTbDrFUV1loGBAe8YoHpxUMoVq2MbW_ZKiM0?e=Tpqamb",de:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQD1gPA_f9aBRbyRsdiCC3JZAZckyirYt4zMJ8tT_bGbmo8?e=rA0gpt"}},
   {cat:"measure", g:{fr:"Tests électriques",en:"Electrical tests",de:"Elektrische Tests"}, t:{fr:"Test fusible / continuité",en:"Fuse / continuity test",de:"Sicherungs-/Durchgangsprüfung"}, type:"pdf", url:{fr:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQAVoiBP7x_DS59UOoRWiiZSAYgWGKjKw4ZdhI1KAFDJWyM?e=71JteF",en:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQCz-jcrkRK9SIpPrSGJ-dGRAQy-e9lRRgUkcEaOrL4GJF8?e=GD3O9s",de:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQCMvGRy0jGgSJZ_IXbMTH45AffCzG5oD8V7gbegT_kmrgc?e=wvSjZc"}},
   {cat:"measure", g:{fr:"Carbonatation",en:"Carbonation",de:"Karbonisierung"}, t:{fr:"Mesurer le taux de CO₂ dans l'eau",en:"Measure CO₂ level in water",de:"CO₂-Gehalt im Wasser messen"}, type:"pdf", url:{fr:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQC1TdM4mmkiTYIw2ckWdNnbARoEr3p1b5aW0DU71hrUktU?e=6DMZrN",en:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQDLLjqhkuULRrm7y4pEzVhcATtbMqBxGZFW228c-ijl3F0?e=0p1vrH",de:"https://bewtradmin-my.sharepoint.com/:b:/g/personal/charles_epert_bewtradmin_onmicrosoft_com/IQDjbXF4UfyNTq9CG5O1_CgmAaWVG-eaSAirJkA0jWBXXzY?e=Mp4oDe"}},
@@ -1852,7 +1856,6 @@ const GUIDE_PLACEMENT = {
   /* « installation » n'a pas de bloc à lui : ses fiches sont les cartes
      d'installation de la bibliothèque — voir INSTALL_FICHE. */
   "g-settings":     ["memo-reglages"],
-  "g-mesures":      ["mesures"],
   /* « memo-maintenance » et « memo-client » reprenaient mot pour mot le
      protocole de maintenance et la remise client déjà écrits dans le hub —
      en moins bien composé. Le hub garde les siens. */
@@ -1955,6 +1958,8 @@ const LIB_FICHE = {
   "Be Connect (schéma, pannes & infos)":  ["installation", "BE CONNECT (schéma, pannes et informations)"],
   "BOX 80 — Kit de ventilation":         ["installation", "BOX 80 - kit de ventilation"],
   "Faire une maintenance (avec Be Connect)":     ["maintenance", "Faire une maintenance (avec BE CONNECT)"],
+  "Mesures bouteilles CO2 (par pays)":          ["mesures", "Mesures bouteilles CO2 (par pays)"],
+  "Visite technique B2C — BOX 20 + Mullex":     ["mesures", "Visite technique B2C — BOX 20 + Mullex"],
   "Mesure de tension":                          ["mesures", "Mesure de tension"],
   "Test fusible / continuité":                  ["mesures", "Test fusible ou continuité"],
   "Mesurer le taux de CO₂ dans l'eau":          ["mesures", "Mesurer le taux de CO2 dans l'eau"],
@@ -2102,6 +2107,20 @@ function guideMemoHtml(c){
    dix écrans. Elles se rangent donc par catégorie de produit, repliées comme
    sur le portail, avec le compte en bout de ligne et une recherche qui ouvre
    les catégories qui répondent. */
+/* Le portail pose une vignette sur chaque catégorie de références. Tant que la
+   reprise ne l'a pas ramenée, un pictogramme tient la place — celui de la
+   famille de produit, dans le vocabulaire du hub. */
+var REF_ICONS = {
+  "TAP":"╤", "BOX":"▤", "ACCESSOIRES CLIENT":"☺", "PIÈCES INSTALLATION":"✚",
+  "RACCORDS ET CONNECTEURS":"◆", "PIÈCES DÉTACHÉES ET CONSOMMABLES":"◈",
+  "BOUTEILLES CO2":"▩", "RÉFÉRENCE INTERNE":"☑",
+  "VIDANGE / ÉVACUATION / ALARMES / RAMASSE-GOUTTES":"≋"
+};
+function refGroupIcon(g){
+  if(g.img) return '<span class="gi ph"><img loading="lazy" alt="" src="' + g.img + '"></span>';
+  return '<span class="gi">' + (REF_ICONS[(g.h && g.h.fr) || ""] || "▦") + '</span>';
+}
+
 function guideRefsHtml(c){
   var d = I18N[lang];
   return '<div class="gref-tools">'
@@ -2110,7 +2129,7 @@ function guideRefsHtml(c){
     + '<button type="button" class="gref-all" data-open="0">' + d["refs.close"] + '</button></div>'
     + (c.refGroups||[]).map(function(g){
         var items = g.items || [];
-        return '<details class="gref-grp"><summary>' + itutEsc(itutTr(g.h))
+        return '<details class="gref-grp"><summary>' + refGroupIcon(g) + itutEsc(itutTr(g.h))
           + '<span class="gref-cnt">' + items.length + ' ' + d["refs.count"] + '</span></summary>'
           + '<div class="gref-grid">'
           + items.map(function(it){
