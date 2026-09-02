@@ -3106,9 +3106,11 @@ function doSearch(){ var q=(document.getElementById('gq').value||'').trim().toLo
   _sidx.forEach(function(e){ if(e.text.indexOf(q)<0)return; if(e.type==='sec'&&secs.length<8)secs.push(e); else if(e.type==='part'&&parts.length<14)parts.push(e); else if(e.type==='tuto'&&tuts.length<8)tuts.push(e); });
   var html='';
   function grp(title,arr,render){ if(!arr.length)return; html+='<div class="sr-grp">'+title+'</div>'+arr.map(render).join(''); }
+  /* L'ordre du technicien : le geste d'abord, la rubrique ensuite, la pièce
+     en dernier — on ne commande une pièce qu'une fois le reste écarté. */
+  grp(d['search.g.tuto']||'Tutos',tuts,function(e){return '<button class="sr-item" data-go="'+(e.go||'tuto')+'"><span class="sr-ic">▶</span>'+e.label+'</button>';});
   grp(d['search.g.sec']||'Sections',secs,function(e){return '<button class="sr-item" data-go="sec:'+e.id+'"><span class="sr-ic">▤</span>'+e.label+'</button>';});
   grp(d['search.g.part']||'Pieces',parts,function(e){return '<button class="sr-item" data-go="part:'+encodeURIComponent(e.product)+'"><span class="sr-ic">▦</span>'+e.label+' <span class="sr-sub">'+productLabel(e.product)+'</span></button>';});
-  grp(d['search.g.tuto']||'Tutos',tuts,function(e){return '<button class="sr-item" data-go="'+(e.go||'tuto')+'"><span class="sr-ic">▶</span>'+e.label+'</button>';});
   if(!html) html='<p class="small muted sr-empty" style="padding:12px">'+(d['search.none']||'')+'</p>';
   box.innerHTML=html;
   box.querySelectorAll('.sr-item').forEach(function(b){ b.addEventListener('click',function(){ searchGo(b.dataset.go); }); }); }
