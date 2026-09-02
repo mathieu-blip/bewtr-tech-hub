@@ -199,12 +199,15 @@
   .itut-n{flex:none;width:24px;height:24px;border-radius:8px;background:var(--orange-soft);color:var(--orange);font-size:12px;font-weight:700;display:grid;place-items:center}
   .itut-sb{min-width:0;flex:1}
   .itut-sd{font-size:13.5px;line-height:1.45}
-  .itut-ph{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  /* align-items : sans lui, les photos d'une rangée s'étirent toutes à la
+     hauteur de la plus haute et perdent leur format d'origine. */
+  .itut-ph{display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;margin-top:8px}
   .itut .itut-ph img{width:192px;max-width:46%;height:auto;margin:0;display:block;border:1px solid var(--line);cursor:zoom-in}
   .itut .itut-dg img{width:100%;max-width:100%;margin:0 0 8px;cursor:zoom-in}
   .itut-bl ul{margin:8px 0 0;padding-left:18px}
   .itut-bl li{font-size:12.5px;line-height:1.55}
   .itut-rel{display:flex;flex-wrap:wrap;gap:8px}
+  .itut-relsec{margin-bottom:18px}
   .itut-rel a{font-size:12.5px;border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:#fff;color:var(--ink)}
   .itut-rel a:hover{border-color:var(--orange);text-decoration:none}
   #itzoom{display:none;position:fixed;inset:0;z-index:3000;background:rgba(10,14,20,.94);align-items:center;justify-content:center;padding:14px;cursor:zoom-out}
@@ -1418,7 +1421,7 @@ const I18N = {
     "tech.fronly":"Document en fran\u00e7ais \u2014 traduction \u00e0 venir",
     "schema.exploded":"Pièces détachées",
     "schema.measures":"Mesures produits","schema.measures.pdf":"Les documents d'origine, en PDF\u00a0:",
-    "schema.tech":"Fiches techniques (dimensions)",
+    "schema.tech":"Fiches techniques",
     "spare.ref":"Référence",
     "spare.name":"Désignation",
     "spare.none":"Aucune pièce listée pour ce produit.",
@@ -1542,7 +1545,7 @@ const I18N = {
     "tech.fronly":"French document \u2014 translation pending",
     "schema.exploded":"Spare parts",
     "schema.measures":"Product measurements","schema.measures.pdf":"The original PDF documents:",
-    "schema.tech":"Technical sheets (dimensions)",
+    "schema.tech":"Technical sheets",
     "spare.ref":"Reference",
     "spare.name":"Part",
     "spare.none":"No parts listed for this product.",
@@ -1666,7 +1669,7 @@ const I18N = {
     "tech.fronly":"Dokument auf Franz\u00f6sisch \u2014 \u00dcbersetzung folgt",
     "schema.exploded":"Ersatzteile",
     "schema.measures":"Produktmessungen","schema.measures.pdf":"Die Original-PDF-Dokumente:",
-    "schema.tech":"Technische Datenblätter (Maße)",
+    "schema.tech":"Technische Datenblätter",
     "spare.ref":"Referenz",
     "spare.name":"Teil",
     "spare.none":"Keine Teile für dieses Produkt gelistet.",
@@ -2358,6 +2361,21 @@ function openGuideFiche(catId, gi, pi, card){
   if(p.video) h += '<a class="itut-video" href="' + p.video + '" target="_blank" rel="noopener">▶ ' + d["itut.video"] + '</a>';
   if(p.actor) h += '<span class="gf-actor">' + d[p.actor === "technicien" ? "itut.actorTech" : "itut.actorUser"] + '</span>';
   h += '<span class="itut-hint">' + d["itut.zoom"] + '</span></div>';
+  /* Ce qu'il faut avoir sous la main se lit avant de commencer, pas après la
+     cinquantième étape : le PDF que ce tuto remplace et les tutos voisins
+     montent en tête. */
+  var rel = (p.related||[]).slice(), pdf = installFichePdf(catId, gi, pi);
+  if(pdf) rel.push({url:(pdf[lang] || pdf.fr), label:{fr:d["itut.pdf"], en:d["itut.pdf"], de:d["itut.pdf"]}});
+  if(rel.length){
+    h += '<div class="itut-sec itut-relsec"><h4>' + d["itut.related"] + '</h4><div class="itut-rel">'
+       + rel.map(function(r){
+           var label = itutEsc(itutTr(r.label));
+           return r.url
+             ? '<a href="' + r.url + '" target="_blank" rel="noopener">↗ ' + label + '</a>'
+             : '<button type="button" data-gf="' + r.cat + '|' + r.gi + '|' + r.pi + '">→ ' + label + '</button>';
+         }).join("")
+       + '</div></div>';
+  }
   if(p.why) h += '<div class="itut-why"><b>' + d["itut.why"] + '</b> ' + itutEsc(itutTr(p.why)) + '</div>';
   (p.mats||[]).forEach(function(m){
     h += '<div class="itut-sec"><h4>' + itutEsc(itutTr(m.h)) + '</h4><div class="itut-mats">'
@@ -2404,18 +2422,6 @@ function openGuideFiche(catId, gi, pi, card){
        + (items.length ? '<ul>' + items.map(function(x){ return '<li>' + itutEsc(x) + '</li>'; }).join("") + '</ul>' : '')
        + '</div>';
   });
-  var rel = (p.related||[]).slice(), pdf = installFichePdf(catId, gi, pi);
-  if(pdf) rel.push({url:(pdf[lang] || pdf.fr), label:{fr:d["itut.pdf"], en:d["itut.pdf"], de:d["itut.pdf"]}});
-  if(rel.length){
-    h += '<div class="itut-sec"><h4>' + d["itut.related"] + '</h4><div class="itut-rel">'
-       + rel.map(function(r){
-           var label = itutEsc(itutTr(r.label));
-           return r.url
-             ? '<a href="' + r.url + '" target="_blank" rel="noopener">↗ ' + label + '</a>'
-             : '<button type="button" data-gf="' + r.cat + '|' + r.gi + '|' + r.pi + '">→ ' + label + '</button>';
-         }).join("")
-       + '</div></div>';
-  }
   h += '</div>';
   openFichePanel(catId + "|" + gi + "|" + pi, itutTr(p.t), itutTr(c.t), h, card);
 }
