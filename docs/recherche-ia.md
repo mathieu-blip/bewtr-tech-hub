@@ -8,11 +8,31 @@ ne trouvait rien, parce que ces quatre mots ne sont écrits nulle part.
 
 Depuis, la barre porte deux recherches :
 
-* **la recherche mot à mot**, inchangée, qui répond pendant la frappe. C'est
-  elle qui trouve une référence, un nom de produit, un mot exact ;
+* **la recherche mot à mot**, qui répond pendant la frappe. C'est elle qui
+  trouve une référence, un nom de produit, un mot exact ;
 * **la recherche de Claude**, qui lit tout le guide et répond à la question.
   Elle part sur `Entrée`, ou d'elle-même une seconde et demie après la
   dernière touche.
+
+Ce qu'elle cherche, et dans quel ordre elle le rend :
+
+| Groupe | Ce qu'il porte | Sur quoi il est cherché |
+|---|---|---|
+| Tutos | Les 73 fiches pas à pas et la bibliothèque | Titre, catégorie et toutes les étapes |
+| Cotes & fiches techniques | Les 17 blocs de cotes produit et les 9 fiches techniques | Le produit, ses mesures, et les mots qu'on tape pour les chercher — *dimensions, cotes, encombrement, hauteur…*, en trois langues |
+| Sections | Les rubriques du hub | **Leur titre seulement.** Cherchée sur son corps, une rubrique répondait à presque tout : sept rubriques sortaient pour « box 80 » sans rien apprendre à personne |
+| Pièces détachées | Les 376 références | Référence, désignation, produit |
+
+Trois choses la rendent moins littérale qu'avant :
+
+* **les accents ne décident plus** — `depannage` trouve *Dépannage*, `maße`
+  trouve les cotes ;
+* **plusieurs mots valent plusieurs mots** — `dimensions box 80` retrouve les
+  deux blocs de cotes du BOX 80, alors qu'aucun texte ne porte cette suite de
+  caractères ;
+* **les résultats sont classés** — la phrase entière avant les mots pris un à
+  un, le titre avant le corps. `hauteur pro 3` sort les cotes du PRO 3 avant
+  celles des seize autres produits, qui parlent toutes de hauteur.
 
 Claude rend deux choses : une réponse de deux ou trois phrases, et la liste
 des pages à ouvrir — une fiche pas à pas, une rubrique, une pièce détachée —
@@ -36,8 +56,8 @@ navigateur ──► guide-search ──► hub_auth        (le mot de passe du 
    └── empreinte du guide   ──► API Anthropic
 ```
 
-Le guide pèse environ 130 ko de texte : 14 rubriques, 73 fiches pas à pas,
-376 pièces détachées. Le navigateur ne l'envoie pas à chaque question. Il en
+Le guide pèse environ 137 ko de texte : 14 rubriques, 73 fiches pas à pas,
+376 pièces détachées, 17 blocs de cotes et 9 fiches techniques. Le navigateur ne l'envoie pas à chaque question. Il en
 calcule l'empreinte (SHA-256) et n'envoie qu'elle ; le serveur retrouve le
 texte qu'il a déposé sous cette empreinte. Le guide ne remonte donc qu'une
 fois : à la première question posée après une mise en ligne du hub, celle qui
