@@ -95,6 +95,28 @@
   .dot{width:16px;height:16px;border-radius:50%;flex:none;box-shadow:0 0 0 4px rgba(0,0,0,.03)}
   .led .n{font-weight:600;font-size:14px}
   .led .d{font-size:12px;color:var(--ink-soft)}
+  /* Les trois voyants qui bougent respirent en continu au lieu de s'allumer et
+     s'éteindre d'un coup : l'éclat et la taille montent et redescendent en
+     douceur, au rythme réel de la LED. */
+  @keyframes bwLedPulse{0%,100%{opacity:.2;transform:scale(.74)}50%{opacity:1;transform:scale(1)}}
+  @keyframes bwLedBurst{
+    0%{opacity:.2;transform:scale(.74)}      4.545%{opacity:1;transform:scale(1)}
+    9.091%{opacity:.2;transform:scale(.74)}  13.636%{opacity:1;transform:scale(1)}
+    18.182%{opacity:.2;transform:scale(.74)} 22.727%{opacity:1;transform:scale(1)}
+    27.273%{opacity:.2;transform:scale(.74)} 31.818%{opacity:1;transform:scale(1)}
+    36.364%{opacity:.2;transform:scale(.74)} 40.909%{opacity:1;transform:scale(1)}
+    45.455%,100%{opacity:.2;transform:scale(.74)}
+  }
+  /* Pulsation : 1 battement par seconde — distribution en cours */
+  .dot.is-pulse,.gm-dot.is-pulse::after{animation:bwLedPulse 1s ease-in-out infinite}
+  /* Clignotant lent : 1 battement toutes les 3 secondes — hors réseau */
+  .dot.is-slow,.gm-dot.is-slow::after{animation:bwLedPulse 3s ease-in-out infinite}
+  /* 5 clignotements : 5 battements de 0,5 s puis 3 s de pause — reset usine */
+  .dot.is-burst,.gm-dot.is-burst::after{animation:bwLedBurst 5.5s ease-in-out infinite}
+  @media (prefers-reduced-motion:reduce){
+    .dot.is-pulse,.dot.is-slow,.dot.is-burst,
+    .gm-dot.is-pulse::after,.gm-dot.is-slow::after,.gm-dot.is-burst::after{animation:none}
+  }
   details.ts{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;overflow:hidden}
   details.ts summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;align-items:center;gap:12px;font-weight:600;font-size:15px}
   details.ts summary::-webkit-details-marker{display:none}
@@ -209,7 +231,8 @@
   .gm-vn{font-size:11.5px;color:var(--ink-soft);line-height:1.4}
   .gm-leds{display:grid;gap:7px}
   .gm-led{display:flex;align-items:center;gap:9px;font-size:13px}
-  .gm-dot{width:13px;height:13px;border-radius:50%;border:1px solid var(--line);flex:none}
+  .gm-dot{position:relative;width:15px;height:15px;border-radius:50%;background:#1c232b;border:1px solid rgba(0,0,0,.2);flex:none;display:grid;place-items:center;color:var(--led,#ccc)}
+  .gm-dot::after{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 5px currentColor}
   .gref-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0 12px}
   .gref-all{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 15px;font:inherit;font-size:12.5px;color:var(--ink-soft);cursor:pointer;transition:.15s}
   .gref-all:hover{border-color:var(--orange);color:var(--orange)}
@@ -1344,9 +1367,9 @@ const I18N = {
     "s2.body":`<div class="card"><h3>Signification des couleurs LED</h3><div class="leds">
     <div class="led"><span class="dot" style="background:#cfd6de"></span><div><div class="n">LED éteinte</div><div class="d">Veille</div></div></div>
     <div class="led"><span class="dot" style="background:#1f9d55"></span><div><div class="n">Fixe</div><div class="d">Au repos</div></div></div>
-    <div class="led"><span class="dot" style="background:#1f6feb"></span><div><div class="n">Pulsation</div><div class="d">Distribution en cours</div></div></div>
-    <div class="led"><span class="dot" style="background:#1f6feb;box-shadow:0 0 0 4px rgba(31,111,235,.18)"></span><div><div class="n">Clignotante</div><div class="d">Appareil non connecté</div></div></div>
-    <div class="led"><span class="dot" style="background:#8a63d2"></span><div><div class="n">5× clignotements</div><div class="d">Réinitialisation usine</div></div></div>
+    <div class="led"><span class="dot is-pulse" style="background:#1f6feb"></span><div><div class="n">Pulsation</div><div class="d">Distribution en cours</div></div></div>
+    <div class="led"><span class="dot is-slow" style="background:#1f6feb;box-shadow:0 0 0 4px rgba(31,111,235,.18)"></span><div><div class="n">Clignotante</div><div class="d">Appareil non connecté</div></div></div>
+    <div class="led"><span class="dot is-burst" style="background:#8a63d2"></span><div><div class="n">5× clignotements</div><div class="d">Réinitialisation usine</div></div></div>
     <div class="led"><span class="dot" style="background:#e39a17"></span><div><div class="n">Orange</div><div class="d">Alerte</div></div></div></div>
     </div>`,
     "s3.t":"Installation pas à pas","s3.sub":"La procédure complète pour installer en autonomie. Les étapes détaillées par produit sont dans la bibliothèque.",
@@ -1468,9 +1491,9 @@ const I18N = {
     "s2.body":`<div class="card"><h3>LED colour signification</h3><div class="leds">
     <div class="led"><span class="dot" style="background:#cfd6de"></span><div><div class="n">LED off</div><div class="d">Sleep</div></div></div>
     <div class="led"><span class="dot" style="background:#1f9d55"></span><div><div class="n">Steady</div><div class="d">Idle</div></div></div>
-    <div class="led"><span class="dot" style="background:#1f6feb"></span><div><div class="n">Pulse</div><div class="d">Dispensing</div></div></div>
-    <div class="led"><span class="dot" style="background:#1f6feb;box-shadow:0 0 0 4px rgba(31,111,235,.18)"></span><div><div class="n">Blinking</div><div class="d">Device not connected</div></div></div>
-    <div class="led"><span class="dot" style="background:#8a63d2"></span><div><div class="n">5× blinking</div><div class="d">Factory reset</div></div></div>
+    <div class="led"><span class="dot is-pulse" style="background:#1f6feb"></span><div><div class="n">Pulse</div><div class="d">Dispensing</div></div></div>
+    <div class="led"><span class="dot is-slow" style="background:#1f6feb;box-shadow:0 0 0 4px rgba(31,111,235,.18)"></span><div><div class="n">Blinking</div><div class="d">Device not connected</div></div></div>
+    <div class="led"><span class="dot is-burst" style="background:#8a63d2"></span><div><div class="n">5× blinking</div><div class="d">Factory reset</div></div></div>
     <div class="led"><span class="dot" style="background:#e39a17"></span><div><div class="n">Orange</div><div class="d">Warning</div></div></div></div>
     </div>`,
     "s3.t":"Step-by-step installation","s3.sub":"The full procedure to install on your own. Detailed per-product steps are in the library.",
@@ -1592,9 +1615,9 @@ const I18N = {
     "s2.body":`<div class="card"><h3>Bedeutung der LED-Farben</h3><div class="leds">
     <div class="led"><span class="dot" style="background:#cfd6de"></span><div><div class="n">LED aus</div><div class="d">Ruhezustand</div></div></div>
     <div class="led"><span class="dot" style="background:#1f9d55"></span><div><div class="n">Dauerhaft</div><div class="d">Bereit</div></div></div>
-    <div class="led"><span class="dot" style="background:#1f6feb"></span><div><div class="n">Pulsierend</div><div class="d">Ausgabe läuft</div></div></div>
-    <div class="led"><span class="dot" style="background:#1f6feb;box-shadow:0 0 0 4px rgba(31,111,235,.18)"></span><div><div class="n">Blinkend</div><div class="d">Gerät nicht verbunden</div></div></div>
-    <div class="led"><span class="dot" style="background:#8a63d2"></span><div><div class="n">5× Blinken</div><div class="d">Werksreset</div></div></div>
+    <div class="led"><span class="dot is-pulse" style="background:#1f6feb"></span><div><div class="n">Pulsierend</div><div class="d">Ausgabe läuft</div></div></div>
+    <div class="led"><span class="dot is-slow" style="background:#1f6feb;box-shadow:0 0 0 4px rgba(31,111,235,.18)"></span><div><div class="n">Blinkend</div><div class="d">Gerät nicht verbunden</div></div></div>
+    <div class="led"><span class="dot is-burst" style="background:#8a63d2"></span><div><div class="n">5× Blinken</div><div class="d">Werksreset</div></div></div>
     <div class="led"><span class="dot" style="background:#e39a17"></span><div><div class="n">Orange</div><div class="d">Warnung</div></div></div></div>
     </div>`,
     "s3.t":"Schritt-für-Schritt-Installation","s3.sub":"Die vollständige Prozedur zur eigenständigen Installation. Detaillierte Schritte je Produkt in der Bibliothek.",
@@ -1912,6 +1935,20 @@ Object.keys(ITUT_LABELS).forEach(function(k){
 });
 
 function itutTr(o){ return o ? (o[lang] || o.fr || "") : ""; }
+/* Trois voyants du mémo ne sont pas une couleur mais un rythme : la pulsation
+   de distribution, le clignotement lent hors réseau et les 5 clignotements du
+   reset usine. Le canal du portail ne porte pas cette information — on la
+   retrouve depuis le libellé, pour que l'instantané `guide.json` reste une
+   copie fidèle de ce que le portail enregistre. */
+function gmLedRythm(it){
+  var l = (it && it.label) ? String(it.label.fr || it.label.en || it.label.de || "") : "";
+  l = l.toLowerCase();
+  if(/^5\s*(×|x)?\s*(clignot|blink|-?mal)/.test(l)) return " is-burst";
+  if(/lent|slow|langsam/.test(l)) return " is-slow";
+  if(/pulsa|pulsing|pulsier/.test(l)) return " is-pulse";
+  return "";
+}
+function gmLedColor(c){ return /^#[0-9a-fA-F]{3,8}$/.test(String(c==null?"":c)) ? c : "#ccc"; }
 /* Quelques textes du portail traînent un reste de mise en forme — un &nbsp;,
    un <br>, un <span> de couleur. Échappés tels quels, ils s'affichaient en
    toutes lettres au milieu d'une étape. On les remet en texte avant de les
@@ -2087,7 +2124,7 @@ function guideMemoHtml(c){
       }).join("") + '</div>';
     }else if(b.kind === "leds"){
       h += '<div class="gm-leds">' + (b.items||[]).map(function(it){
-        return '<div class="gm-led"><span class="gm-dot" style="background:' + (it.color || "#ccc") + '"></span>'
+        return '<div class="gm-led"><span class="gm-dot' + gmLedRythm(it) + '" style="--led:' + gmLedColor(it.color) + '"></span>'
              + '<b>' + itutEsc(itutTr(it.label)) + '</b> — ' + itutEsc(itutTr(it.text)) + '</div>';
       }).join("") + '</div>';
     }else if(b.items){
