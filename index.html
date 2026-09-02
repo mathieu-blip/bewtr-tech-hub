@@ -646,6 +646,22 @@
     font-size:14px;font-weight:600;background:#fff;color:var(--ink);min-width:190px}
   .cl-scope select:focus{outline:none;border-color:var(--orange)}
   .cl-scope .hint{font-size:12.5px;color:var(--ink-soft)}
+  /* Mode réparateur — il vit à droite du filtre pays, parce qu'il vaut lui
+     aussi pour toute la plateforme : hors de ce mode, les tickets se lisent
+     mais aucun champ ne s'écrit. */
+  .cl-rep{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-left:auto}
+  .cl-rep form[hidden]{display:none}
+  .cl-rep form{display:flex;align-items:center;gap:7px;margin:0}
+  .cl-rep input{width:170px;padding:7px 11px;border:1px solid var(--line);border-radius:9px;
+    font:inherit;font-size:13px;background:#fff;color:var(--ink)}
+  .cl-rep input:focus{outline:none;border-color:var(--orange)}
+  .cl-rep .on[hidden]{display:none}
+  .cl-rep .on{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;
+    text-transform:uppercase;letter-spacing:.6px;color:var(--orange);
+    background:var(--orange-soft);border-radius:999px;padding:5px 12px}
+  .cl-rep .msg{font-size:12.5px;color:var(--red)}
+  .cl-lock{font-size:13px;color:var(--ink-soft);background:#fafbfc;
+    border:1px dashed var(--line);border-radius:10px;padding:11px 13px;margin:18px 0 0}
   .cl-chk{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-soft);cursor:pointer;white-space:nowrap}
   .cl-chk input{accent-color:var(--orange);width:15px;height:15px;cursor:pointer}
   .cl-sugg{margin:10px 0 4px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
@@ -670,6 +686,8 @@
   .cl-gate form{display:flex;gap:8px;margin-top:18px}
   .cl-in{width:100%;padding:10px 13px;border:1px solid var(--line);border-radius:10px;font:inherit;font-size:14px;background:#fff;color:var(--ink)}
   .cl-in:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(242,101,34,.13)}
+  /* hors mode réparateur : le champ se lit, et se voit qu'il ne s'écrit pas */
+  .cl-in:disabled{background:#f6f7f8;color:var(--ink-soft);cursor:not-allowed}
   .cl-btn{border:none;background:var(--orange);color:#fff;font:inherit;font-weight:700;font-size:14px;padding:10px 18px;border-radius:10px;cursor:pointer;white-space:nowrap}
   .cl-btn:hover{filter:brightness(1.06)}
   .cl-btn:disabled{opacity:.5;cursor:default}
@@ -1084,6 +1102,19 @@
             <span class="lbl" data-cl-i18n="scope.country"></span>
             <select id="clCountry"></select>
             <span class="hint" data-cl-i18n="scope.hint"></span>
+            <!-- La clé de l'écriture : sans elle, la plateforme se consulte. -->
+            <div class="cl-rep" id="clRep">
+              <span class="on" id="clRepOn" hidden>⚒ <span data-cl-i18n="rp.badge"></span></span>
+              <button class="cl-btn ghost sm" type="button" id="clRepBtn"></button>
+              <form id="clRepForm" hidden autocomplete="off">
+                <input id="clRepPass" type="password" autocomplete="off" spellcheck="false"
+                       data-cl-ph="rp.ph">
+                <button class="cl-btn sm" type="submit" data-cl-i18n="rp.go"></button>
+                <button class="cl-btn ghost sm" type="button" id="clRepCancel"
+                        data-cl-i18n="d.editcancel"></button>
+              </form>
+              <span class="msg" id="clRepErr"></span>
+            </div>
           </div>
           <div class="cl-tabs" id="clTabs">
             <button data-v="new"><span data-cl-i18n="tab.new"></span></button>
@@ -1125,16 +1156,16 @@
               </div>
               <div class="two">
                 <div>
-                  <label class="cl-lbl" for="clnProduct" data-cl-i18n="f.product"></label>
+                  <label class="cl-lbl" for="clnProduct"><span data-cl-i18n="f.product"></span> <span class="cl-req">*</span></label>
                   <select class="cl-in" id="clnProduct"></select>
                 </div>
                 <div>
-                  <label class="cl-lbl" for="clnSerial" data-cl-i18n="f.serial"></label>
+                  <label class="cl-lbl" for="clnSerial"><span data-cl-i18n="f.serial"></span> <span class="cl-req">*</span></label>
                   <input class="cl-in" id="clnSerial" maxlength="80">
                 </div>
               </div>
               <div>
-                <span class="cl-lbl" data-cl-i18n="f.parts"></span>
+                <span class="cl-lbl"><span data-cl-i18n="f.parts"></span> <span class="cl-req">*</span></span>
                 <div class="cl-picker">
                   <button class="cl-btn ghost sm" type="button" id="clnExploded"
                           data-cl-i18n="d.exploded" style="margin-bottom:9px" hidden></button>
@@ -1145,28 +1176,28 @@
               </div>
               <div class="two">
                 <div>
-                  <label class="cl-lbl" for="clnInstall" data-cl-i18n="f.install"></label>
+                  <label class="cl-lbl" for="clnInstall"><span data-cl-i18n="f.install"></span> <span class="cl-req">*</span></label>
                   <input class="cl-in" id="clnInstall" type="date">
                 </div>
                 <div>
-                  <label class="cl-lbl" for="clnClaim" data-cl-i18n="f.claimdate"></label>
+                  <label class="cl-lbl" for="clnClaim"><span data-cl-i18n="f.claimdate"></span> <span class="cl-req">*</span></label>
                   <input class="cl-in" id="clnClaim" type="date">
                 </div>
               </div>
               <div id="clnWarranty"></div>
               <div class="two">
                 <div>
-                  <label class="cl-lbl" for="clnCountry" data-cl-i18n="f.country"></label>
+                  <label class="cl-lbl" for="clnCountry"><span data-cl-i18n="f.country"></span> <span class="cl-req">*</span></label>
                   <select class="cl-in" id="clnCountry"></select>
                 </div>
                 <div>
-                  <label class="cl-lbl" for="clnUnits" data-cl-i18n="f.units"></label>
+                  <label class="cl-lbl" for="clnUnits"><span data-cl-i18n="f.units"></span> <span class="cl-req">*</span></label>
                   <input class="cl-in" id="clnUnits" type="number" min="1" step="1" value="1">
                 </div>
               </div>
               <div class="two">
                 <div>
-                  <label class="cl-lbl" for="clnTech" data-cl-i18n="f.tech"></label>
+                  <label class="cl-lbl" for="clnTech"><span data-cl-i18n="f.tech"></span> <span class="cl-req">*</span></label>
                   <input class="cl-in" id="clnTech" maxlength="120" autocomplete="name">
                 </div>
                 <div>
@@ -1175,7 +1206,7 @@
                 </div>
               </div>
               <div>
-                <label class="cl-lbl" for="clnCompany" data-cl-i18n="f.company"></label>
+                <label class="cl-lbl" for="clnCompany"><span data-cl-i18n="f.company"></span> <span class="cl-req">*</span></label>
                 <!-- pré-rempli : l'écrasante majorité des tickets vient de
                      l'interne, seuls les externes ont à le changer -->
                 <input class="cl-in" id="clnCompany" maxlength="160" autocomplete="organization" value="BE WTR">
@@ -1183,6 +1214,7 @@
               <div>
                 <button class="cl-btn" type="submit" id="clnSubmit" data-cl-i18n="f.submit"></button>
                 <span class="cl-ok" id="clnMsg"></span>
+                <p class="muted small" style="margin:9px 0 0" data-cl-i18n="f.need.hint"></p>
               </div>
             </form>
           </div>
@@ -3224,6 +3256,26 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeSearc
    les prix d'achat, et elle est redemandée à chaque visite. */
 const CL_PASS_KEY = "bewtr_claims_pass";
 
+/* Mode réparateur — la modification des tickets lui est réservée.
+
+   Le mot de passe du hub ouvre la plateforme en lecture : chacun consulte
+   les tickets, les pièces et le rapport. Écrire sur un ticket existant
+   demande un geste de plus, celui du réparateur — sinon une fiche se
+   modifie en passant, d'un clic mal placé.
+
+   Ce mot de passe ne protège pas la base : les fonctions Supabase, elles,
+   exigent toujours celui du hub. Il ferme les gestes d'écriture de l'écran.
+   Il tient le temps de l'onglet (sessionStorage), pas au-delà : on ne
+   revient pas en réparateur sans le vouloir. */
+const CL_REPAIR_KEY  = "bewtr_claims_repair";
+const CL_REPAIR_PASS = "repair";
+
+/* Même tolérance que l'écran de garde : espaces et majuscules sont ignorés. */
+function clRepairNorm(v){ return String(v || "").trim().replace(/\s+/g, " ").toLowerCase(); }
+
+/** Vrai quand l'écran accepte d'écrire sur un ticket existant. */
+function clCanEdit(){ return !!clState.repair && !clState.anon; }
+
 
 const CLAIMS_URL = "https://hgjitagsffudcvqwakwk.supabase.co";
 const CLAIMS_KEY = "sb_publishable_SCtyYXfzE2i-D4CfIoeBPw__u1pB0Dk";
@@ -3235,6 +3287,9 @@ const CL_I18N = {
     "gate.t":"Espace protégé","gate.sub":"Saisissez le mot de passe d'accès du hub pour ouvrir la plateforme des tickets de réparation.","gate.go":"Ouvrir",
     "gate.bad":"Mot de passe incorrect.","gate.net":"Connexion impossible. Vérifiez votre réseau puis réessayez.",
     "anon.unlock":"Accès équipe","scope.country":"Pays","scope.hint":"S'applique à tous les onglets.",
+    "rp.open":"Mode réparateur","rp.close":"Quitter","rp.badge":"Mode réparateur",
+    "rp.ph":"Mot de passe réparateur","rp.go":"Activer","rp.bad":"Mot de passe incorrect.",
+    "rp.locked":"Lecture seule. Activez le mode réparateur, à droite du filtre pays, pour modifier ce ticket.",
     "tab.board":"Tickets à qualifier","tab.withparts":"Tickets avec pièces","tab.supplier":"Renvoi fournisseur","d.tosupplier":"Renvoyer au fournisseur","board.none.supplier":"Aucun renvoi fournisseur en cours.","kpi.toqualify":"À qualifier","kpi.withparts":"Avec pièces","board.none.toqualify":"Tout est qualifié : chaque ticket ouvert porte au moins une pièce.","board.none.withparts":"Aucun ticket ne porte encore de pièce.","tab.new":"Nouveau ticket","tab.parts":"Pièces à commander","tab.order":"Bulletin de commande","tab.history":"Commandes passées","tab.report":"Rapport",
     "rep.sub":"Le périmètre est celui du filtre pays, tout en haut de la page.",
     "rep.open":"Tickets ouverts","rep.closed":"Tickets fermés","rep.parts":"Pièces posées",
@@ -3250,7 +3305,9 @@ const CL_I18N = {
     "f.install":"Date d'installation","f.claimdate":"Date du ticket","f.country":"Pays","f.units":"Nb d'unités concernées",
     "f.tech":"Technicien","f.mail":"E-mail","f.company":"Société","f.parts":"Pièces nécessaires",
     "f.parts.search":"Chercher une pièce — réf BW ou désignation…","f.submit":"Créer le ticket",
-    "f.need.desc":"La description du problème est obligatoire.","f.need.claimdate":"La date du ticket ne peut pas être dans le futur.","f.saved":"Ticket %s créé.","f.err":"Enregistrement impossible : %s",
+    "f.need.desc":"La description du problème est obligatoire.","f.need.claimdate":"La date du ticket ne peut pas être dans le futur.",
+    "f.need":"« %s » est obligatoire.","f.need.parts":"Ajoutez au moins une pièce nécessaire.",
+    "f.need.hint":"Tout est obligatoire, sauf l'e-mail.","f.need.keep":"« %s » ne peut pas être vidé.","f.saved":"Ticket %s créé.","f.err":"Enregistrement impossible : %s",
     "war.yes":"Sous garantie","war.no":"Hors garantie","war.unknown":"Garantie inconnue",
     "war.hint":"Garantie = moins de 730 jours entre l'installation et le ticket.",
     "col.code":"Réf.","col.product":"Produit","col.serial":"N° série","col.country":"Pays",
@@ -3281,6 +3338,9 @@ const CL_I18N = {
     "gate.t":"Protected area","gate.sub":"Enter the hub access password to open the claims platform.","gate.go":"Open",
     "gate.bad":"Wrong password.","gate.net":"Cannot connect. Check your network and try again.",
     "anon.unlock":"Team access","scope.country":"Country","scope.hint":"Applies to every tab.",
+    "rp.open":"Repairer mode","rp.close":"Leave","rp.badge":"Repairer mode",
+    "rp.ph":"Repairer password","rp.go":"Turn on","rp.bad":"Wrong password.",
+    "rp.locked":"Read only. Turn on repairer mode, to the right of the country filter, to edit this claim.",
     "tab.board":"Claims to qualify","tab.withparts":"Claims with parts","tab.supplier":"Supplier return","d.tosupplier":"Send back to supplier","board.none.supplier":"No supplier return in progress.","kpi.toqualify":"To qualify","kpi.withparts":"With parts","board.none.toqualify":"Everything is qualified: every open claim carries at least one part.","board.none.withparts":"No claim carries a part yet.","tab.new":"New ticket","tab.parts":"Parts to order","tab.order":"Order form","tab.history":"Past orders","tab.report":"Report",
     "rep.sub":"The scope is the country filter at the top of the page.",
     "rep.open":"Open tickets","rep.closed":"Closed tickets","rep.parts":"Parts fitted",
@@ -3296,7 +3356,9 @@ const CL_I18N = {
     "f.install":"Installation date","f.claimdate":"Claim date","f.country":"Country","f.units":"Units impacted",
     "f.tech":"Technician","f.mail":"E-mail","f.company":"Company","f.parts":"Parts needed",
     "f.parts.search":"Find a part — BW ref or designation…","f.submit":"Create ticket",
-    "f.need.desc":"The problem description is required.","f.need.claimdate":"The claim date cannot be in the future.","f.saved":"Ticket %s created.","f.err":"Could not save: %s",
+    "f.need.desc":"The problem description is required.","f.need.claimdate":"The claim date cannot be in the future.",
+    "f.need":"“%s” is required.","f.need.parts":"Add at least one required part.",
+    "f.need.hint":"Everything is required, except the e-mail.","f.need.keep":"“%s” cannot be cleared.","f.saved":"Ticket %s created.","f.err":"Could not save: %s",
     "war.yes":"Under warranty","war.no":"Out of warranty","war.unknown":"Warranty unknown",
     "war.hint":"Warranty = less than 730 days between installation and claim.",
     "col.code":"Ref.","col.product":"Product","col.serial":"Serial","col.country":"Country",
@@ -3327,6 +3389,9 @@ const CL_I18N = {
     "gate.t":"Geschützter Bereich","gate.sub":"Hub-Zugangspasswort eingeben, um die Claims-Plattform zu öffnen.","gate.go":"Öffnen",
     "gate.bad":"Falsches Passwort.","gate.net":"Keine Verbindung. Netzwerk prüfen und erneut versuchen.",
     "anon.unlock":"Team-Zugang","scope.country":"Land","scope.hint":"Gilt für alle Reiter.",
+    "rp.open":"Reparaturmodus","rp.close":"Verlassen","rp.badge":"Reparaturmodus",
+    "rp.ph":"Passwort Reparateur","rp.go":"Aktivieren","rp.bad":"Falsches Passwort.",
+    "rp.locked":"Nur Lesen. Aktivieren Sie den Reparaturmodus rechts vom Länderfilter, um dieses Ticket zu ändern.",
     "tab.board":"Claims zu qualifizieren","tab.withparts":"Claims mit Teilen","tab.supplier":"Lieferantenrücksendung","d.tosupplier":"An Lieferant senden","board.none.supplier":"Keine laufende Rücksendung.","kpi.toqualify":"Zu qualifizieren","kpi.withparts":"Mit Teilen","board.none.toqualify":"Alles qualifiziert: jeder offene Claim trägt mindestens ein Teil.","board.none.withparts":"Noch kein Claim mit Teil.","tab.new":"Neues Ticket","tab.parts":"Zu bestellende Teile","tab.order":"Bestellbeleg","tab.history":"Frühere Bestellungen","tab.report":"Bericht",
     "rep.sub":"Der Umfang ist der Länderfilter oben auf der Seite.",
     "rep.open":"Offene Tickets","rep.closed":"Geschlossene Tickets","rep.parts":"Verbaute Teile",
@@ -3342,7 +3407,9 @@ const CL_I18N = {
     "f.install":"Installationsdatum","f.claimdate":"Claim-Datum","f.country":"Land","f.units":"Betroffene Einheiten",
     "f.tech":"Techniker","f.mail":"E-Mail","f.company":"Firma","f.parts":"Benötigte Teile",
     "f.parts.search":"Teil suchen — BW-Nr. oder Bezeichnung…","f.submit":"Ticket anlegen",
-    "f.need.desc":"Die Problembeschreibung ist erforderlich.","f.need.claimdate":"Das Claim-Datum darf nicht in der Zukunft liegen.","f.saved":"Ticket %s angelegt.","f.err":"Speichern fehlgeschlagen: %s",
+    "f.need.desc":"Die Problembeschreibung ist erforderlich.","f.need.claimdate":"Das Claim-Datum darf nicht in der Zukunft liegen.",
+    "f.need":"„%s“ ist ein Pflichtfeld.","f.need.parts":"Mindestens ein benötigtes Teil hinzufügen.",
+    "f.need.hint":"Alles ist Pflicht, außer der E-Mail.","f.need.keep":"„%s“ darf nicht geleert werden.","f.saved":"Ticket %s angelegt.","f.err":"Speichern fehlgeschlagen: %s",
     "war.yes":"In Garantie","war.no":"Außerhalb Garantie","war.unknown":"Garantie unbekannt",
     "war.hint":"Garantie = weniger als 730 Tage zwischen Installation und Claim.",
     "col.code":"Nr.","col.product":"Produkt","col.serial":"Seriennr.","col.country":"Land",
@@ -3383,6 +3450,7 @@ const clState = {
   orderFilter:{supplier:""}, histFilter:{supplier:""},
   partsFilter:{supplier:""}, orderUnchecked:{}, prefill:null, boardMode:"toqualify",
   country:"", spareTarget:null, anon:false,   // périmètre commun à tous les onglets
+  repair:false, detailId:null,               // écriture ouverte, ticket affiché
   repProduct:null,                           // produit déplié dans le rapport
   newParts:[], loaded:false
 };
@@ -3820,6 +3888,7 @@ function clSuggestParts(text, product, limit){
  * cours de réparation garde le sien.
  */
 async function clAttachPart(claim, ref, edit){
+  if(!clCanEdit()) return;          // dernier filet : hors mode, rien ne s'écrit
   await clRpc("claim_add_part", { p_pass: clState.pass, p_claim_id: claim.id,
                                   p_ref: ref, p_qty: 1 });
   if(claim.status === "New (to repair)"){
@@ -4254,7 +4323,10 @@ function clDetailHead(c){
   const full = clSubject(c), head = clSubjectLine(full, 140);
   return '<h3>'+clEsc(head || c.code)+'</h3>'
     + '<p class="muted small code">'+clEsc(c.code)
-    +   ' <button class="cl-btn ghost sm" type="button" id="clEdit">'+clT("d.edit")+'</button></p>'
+        // le bouton n'apparaît qu'en mode réparateur : sans lui, la fiche se lit
+    +   (clCanEdit()
+          ? ' <button class="cl-btn ghost sm" type="button" id="clEdit">'+clT("d.edit")+'</button>' : '')
+    +   '</p>'
     // le bloc ne s'ouvre que si le texte dit plus que le titre : sinon la
     // même phrase apparaîtrait deux fois de suite
     + (full && full !== head
@@ -4353,6 +4425,11 @@ function clDetailEditForm(c){
 function clOpenDetail(id, edit){
   const c = clState.claims.find(x => x.id === id);
   if(!c) return;
+  clState.detailId = id;
+  // Hors mode réparateur la fiche s'affiche en lecture : pas de correction,
+  // pas de pièce ajoutée ou retirée, pas de suivi enregistré.
+  const ro = !clCanEdit(), dis = ro ? " disabled" : "";
+  if(ro) edit = false;
   // la valeur envoyée reste l'anglais canonique, seul le libellé est traduit
   const opt = (list, cur) => list.map(v =>
     '<option value="'+clEsc(v)+'"'+(v === cur ? " selected" : "")+'>'
@@ -4363,9 +4440,9 @@ function clOpenDetail(id, edit){
         + '<span class="n">'+clEsc(clPartLabel(p))+'</span>'
         + '<span class="muted small">×'+p.qty+'</span>'
         + '<label class="cl-chk" title="'+clEsc(clT("parts.ordered.help"))+'">'
-        +   '<input type="checkbox" data-ord-one="'+p.id+'"'+(p.ordered ? " checked" : "")+'>'
+        +   '<input type="checkbox" data-ord-one="'+p.id+'"'+(p.ordered ? " checked" : "")+dis+'>'
         +   '<span>'+clT("parts.ordered")+'</span></label>'
-        + (p.ordered ? ''
+        + ((p.ordered || ro) ? ''
             : '<button class="del" type="button" data-del="'+p.id+'" title="×">×</button>')
         + '</div>').join("") + '</div>'
     : '<p class="muted small">'+clT("d.none")+'</p>';
@@ -4380,48 +4457,51 @@ function clOpenDetail(id, edit){
     // fiche déclarée vient ensuite — on la consulte, on n'agit pas dessus.
     : '<button class="x" type="button" id="clClose">×</button>'
     + clDetailHead(c)
-    + '<div class="cl-sugg" id="clDetailSugg"></div>'
+    + (ro ? '' : '<div class="cl-sugg" id="clDetailSugg"></div>')
     + '<h4>'+clT("d.parts")
-    +   (clSpareKey(c.product)
+    +   (clSpareKey(c.product) && !ro
           ? ' <button class="cl-btn ghost sm" type="button" id="clDetailExploded">'
             + clT("d.exploded")+'</button>' : '')
     + '</h4>' + parts
-    + '<div class="cl-picker" style="margin-top:11px">'
+    + (ro ? '' :
+      '<div class="cl-picker" style="margin-top:11px">'
     +   '<input class="cl-in" id="clDetailPartQ" placeholder="'+clEsc(clT("d.addpart"))+'">'
     +   '<div class="res" id="clDetailPartRes"></div>'
-    + '</div>'
+    + '</div>')
     + clDetailIdentity(c)
     + '<form class="cl-form" id="clDetailForm" style="margin-top:22px">'
     +   '<div class="two">'
     +     '<div><label class="cl-lbl">'+clT("d.status")+'</label>'
-    +       '<select class="cl-in" name="status">'
+    +       '<select class="cl-in" name="status"'+dis+'>'
               // le statut courant reste dans la liste même s'il n'est plus
               // proposé : sinon le select afficherait autre chose que la
               // réalité, et le premier enregistrement l'écraserait.
     +       opt(clStatusChoices(c.status), c.status)+'</select></div>'
     +     '<div><label class="cl-lbl">'+clT("d.repairdate")+'</label>'
-    +       '<input class="cl-in" type="date" name="repair_date" value="'+clEsc((c.repair_date||"").slice(0,10))+'"></div>'
+    +       '<input class="cl-in" type="date" name="repair_date" value="'+clEsc((c.repair_date||"").slice(0,10))+'"'+dis+'></div>'
     +   '</div>'
     +   '<div class="two">'
           // Qui a réparé se sait en fin de course, pas à l'ouverture : le champ
           // n'a donc rien à faire dans le formulaire de création.
     +     '<div><label class="cl-lbl">'+clT("d.repairedby")+'</label>'
     +       '<input class="cl-in" name="repaired_by" maxlength="120" autocomplete="name"'
-    +       ' list="clRepairedBy" value="'+clEsc(c.repaired_by || "")+'"></div>'
+    +       ' list="clRepairedBy" value="'+clEsc(c.repaired_by || "")+'"'+dis+'></div>'
     +     '<div><label class="cl-lbl">'+clT("d.restock")+'</label>'
-    +       '<select class="cl-in" name="restock_location"><option value=""></option>'
+    +       '<select class="cl-in" name="restock_location"'+dis+'><option value=""></option>'
     +       opt(CL_RESTOCK, c.restock_location)+'</select></div>'
     +   '</div>'
           // les noms déjà saisis se reproposent : « Levent » ne s'écrit qu'une fois
     +   '<datalist id="clRepairedBy">'+clRepairedByOptions()+'</datalist>'
     +   '<div><label class="cl-lbl">'+clT("d.repair")+'</label>'
-    +     '<textarea class="cl-in" name="repair_notes" rows="3">'+clEsc(c.repair_notes || "")+'</textarea></div>'
-    +   '<div><button class="cl-btn" type="submit">'+clT("d.save")+'</button> '
+    +     '<textarea class="cl-in" name="repair_notes" rows="3"'+dis+'>'+clEsc(c.repair_notes || "")+'</textarea></div>'
+    +   (ro
+        ? '<p class="cl-lock">'+clT("rp.locked")+'</p>'
+        : '<div><button class="cl-btn" type="submit">'+clT("d.save")+'</button> '
     +     (clIsArchived(c) ? '' :
           '<button class="cl-btn ghost" type="button" id="clArchive">'+clT("d.archive")+'</button> ')
     +     ((clIsArchived(c) || clIsSupplierReturn(c)) ? '' :
           '<button class="cl-btn ghost" type="button" id="clToSupplier">'+clT("d.tosupplier")+'</button> ')
-    +     '<span class="cl-ok" id="clDetailMsg"></span></div>'
+    +     '<span class="cl-ok" id="clDetailMsg"></span></div>')
     + '</form>';
 
   const box = document.getElementById("clDetail");
@@ -4430,12 +4510,13 @@ function clOpenDetail(id, edit){
 
   if(edit){ clBindEditForm(c); return; }
 
-  document.getElementById("clEdit").onclick = () => clOpenDetail(c.id, true);
+  const ed = document.getElementById("clEdit");
+  if(ed) ed.onclick = () => clOpenDetail(c.id, true);
 
   // ajout d'une pièce depuis le détail — recherche et suggestion passent
   // par le même chemin, pour que le statut suive dans les deux cas
   const q = document.getElementById("clDetailPartQ"), res = document.getElementById("clDetailPartRes");
-  q.oninput = () => clPartResults(q.value, res, async p => {
+  if(q) q.oninput = () => clPartResults(q.value, res, async p => {
     q.value = ""; res.innerHTML = "";
     await clAttachPart(c, p.ref);
   }, c.product);
@@ -4459,6 +4540,7 @@ function clOpenDetail(id, edit){
   // mêmes propositions que sur un nouveau ticket : cinq, sous la description
   const sg = document.getElementById("clDetailSugg");
   const already = (c.parts || []).map(x => x.ref);
+  if(sg){
   const sugg = clSuggestParts(clSubject(c), c.product, 5)
                  .filter(x => !already.includes(x.ref));
   sg.hidden = !sugg.length;
@@ -4470,9 +4552,10 @@ function clOpenDetail(id, edit){
       bt.onclick = function(){ clAttachPart(c, sugg[Number(bt.dataset.g)].ref); };
     });
   } else { sg.innerHTML = ""; }
+  }
 
   // cocher / décocher une pièce précise de ce ticket
-  document.getElementById("clDetailBody").querySelectorAll("[data-ord-one]").forEach(cb => {
+  if(!ro) document.getElementById("clDetailBody").querySelectorAll("[data-ord-one]").forEach(cb => {
     cb.onchange = async function(){
       const msg = document.getElementById("clDetailMsg");
       cb.disabled = true;
@@ -4509,6 +4592,7 @@ function clOpenDetail(id, edit){
 
   document.getElementById("clDetailForm").onsubmit = async e => {
     e.preventDefault();
+    if(ro) return;                     // le formulaire est là pour être lu
     const f = e.target, msg = document.getElementById("clDetailMsg");
     const payload = {};
     ["status","repair_date","restock_location","repair_notes"].forEach(k => {
@@ -4643,6 +4727,7 @@ function clBindEditForm(c){
  * trace, que corriger une description n'a aucune raison d'effacer.
  */
 async function clEditSave(){
+  if(!clCanEdit()) return false;
   const f = document.getElementById("clEditForm");
   if(!f) return true;
   const msg = document.getElementById("clEditMsg");
@@ -4653,6 +4738,16 @@ async function clEditSave(){
   // Un claim daté de demain fausse l'ancienneté comme la garantie.
   if(f.elements.claim_date.value > clToday()){
     if(msg) msg.textContent = clT("f.need.claimdate");
+    return false;
+  }
+  // Les champs obligatoires du ticket le restent en correction : on peut
+  // compléter un ticket repris de Monday auquel il manque le pays, mais pas
+  // vider ce qui est rempli.
+  const c = clState.claims.find(x => x.id === Number(f.dataset.claim)) || {};
+  const empty = CL_REQUIRED_EDIT.find(x =>
+    !f.elements[x[0]].value.trim() && String(c[x[0]] == null ? "" : c[x[0]]).trim());
+  if(empty){
+    if(msg) msg.textContent = clT("f.need.keep", clT(empty[1]));
     return false;
   }
   const p = {};
@@ -4891,6 +4986,36 @@ function clToday(){
 }
 
 /* ---------------------------------------------------- nouveau ticket */
+/* Un ticket ne vaut que rempli : la machine sans numéro de série, la panne
+   sans date ni pays, c'est ce qui rendait les tickets repris de Monday
+   inexploitables. Tout est donc obligatoire — sauf l'e-mail, que l'externe
+   n'a pas toujours. Les pièces comptent comme un champ : elles se cherchent
+   dans le catalogue et se cliquent, ce n'est pas une saisie de plus. */
+const CL_REQUIRED = [
+  ["clnDesc",    "f.desc"],
+  ["clnProduct", "f.product"],
+  ["clnSerial",  "f.serial"],
+  ["clnInstall", "f.install"],
+  ["clnClaim",   "f.claimdate"],
+  ["clnCountry", "f.country"],
+  ["clnUnits",   "f.units"],
+  ["clnTech",    "f.tech"],
+  ["clnCompany", "f.company"]
+];
+
+/* Les mêmes champs sur la fiche en correction, sous le nom que porte le
+   formulaire. La description y est déjà contrôlée à part. */
+const CL_REQUIRED_EDIT = [
+  ["product",         "f.product"],
+  ["serial_number",   "f.serial"],
+  ["install_date",    "f.install"],
+  ["claim_date",      "f.claimdate"],
+  ["country",         "f.country"],
+  ["units_impacted",  "f.units"],
+  ["technician_name", "f.tech"],
+  ["company",         "f.company"]
+];
+
 function clRenderNewForm(){
   const prodSel = document.getElementById("clnProduct");
   if(!prodSel.options.length){
@@ -5302,9 +5427,40 @@ function clApplyI18n(){
   document.querySelectorAll("#claims [data-cl-i18n]").forEach(el => {
     el.textContent = clT(el.getAttribute("data-cl-i18n"));
   });
+  clRenderRepair();
   document.querySelectorAll("#claims [data-cl-ph]").forEach(el => {
     el.placeholder = clT(el.getAttribute("data-cl-ph"));
   });
+}
+
+/**
+ * Le bandeau du mode réparateur : un bouton, une phrase de passe, un badge.
+ * Il vit à droite du filtre pays, et il est le seul endroit d'où l'écriture
+ * s'ouvre ou se referme.
+ */
+function clRenderRepair(){
+  const btn = document.getElementById("clRepBtn");
+  if(!btn) return;
+  document.getElementById("clRepOn").hidden = !clState.repair;
+  btn.textContent = clT(clState.repair ? "rp.close" : "rp.open");
+  btn.hidden = false;
+  document.getElementById("clRepForm").hidden = true;
+  document.getElementById("clRepErr").textContent = "";
+}
+
+/** Ouvre ou referme l'écriture, et rafraîchit ce qui en dépend. */
+function clSetRepair(on){
+  clState.repair = !!on;
+  try {
+    if(on) sessionStorage.setItem(CL_REPAIR_KEY, "1");
+    else   sessionStorage.removeItem(CL_REPAIR_KEY);
+  } catch(e){}
+  clRenderRepair();
+  // Le panneau ouvert porte des champs : il doit changer d'état avec le mode,
+  // sinon on croirait pouvoir enregistrer ce qu'on vient de verrouiller.
+  const box = document.getElementById("clDetail");
+  if(box && box.classList.contains("open") && clState.detailId)
+    clOpenDetail(clState.detailId);
 }
 
 function clShowView(v){
@@ -5430,7 +5586,27 @@ function clEnsureLoaded(){
 }
 
 function clInit(){
+  // repris de l'onglet : recharger la page en pleine réparation ne renvoie
+  // pas le réparateur à la case départ
+  try{ clState.repair = !!sessionStorage.getItem(CL_REPAIR_KEY); }catch(e){}
   clApplyI18n();
+
+  // ---- mode réparateur
+  document.getElementById("clRepBtn").addEventListener("click", function(){
+    if(clState.repair){ clSetRepair(false); return; }
+    const f = document.getElementById("clRepForm"), i = document.getElementById("clRepPass");
+    f.hidden = false; this.hidden = true; i.value = ""; i.focus();
+  });
+  document.getElementById("clRepCancel").addEventListener("click", clRenderRepair);
+  document.getElementById("clRepForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    const pass = document.getElementById("clRepPass").value;
+    if(clRepairNorm(pass) !== CL_REPAIR_PASS){
+      document.getElementById("clRepErr").textContent = clT("rp.bad");
+      return;
+    }
+    clSetRepair(true);
+  });
 
   // ---- porte d'entrée du niveau claims
   document.getElementById("clGateForm").addEventListener("submit", async e => {
@@ -5553,6 +5729,16 @@ function clInit(){
     const msg = document.getElementById("clnMsg"), btn = document.getElementById("clnSubmit");
     const val = id => document.getElementById(id).value.trim();
     if(!val("clnDesc")){ msg.textContent = clT("f.need.desc"); return; }
+    // Le premier champ vide arrête l'envoi, nommé : un « remplissez tout »
+    // laisserait chercher lequel.
+    const miss = CL_REQUIRED.find(x => !val(x[0]));
+    if(miss){
+      msg.textContent = clT("f.need", clT(miss[1]));
+      const el = document.getElementById(miss[0]);
+      if(el){ el.focus(); if(el.scrollIntoView) el.scrollIntoView({block:"center"}); }
+      return;
+    }
+    if(!clState.newParts.length){ msg.textContent = clT("f.need.parts"); return; }
     if(val("clnClaim") > clToday()){ msg.textContent = clT("f.need.claimdate"); return; }
     btn.disabled = true; msg.innerHTML = '<span class="cl-spin"></span>';
     try {
