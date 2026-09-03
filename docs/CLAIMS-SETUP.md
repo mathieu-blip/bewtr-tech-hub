@@ -404,25 +404,20 @@ avec le rôle `anon`, celui du navigateur :
 | `claim_edit()` | corrige, efface un champ vidé, garde titre et date de claim (NOT NULL), refuse une mauvaise phrase |
 | `claim_update()` | suit la réparation ; « réparé par » s'efface en arrivant vide |
 
-**À exécuter, dans cet ordre :**
+**Tous les scripts de `docs/supabase/` sont passés en base** — vérifié le
+2026-09-03, le dernier étant le 19. Ils restent versionnés pour deux
+raisons : recréer la base depuis zéro, et lire pourquoi une décision a été
+prise. Tous sont rejouables sans dommage.
 
-1. `docs/supabase/09-reprise-monday.sql` — la reprise Monday du 2026-08-28.
-2. `docs/supabase/10-date-claim-pas-dans-le-futur.sql` — la borne sur la date
-   de claim. Après 09, dont un ticket est daté `2027-01-17` : le rattrapage
-   de fin de script le ramènera au jour même.
-3. `docs/supabase/11-pieces-des-archives.sql` — les pièces posées sur les
-   tickets archivés, sans quoi le rapport annonce 264 tickets fermés et zéro
-   pièce utilisée. Après 09, dont il complète les claims.
-4. `docs/supabase/12-pieces-deduites.sql` — 23 pièces de plus, déduites du
-   texte des tickets. Voir ci-dessous.
-5. `docs/supabase/13-pieces-deduites-2.sql` — 23 autres, second passage.
-6. `docs/supabase/14-retirer-le-suffixe-deduit.sql` — retire le
-   « (déduit) » des lignes déjà écrites. Sans objet si 12 et 13 sont passés
-   après cette mise à jour, les scripts n'écrivant plus le suffixe.
-7. `docs/supabase/18-un-seul-texte-et-repare-par.sql` — l'objet du ticket
-   disparaît du formulaire au profit de la seule description, et le suivi
-   gagne un champ « réparé par ». Voir ci-dessous.
-8. `docs/supabase/19-photos-sur-les-tickets.sql` — les photos. Voir ci-dessous.
+L'ordre, si la base est refaite : 01 → 19, en numérotation. Deux dépendances
+méritent d'être connues, parce qu'elles ne sont pas déductibles du numéro :
+10 doit passer **après** 09 (dont un ticket est daté `2027-01-17`, que le
+rattrapage de fin ramène au jour même), et 13 **après** 12 (il ne complète
+que les claims restés sans pièce).
+
+Ce que la base porte aujourd'hui : 327 tickets, 185 pièces, 145 des 268
+archives avec la pièce qui a servi, 0 ticket sans description, 0 suffixe
+« (déduit) », plus aucune trace des anciennes références BW-0987 / BW-0988.
 
 ### Des photos sur les tickets — script 19
 
@@ -660,7 +655,8 @@ claims, pas de prix. Deux fonctions seulement lui sont ouvertes —
 pas même le sien.
 
 > **Ce script est indispensable.** Sans `05-formulaire-public.sql`, le lien
-> retombe sur l'écran de passe. À exécuter avant de diffuser le lien.
+> retombe sur l'écran de passe. Il est passé ; à rejouer si la base est
+> refaite, avant de rediffuser le lien.
 
 Un bouton **Accès équipe** ouvre la plateforme complète pour qui a la phrase.
 Une fois saisie, elle est mémorisée par appareil. La phrase du bulletin de
@@ -914,10 +910,10 @@ supplier`) rangent encore un claim dans l'onglet Renvoi fournisseur.
 
 ---
 
-## Évolution 2 — script à exécuter
+## Évolution 2 — script 04
 
-`docs/supabase/04-evolutions.sql` **doit être exécuté une fois** dans
-Supabase ▸ SQL Editor. Sans lui le hub fonctionne, mais en retrait :
+`docs/supabase/04-evolutions.sql` est passé. Il est à rejouer si la base est
+refaite : sans lui le hub fonctionne, mais en retrait :
 
 | Fonction | Sans le script | Avec |
 |---|---|---|
