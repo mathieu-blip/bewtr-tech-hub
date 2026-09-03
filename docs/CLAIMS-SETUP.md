@@ -291,11 +291,18 @@ de détail.
 ## Le parcours au quotidien
 
 1. **Nouveau ticket** — le technicien décrit la panne en un seul champ (la
-   description ; il n'y a plus d'objet à saisir), choisit la machine et
-   ajoute les pièces nécessaires (recherche par réf BW ou par désignation ;
-   le bloc pièces suit le produit, dont il dépend). La garantie
-   s'affiche en direct dès que les deux dates sont saisies. Un ticket créé
-   avec des pièces part directement en « Spare part to order ».
+   description ; il n'y a plus d'objet à saisir), **joint ses photos**,
+   choisit la machine et, s'il sait déjà ce qu'il faut, ajoute les pièces
+   (recherche par réf BW ou par désignation ; le bloc pièces suit le produit,
+   dont il dépend). La pièce n'est **pas** obligatoire : on ouvre un ticket
+   pour une panne qu'on ne sait pas encore réparer, et c'est la pile « à
+   qualifier » qui sert à la nommer ensuite. La garantie s'affiche en direct
+   dès que les deux dates sont saisies. Un ticket créé avec des pièces part
+   directement en « Spare part to order ».
+
+   Le bouton orange **Tickets de réparation**, en bas de la barre latérale,
+   ouvre directement ce formulaire — pas le dernier onglet consulté : on
+   clique dessus parce qu'on a une panne à déclarer.
 2. **Claims** — le tableau, groupé par statut comme les groupes Monday.
    Clic sur une ligne : panneau de détail, changement de statut, note de
    réparation, lieu de restockage, ajout/retrait de pièces. Le bouton
@@ -405,6 +412,39 @@ avec le rôle `anon`, celui du navigateur :
 7. `docs/supabase/18-un-seul-texte-et-repare-par.sql` — l'objet du ticket
    disparaît du formulaire au profit de la seule description, et le suivi
    gagne un champ « réparé par ». Voir ci-dessous.
+8. `docs/supabase/19-photos-sur-les-tickets.sql` — les photos. Voir ci-dessous.
+
+### Des photos sur les tickets — script 19
+
+Une panne se décrit mal et se photographie bien. Le technicien joint ses
+photos au moment d'ouvrir le ticket, ou plus tard depuis la fiche ; le
+réparateur en ajoute et en retire, comme il ajoute une pièce — hors mode
+réparateur, les photos se regardent sans se toucher.
+
+**Elles vivent dans la base, pas dans un bucket Storage.** Le hub n'a qu'une
+porte : les fonctions `SECURITY DEFINER` qui exigent la phrase de passe. Un
+bucket demanderait ses propres règles d'accès, appuyées sur une clé publique
+lisible dans la page — donc soit ouvert à tous, soit inutilisable. Deux
+tailles sont stockées : la **vignette** (320 px), rendue avec la liste, et
+l'**image** (1600 px), tirée seulement quand on l'ouvre. Sans quoi ouvrir un
+ticket téléchargerait plusieurs mégaoctets sur un téléphone en 4G.
+
+**La page réduit avant d'envoyer.** Le canvas rééchantillonne et réencode en
+JPEG : une photo d'iPhone de 4 Mo part autour de 300 Ko, sa vignette autour
+de 20 Ko. Le HEIC comme le PNG ressortent en JPEG, lisibles partout. Les
+plafonds SQL (4 Mo par image, 12 photos par ticket, 2 Mo par le dépôt
+externe) ne sont donc pas la norme mais la digue : ils arrêtent un appel
+direct, pas un usage normal.
+
+Le **dépôt externe** est le seul chemin où les photos voyagent dans la
+déclaration elle-même, trois au plus : `claim_submit()` ne rend que le numéro
+du ticket, jamais son id, donc rien ne pourrait les rattacher après coup.
+L'équipe, elle, récupère l'id et les envoie une à une — un seul appel de
+plusieurs mégaoctets serait plus fragile.
+
+`hub.photo_add()` porte tous les contrôles, une seule fois, dans un schéma
+que PostgREST n'expose pas : format accepté (JPEG, PNG, WebP — pas de SVG,
+qui s'exécute dans le navigateur qui l'ouvre), taille, nombre par ticket.
 
 ### Un seul texte par ticket, et « réparé par » — script 18
 
@@ -425,9 +465,13 @@ l'écran. La page applique le même repli sans attendre le script, en lisant
 `description || title`.
 
 « **Réparé par** » est un champ du **formulaire de suivi**, jamais de la
-création : au moment d'ouvrir un ticket, personne ne l'a encore réparé. Il
-propose les noms déjà employés sur d'autres tickets, se relit dans le
-rapport et part dans l'export Excel. C'est le seul champ du suivi qu'on
+création : au moment d'ouvrir un ticket, personne ne l'a encore réparé.
+C'est une liste déroulante qui s'écrit toute seule : elle porte les noms des
+tickets déjà réparés, plus l'entrée « ＋ Ajouter un nom… » qui ouvre la
+saisie. Le nom tapé entre dans la liste aussitôt — sur ce ticket comme sur
+les suivants — et tient sur l'appareil, pour qu'un remplaçant le retrouve à
+la visite d'après, avant même que son premier ticket ne revienne du serveur.
+Il se relit dans le rapport et part dans l'export Excel. C'est le seul champ du suivi qu'on
 efface en le vidant — les autres gardent leur valeur quand ils arrivent
 vides, pour qu'un enregistrement partiel n'efface rien par mégarde.
 

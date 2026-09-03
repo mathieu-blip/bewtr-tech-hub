@@ -780,6 +780,18 @@
   .cl-picker .res .r{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;color:var(--orange);font-weight:700;flex:none;width:74px}
   .cl-picker .res .m{color:var(--ink-soft);font-size:11.5px;margin-left:auto;flex:none}
   .cl-chosen{display:flex;flex-direction:column;gap:7px;margin-top:11px}
+  /* Photos — la vignette est carree et recadree : une colonne de photos de
+     hauteurs differentes se lit mal, et le detail se voit en grand. */
+  .cl-photos{display:flex;flex-wrap:wrap;gap:8px;margin:3px 0 9px}
+  .cl-photos figure{position:relative;margin:0;width:94px;height:94px;border-radius:10px;
+    overflow:hidden;border:1px solid var(--line);background:#f4f6f8}
+  .cl-photos img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in}
+  .cl-photos .del{position:absolute;top:3px;right:3px;border:0;width:21px;height:21px;
+    border-radius:999px;background:rgba(20,28,38,.72);color:#fff;font-size:13px;line-height:21px;
+    padding:0;cursor:pointer}
+  .cl-photos .del:hover{background:#c0392b}
+  .cl-photos .wait{display:grid;place-items:center;height:100%;color:var(--ink-soft);font-size:11px}
+  .cl-photo-add{display:inline-flex;align-items:center;cursor:pointer;margin-right:9px}
   .cl-chosen .row{display:flex;align-items:center;gap:9px;background:#fafbfc;border:1px solid var(--line);border-radius:9px;padding:7px 10px;font-size:13px}
   .cl-chosen .row .r{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;color:var(--orange);font-weight:700}
   .cl-chosen .row .n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
@@ -1000,7 +1012,9 @@
       <a href="#gaps"><span class="ic">☑</span> <span data-i18n="nav.gaps"></span></a>
       </div>
       <div class="nav-pin">
-        <a class="nav-cl" href="#claims" hidden><span class="ic">⚑</span> <span data-i18n="nav.claims"></span></a>
+        <!-- data-cl : le bouton sert a ouvrir un ticket, il se pose donc sur
+             le formulaire, pas sur l'onglet ou l'on s'etait arrete. -->
+        <a class="nav-cl" href="#claims" data-cl="new" hidden><span class="ic">⚑</span> <span data-i18n="nav.claims"></span></a>
         <a class="nav-fb" href="#feedback"><span class="ic">✎</span> <span data-i18n="nav.feedback"></span></a>
       </div>
     </nav>
@@ -1232,6 +1246,18 @@
                 <textarea class="cl-in" id="clnDesc" rows="5" maxlength="4000" required></textarea>
                 <div class="cl-sugg" id="clnSugg" hidden></div>
               </div>
+              <!-- Une panne se decrit mal et se photographie bien : le bloc
+                   suit la description, dont il est la suite naturelle. -->
+              <div>
+                <span class="cl-lbl" data-cl-i18n="f.photos"></span>
+                <div class="cl-photos" id="clnPhotos"></div>
+                <label class="cl-btn ghost sm cl-photo-add">
+                  <span>＋ <span data-cl-i18n="f.photo.add"></span></span>
+                  <input type="file" id="clnPhotoIn" accept="image/*" multiple hidden>
+                </label>
+                <span class="muted small" data-cl-i18n="f.photo.hint"></span>
+                <div class="cl-err" id="clnPhotoErr"></div>
+              </div>
               <div class="two">
                 <div>
                   <label class="cl-lbl" for="clnProduct"><span data-cl-i18n="f.product"></span> <span class="cl-req">*</span></label>
@@ -1243,7 +1269,7 @@
                 </div>
               </div>
               <div>
-                <span class="cl-lbl"><span data-cl-i18n="f.parts"></span> <span class="cl-req">*</span></span>
+                <span class="cl-lbl" data-cl-i18n="f.parts"></span>
                 <div class="cl-picker">
                   <button class="cl-btn ghost sm" type="button" id="clnExploded"
                           data-cl-i18n="d.exploded" style="margin-bottom:9px" hidden></button>
@@ -2919,7 +2945,12 @@ function openToolsList(){ if(typeof openImg==='function') openImg(TOOLS, I18N[la
 
 function renderCatMenu(){
   const panel=document.getElementById('catPanel'); if(!panel) return;
-  panel.innerHTML=[...document.querySelectorAll('#nav a')].map(a=>'<a href="'+a.getAttribute('href')+'">'+a.textContent.trim()+'</a>').join('');
+  // data-cl suit : sur téléphone aussi, « Tickets de réparation » ouvre le
+  // formulaire, pas le dernier onglet consulté
+  panel.innerHTML=[...document.querySelectorAll('#nav a')].map(function(a){
+    var cl=a.getAttribute('data-cl');
+    return '<a href="'+a.getAttribute('href')+'"'+(cl?' data-cl="'+cl+'"':'')+'>'+a.textContent.trim()+'</a>';
+  }).join('');
   panel.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>panel.classList.remove('open')));
 }
 (function(){
@@ -3333,14 +3364,26 @@ function showTab(hash){
   document.querySelectorAll('#nav a').forEach(function(a){ a.classList.toggle('active', a.getAttribute('href')==='#'+id); });
   var cp=document.getElementById('catPanel'); if(cp) cp.classList.remove('open');
   // la plateforme tickets se charge à sa première ouverture, pas avant
-  if(id==='claims'){ try{ if(typeof clEnsureLoaded==='function') clEnsureLoaded(); }catch(e){} }
+  if(id==='claims'){
+    try{ if(typeof clEnsureLoaded==='function') clEnsureLoaded(); }catch(e){}
+    // Déjà chargée, elle rouvrirait le dernier onglet consulté : le lien qui
+    // demande un ticket neuf le dit ici. Au premier chargement, c'est
+    // clEnsureLoaded qui posera la vue, une fois les données là.
+    try{
+      if(window.__clLanding==='new' && typeof clState==='object' && clState.loaded){
+        window.__clLanding=null; clShowView('new');
+      }
+    }catch(e){}
+  }
   try{ if(history&&history.replaceState) history.replaceState(null,'','#'+id); }catch(e){}
   try{ jumpTo(id); }catch(e){}
 }
 document.addEventListener('click',function(e){
   var a=e.target.closest?e.target.closest('a[href^="#"]'):null; if(!a) return;
   var id=a.getAttribute('href').replace('#','');
-  if(SECT_IDS.indexOf(id)>=0){ e.preventDefault(); showTab('#'+id); var tf=a.getAttribute('data-tf'); if(tf){ var fb=document.querySelector('#filters button[data-f="'+tf+'"]'); if(fb) fb.click(); } var pp=a.getAttribute('data-parts'); if(pp){ showProducts('exploded'); } }
+  if(SECT_IDS.indexOf(id)>=0){ e.preventDefault();
+    var cl=a.getAttribute('data-cl'); if(cl) window.__clLanding=cl;
+    showTab('#'+id); var tf=a.getAttribute('data-tf'); if(tf){ var fb=document.querySelector('#filters button[data-f="'+tf+'"]'); if(fb) fb.click(); } var pp=a.getAttribute('data-parts'); if(pp){ showProducts('exploded'); } }
 });
 window.addEventListener('hashchange',function(){
   // #ticket dépouille la page dès le chargement, dans le script de garde :
@@ -3438,14 +3481,19 @@ const CL_I18N = {
     "f.install":"Date d'installation","f.claimdate":"Date du ticket","f.country":"Pays","f.units":"Nb d'unités concernées",
     "f.tech":"Technicien","f.mail":"E-mail","f.company":"Société","f.parts":"Pièces nécessaires",
     "f.parts.search":"Chercher une pièce — réf BW ou désignation…","f.submit":"Créer le ticket",
+    "f.photos":"Photos","f.photo.add":"Ajouter une photo","d.photos":"Photos",
+    "f.photo.hint":"Le raccord, la carte, l'étiquette : ce qui se voit vaut mieux qu'une phrase.",
+    "f.photo.none":"Aucune photo sur ce ticket.","f.photo.err":"Photo refusée : %s",
+    "f.photo.wait":"…","f.photo.max":"12 photos au maximum par ticket.",
     "f.need.desc":"La description du problème est obligatoire.","f.need.claimdate":"La date du ticket ne peut pas être dans le futur.",
     "f.need":"« %s » est obligatoire.","f.need.parts":"Ajoutez au moins une pièce nécessaire.",
-    "f.need.hint":"Tout est obligatoire, sauf l'e-mail.","f.need.keep":"« %s » ne peut pas être vidé.","f.saved":"Ticket %s créé.","f.err":"Enregistrement impossible : %s",
+    "f.need.hint":"Tout est obligatoire, sauf l'e-mail, les pièces et les photos.","f.need.keep":"« %s » ne peut pas être vidé.","f.saved":"Ticket %s créé.","f.err":"Enregistrement impossible : %s",
     "war.yes":"Sous garantie","war.no":"Hors garantie","war.unknown":"Garantie inconnue",
     "war.hint":"Garantie = moins de 730 jours entre l'installation et le ticket.",
     "col.code":"Réf.","col.product":"Produit","col.serial":"N° série","col.country":"Pays",
     "col.tech":"Technicien","col.date":"Date ticket","col.warranty":"Garantie","col.parts":"Pièces",
     "d.status":"Statut","d.repair":"Note de réparation","d.repairdate":"Date de réparation","d.repairedby":"Réparé par",
+    "d.repairedby.new":"＋ Ajouter un nom…","d.repairedby.ph":"Nom du réparateur",
     "d.edit":"Modifier","d.editcancel":"Annuler",
     "d.editparts":"Ajouter ou retirer une pièce enregistre d'abord la fiche.",
     "d.restock":"Lieu de restockage","d.save":"Enregistrer","d.saved":"Enregistré.","d.parts":"Pièces demandées",
@@ -3489,14 +3537,19 @@ const CL_I18N = {
     "f.install":"Installation date","f.claimdate":"Claim date","f.country":"Country","f.units":"Units impacted",
     "f.tech":"Technician","f.mail":"E-mail","f.company":"Company","f.parts":"Parts needed",
     "f.parts.search":"Find a part — BW ref or designation…","f.submit":"Create ticket",
+    "f.photos":"Photos","f.photo.add":"Add a photo","d.photos":"Photos",
+    "f.photo.hint":"The fitting, the board, the label: what can be seen beats a sentence.",
+    "f.photo.none":"No photo on this ticket.","f.photo.err":"Photo rejected: %s",
+    "f.photo.wait":"…","f.photo.max":"12 photos per ticket at most.",
     "f.need.desc":"The problem description is required.","f.need.claimdate":"The claim date cannot be in the future.",
     "f.need":"“%s” is required.","f.need.parts":"Add at least one required part.",
-    "f.need.hint":"Everything is required, except the e-mail.","f.need.keep":"“%s” cannot be cleared.","f.saved":"Ticket %s created.","f.err":"Could not save: %s",
+    "f.need.hint":"Everything is required, except the e-mail, the parts and the photos.","f.need.keep":"“%s” cannot be cleared.","f.saved":"Ticket %s created.","f.err":"Could not save: %s",
     "war.yes":"Under warranty","war.no":"Out of warranty","war.unknown":"Warranty unknown",
     "war.hint":"Warranty = less than 730 days between installation and claim.",
     "col.code":"Ref.","col.product":"Product","col.serial":"Serial","col.country":"Country",
     "col.tech":"Technician","col.date":"Claim date","col.warranty":"Warranty","col.parts":"Parts",
     "d.status":"Status","d.repair":"Repair note","d.repairdate":"Repair date","d.repairedby":"Repaired by",
+    "d.repairedby.new":"＋ Add a name…","d.repairedby.ph":"Repairer name",
     "d.edit":"Edit","d.editcancel":"Cancel",
     "d.editparts":"Adding or removing a part saves the form first.",
     "d.restock":"Restocking location","d.save":"Save","d.saved":"Saved.","d.parts":"Parts requested",
@@ -3540,14 +3593,19 @@ const CL_I18N = {
     "f.install":"Installationsdatum","f.claimdate":"Claim-Datum","f.country":"Land","f.units":"Betroffene Einheiten",
     "f.tech":"Techniker","f.mail":"E-Mail","f.company":"Firma","f.parts":"Benötigte Teile",
     "f.parts.search":"Teil suchen — BW-Nr. oder Bezeichnung…","f.submit":"Ticket anlegen",
+    "f.photos":"Fotos","f.photo.add":"Foto hinzufügen","d.photos":"Fotos",
+    "f.photo.hint":"Der Anschluss, die Platine, das Etikett: was man sieht, sagt mehr als ein Satz.",
+    "f.photo.none":"Kein Foto zu diesem Ticket.","f.photo.err":"Foto abgelehnt: %s",
+    "f.photo.wait":"…","f.photo.max":"Höchstens 12 Fotos pro Ticket.",
     "f.need.desc":"Die Problembeschreibung ist erforderlich.","f.need.claimdate":"Das Claim-Datum darf nicht in der Zukunft liegen.",
     "f.need":"„%s“ ist ein Pflichtfeld.","f.need.parts":"Mindestens ein benötigtes Teil hinzufügen.",
-    "f.need.hint":"Alles ist Pflicht, außer der E-Mail.","f.need.keep":"„%s“ darf nicht geleert werden.","f.saved":"Ticket %s angelegt.","f.err":"Speichern fehlgeschlagen: %s",
+    "f.need.hint":"Alles ist Pflicht, außer E-Mail, Teilen und Fotos.","f.need.keep":"„%s“ darf nicht geleert werden.","f.saved":"Ticket %s angelegt.","f.err":"Speichern fehlgeschlagen: %s",
     "war.yes":"In Garantie","war.no":"Außerhalb Garantie","war.unknown":"Garantie unbekannt",
     "war.hint":"Garantie = weniger als 730 Tage zwischen Installation und Claim.",
     "col.code":"Nr.","col.product":"Produkt","col.serial":"Seriennr.","col.country":"Land",
     "col.tech":"Techniker","col.date":"Claim-Datum","col.warranty":"Garantie","col.parts":"Teile",
     "d.status":"Status","d.repair":"Reparaturnotiz","d.repairdate":"Reparaturdatum","d.repairedby":"Repariert von",
+    "d.repairedby.new":"＋ Namen hinzufügen…","d.repairedby.ph":"Name des Reparateurs",
     "d.edit":"Bearbeiten","d.editcancel":"Abbrechen",
     "d.editparts":"Ein Teil hinzuzufügen oder zu entfernen speichert zuerst das Formular.",
     "d.restock":"Einlagerungsort","d.save":"Speichern","d.saved":"Gespeichert.","d.parts":"Angeforderte Teile",
@@ -3585,7 +3643,7 @@ const clState = {
   country:"", spareTarget:null, anon:false,   // périmètre commun à tous les onglets
   repair:false, detailId:null,               // écriture ouverte, ticket affiché
   repProduct:null,                           // produit déplié dans le rapport
-  newParts:[], loaded:false
+  newParts:[], newPhotos:[], photos:{}, loaded:false
 };
 
 /* ------------------------------------------------- appel des fonctions
@@ -4438,11 +4496,75 @@ function clRenderBoard(){
 
 /* -------------------------------------------------------- panneau détail */
 
-/** Les noms déjà portés par un ticket, proposés au lieu d'être retapés. */
-function clRepairedByOptions(){
-  const seen = Array.from(new Set(clState.claims
-                  .map(x => (x.repaired_by || "").trim()).filter(Boolean))).sort();
-  return seen.map(v => '<option value="'+clEsc(v)+'">').join("");
+/* « Réparé par » — une liste qui s'écrit toute seule.
+
+   Les noms viennent des tickets déjà réparés, et le réparateur ajoute le
+   sien s'il n'y figure pas : il entre alors dans la liste tout de suite, sur
+   ce ticket comme sur les suivants, sans attendre l'enregistrement. Les noms
+   ajoutés à la main tiennent aussi sur l'appareil — un remplaçant qui saisit
+   son nom une fois le retrouve à la visite d'après, même avant que son
+   premier ticket ne revienne du serveur. */
+const CL_REPAIRERS_KEY = "bewtr_claims_repairers";
+
+function clRepairersLocal(){
+  try { return JSON.parse(localStorage.getItem(CL_REPAIRERS_KEY) || "[]") || []; }
+  catch(e){ return []; }
+}
+
+/** Tous les noms connus : ceux des tickets, plus ceux ajoutés à la main. */
+function clRepairers(){
+  const all = clState.claims.map(x => (x.repaired_by || "").trim())
+                .concat(clRepairersLocal().map(x => String(x || "").trim()))
+                .filter(Boolean);
+  // dédoublonné sans la casse : « levent » et « Levent » sont le même homme
+  const seen = {};
+  all.forEach(v => { const k = v.toLowerCase(); if(!seen[k]) seen[k] = v; });
+  return Object.keys(seen).sort((a, b) => seen[a].localeCompare(seen[b])).map(k => seen[k]);
+}
+
+/** Retient un nom saisi à la main, pour qu'il soit dans la liste ensuite. */
+function clRepairerRemember(name){
+  const v = String(name || "").trim();
+  if(!v) return;
+  const list = clRepairersLocal();
+  if(list.some(x => String(x || "").trim().toLowerCase() === v.toLowerCase())) return;
+  list.push(v);
+  try { localStorage.setItem(CL_REPAIRERS_KEY, JSON.stringify(list.slice(-40))); } catch(e){}
+}
+
+/** La liste déroulante, plus l'entrée qui ouvre la saisie d'un nom neuf. */
+function clRepairedBySelect(cur, dis){
+  const list = clRepairers();
+  if(cur && !list.some(v => v.toLowerCase() === cur.toLowerCase())) list.unshift(cur);
+  return '<select class="cl-in" name="repaired_by" id="clRbSel"' + dis + '>'
+    + '<option value=""></option>'
+    + list.map(v => '<option value="' + clEsc(v) + '"'
+        + (v === cur ? " selected" : "") + '>' + clEsc(v) + '</option>').join("")
+    + '<option value="__new">' + clT("d.repairedby.new") + '</option></select>'
+    + '<input class="cl-in" id="clRbNew" maxlength="120" autocomplete="name" hidden'
+    + ' placeholder="' + clEsc(clT("d.repairedby.ph")) + '"' + dis + '>';
+}
+
+/** Le nom retenu : celui de la liste, ou celui qu'on vient de taper. */
+function clRepairedByValue(){
+  const sel = document.getElementById("clRbSel");
+  if(!sel) return "";
+  if(sel.value !== "__new") return sel.value.trim();
+  const inp = document.getElementById("clRbNew");
+  return inp ? inp.value.trim() : "";
+}
+
+/** Choisir « nouveau nom » ouvre le champ ; le nom saisi rejoint la liste. */
+function clBindRepairedBy(){
+  const sel = document.getElementById("clRbSel"), inp = document.getElementById("clRbNew");
+  if(!sel || !inp) return;
+  sel.onchange = function(){
+    inp.hidden = sel.value !== "__new";
+    if(!inp.hidden){ inp.value = ""; inp.focus(); }
+  };
+  // dès que le nom est écrit, il est mémorisé : il sera dans la liste du
+  // ticket suivant même si celui-ci n'est finalement pas enregistré
+  inp.onchange = function(){ clRepairerRemember(inp.value); };
 }
 
 /** Statuts proposés à la saisie, plus celui du claim s'il n'y est plus. */
@@ -4590,6 +4712,13 @@ function clOpenDetail(id, edit){
     // fiche déclarée vient ensuite — on la consulte, on n'agit pas dessus.
     : '<button class="x" type="button" id="clClose">×</button>'
     + clDetailHead(c)
+          // Les photos suivent le texte : on lit la panne, puis on la voit.
+    + '<h4>'+clT("d.photos")
+    +   (ro ? '' :
+          ' <label class="cl-btn ghost sm cl-photo-add">＋ ' + clT("f.photo.add")
+          + '<input type="file" id="clDetailPhotoIn" accept="image/*" multiple hidden></label>')
+    + '</h4>'
+    + '<div class="cl-photos" id="clDetailPhotos"></div>'
     + (ro ? '' : '<div class="cl-sugg" id="clDetailSugg"></div>')
     + '<h4>'+clT("d.parts")
     +   (clSpareKey(c.product) && !ro
@@ -4617,14 +4746,11 @@ function clOpenDetail(id, edit){
           // Qui a réparé se sait en fin de course, pas à l'ouverture : le champ
           // n'a donc rien à faire dans le formulaire de création.
     +     '<div><label class="cl-lbl">'+clT("d.repairedby")+'</label>'
-    +       '<input class="cl-in" name="repaired_by" maxlength="120" autocomplete="name"'
-    +       ' list="clRepairedBy" value="'+clEsc(c.repaired_by || "")+'"'+dis+'></div>'
+    +       clRepairedBySelect((c.repaired_by || "").trim(), dis)+'</div>'
     +     '<div><label class="cl-lbl">'+clT("d.restock")+'</label>'
     +       '<select class="cl-in" name="restock_location"'+dis+'><option value=""></option>'
     +       opt(CL_RESTOCK, c.restock_location)+'</select></div>'
     +   '</div>'
-          // les noms déjà saisis se reproposent : « Levent » ne s'écrit qu'une fois
-    +   '<datalist id="clRepairedBy">'+clRepairedByOptions()+'</datalist>'
     +   '<div><label class="cl-lbl">'+clT("d.repair")+'</label>'
     +     '<textarea class="cl-in" name="repair_notes" rows="3"'+dis+'>'+clEsc(c.repair_notes || "")+'</textarea></div>'
     +   (ro
@@ -4642,6 +4768,16 @@ function clOpenDetail(id, edit){
   document.getElementById("clClose").onclick = () => box.classList.remove("open");
 
   if(edit){ clBindEditForm(c); return; }
+
+  clBindRepairedBy();
+
+  // les vignettes arrivent après le panneau : on ne fait pas attendre la fiche
+  clLoadPhotos(c.id, !ro);
+  const pin = document.getElementById("clDetailPhotoIn");
+  if(pin) pin.onchange = async function(){
+    const files = Array.from(pin.files); pin.value = "";   // liste vivante : copie d'abord
+    await clAddPhotosTo(c.id, files, !ro);
+  };
 
   const ed = document.getElementById("clEdit");
   if(ed) ed.onclick = () => clOpenDetail(c.id, true);
@@ -4732,7 +4868,8 @@ function clOpenDetail(id, edit){
       const v = f.elements[k].value.trim(); if(v) payload[k] = v;
     });
     // envoyé même vide : c'est le seul champ du suivi qu'on efface en le vidant
-    payload.repaired_by = f.elements.repaired_by.value.trim();
+    payload.repaired_by = clRepairedByValue();
+    clRepairerRemember(payload.repaired_by);
     try {
       await clRpc("claim_update", { p_pass: clState.pass, p_id: c.id, p: payload });
       msg.textContent = clT("d.saved");
@@ -5122,8 +5259,10 @@ function clToday(){
 /* Un ticket ne vaut que rempli : la machine sans numéro de série, la panne
    sans date ni pays, c'est ce qui rendait les tickets repris de Monday
    inexploitables. Tout est donc obligatoire — sauf l'e-mail, que l'externe
-   n'a pas toujours. Les pièces comptent comme un champ : elles se cherchent
-   dans le catalogue et se cliquent, ce n'est pas une saisie de plus. */
+   n'a pas toujours, et sauf les pièces : on ouvre un ticket pour une panne
+   qu'on ne sait pas encore réparer, la pièce se nomme après le diagnostic.
+   Les photos, elles, ne s'exigent pas non plus : on ne peut pas toujours
+   photographier une machine encastrée. */
 const CL_REQUIRED = [
   ["clnDesc",    "f.desc"],
   ["clnProduct", "f.product"],
@@ -5164,6 +5303,7 @@ function clRenderNewForm(){
   cd.max = clToday();
   if(!cd.value) cd.value = cd.max;
   clRenderNewParts();
+  clRenderNewPhotos();
   clUpdateWarrantyHint();
   clRenderSuggestions();
   const exb = document.getElementById("clnExploded");
@@ -5210,6 +5350,169 @@ function clRenderNewParts(){
     b.onclick = () => { clState.newParts.splice(Number(b.dataset.x), 1); clRenderNewParts(); };
   });
 }
+/* ============================================================
+   Photos des tickets
+
+   Le téléphone sort des images de 4 Mo ; la base en recevrait autant, et
+   ouvrir un ticket en 4G les retéléchargerait. La page réduit donc avant
+   d'envoyer, et deux fois : l'image qu'on ouvre (1600 px) et la vignette
+   qu'on liste (320 px). Une photo de panne pèse alors quelques centaines
+   de kilo-octets, la vignette quelques dizaines.
+
+   Le JPEG est imposé à la sortie du canvas, quel que soit le format entré :
+   un HEIC d'iPhone comme un PNG de capture d'écran ressortent lisibles
+   partout, et la base ne stocke qu'un format.
+   ============================================================ */
+const CL_PHOTO_MAX   = 1600;   // côté long de l'image conservée
+const CL_PHOTO_THUMB = 320;    // côté long de la vignette
+const CL_PHOTO_COUNT = 12;     // par ticket, comme la fonction SQL
+
+/** Dessine la source dans un canvas borné et rend le JPEG en base64. */
+function clPhotoScale(src, max, quality){
+  const w = src.width || src.naturalWidth, h = src.height || src.naturalHeight;
+  const r = Math.min(1, max / Math.max(w, h));
+  const cv = document.createElement("canvas");
+  cv.width  = Math.max(1, Math.round(w * r));
+  cv.height = Math.max(1, Math.round(h * r));
+  const cx = cv.getContext("2d");
+  // fond blanc : un PNG transparent aplati en JPEG virerait au noir
+  cx.fillStyle = "#fff"; cx.fillRect(0, 0, cv.width, cv.height);
+  cx.drawImage(src, 0, 0, cv.width, cv.height);
+  return cv.toDataURL("image/jpeg", quality).split(",")[1] || "";
+}
+
+/** Décode un fichier en respectant l'orientation EXIF du téléphone. */
+async function clPhotoDecode(file){
+  if(window.createImageBitmap){
+    try { return await createImageBitmap(file, { imageOrientation:"from-image" }); }
+    catch(e){ /* navigateur sans l'option : on retombe sur <img> */ }
+  }
+  const url = URL.createObjectURL(file);
+  try {
+    return await new Promise((ok, ko) => {
+      const im = new Image();
+      im.onload = () => ok(im);
+      im.onerror = () => ko(new Error("image illisible"));
+      im.src = url;
+    });
+  } finally { setTimeout(() => URL.revokeObjectURL(url), 5000); }
+}
+
+/** Un fichier choisi → { mime, data, thumb }, prêt pour la base. */
+async function clPhotoPrepare(file){
+  if(!/^image\//.test(file.type || "")) throw new Error(file.name || "?");
+  const src = await clPhotoDecode(file);
+  const out = { mime:"image/jpeg",
+                data:  clPhotoScale(src, CL_PHOTO_MAX,   0.72),
+                thumb: clPhotoScale(src, CL_PHOTO_THUMB, 0.6) };
+  if(src.close) src.close();
+  if(!out.data) throw new Error(file.name || "?");
+  return out;
+}
+
+/** La bande de vignettes : la même partout, seul le retrait change. */
+function clPhotoStrip(host, list, onOpen, onDel){
+  host.innerHTML = list.map((ph, i) =>
+    '<figure>'
+    + '<img src="data:'+clEsc(ph.mime || "image/jpeg")+';base64,'+clEsc(ph.thumb)+'" alt="" data-o="'+i+'">'
+    + (onDel ? '<button class="del" type="button" data-x="'+i+'" title="×">×</button>' : '')
+    + '</figure>').join("");
+  host.querySelectorAll("[data-o]").forEach(im => {
+    im.onclick = () => onOpen(list[Number(im.dataset.o)]);
+  });
+  host.querySelectorAll("[data-x]").forEach(b => {
+    b.onclick = () => onDel(list[Number(b.dataset.x)], Number(b.dataset.x));
+  });
+}
+
+/** Ouvre une photo dans la visionneuse du hub, par-dessus le panneau. */
+function clPhotoOpen(src, title){
+  try { openImg(src, title || ""); } catch(e){ return; }
+  const lb = document.getElementById("imgbox");
+  if(lb) lb.classList.add("cl-over");
+}
+
+/* ---------------------------------------------- photos d'un nouveau ticket */
+function clRenderNewPhotos(){
+  const host = document.getElementById("clnPhotos");
+  if(!host) return;
+  clPhotoStrip(host, clState.newPhotos,
+    ph => clPhotoOpen("data:" + ph.mime + ";base64," + ph.data),
+    (ph, i) => { clState.newPhotos.splice(i, 1); clRenderNewPhotos(); });
+}
+
+/** Ajoute les fichiers choisis, un par un, en disant lequel a été refusé. */
+async function clAddNewPhotos(files){
+  const err = document.getElementById("clnPhotoErr");
+  if(err) err.textContent = "";
+  for(const f of Array.from(files || [])){
+    if(clState.newPhotos.length >= CL_PHOTO_COUNT){
+      if(err) err.textContent = clT("f.photo.max");
+      break;
+    }
+    try {
+      clState.newPhotos.push(await clPhotoPrepare(f));
+      clRenderNewPhotos();
+    } catch(e){
+      if(err) err.textContent = clT("f.photo.err", e.message);
+    }
+  }
+}
+
+/* ------------------------------------------------ photos d'un ticket ouvert */
+/** Les vignettes du ticket, chargées à l'ouverture du panneau. */
+async function clLoadPhotos(claimId, canEdit){
+  const host = document.getElementById("clDetailPhotos");
+  if(!host) return;
+  let list = clState.photos[claimId];
+  if(!list){
+    try {
+      list = await clRpc("claim_photos_list",
+                         { p_pass: clState.pass, p_claim_id: claimId }) || [];
+      clState.photos[claimId] = list;
+    } catch(e){ host.innerHTML = '<p class="muted small">'+clEsc(e.message)+'</p>'; return; }
+  }
+  // le panneau a pu changer de ticket pendant l'appel
+  if(clState.detailId !== claimId) return;
+  if(!list.length){
+    host.innerHTML = '<p class="muted small">'+clT("f.photo.none")+'</p>';
+    return;
+  }
+  clPhotoStrip(host, list, async ph => {
+    // l'image entière n'est tirée qu'à l'ouverture, la vignette a suffi jusque-là
+    if(!ph.full){
+      const r = await clRpc("claim_photo_get", { p_pass: clState.pass, p_id: ph.id });
+      const row = Array.isArray(r) ? r[0] : r;
+      if(!row) return;
+      ph.full = "data:" + (row.mime || "image/jpeg") + ";base64," + row.data;
+    }
+    clPhotoOpen(ph.full);
+  }, canEdit ? async (ph) => {
+    await clRpc("claim_photo_delete", { p_pass: clState.pass, p_id: ph.id });
+    delete clState.photos[claimId];
+    clLoadPhotos(claimId, canEdit);
+  } : null);
+}
+
+/** Ajoute des photos à un ticket déjà ouvert. */
+async function clAddPhotosTo(claimId, files, canEdit){
+  const host = document.getElementById("clDetailPhotos");
+  for(const f of Array.from(files || [])){
+    try {
+      const ph = await clPhotoPrepare(f);
+      if(host) host.insertAdjacentHTML("beforeend",
+        '<figure><span class="wait">'+clT("f.photo.wait")+'</span></figure>');
+      await clRpc("claim_photo_add",
+                  { p_pass: clState.pass, p_claim_id: claimId, p: ph });
+    } catch(e){
+      const msg = document.getElementById("clDetailMsg");
+      if(msg) msg.textContent = clT("f.photo.err", e.message);
+    }
+  }
+  delete clState.photos[claimId];
+  await clLoadPhotos(claimId, canEdit);
+}
+
 /** Reproduit la formule Monday : < 730 jours entre installation et claim. */
 function clUpdateWarrantyHint(){
   const i = document.getElementById("clnInstall").value;
@@ -5868,6 +6171,16 @@ function clInit(){
   ["clnInstall","clnClaim"].forEach(id =>
     document.getElementById(id).addEventListener("change", clUpdateWarrantyHint));
 
+  // ---- photos du nouveau ticket
+  const pin = document.getElementById("clnPhotoIn");
+  pin.addEventListener("change", async function(){
+    // La liste est vivante : vider le champ la viderait aussi. On la copie
+    // avant, sans quoi rien ne serait ajouté — et on vide pour que le même
+    // fichier, choisi deux fois de suite, déclenche bien un second « change ».
+    const files = Array.from(pin.files); pin.value = "";
+    await clAddNewPhotos(files);
+  });
+
   // ---- création d'un ticket
   document.getElementById("clNewForm").addEventListener("submit", async e => {
     e.preventDefault();
@@ -5883,7 +6196,6 @@ function clInit(){
       if(el){ el.focus(); if(el.scrollIntoView) el.scrollIntoView({block:"center"}); }
       return;
     }
-    if(!clState.newParts.length){ msg.textContent = clT("f.need.parts"); return; }
     if(val("clnClaim") > clToday()){ msg.textContent = clT("f.need.claimdate"); return; }
     btn.disabled = true; msg.innerHTML = '<span class="cl-spin"></span>';
     try {
@@ -5899,16 +6211,27 @@ function clInit(){
         status: clState.newParts.length ? "Spare part to order" : "New (to repair)",
         parts: clState.newParts.map(p => ({ ref:p.ref, qty:p.qty }))
       };
+      // Le dépôt externe ne rend que le numéro du ticket : ses photos doivent
+      // donc partir avec lui. L'équipe, elle, récupère l'id et les envoie une
+      // à une — un seul appel de plusieurs mégaoctets serait plus fragile.
+      if(clState.anon) payload.photos = clState.newPhotos.slice(0, 3);
       const r = clState.anon
         ? await clRpc("claim_submit", { p: payload })
         : await clRpc("claim_create", { p_pass: clState.pass, p: payload });
-      const code = clState.anon ? r
-        : (Array.isArray(r) ? (r[0] || {}).code : (r || {}).code);
+      const row = Array.isArray(r) ? (r[0] || {}) : (r || {});
+      const code = clState.anon ? r : row.code;
+      if(!clState.anon && row.id){
+        for(const ph of clState.newPhotos){
+          try { await clRpc("claim_photo_add",
+                            { p_pass: clState.pass, p_claim_id: row.id, p: ph }); }
+          catch(e){ msg.textContent = clT("f.photo.err", e.message); }
+        }
+      }
       msg.textContent = clT("f.saved", code || "");
       e.target.reset();
-      clState.newParts = [];
+      clState.newParts = []; clState.newPhotos = [];
       document.getElementById("clnClaim").value = clToday();
-      clRenderNewParts(); clUpdateWarrantyHint(); clRenderSuggestions();
+      clRenderNewParts(); clRenderNewPhotos(); clUpdateWarrantyHint(); clRenderSuggestions();
       if(!clState.anon) await clRefreshAll();
     } catch(err){ msg.textContent = clT("f.err", err.message); }
     finally { btn.disabled = false; }
