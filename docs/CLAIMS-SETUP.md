@@ -39,6 +39,20 @@ La base reste fermée quoi qu'il arrive au HTML.
 Les deux rôles sont déclarés dans `GATE_ROLES`, en tête du script de garde
 d'`index.html` ; l'indicateur `claims` de chaque ligne est ce qui décide.
 
+### Se déconnecter
+
+Le hub retient le mot de passe par appareil. Sur un poste partagé, un
+distributeur héritait donc de la session d'un interne, tickets compris. Le
+panneau des réglages — l'engrenage en haut à droite — porte maintenant une
+ligne **Session** sous la langue et la taille du texte : elle nomme le rôle en
+cours et offre **Se déconnecter**.
+
+Le bouton efface ce que la garde a déposé — `bewtr_gate_ok`,
+`bewtr_claims_pass`, le mode réparateur (`bewtr_claims_repair`) — puis
+recharge la page sur `#home`, garde comprise. La langue et la taille du texte
+survivent : ce sont des préférences, pas une identité. Le lien externe
+`#ticket` n'affiche pas cette ligne — il n'a pas de session à quitter.
+
 Le niveau `claims` n'a plus de phrase à lui : qui a franchi l'écran de garde
 du hub **avec le mot de passe interne** est un technicien BE WTR, les tickets
 lui sont ouverts d'office. La

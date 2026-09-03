@@ -73,6 +73,11 @@
   .set-seg button{border:none;background:transparent;color:var(--ink-soft);font-size:12.5px;font-weight:700;padding:6px 13px;border-radius:999px;cursor:pointer;transition:.15s;letter-spacing:.3px}
   .set-seg button:hover{color:var(--ink)}
   .set-seg button.on{background:var(--orange);color:#fff}
+  .set-panel .set-who{margin:0;font-size:12.5px;color:var(--ink);font-weight:600}
+  .set-out{width:100%;border:1px solid var(--line);background:#f6f8fa;color:var(--ink-soft);
+    font:inherit;font-size:12.5px;font-weight:700;padding:8px 13px;border-radius:999px;
+    cursor:pointer;transition:.15s;letter-spacing:.3px}
+  .set-out:hover{border-color:var(--orange);background:var(--orange-soft);color:var(--orange)}
   .lay-caps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px;text-align:left}
   .lay-caps>div{background:#fafbfc;border:1px solid var(--line);border-radius:10px;padding:11px 13px}
   .lay-caps b{display:block;font-size:13px;margin-bottom:4px;color:var(--ink)}
@@ -901,6 +906,8 @@
     if(gate && gate.parentNode) gate.parentNode.removeChild(gate);
     /* le hub a été construit pendant le verrouillage : on remet l'onglet en place */
     try{ if(typeof showTab === "function") showTab(location.hash); }catch(e){}
+    /* le panneau des réglages nomme la session et offre d'en sortir */
+    try{ if(typeof renderSession === "function") renderSession(); }catch(e){}
     /* Le rôle est fixé : le bloc Claims, qui attend ce signal, peut décider
        d'ouvrir la plateforme ou de la laisser fermée. Au premier chargement
        il n'est pas encore déclaré — d'où la promesse. Mais elle s'est déjà
@@ -1009,6 +1016,14 @@
           </div>
           <div class="set-row"><span class="set-lbl" data-i18n="set.size"></span>
             <div class="set-seg"><button id="fsMinus">A−</button><button id="fsReset">A</button><button id="fsPlus">A+</button></div>
+          </div>
+          <!-- Le hub retient le mot de passe par appareil. Sur un poste
+               partagé, un distributeur héritait donc de la session d'un
+               interne, tickets compris. Ce bouton rend la main à la garde. -->
+          <div class="set-row" id="setSessionRow" hidden>
+            <span class="set-lbl" data-i18n="set.session"></span>
+            <div class="set-who" id="setWho"></div>
+            <button class="set-out" id="setSignout" type="button" data-i18n="set.signout"></button>
           </div>
         </div>
       </div>
@@ -1534,6 +1549,10 @@ const I18N = {
     "spare.none":"Aucune pièce listée pour ce produit.",
     "set.lang":"Langue",
     "set.size":"Taille du texte",
+    "set.session":"Session",
+    "set.signout":"Se déconnecter",
+    "set.who.internal":"Interne BE WTR",
+    "set.who.dist":"Distributeur",
     "nav.safety":"Sécurité",
     "s14.t":"Hygiène & sécurité",
     "s14.sub":"Règles d'hygiène, sécurité électrique et sécurité CO₂ — à respecter sur chaque intervention.",
@@ -1658,6 +1677,10 @@ const I18N = {
     "spare.none":"No parts listed for this product.",
     "set.lang":"Language",
     "set.size":"Text size",
+    "set.session":"Session",
+    "set.signout":"Sign out",
+    "set.who.internal":"BE WTR internal",
+    "set.who.dist":"Distributor",
     "nav.safety":"Safety",
     "s14.t":"Hygiene & safety",
     "s14.sub":"Hygiene rules, electrical safety and CO₂ safety — to follow on every visit.",
@@ -1782,6 +1805,10 @@ const I18N = {
     "spare.none":"Keine Teile für dieses Produkt gelistet.",
     "set.lang":"Sprache",
     "set.size":"Textgröße",
+    "set.session":"Sitzung",
+    "set.signout":"Abmelden",
+    "set.who.internal":"BE WTR intern",
+    "set.who.dist":"Händler",
     "nav.safety":"Sicherheit",
     "s14.t":"Hygiene & Sicherheit",
     "s14.sub":"Hygieneregeln, elektrische Sicherheit und CO₂-Sicherheit — bei jedem Einsatz zu beachten.",
@@ -1856,6 +1883,8 @@ function applyI18n(){
   document.querySelectorAll("#filters button").forEach(b=>{ b.textContent = d["filter."+b.dataset.f]; });
   // lang buttons
   document.querySelectorAll("#lang button").forEach(b=> b.classList.toggle("on", b.dataset.lang===lang));
+  // « Interne BE WTR » / « Distributeur » suit la langue comme le reste
+  try{ if(typeof renderSession==="function") renderSession(); }catch(e){}
   // Les désignations de pièces suivent la langue : changer de langue doit
   // redessiner tout ce qui en affiche, pas seulement les libellés fixes.
   try{ if(typeof clApplyI18n==="function"){
@@ -2901,6 +2930,38 @@ function renderCatMenu(){
   }
 })();
 
+/* ------------------------------------------------------------- session
+   Le mot de passe est retenu par appareil : sans ce bouton, un poste
+   partagé garderait la session du premier venu, et un distributeur
+   hériterait des tickets d'un interne. Se déconnecter efface ce que la
+   garde a déposé — le mot de passe, la phrase des tickets, le mode
+   réparateur — et rend la page à l'écran de garde. La langue et la taille
+   du texte restent : ce sont des préférences, pas une identité. */
+function signOut(){
+  ['bewtr_gate_ok','bewtr_claims_pass'].forEach(function(k){
+    try{ localStorage.removeItem(k); }catch(e){}
+  });
+  try{ sessionStorage.removeItem('bewtr_claims_repair'); }catch(e){}
+  /* Rechargement plutôt que retrait à la main : la plateforme des tickets
+     garde en mémoire des claims et des prix qu'un simple masquage
+     laisserait derrière lui. On repart de l'accueil, sans quoi un « #claims »
+     resté dans l'adresse rouvrirait l'onglet au visiteur suivant. */
+  try{ location.replace(location.pathname + location.search + '#home'); }catch(e){}
+  location.reload();
+}
+
+/* La ligne n'apparaît que pour qui s'est identifié : le lien externe
+   « #ticket » n'a pas de session à quitter. */
+function renderSession(){
+  var row=document.getElementById('setSessionRow'), who=document.getElementById('setWho');
+  if(!row||!who) return;
+  var role=window.__hubRole;
+  if(!role){ row.hidden=true; return; }
+  row.hidden=false;
+  var d=I18N[lang]||{};
+  who.textContent=d['set.who.'+role]||'';
+}
+
 var fontScale=1, _fsBase=null;
 try{var _fs=parseFloat(localStorage.getItem('bewtr_fs')); if(_fs&&_fs>=0.85&&_fs<=1.7) fontScale=_fs;}catch(e){}
 function _fsCollect(rules){ for(var i=0;i<rules.length;i++){ var r=rules[i]; try{ if(r.style&&r.style.fontSize&&/px$/.test(r.style.fontSize)) _fsBase.push({r:r,px:parseFloat(r.style.fontSize)}); }catch(e){} if(r.cssRules) _fsCollect(r.cssRules); } }
@@ -2915,6 +2976,8 @@ function applyFontScale(){
   if(plus) plus.addEventListener('click',function(){fontScale=Math.min(1.7,+(fontScale+0.1).toFixed(2));applyFontScale();});
   if(minus) minus.addEventListener('click',function(){fontScale=Math.max(0.85,+(fontScale-0.1).toFixed(2));applyFontScale();});
   if(reset) reset.addEventListener('click',function(){fontScale=1;applyFontScale();});
+  var so=document.getElementById('setSignout');
+  if(so) so.addEventListener('click',signOut);
   var sb=document.getElementById('setBtn'),sp=document.getElementById('setPanel'),sc=document.getElementById('setTab');
   if(sb&&sp&&sc){ sb.addEventListener('click',function(e){e.stopPropagation();sp.classList.toggle('open');});
     document.addEventListener('click',function(e){ if(sp.classList.contains('open')&&!sc.contains(e.target)) sp.classList.remove('open'); }); }
@@ -5948,8 +6011,12 @@ function clRevealNav(){
 
 clInit();
 // La garde tranche du rôle, parfois de façon différée : on attend son verdict
-// avant d'ouvrir quoi que ce soit.
-Promise.resolve(window.__hubGateReady).then(function(){ return clAutoUnlock(); });
+// avant d'ouvrir quoi que ce soit, et pour nommer la session dans le panneau
+// des réglages.
+Promise.resolve(window.__hubGateReady).then(function(){
+  try{ renderSession(); }catch(e){}
+  return clAutoUnlock();
+});
 
 </script>
 </body>
