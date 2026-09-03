@@ -28,14 +28,19 @@
   body.ticket-only #clXls{display:none}
   /* Mot de passe distributeur : le hub s'ouvre en entier — tutoriels,
      schémas, pièces — sauf ce qui appartient au travail interne de BE WTR.
-     Les tickets de réparation et le formulaire « Signaler / suggérer »
-     disparaissent du menu, de l'accueil et de la recherche. Voir la classe
-     « role-dist » et la garde d'accès plus bas. */
-  body.role-dist .nav-cl,
-  body.role-dist .nav-fb,
+     Les tickets de réparation, le formulaire « Signaler / suggérer » et la
+     liste « À compléter » disparaissent du menu, de l'accueil et de la
+     recherche. Voir la classe « role-dist » et la garde d'accès plus bas.
+     Les liens se désignent par leur cible, comme ROLE_SECT plus bas : les
+     deux listes se lisent alors ensemble, et ajouter un onglet réservé ne
+     demande pas d'inventer une classe. */
+  body.role-dist #nav a[href="#claims"],
+  body.role-dist #nav a[href="#feedback"],
+  body.role-dist #nav a[href="#gaps"],
   body.role-dist .home-card[href="#feedback"],
   body.role-dist #claims,
-  body.role-dist #feedback{display:none !important}
+  body.role-dist #feedback,
+  body.role-dist #gaps{display:none !important}
   /* Le bouton « Ticket » des vues éclatées mène à la plateforme : il part
      avec elle, sinon il ouvrirait un onglet que le distributeur ne voit pas. */
   body.role-dist .sp-ticket{display:none}
@@ -3355,8 +3360,12 @@ function jumpTo(id){
 var SECT_IDS=['home','overview','beconnect','install','settings','maintenance','safety','troubleshoot','experience','tutorials','schemas','glossary','gaps','feedback','claims'];
 /* Onglets réservés à l'interne. Le distributeur qui tape l'adresse à la main,
    ou qui garde un vieux lien, retombe sur l'accueil plutôt que sur un onglet
-   vide. Le CSS les cache déjà : ceci ferme la porte de derrière. */
-var ROLE_SECT=['feedback','claims'];
+   vide. Le CSS les cache déjà : ceci ferme la porte de derrière — et le
+   tiroir du téléphone comme l'index de recherche s'y règlent aussi.
+   « gaps » (« À compléter ») est un pense-bête de rédaction interne : il
+   nomme ce qui manque encore au guide, ce qui ne regarde pas un
+   distributeur. */
+var ROLE_SECT=['feedback','claims','gaps'];
 function sectHidden(id){
   return ROLE_SECT.indexOf(id)>=0 && document.body.classList.contains('role-dist');
 }
