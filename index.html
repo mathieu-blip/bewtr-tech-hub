@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -648,6 +648,16 @@
   .gate-card.shake{animation:gateShake .35s}
   @keyframes gateShake{10%,90%{transform:translateX(-3px)}30%,70%{transform:translateX(6px)}50%{transform:translateX(-6px)}}
   .gate-foot{margin-top:20px;font-size:11.5px;color:#9aa6b4}
+  /* Le choix de la langue avant même d'entrer : le guide sert au-delà des
+     équipes francophones, et la garde était le seul écran qui n'offrait rien.
+     Même pastille que dans les réglages, en plus discret. */
+  .gate-seg{display:inline-flex;background:#f6f8fa;border:1px solid var(--line);
+    border-radius:999px;padding:3px;margin-top:18px}
+  .gate-seg button{border:none;background:transparent;color:var(--ink-soft);font-family:inherit;
+    font-size:12px;font-weight:700;padding:5px 14px;border-radius:999px;cursor:pointer;
+    transition:.15s;letter-spacing:.3px}
+  .gate-seg button:hover{color:var(--ink)}
+  .gate-seg button.on{background:var(--orange);color:#fff}
 
   /* ============================================================
      Onglet Claims & pièces détachées (remplace le board Monday)
@@ -845,15 +855,20 @@
 <div class="gate" id="gate">
   <div class="gate-card" id="gateCard">
     <div class="gate-logo">BE WTR<span class="tm">™</span></div>
-    <p class="gate-sub">Guide Technicien</p>
-    <h1>Accès réservé</h1>
-    <p class="gate-help">Saisissez le mot de passe d'accès pour ouvrir le hub.</p>
+    <p class="gate-sub" id="gateSub">Technician Guide</p>
+    <h1 id="gateTitle">Restricted access</h1>
+    <p class="gate-help" id="gateHelp">Enter the access password to open the hub.</p>
     <form id="gateForm" autocomplete="off">
-      <input class="gate-in" id="gateIn" type="password" placeholder="Mot de passe" aria-label="Mot de passe d'accès" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false">
-      <button class="gate-btn" type="submit">Entrer</button>
+      <input class="gate-in" id="gateIn" type="password" placeholder="Password" aria-label="Access password" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false">
+      <button class="gate-btn" type="submit" id="gateGo">Enter</button>
     </form>
-    <p class="gate-err" id="gateErr">Mot de passe incorrect.</p>
-    <p class="gate-foot">Réservé aux techniciens BE WTR.</p>
+    <p class="gate-err" id="gateErr">Incorrect password.</p>
+    <p class="gate-foot" id="gateFoot">For BE WTR technicians only.</p>
+    <div class="gate-seg" id="gateLang">
+      <button type="button" data-lang="en">EN</button>
+      <button type="button" data-lang="fr">FR</button>
+      <button type="button" data-lang="de">DE</button>
+    </div>
   </div>
 </div>
 <script>
@@ -891,11 +906,72 @@
     for(var i=0;i<GATE_ROLES.length;i++) if(GATE_ROLES[i].hash === hash) return GATE_ROLES[i];
     return null;
   }
+
+  /* La garde s'affiche avant que le hub soit construit : le grand I18N, qui
+     vit dans le second script, n'existe pas encore. D'où ces quelques lignes
+     à elle. Le choix se dépose sous la même clé que celle du hub — changer
+     de langue ici, c'est en changer partout. */
+  var LANG_KEY = "bewtr_lang";
+  var GATE_I18N = {
+    en:{ sub:"Technician Guide", t:"Restricted access",
+         help:"Enter the access password to open the hub.",
+         ph:"Password", aria:"Access password", go:"Enter",
+         bad:"Incorrect password.", foot:"For BE WTR technicians only.",
+         https:"Browser not supported: open the site over HTTPS." },
+    fr:{ sub:"Guide Technicien", t:"Accès réservé",
+         help:"Saisissez le mot de passe d'accès pour ouvrir le hub.",
+         ph:"Mot de passe", aria:"Mot de passe d'accès", go:"Entrer",
+         bad:"Mot de passe incorrect.", foot:"Réservé aux techniciens BE WTR.",
+         https:"Navigateur non compatible : ouvrez le site en HTTPS." },
+    de:{ sub:"Technikerhandbuch", t:"Zugang beschränkt",
+         help:"Geben Sie das Zugangspasswort ein, um den Hub zu öffnen.",
+         ph:"Passwort", aria:"Zugangspasswort", go:"Öffnen",
+         bad:"Falsches Passwort.", foot:"Nur für BE WTR-Techniker.",
+         https:"Browser nicht unterstützt: Öffnen Sie die Seite über HTTPS." }
+  };
+  /* L'anglais par défaut, comme le hub ; le choix mémorisé l'emporte. */
+  var gateLang = "en";
+  try{ var _gl = localStorage.getItem(LANG_KEY); if(_gl && GATE_I18N[_gl]) gateLang = _gl; }catch(e){}
+  function gt(k){ return (GATE_I18N[gateLang] || GATE_I18N.en)[k]; }
   var gate = document.getElementById("gate");
   var card = document.getElementById("gateCard");
   var form = document.getElementById("gateForm");
   var input = document.getElementById("gateIn");
   var err  = document.getElementById("gateErr");
+  var seg  = document.getElementById("gateLang");
+
+  /* Le message d'erreur garde le sien tant qu'il est affiché : traduire au
+     milieu d'une saisie ratée ne doit pas l'effacer. */
+  function paintGate(){
+    document.documentElement.lang = gateLang;
+    var set = function(id, txt){ var e=document.getElementById(id); if(e) e.textContent = txt; };
+    set("gateSub",  gt("sub"));
+    set("gateTitle",gt("t"));
+    set("gateHelp", gt("help"));
+    set("gateGo",   gt("go"));
+    set("gateFoot", gt("foot"));
+    if(input){ input.placeholder = gt("ph"); input.setAttribute("aria-label", gt("aria")); }
+    if(err && !err.classList.contains("on")) err.textContent = gt("bad");
+    if(seg) seg.querySelectorAll("button").forEach(function(b){
+      b.classList.toggle("on", b.dataset.lang === gateLang);
+    });
+  }
+  paintGate();
+
+  if(seg) seg.addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest("button[data-lang]") : null;
+    if(!b) return;
+    gateLang = b.dataset.lang;
+    /* La même clé que le hub : la langue choisie ici est celle qui s'ouvre
+       derrière, sans avoir à la redire dans les réglages. */
+    try{ localStorage.setItem(LANG_KEY, gateLang); }catch(e){}
+    paintGate();
+    /* Le hub est déjà construit derrière la garde, dans la langue qu'il a lue
+       au chargement : la clé seule ne le retournerait qu'au rechargement
+       suivant. On le fait donc changer avec nous. */
+    try{ if(typeof setLang === "function") setLang(gateLang); }catch(e){}
+    if(input) input.focus();
+  });
 
   /* « aqtiv duo », « AQTiV  DUO » … tout est accepté */
   function normalize(v){ return String(v||"").trim().replace(/\s+/g," ").toUpperCase(); }
@@ -938,7 +1014,7 @@
   }
 
   function fail(msg){
-    err.textContent = msg || "Mot de passe incorrect.";
+    err.textContent = msg || gt("bad");
     err.classList.add("on");
     card.classList.remove("shake");
     void card.offsetWidth;
@@ -989,7 +1065,7 @@
       try{ localStorage.setItem(STORE_KEY, pass); }catch(e){}
       unlock(pass, entry);
     }, function(){
-      fail("Navigateur non compatible : ouvrez le site en HTTPS.");
+      fail(gt("https"));
     });
   });
 })();
@@ -1033,7 +1109,7 @@
         <button class="set-btn" id="setBtn" aria-label="Settings">⚙</button>
         <div class="set-panel" id="setPanel">
           <div class="set-row"><span class="set-lbl" data-i18n="set.lang"></span>
-            <div class="set-seg" id="lang"><button data-lang="en">EN</button><button data-lang="fr" class="on">FR</button><button data-lang="de">DE</button></div>
+            <div class="set-seg" id="lang"><button data-lang="en" class="on">EN</button><button data-lang="fr">FR</button><button data-lang="de">DE</button></div>
           </div>
           <div class="set-row"><span class="set-lbl" data-i18n="set.size"></span>
             <div class="set-seg"><button id="fsMinus">A−</button><button id="fsReset">A</button><button id="fsPlus">A+</button></div>
@@ -1897,7 +1973,10 @@ const I18N = {
 };
 
 /* ============ RENDER ============ */
-let lang = "fr", activeFilter = "all", query = "";
+/* L'anglais par défaut : le guide sert au-delà des équipes francophones, et
+   qui a besoin du français le trouve en un clic — dans les réglages, et dès
+   l'écran de garde. Le choix, lui, tient sur l'appareil. */
+let lang = "en", activeFilter = "all", query = "";
 try{ const s = localStorage.getItem("bewtr_lang"); if(s && I18N[s]) lang = s; }catch(e){}
 
 const typeCls = {pdf:"type-pdf", yt:"type-yt"};
