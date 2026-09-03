@@ -313,6 +313,10 @@
   .gf-panel .itut-sec+.itut-sec{border-top:1px solid var(--line);padding-top:14px}
   .tut.on,.gfiche.on,.itut-card.on{border-color:var(--orange)}
   .gfiche.on{background:var(--orange-soft)}
+  /* Le sélecteur de machine renvoie à la carte de la bibliothèque : elle
+     s'allume un instant, le temps qu'on la retrouve dans la liste. */
+  .tut.flash{animation:tutFlash 1.6s ease-out}
+  @keyframes tutFlash{0%,60%{border-color:var(--orange);box-shadow:var(--shadow)}100%{border-color:var(--line);box-shadow:none}}
 
   /* ---- Dépannage : on part du symptôme ---- */
   .sym-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(228px,1fr));gap:10px;margin:10px 0 4px}
@@ -2037,13 +2041,13 @@ function renderLibrary(){
       const title = t.t[lang], f = installFiche(t);
       if((t.type==="soon" || !t.url) && !f){
         const el = document.createElement("div");
-        el.className = "tut disabled";
+        el.className = "tut disabled"; el.dataset.tut = t.t.fr;
         el.innerHTML = `<span class="ti">…</span><div><div class="tt">${title}</div><div class="ts2">${d["tut.word"]}</div></div><span class="badge-soon">${d["soon.badge"]}</span>`;
         grid.appendChild(el);
       }else if(f){
         /* La carte ouvre le tuto du portail, sans quitter la page. */
         const b = document.createElement("button");
-        b.type = "button"; b.className = "tut";
+        b.type = "button"; b.className = "tut"; b.dataset.tut = t.t.fr;
         b.dataset.gf = `${LIB_FICHE[t.t.fr][0]}|${f.gi}|${f.pi}`;
         b.innerHTML = `<span class="ti ph">${f.p.cover ? `<img loading="lazy" alt="" src="${f.p.cover}">` : "▤"}</span>`
           + `<div><div class="tt">${title}</div><div class="ic-s">${guideBits(f.p)}</div></div>`
@@ -2051,7 +2055,8 @@ function renderLibrary(){
         grid.appendChild(b);
       }else{
         const a = document.createElement("a");
-        a.className = "tut"; a.href = (t.url[lang]||t.url.fr); a.target = "_blank"; a.rel = "noopener";
+        a.className = "tut"; a.dataset.tut = t.t.fr;
+        a.href = (t.url[lang]||t.url.fr); a.target = "_blank"; a.rel = "noopener";
         a.innerHTML = `<span class="ti ${typeCls[t.type]}">${typeIc[t.type]}</span><div><div class="tt">${title}</div><div class="ts2">${d["type."+t.type]}</div></div><span class="ext">↗</span>`;
         grid.appendChild(a);
       }
@@ -3140,7 +3145,42 @@ function tilePic(k, ic){
              : '<span class="st-ic">' + ic + '</span>';
 }
 
-function tutUrl(title){ if(!title||typeof tutorials==='undefined')return null; for(var i=0;i<tutorials.length;i++){var e=tutorials[i]; if(e.t&&e.t.fr===title){ if(e.type==='soon'||!e.url)return null; return e.url[lang]||e.url.fr; } } return null; }
+/* Le renvoi « Tutos » du sélecteur de machine mène à la bibliothèque de tutos
+   (§8), pas au PDF SharePoint : le tuto pas à pas du portail s'ouvre sur
+   place, et le document d'origine reste à un clic, en tête du tuto sous « À
+   voir aussi ». Un sujet que le portail n'a pas encore repris garde son PDF :
+   sa carte de la bibliothèque s'allume, et c'est elle qui l'ouvre. Un sujet
+   encore « bientôt » n'a rien à montrer : pas de renvoi du tout. */
+function tutEntry(title){
+  if(!title || typeof tutorials === 'undefined') return null;
+  for(var i=0;i<tutorials.length;i++){ var e=tutorials[i]; if(e.t && e.t.fr === title) return e; }
+  return null;
+}
+function hasTuto(title){
+  var e = tutEntry(title); if(!e) return false;
+  return !!(installFiche(e) || (e.type !== 'soon' && e.url));
+}
+function libCard(title){
+  var out = null;
+  document.querySelectorAll('#library [data-tut]').forEach(function(el){ if(el.dataset.tut === title) out = el; });
+  return out;
+}
+function openLibTuto(title){
+  var e = tutEntry(title); if(!e) return;
+  showTab('#tutorials');
+  /* La carte doit être à l'écran pour qu'on puisse l'ouvrir : on efface la
+     recherche en cours et on pose le filtre de sa catégorie, comme le fait
+     déjà un renvoi « Voir les tutos ». */
+  var qi = document.getElementById('q'); if(qi) qi.value = '';
+  query = '';
+  var fb = document.querySelector('#filters button[data-f="' + e.cat + '"]');
+  if(fb && !fb.classList.contains('on')) fb.click(); else renderLibrary();
+  var f = installFiche(e), card = libCard(title);
+  if(f){ openGuideFiche(LIB_FICHE[e.t.fr][0], f.gi, f.pi, card); return; }
+  if(!card) return;
+  card.classList.remove('flash'); void card.offsetWidth; card.classList.add('flash');
+  card.scrollIntoView({behavior:'smooth', block:'center'});
+}
 function machDocs(m){ var d=I18N[lang],out=[];
   if(m.s&&typeof SCHEMAS!=='undefined'&&SCHEMAS[m.s]){ if(SCHEMAS[m.s].water)out.push({a:'water',l:d['chip.water'],k:m.s}); if(SCHEMAS[m.s].elec)out.push({a:'elec',l:d['chip.elec'],k:m.s}); }
   if(m.p&&typeof SPAREPARTS!=='undefined'&&SPAREPARTS[m.p]) out.push({a:'parts',l:d['chip.parts'],k:m.p});
@@ -3150,7 +3190,7 @@ function renderMachines(){ var root=document.getElementById('machinePicker'); if
   function list(arr,isBox){ var h=''; arr.forEach(function(m){ var docs=machDocs(m);
       var chips=docs.map(function(c){return '<a class="mchip" data-a="'+c.a+'" data-k="'+encodeURIComponent(c.k)+'">'+c.l+'</a>';});
       if(isBox){ chips.push('<a class="mchip" data-a="maint">'+d['chip.maint']+'</a>'); chips.push('<a class="mchip" data-a="bec">'+d['chip.bec']+'</a>'); }
-      var tu=tutUrl(m.tut); if(tu) chips.push('<a class="mchip mchip-t" data-a="tuto" data-u="'+encodeURIComponent(tu)+'">'+d['chip.tuto']+'</a>');
+      if(hasTuto(m.tut)) chips.push('<a class="mchip mchip-t" data-a="tuto" data-t="'+encodeURIComponent(m.tut)+'">'+d['chip.tuto']+'</a>');
       var ph=refImg(m.ref);
       h+='<div class="mach-row">'
         +(ph?'<span class="mach-ph"><img loading="lazy" alt="" src="'+ph+'"></span>':'<span class="mach-ph"></span>')
@@ -3165,7 +3205,7 @@ function renderMachines(){ var root=document.getElementById('machinePicker'); if
     else if(a==='tech') openTechSheet(k,productLabel(k)+' — '+dd['schema.tech']);
     else if(a==='maint') showTab('#maintenance');
     else if(a==='bec') showTab('#beconnect');
-    else if(a==='tuto'){ if(b.dataset.u) window.open(decodeURIComponent(b.dataset.u),'_blank'); } }); }); }
+    else if(a==='tuto'){ if(b.dataset.t) openLibTuto(decodeURIComponent(b.dataset.t)); } }); }); }
 /* ============ SIGNALER / SUGGÉRER ============ */
 var fbKind = 'bug', fbBusy = false;
 
