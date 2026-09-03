@@ -27,8 +27,18 @@ ne donnent pas la même vue du guide :
 
 | Mot de passe | Qui | Ce qu'il voit |
 |---|---|---|
-| `AQTiV DUO` | interne BE WTR | le hub entier : tutoriels, schémas, pièces, **tickets de réparation** et **« Signaler / suggérer »** |
-| `AQTiV ONE` | distributeur | le hub **sans** les tickets de réparation ni « Signaler / suggérer » |
+| `AQTiV DUO` | interne BE WTR | le hub entier : tutoriels, schémas, pièces, **tickets de réparation**, **« Signaler / suggérer »** et **« À compléter »** |
+| `AQTiV ONE` | distributeur | le hub **sans** ces trois onglets |
+
+Les trois onglets retirés au distributeur relèvent du travail interne : les
+tickets de réparation, le formulaire « Signaler / suggérer », et « À
+compléter » — le pense-bête qui nomme ce qui manque encore au guide.
+
+La liste fait foi en un seul endroit, `ROLE_SECT` dans `index.html` ; les
+règles CSS désignent les mêmes cibles, et le menu, le tiroir du téléphone,
+l'index de recherche et `showTab` s'y règlent tous. Ajouter un onglet réservé
+tient donc en une entrée de plus dans `ROLE_SECT` et une ligne de plus dans le
+sélecteur `body.role-dist`.
 
 Le distributeur n'est pas seulement privé de l'affichage : son mot de passe
 n'est **jamais** déposé sous `bewtr_claims_pass`, donc aucune requête ne part
