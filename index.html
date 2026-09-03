@@ -351,7 +351,11 @@
   .note{background:var(--orange-soft);border:1px solid #ffd9c7;border-radius:12px;padding:14px 16px;font-size:13.5px;color:#8a3d18}
   .note b{color:#6f2f10}
   .callout{background:#eef6ff;border:1px solid #cfe4ff;border-radius:12px;padding:14px 16px;font-size:13.5px;color:#204b7a;line-height:1.55}
-  footer{border-top:1px solid var(--line);padding:22px 46px;color:var(--ink-soft);font-size:12.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  /* Le pied de page ne porte plus que la marque : la provenance des documents
+     et la mention d'usage interne se lisaient comme un tampon de photocopie. */
+  footer{border-top:1px solid var(--line);padding:26px 46px;display:flex;justify-content:center}
+  .foot-mark{font-weight:800;font-size:13px;letter-spacing:2.4px;color:var(--ink-soft);opacity:.55}
+  .foot-mark .tm{font-size:8px;vertical-align:super;letter-spacing:0}
   .hidden{display:none !important}
   .empty{padding:30px;text-align:center;color:var(--ink-soft);font-size:14px}
   .start{background:linear-gradient(120deg,#fff6f1,#fff);border:1px solid #ffd9c7;border-left:4px solid var(--orange);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 24px;margin-bottom:30px}
@@ -1515,8 +1519,7 @@
     </div>
 
     <footer>
-      <span data-i18n="foot.l"></span>
-      <span data-i18n="foot.r"></span>
+      <span class="foot-mark">BE WTR<span class="tm">™</span></span>
     </footer>
   <button id="catBtn" class="cat-btn" aria-label="Categories">☰</button>
       <div id="catPanel" class="cat-panel"></div>
@@ -1601,8 +1604,6 @@ const I18N = {
     "empty":"Aucun tuto ne correspond à votre recherche.",
     "type.pdf":"Guide PDF","type.yt":"Vidéo YouTube","type.soon":"Bientôt disponible","tut.word":"Tutoriel","soon.badge":"Bientôt",
     "filter.all":"Tout","filter.install":"Installation","filter.maintenance":"Maintenance","filter.troubleshoot":"Dépannage","filter.measure":"Mesures & tests","filter.tips":"Astuces techniques","filter.config":"Configuration",
-    "foot.l":"BE WTR — Guide Technicien · Compilé depuis le Manuel technique Rev06, les Bonnes pratiques distributeurs & le Sommaire technicien",
-    "foot.r":"Usage interne — pour les techniciens BE WTR formés",
     "s1.t":"Vue d'ensemble","s1.sub":"Ce qu'est un système BE WTR et ce qui est livré à chaque installation.",
     "s1.body":`<div class="card"><h3>Rôle & usage prévu</h3><p class="muted small">Le système délivre de l'eau <b>plate</b> et <b>pétillante</b> filtrée fraîche. Les taps AQTiV Combi & Combi H délivrent en plus de l'eau du réseau non filtrée, tempérée/chaude. Conçu pour un usage <b>intérieur uniquement</b>, installé et entretenu par des techniciens qualifiés et formés BE WTR.</p><div class="callout small"><b>Conditions d'utilisation :</b> système prévu pour une température ambiante de <b>5 °C à 30 °C</b>, eau entre <b>5 °C et 35 °C</b>, à l'abri du soleil et des intempéries. En dessous → risque de <b>gel et de fuite</b>. Au-dessus → <b>vieillissement prématuré</b> et baisse des performances.</div></div>
     <div class="card"><h4>À prendre à chaque installation</h4><ul class="small"><li>Le système</li><li>La BOX (câble électrique fourni séparément)</li><li>Le BE CONNECT (tête de filtre connectée)</li><li>Le filtre</li><li>Le réducteur de pression (inclus dans les taps AQTiV, sinon fourni séparément)</li><li>Le kit de maintenance réutilisable</li><li>Sticker BE WTR + sticker Hotline (si contrat BE WTR)</li><li>Bouteilles de CO₂ (quantité selon contrat)</li></ul></div>`,
@@ -1729,8 +1730,6 @@ const I18N = {
     "empty":"No tutorial matches your search.",
     "type.pdf":"PDF guide","type.yt":"YouTube video","type.soon":"Coming soon","tut.word":"Tutorial","soon.badge":"Coming soon",
     "filter.all":"All","filter.install":"Installation","filter.maintenance":"Maintenance","filter.troubleshoot":"Troubleshooting","filter.measure":"Measures & tests","filter.tips":"Technical tips","filter.config":"Configuration",
-    "foot.l":"BE WTR — Technician Guide · Compiled from Technical Manual Rev06, Distributor Best Practices & Technician Index",
-    "foot.r":"Internal use — for trained BE WTR technicians",
     "s1.t":"System overview","s1.sub":"What a BE WTR system is and what ships in every install.",
     "s1.body":`<div class="card"><h3>Purpose & intended use</h3><p class="muted small">The system delivers filtered fresh <b>still</b> and <b>sparkling</b> water. AQTiV Combi & Combi H taps additionally deliver mixed ambient / warm, non-filtered tap water. Designed for <b>indoor use only</b>, installed and maintained by qualified, BE&nbsp;WTR-trained technicians.</p><div class="callout small"><b>Operating conditions:</b> the system is designed for an ambient temperature of <b>5 °C to 30 °C</b>, water between <b>5 °C and 35 °C</b>, away from sunlight and weather. Below → risk of <b>freezing and leaks</b>. Above → <b>premature ageing</b> and reduced performance.</div></div>
     <div class="card"><h4>To bring to every installation</h4><ul class="small"><li>The system</li><li>The BOX (electrical cable supplied separately)</li><li>BE CONNECT (connected filter head)</li><li>Filter</li><li>Pressure reducer (included in AQTiV taps, otherwise supplied separately)</li><li>Reusable maintenance kit</li><li>BE WTR sticker + Hotline sticker (if BE WTR contract)</li><li>CO₂ bottles (quantity per contract)</li></ul></div>`,
@@ -1857,8 +1856,6 @@ const I18N = {
     "empty":"Kein Tutorial passt zu Ihrer Suche.",
     "type.pdf":"PDF-Anleitung","type.yt":"YouTube-Video","type.soon":"Demnächst","tut.word":"Tutorial","soon.badge":"Demnächst",
     "filter.all":"Alle","filter.install":"Installation","filter.maintenance":"Wartung","filter.troubleshoot":"Fehlerbehebung","filter.measure":"Messungen & Tests","filter.tips":"Technik-Tipps","filter.config":"Konfiguration",
-    "foot.l":"BE WTR — Techniker-Leitfaden · Zusammengestellt aus Technisches Handbuch Rev06, Distributor-Best-Practices & Techniker-Index",
-    "foot.r":"Interner Gebrauch — für geschulte BE WTR-Techniker",
     "s1.t":"Systemübersicht","s1.sub":"Was ein BE WTR-System ist und was bei jeder Installation geliefert wird.",
     "s1.body":`<div class="card"><h3>Zweck & bestimmungsgemäße Verwendung</h3><p class="muted small">Das System liefert gefiltertes frisches <b>Still-</b> und <b>Sprudelwasser</b>. AQTiV Combi & Combi H Zapfhähne liefern zusätzlich ungefiltertes, temperiertes/warmes Leitungswasser. Nur für den <b>Innenbereich</b>, installiert und gewartet von qualifizierten, BE&nbsp;WTR-geschulten Technikern.</p><div class="callout small"><b>Betriebsbedingungen:</b> Das System ist für eine Umgebungstemperatur von <b>5 °C bis 30 °C</b> ausgelegt, Wasser zwischen <b>5 °C und 35 °C</b>, vor Sonne und Witterung geschützt. Darunter → Gefahr von <b>Frost und Leckagen</b>. Darüber → <b>vorzeitige Alterung</b> und Leistungsabfall.</div></div>
     <div class="card"><h4>Für jede Installation mitnehmen</h4><ul class="small"><li>Das System</li><li>Die BOX (Stromkabel separat geliefert)</li><li>BE CONNECT (vernetzter Filterkopf)</li><li>Filter</li><li>Druckminderer (in AQTiV-Zapfhähnen enthalten, sonst separat geliefert)</li><li>Wiederverwendbares Wartungskit</li><li>BE WTR-Sticker + Hotline-Sticker (bei BE WTR-Vertrag)</li><li>CO₂-Flaschen (Menge laut Vertrag)</li></ul></div>`,
