@@ -26,6 +26,19 @@
   body.ticket-only .hsearch,
   body.ticket-only #clRefresh,
   body.ticket-only #clXls{display:none}
+  /* Mot de passe distributeur : le hub s'ouvre en entier — tutoriels,
+     schémas, pièces — sauf ce qui appartient au travail interne de BE WTR.
+     Les tickets de réparation et le formulaire « Signaler / suggérer »
+     disparaissent du menu, de l'accueil et de la recherche. Voir la classe
+     « role-dist » et la garde d'accès plus bas. */
+  body.role-dist .nav-cl,
+  body.role-dist .nav-fb,
+  body.role-dist .home-card[href="#feedback"],
+  body.role-dist #claims,
+  body.role-dist #feedback{display:none !important}
+  /* Le bouton « Ticket » des vues éclatées mène à la plateforme : il part
+     avec elle, sinon il ouvrirait un onglet que le distributeur ne voit pas. */
+  body.role-dist .sp-ticket{display:none}
   /* grid items default to min-width:auto, which lets wide content stretch the page past the viewport */
   .shell>*{min-width:0}
   aside{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;background:#fff;border-right:1px solid var(--line);padding:26px 18px;}
@@ -60,6 +73,11 @@
   .set-seg button{border:none;background:transparent;color:var(--ink-soft);font-size:12.5px;font-weight:700;padding:6px 13px;border-radius:999px;cursor:pointer;transition:.15s;letter-spacing:.3px}
   .set-seg button:hover{color:var(--ink)}
   .set-seg button.on{background:var(--orange);color:#fff}
+  .set-panel .set-who{margin:0;font-size:12.5px;color:var(--ink);font-weight:600}
+  .set-out{width:100%;border:1px solid var(--line);background:#f6f8fa;color:var(--ink-soft);
+    font:inherit;font-size:12.5px;font-weight:700;padding:8px 13px;border-radius:999px;
+    cursor:pointer;transition:.15s;letter-spacing:.3px}
+  .set-out:hover{border-color:var(--orange);background:var(--orange-soft);color:var(--orange)}
   .lay-caps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px;text-align:left}
   .lay-caps>div{background:#fafbfc;border:1px solid var(--line);border-radius:10px;padding:11px 13px}
   .lay-caps b{display:block;font-size:13px;margin-bottom:4px;color:var(--ink)}
@@ -805,10 +823,19 @@
 <body class="gate-locked">
 <!-- ============ ÉCRAN DE VERROUILLAGE ============
      Le hub n'est visible qu'après saisie du mot de passe d'accès.
-     GATE_HASH = SHA-256 du mot de passe normalisé (trim, espaces réduits, majuscules).
-     Pour changer le mot de passe :
+
+     Deux mots de passe, deux vues du même hub :
+       « AQTiV DUO » — interne BE WTR : le hub entier, tickets de réparation
+                       et formulaire « Signaler / suggérer » compris ;
+       « AQTiV ONE » — distributeur : les tutoriels, les schémas, les pièces,
+                       mais ni tickets ni « Signaler / suggérer ».
+     Le rôle du distributeur ne fait pas que masquer : son mot de passe n'est
+     pas déposé pour la plateforme Supabase, qui reste donc fermée à clé.
+
+     Chaque GATE_ROLES[i].hash = SHA-256 du mot de passe normalisé
+     (trim, espaces réduits, majuscules). Pour changer un mot de passe :
        printf '%s' "NOUVEAU MOT" | sha256sum
-     puis coller la valeur dans GATE_HASH ci-dessous.
+     puis coller la valeur dans le hash correspondant ci-dessous.
      ------------------------------------------------------------------ -->
 <div class="gate" id="gate">
   <div class="gate-card" id="gateCard">
@@ -826,13 +853,39 @@
 </div>
 <script>
 (function(){
-  var GATE_HASH = "95f6796b8fc04a72a55a4c74f7a84ae467d52bf0201a866432894859dfa509b1";
+  /* Un mot de passe, un rôle. « claims » dit si le porteur a droit aux
+     tickets de réparation et au formulaire « Signaler / suggérer ». */
+  var GATE_ROLES = [
+    { role:"internal", claims:true,  hash:"95f6796b8fc04a72a55a4c74f7a84ae467d52bf0201a866432894859dfa509b1" }, /* AQTiV DUO */
+    { role:"dist",     claims:false, hash:"073cba9a80e290c1a5e6353b65094feebafaa6b4d7d61f7d6ce2af9e1fb16559" }  /* AQTiV ONE */
+  ];
   var STORE_KEY = "bewtr_gate_ok";
-  /* Ce mot de passe ouvre aussi la plateforme des tickets : elle n'a plus de
-     phrase à elle. On le dépose sous la clé que lit le bloc Claims, qui
-     l'enverra à Supabase à l'ouverture (voir clAutoUnlock). Les prix d'achat
-     gardent, eux, la phrase « commande ». */
+  /* Le mot de passe interne ouvre aussi la plateforme des tickets : elle n'a
+     plus de phrase à elle. On le dépose sous la clé que lit le bloc Claims,
+     qui l'enverra à Supabase à l'ouverture (voir clAutoUnlock). Les prix
+     d'achat gardent, eux, la phrase « commande ».
+     Le distributeur, lui, ne le dépose pas : sans phrase, aucune requête ne
+     part vers Supabase — le masquage n'est pas la seule barrière. */
   var CLAIMS_PASS_KEY = "bewtr_claims_pass";
+
+  /* Rôle du visiteur, lu par le reste de la page (menu, recherche, onglets).
+     Défaut prudent : tant que la garde n'a rien validé, pas de tickets. */
+  window.__hubRole = null;
+  window.__hubClaims = false;
+
+  /* La garde tranche parfois de façon différée — le hash du mot de passe
+     mémorisé est asynchrone — alors que le bloc Claims, lui, s'exécute à la
+     fin du script. Il attend donc cette promesse au lieu de partir avant que
+     le rôle soit connu, sans quoi un onglet réservé s'ouvrirait le temps d'un
+     battement. Elle se tient qu'on ouvre ou qu'on demande le mot de passe. */
+  var gateDone;
+  window.__hubGateReady = new Promise(function(res){ gateDone = res; });
+  function gateSettled(){ if(gateDone){ gateDone(); gateDone = null; } }
+
+  function roleFor(hash){
+    for(var i=0;i<GATE_ROLES.length;i++) if(GATE_ROLES[i].hash === hash) return GATE_ROLES[i];
+    return null;
+  }
   var gate = document.getElementById("gate");
   var card = document.getElementById("gateCard");
   var form = document.getElementById("gateForm");
@@ -851,16 +904,32 @@
     });
   }
 
-  function unlock(pass){
-    if(pass){ try{ localStorage.setItem(CLAIMS_PASS_KEY, pass); }catch(e){} }
+  function unlock(pass, entry){
+    /* Un distributeur n'a rien à faire dans la plateforme des tickets : son
+       mot de passe n'y est pas déposé, et une phrase laissée par un passage
+       interne sur le même appareil est effacée. */
+    var claims = !!(entry && entry.claims);
+    window.__hubRole = entry ? entry.role : null;
+    window.__hubClaims = claims;
+    if(entry && !claims) document.body.classList.add("role-dist");
+    if(pass && claims){ try{ localStorage.setItem(CLAIMS_PASS_KEY, pass); }catch(e){} }
+    if(entry && !claims){ try{ localStorage.removeItem(CLAIMS_PASS_KEY); }catch(e){} }
     document.body.classList.remove("gate-locked");
     if(gate && gate.parentNode) gate.parentNode.removeChild(gate);
     /* le hub a été construit pendant le verrouillage : on remet l'onglet en place */
     try{ if(typeof showTab === "function") showTab(location.hash); }catch(e){}
-    /* mot de passe saisi à l'instant : la plateforme tickets s'ouvre sans
-       recharger la page. Au chargement, la fonction n'existe pas encore —
-       le bloc Claims l'appelle lui-même en fin de script. */
-    try{ if(pass && typeof clAutoUnlock === "function") clAutoUnlock(); }catch(e){}
+    /* le panneau des réglages nomme la session et offre d'en sortir, et le
+       tiroir du téléphone se refait sur le menu que le rôle vient de fixer */
+    try{ if(typeof renderSession === "function") renderSession(); }catch(e){}
+    try{ if(typeof renderCatMenu === "function") renderCatMenu(); }catch(e){}
+    /* Le rôle est fixé : le bloc Claims, qui attend ce signal, peut décider
+       d'ouvrir la plateforme ou de la laisser fermée. Au premier chargement
+       il n'est pas encore déclaré — d'où la promesse. Mais elle s'est déjà
+       tenue quand la garde a demandé le mot de passe : celui qui le saisit à
+       l'instant a besoin de l'appel direct, sans quoi la plateforme
+       n'ouvrirait qu'au rechargement. clAutoUnlock ne s'exécute qu'une fois. */
+    gateSettled();
+    try{ if(claims && typeof clAutoUnlock === "function") clAutoUnlock(); }catch(e){}
   }
 
   function fail(msg){
@@ -892,12 +961,14 @@
   function ask(){
     gate.style.visibility = "";
     input.focus();
+    gateSettled();          // rôle connu : aucun. Le bloc Claims peut renoncer.
   }
 
   if(stored){
     gate.style.visibility = "hidden";   // pas de garde qui clignote à chaque visite
     sha256(normalize(stored)).then(function(h){
-      if(h === GATE_HASH) return unlock(normalize(stored));
+      var entry = roleFor(h);
+      if(entry) return unlock(normalize(stored), entry);
       try{ localStorage.removeItem(STORE_KEY); }catch(e){}
       ask();
     }, ask);
@@ -908,9 +979,10 @@
     err.classList.remove("on");
     var pass = normalize(input.value);
     sha256(pass).then(function(h){
-      if(h !== GATE_HASH) return fail();
+      var entry = roleFor(h);
+      if(!entry) return fail();
       try{ localStorage.setItem(STORE_KEY, pass); }catch(e){}
-      unlock(pass);
+      unlock(pass, entry);
     }, function(){
       fail("Navigateur non compatible : ouvrez le site en HTTPS.");
     });
@@ -960,6 +1032,14 @@
           </div>
           <div class="set-row"><span class="set-lbl" data-i18n="set.size"></span>
             <div class="set-seg"><button id="fsMinus">A−</button><button id="fsReset">A</button><button id="fsPlus">A+</button></div>
+          </div>
+          <!-- Le hub retient le mot de passe par appareil. Sur un poste
+               partagé, un distributeur héritait donc de la session d'un
+               interne, tickets compris. Ce bouton rend la main à la garde. -->
+          <div class="set-row" id="setSessionRow" hidden>
+            <span class="set-lbl" data-i18n="set.session"></span>
+            <div class="set-who" id="setWho"></div>
+            <button class="set-out" id="setSignout" type="button" data-i18n="set.signout"></button>
           </div>
         </div>
       </div>
@@ -1497,6 +1577,10 @@ const I18N = {
     "spare.none":"Aucune pièce listée pour ce produit.",
     "set.lang":"Langue",
     "set.size":"Taille du texte",
+    "set.session":"Session",
+    "set.signout":"Se déconnecter",
+    "set.who.internal":"Interne BE WTR",
+    "set.who.dist":"Distributeur",
     "nav.safety":"Sécurité",
     "s14.t":"Hygiène & sécurité",
     "s14.sub":"Règles d'hygiène, sécurité électrique et sécurité CO₂ — à respecter sur chaque intervention.",
@@ -1621,6 +1705,10 @@ const I18N = {
     "spare.none":"No parts listed for this product.",
     "set.lang":"Language",
     "set.size":"Text size",
+    "set.session":"Session",
+    "set.signout":"Sign out",
+    "set.who.internal":"BE WTR internal",
+    "set.who.dist":"Distributor",
     "nav.safety":"Safety",
     "s14.t":"Hygiene & safety",
     "s14.sub":"Hygiene rules, electrical safety and CO₂ safety — to follow on every visit.",
@@ -1745,6 +1833,10 @@ const I18N = {
     "spare.none":"Keine Teile für dieses Produkt gelistet.",
     "set.lang":"Sprache",
     "set.size":"Textgröße",
+    "set.session":"Sitzung",
+    "set.signout":"Abmelden",
+    "set.who.internal":"BE WTR intern",
+    "set.who.dist":"Händler",
     "nav.safety":"Sicherheit",
     "s14.t":"Hygiene & Sicherheit",
     "s14.sub":"Hygieneregeln, elektrische Sicherheit und CO₂-Sicherheit — bei jedem Einsatz zu beachten.",
@@ -1819,6 +1911,8 @@ function applyI18n(){
   document.querySelectorAll("#filters button").forEach(b=>{ b.textContent = d["filter."+b.dataset.f]; });
   // lang buttons
   document.querySelectorAll("#lang button").forEach(b=> b.classList.toggle("on", b.dataset.lang===lang));
+  // « Interne BE WTR » / « Distributeur » suit la langue comme le reste
+  try{ if(typeof renderSession==="function") renderSession(); }catch(e){}
   // Les désignations de pièces suivent la langue : changer de langue doit
   // redessiner tout ce qui en affiche, pas seulement les libellés fixes.
   try{ if(typeof clApplyI18n==="function"){
@@ -2855,7 +2949,18 @@ function renderCatMenu(){
   const panel=document.getElementById('catPanel'); if(!panel) return;
   // data-cl suit : sur téléphone aussi, « Tickets de réparation » ouvre le
   // formulaire, pas le dernier onglet consulté
-  panel.innerHTML=[...document.querySelectorAll('#nav a')].map(function(a){
+  //
+  // Le tiroir recopie des liens nus : ni la classe ni l'attribut « hidden »
+  // ne le suivent, et ce qui est caché du menu latéral s'y rouvrirait — les
+  // onglets que le distributeur ne doit pas voir, et « Tickets de
+  // réparation » avant que la phrase soit saisie. On écarte donc ici ce que
+  // le menu latéral ne montre pas. clRevealNav redessine le tiroir quand la
+  // plateforme s'ouvre.
+  panel.innerHTML=[...document.querySelectorAll('#nav a')].filter(function(a){
+    if(a.hidden) return false;
+    var id=(a.getAttribute('href')||'').replace('#','');
+    return !(typeof sectHidden==='function' && sectHidden(id));
+  }).map(function(a){
     var cl=a.getAttribute('data-cl');
     return '<a href="'+a.getAttribute('href')+'"'+(cl?' data-cl="'+cl+'"':'')+'>'+a.textContent.trim()+'</a>';
   }).join('');
@@ -2868,6 +2973,38 @@ function renderCatMenu(){
     document.addEventListener('click',e=>{ if(panel.classList.contains('open')&&!panel.contains(e.target)&&!btn.contains(e.target)) panel.classList.remove('open'); });
   }
 })();
+
+/* ------------------------------------------------------------- session
+   Le mot de passe est retenu par appareil : sans ce bouton, un poste
+   partagé garderait la session du premier venu, et un distributeur
+   hériterait des tickets d'un interne. Se déconnecter efface ce que la
+   garde a déposé — le mot de passe, la phrase des tickets, le mode
+   réparateur — et rend la page à l'écran de garde. La langue et la taille
+   du texte restent : ce sont des préférences, pas une identité. */
+function signOut(){
+  ['bewtr_gate_ok','bewtr_claims_pass'].forEach(function(k){
+    try{ localStorage.removeItem(k); }catch(e){}
+  });
+  try{ sessionStorage.removeItem('bewtr_claims_repair'); }catch(e){}
+  /* Rechargement plutôt que retrait à la main : la plateforme des tickets
+     garde en mémoire des claims et des prix qu'un simple masquage
+     laisserait derrière lui. On repart de l'accueil, sans quoi un « #claims »
+     resté dans l'adresse rouvrirait l'onglet au visiteur suivant. */
+  try{ location.replace(location.pathname + location.search + '#home'); }catch(e){}
+  location.reload();
+}
+
+/* La ligne n'apparaît que pour qui s'est identifié : le lien externe
+   « #ticket » n'a pas de session à quitter. */
+function renderSession(){
+  var row=document.getElementById('setSessionRow'), who=document.getElementById('setWho');
+  if(!row||!who) return;
+  var role=window.__hubRole;
+  if(!role){ row.hidden=true; return; }
+  row.hidden=false;
+  var d=I18N[lang]||{};
+  who.textContent=d['set.who.'+role]||'';
+}
 
 var fontScale=1, _fsBase=null;
 try{var _fs=parseFloat(localStorage.getItem('bewtr_fs')); if(_fs&&_fs>=0.85&&_fs<=1.7) fontScale=_fs;}catch(e){}
@@ -2883,6 +3020,8 @@ function applyFontScale(){
   if(plus) plus.addEventListener('click',function(){fontScale=Math.min(1.7,+(fontScale+0.1).toFixed(2));applyFontScale();});
   if(minus) minus.addEventListener('click',function(){fontScale=Math.max(0.85,+(fontScale-0.1).toFixed(2));applyFontScale();});
   if(reset) reset.addEventListener('click',function(){fontScale=1;applyFontScale();});
+  var so=document.getElementById('setSignout');
+  if(so) so.addEventListener('click',signOut);
   var sb=document.getElementById('setBtn'),sp=document.getElementById('setPanel'),sc=document.getElementById('setTab');
   if(sb&&sp&&sc){ sb.addEventListener('click',function(e){e.stopPropagation();sp.classList.toggle('open');});
     document.addEventListener('click',function(e){ if(sp.classList.contains('open')&&!sc.contains(e.target)) sp.classList.remove('open'); }); }
@@ -3173,7 +3312,7 @@ function fbSend(payload){
 // ---- global search ----
 var _sidx=null;
 function buildSearchIndex(){ var idx=[];
-  SECT_IDS.forEach(function(id){ var el=document.getElementById(id); if(!el)return; var a=document.querySelector('#nav a[href="#'+id+'"]'); var lab=a?a.textContent.trim():id;
+  SECT_IDS.forEach(function(id){ if(sectHidden(id))return; var el=document.getElementById(id); if(!el)return; var a=document.querySelector('#nav a[href="#'+id+'"]'); var lab=a?a.textContent.trim():id;
     idx.push({type:'sec',id:id,label:lab,text:(el.innerText||el.textContent||'').toLowerCase()}); });
   if(typeof SPAREPARTS!=='undefined') Object.keys(SPAREPARTS).forEach(function(p){ SPAREPARTS[p].forEach(function(x){ if(x.sep)return; idx.push({type:'part',product:p,ref:x.ref,name:x.name,label:x.ref+' — '+(typeof partName==='function'?partName(x.name):x.name),text:(x.ref+' '+x.name+' '+(typeof partName==='function'?partName(x.name):'')).toLowerCase()}); }); });
   document.querySelectorAll('#tutorials .tut:not([data-gf])').forEach(function(t){ var tt=t.querySelector('.tt'); if(tt) idx.push({type:'tuto',label:tt.textContent.trim(),text:tt.textContent.toLowerCase()}); });
@@ -3214,6 +3353,13 @@ function jumpTo(id){
   setTimeout(function(){ he.style.scrollBehavior=prev||''; },0);
 }
 var SECT_IDS=['home','overview','beconnect','install','settings','maintenance','safety','troubleshoot','experience','tutorials','schemas','glossary','gaps','feedback','claims'];
+/* Onglets réservés à l'interne. Le distributeur qui tape l'adresse à la main,
+   ou qui garde un vieux lien, retombe sur l'accueil plutôt que sur un onglet
+   vide. Le CSS les cache déjà : ceci ferme la porte de derrière. */
+var ROLE_SECT=['feedback','claims'];
+function sectHidden(id){
+  return ROLE_SECT.indexOf(id)>=0 && document.body.classList.contains('role-dist');
+}
 function showTab(hash){
   // Lien direct donné aux techniciens : ouvre l'onglet claims et, une fois
   // la phrase saisie, se pose sur le formulaire au lieu du tableau.
@@ -3226,7 +3372,7 @@ function showTab(hash){
     window.__clLanding = "new";
   }
   var id=(hash||'#home').replace('#','');
-  if(SECT_IDS.indexOf(id)<0) id='home';
+  if(SECT_IDS.indexOf(id)<0 || sectHidden(id)) id='home';
   document.querySelectorAll('.wrap>section').forEach(function(s){ s.classList.toggle('tab-on', s.id===id); });
   document.querySelectorAll('#nav a').forEach(function(a){ a.classList.toggle('active', a.getAttribute('href')==='#'+id); });
   var cp=document.getElementById('catPanel'); if(cp) cp.classList.remove('open');
@@ -5825,11 +5971,23 @@ async function clOpenSubmitOnly(){
 /**
  * Ouvre la plateforme avec le mot de passe du hub, sans rien redemander.
  *
- * Qui a franchi l'écran de garde est un technicien BE WTR : les tickets lui
- * sont ouverts d'office. Seul le bulletin de commande — références
- * fournisseur et prix d'achat — garde sa propre phrase.
+ * Qui a franchi l'écran de garde avec le mot de passe interne est un
+ * technicien BE WTR : les tickets lui sont ouverts d'office. Seul le bulletin
+ * de commande — références fournisseur et prix d'achat — garde sa propre
+ * phrase. Le distributeur, lui, n'entre pas ici : son rôle n'accorde pas les
+ * tickets, et la garde ne lui a laissé aucune phrase à présenter.
  */
+let clAutoRan = false;    // la garde et la fin du script appellent toutes deux
 async function clAutoUnlock(){
+  // Il faut un droit accordé par la garde. Le distributeur ne l'a pas : rien
+  // ne s'ouvre, rien ne part vers Supabase. Le lien externe #ticket, lui,
+  // garde son dépôt — il n'a jamais eu de mot de passe.
+  // On sort sans rien retenir : la garde peut encore accorder le droit, et
+  // c'est ce second appel qui ouvrira la plateforme.
+  if(!window.__hubClaims && !window.__clTicketOnly) return;
+  if(clAutoRan) return;
+  clAutoRan = true;
+
   let pass = null;
   try{ pass = localStorage.getItem(CL_PASS_KEY); }catch(e){}
 
@@ -6098,6 +6256,7 @@ function clInit(){
    L'onglet claims étant protégé, la pièce choisie est mise de côté et
    n'est appliquée qu'une fois la phrase de passe saisie. */
 function clTicketFor(ref, machine){
+  if(document.body.classList.contains("role-dist")) return;
   clState.prefill = { ref: ref, machine: machine };
   const lb = document.getElementById("imgbox");
   if(lb){ lb.style.display = "none"; try{ unlockScroll(); }catch(e){} }
@@ -6181,12 +6340,22 @@ function clOpenSpareFor(product, target){
 
 /** L'onglet reste hors du menu tant que la phrase n'a pas été saisie. */
 function clRevealNav(){
+  if(document.body.classList.contains("role-dist")) return;
   const a = document.querySelector('#nav a[href="#claims"]');
   if(a) a.hidden = false;
+  // le tiroir du téléphone est une copie du menu : il se refait avec lui
+  try{ if(typeof renderCatMenu === "function") renderCatMenu(); }catch(e){}
 }
 
 clInit();
-clAutoUnlock();
+// La garde tranche du rôle, parfois de façon différée : on attend son verdict
+// avant d'ouvrir quoi que ce soit, et pour nommer la session dans le panneau
+// des réglages.
+Promise.resolve(window.__hubGateReady).then(function(){
+  try{ renderSession(); }catch(e){}
+  try{ renderCatMenu(); }catch(e){}
+  return clAutoUnlock();
+});
 
 </script>
 </body>

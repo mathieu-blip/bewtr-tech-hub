@@ -20,8 +20,42 @@ première ouverture de l'onglet.
 
 `order` ouvre aussi le niveau `claims` — inutile de saisir les deux.
 
+### Le hub a deux mots de passe, un seul ouvre les tickets
+
+Depuis la mise en place des rôles, l'écran de garde accepte deux phrases, qui
+ne donnent pas la même vue du guide :
+
+| Mot de passe | Qui | Ce qu'il voit |
+|---|---|---|
+| `AQTiV DUO` | interne BE WTR | le hub entier : tutoriels, schémas, pièces, **tickets de réparation** et **« Signaler / suggérer »** |
+| `AQTiV ONE` | distributeur | le hub **sans** les tickets de réparation ni « Signaler / suggérer » |
+
+Le distributeur n'est pas seulement privé de l'affichage : son mot de passe
+n'est **jamais** déposé sous `bewtr_claims_pass`, donc aucune requête ne part
+vers Supabase en son nom. Et même s'il en partait une, la ligne `claims` de
+`hub.secrets` ne porte que `AQTIV DUO` : `hub_auth('AQTIV ONE')` répond non.
+La base reste fermée quoi qu'il arrive au HTML.
+
+Les deux rôles sont déclarés dans `GATE_ROLES`, en tête du script de garde
+d'`index.html` ; l'indicateur `claims` de chaque ligne est ce qui décide.
+
+### Se déconnecter
+
+Le hub retient le mot de passe par appareil. Sur un poste partagé, un
+distributeur héritait donc de la session d'un interne, tickets compris. Le
+panneau des réglages — l'engrenage en haut à droite — porte maintenant une
+ligne **Session** sous la langue et la taille du texte : elle nomme le rôle en
+cours et offre **Se déconnecter**.
+
+Le bouton efface ce que la garde a déposé — `bewtr_gate_ok`,
+`bewtr_claims_pass`, le mode réparateur (`bewtr_claims_repair`) — puis
+recharge la page sur `#home`, garde comprise. La langue et la taille du texte
+survivent : ce sont des préférences, pas une identité. Le lien externe
+`#ticket` n'affiche pas cette ligne — il n'a pas de session à quitter.
+
 Le niveau `claims` n'a plus de phrase à lui : qui a franchi l'écran de garde
-du hub est un technicien BE WTR, les tickets lui sont ouverts d'office. La
+du hub **avec le mot de passe interne** est un technicien BE WTR, les tickets
+lui sont ouverts d'office. La
 garde dépose le mot de passe saisi dans `localStorage`
 (`bewtr_claims_pass`) et le bloc Claims l'envoie aux fonctions Supabase. En
 base, la ligne `claims` porte donc ce mot de passe **normalisé comme
@@ -42,8 +76,10 @@ update hub.secrets
 
 Pour `order`, rien à modifier dans `index.html` : la phrase n'est stockée que
 côté base, sous forme de hash bcrypt. Pour `claims`, la ligne doit rester
-alignée sur le mot de passe du hub : changer l'un demande de rejouer l'autre
-(`GATE_HASH` dans `index.html`, voir `docs/supabase/16-…`).
+alignée sur le mot de passe **interne** du hub : changer l'un demande de
+rejouer l'autre (le hash du rôle `internal` dans `GATE_ROLES`, `index.html`,
+voir `docs/supabase/16-…`). Le mot de passe distributeur, lui, n'a rien à
+faire en base : il n'ouvre aucun niveau.
 
 ---
 
@@ -585,7 +621,7 @@ seul — `order_create` l'a écrit, rien ne le relit.
 
 | À qui | Lien | Mot de passe |
 |---|---|---|
-| Techniciens BE WTR | **https://service.bewtr.com/#claims-new** | celui du hub, une fois par appareil |
+| Techniciens BE WTR | **https://service.bewtr.com/#claims-new** | celui du hub — le mot de passe interne — une fois par appareil |
 | Externes — installateurs, clients, prestataires | **https://service.bewtr.com/#ticket** | **aucun** |
 
 ### Le lien technicien
