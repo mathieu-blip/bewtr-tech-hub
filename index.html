@@ -918,8 +918,10 @@
     if(gate && gate.parentNode) gate.parentNode.removeChild(gate);
     /* le hub a été construit pendant le verrouillage : on remet l'onglet en place */
     try{ if(typeof showTab === "function") showTab(location.hash); }catch(e){}
-    /* le panneau des réglages nomme la session et offre d'en sortir */
+    /* le panneau des réglages nomme la session et offre d'en sortir, et le
+       tiroir du téléphone se refait sur le menu que le rôle vient de fixer */
     try{ if(typeof renderSession === "function") renderSession(); }catch(e){}
+    try{ if(typeof renderCatMenu === "function") renderCatMenu(); }catch(e){}
     /* Le rôle est fixé : le bloc Claims, qui attend ce signal, peut décider
        d'ouvrir la plateforme ou de la laisser fermée. Au premier chargement
        il n'est pas encore déclaré — d'où la promesse. Mais elle s'est déjà
@@ -2947,7 +2949,18 @@ function renderCatMenu(){
   const panel=document.getElementById('catPanel'); if(!panel) return;
   // data-cl suit : sur téléphone aussi, « Tickets de réparation » ouvre le
   // formulaire, pas le dernier onglet consulté
-  panel.innerHTML=[...document.querySelectorAll('#nav a')].map(function(a){
+  //
+  // Le tiroir recopie des liens nus : ni la classe ni l'attribut « hidden »
+  // ne le suivent, et ce qui est caché du menu latéral s'y rouvrirait — les
+  // onglets que le distributeur ne doit pas voir, et « Tickets de
+  // réparation » avant que la phrase soit saisie. On écarte donc ici ce que
+  // le menu latéral ne montre pas. clRevealNav redessine le tiroir quand la
+  // plateforme s'ouvre.
+  panel.innerHTML=[...document.querySelectorAll('#nav a')].filter(function(a){
+    if(a.hidden) return false;
+    var id=(a.getAttribute('href')||'').replace('#','');
+    return !(typeof sectHidden==='function' && sectHidden(id));
+  }).map(function(a){
     var cl=a.getAttribute('data-cl');
     return '<a href="'+a.getAttribute('href')+'"'+(cl?' data-cl="'+cl+'"':'')+'>'+a.textContent.trim()+'</a>';
   }).join('');
@@ -6330,6 +6343,8 @@ function clRevealNav(){
   if(document.body.classList.contains("role-dist")) return;
   const a = document.querySelector('#nav a[href="#claims"]');
   if(a) a.hidden = false;
+  // le tiroir du téléphone est une copie du menu : il se refait avec lui
+  try{ if(typeof renderCatMenu === "function") renderCatMenu(); }catch(e){}
 }
 
 clInit();
@@ -6338,6 +6353,7 @@ clInit();
 // des réglages.
 Promise.resolve(window.__hubGateReady).then(function(){
   try{ renderSession(); }catch(e){}
+  try{ renderCatMenu(); }catch(e){}
   return clAutoUnlock();
 });
 
