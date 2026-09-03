@@ -3147,10 +3147,10 @@ function tilePic(k, ic){
 
 /* Le renvoi « Tutos » du sélecteur de machine mène à la bibliothèque de tutos
    (§8), pas au PDF SharePoint : le tuto pas à pas du portail s'ouvre sur
-   place, et le document d'origine reste à un clic, en tête du tuto sous « À
-   voir aussi ». Un sujet que le portail n'a pas encore repris garde son PDF :
-   sa carte de la bibliothèque s'allume, et c'est elle qui l'ouvre. Un sujet
-   encore « bientôt » n'a rien à montrer : pas de renvoi du tout. */
+   place, et il n'y a plus de PDF derrière — le portail est la source.
+   Un sujet que le portail n'a pas encore repris garde le sien : sa carte de la
+   bibliothèque s'allume, et c'est elle qui l'ouvre. Un sujet encore
+   « bientôt » n'a rien à montrer : pas de renvoi du tout. */
 function tutEntry(title){
   if(!title || typeof tutorials === 'undefined') return null;
   for(var i=0;i<tutorials.length;i++){ var e=tutorials[i]; if(e.t && e.t.fr === title) return e; }
