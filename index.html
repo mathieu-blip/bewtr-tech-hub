@@ -181,6 +181,12 @@
   .tut.disabled{opacity:.55;cursor:default;background:#fafbfc}
   .tut.disabled .ti{background:#c2cbd6 !important}
   .badge-soon{font-size:10px;background:#eef1f4;color:#8b97a5;padding:2px 7px;border-radius:999px;margin-left:auto}
+  /* Un tuto en PDF se lit d'un côté, s'emporte de l'autre : la carte ouvre la
+     visionneuse, la flèche descend le fichier lui-même. */
+  .tut-pair{display:flex;gap:6px;align-items:stretch}
+  .tut-pair .tut{flex:1;min-width:0}
+  .tut-dl{flex:none;width:42px;display:grid;place-items:center;background:var(--orange-soft);border:1px solid #ffd9c7;border-radius:12px;color:var(--orange);font-size:17px;font-weight:700;transition:.15s}
+  .tut-dl:hover{background:var(--orange);border-color:var(--orange);color:#fff;text-decoration:none}
 
   /* ---- Tutos d'installation pas à pas (contenu du portail technicien) ---- */
   .itut-wrap{margin-top:26px}
@@ -308,6 +314,14 @@
   .gf-head .gf-cat{font-size:11px;color:#a4653f;white-space:nowrap}
   .gf-close{border:1px solid #ffd0bb;background:#fff;color:#8a3d18;border-radius:9px;width:30px;height:30px;font:inherit;font-size:14px;line-height:1;cursor:pointer;flex:none}
   .gf-close:hover{background:var(--orange);color:#fff;border-color:var(--orange)}
+  /* Emporter le tuto : « ⤓ » écrit un fichier autonome (photos comprises),
+     « ⎙ » passe par la boîte d'impression du navigateur, qui sait
+     l'enregistrer en PDF. Les deux boutons restent dans l'en-tête collant :
+     on peut emporter le tuto depuis n'importe quelle étape. */
+  .gf-dl{border:1px solid #ffd0bb;background:#fff;color:#8a3d18;border-radius:9px;height:30px;padding:0 10px;font:inherit;font-size:12px;font-weight:600;line-height:1;cursor:pointer;flex:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+  .gf-dl:hover{background:var(--orange);color:#fff;border-color:var(--orange)}
+  .gf-dl[disabled]{opacity:.55;cursor:default;background:#fff;color:#8a3d18;border-color:#ffd0bb}
+  .gf-dl .gf-bic{font-size:14px}
   .gf-panel .itut{padding:14px 16px 4px;max-width:none;margin:0}
   .gf-panel .itut-sec{background:transparent;border:0;border-radius:0;padding:0;margin-bottom:16px}
   .gf-panel .itut-sec+.itut-sec{border-top:1px solid var(--line);padding-top:14px}
@@ -503,6 +517,10 @@
   @media(max-width:760px){
     .gf-head .gf-cat{display:none}
     .gf-head .gf-close{order:-1}
+    /* Le titre passe avant les libellés : les deux boutons se réduisent à
+       leur pictogramme. */
+    .gf-head .gf-btxt{display:none}
+    .gf-dl{padding:0 9px}
   }
   #imgbox .img-close{margin-left:auto;border:none;background:var(--orange-soft);color:var(--orange);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:15px}
   #imgbox .img-scroll{flex:1;overflow:auto;background:#f6f8fa;text-align:center;padding:10px}
@@ -1644,7 +1662,7 @@ const I18N = {
     <div class="card"><h4>5 · BE CONNECT</h4><ul class="small"><li><b>Le QR code</b> — Il ouvre l'interface : compteur de consommation d'eau plate et pétillante, au jour ou au mois, prochaines dates de maintenance et impact écologique du système.</li><li><b>L'interrupteur LED</b> — Aucun voyant : le système est en veille. Blanc fixe : il fonctionne. Blanc clignotant : une distribution est en cours. Jaune : scanner le QR code identifie l'erreur détectée et donne le protocole de remise en service.</li><li><b>L'interface</b> — En faire une présentation rapide avec le client. Elle suit la consommation plate et pétillante, affiche l'impact écologique et l'empreinte carbone, offre une veille programmable — ECO Smart, veille de nuit —, montre les capacités restantes du filtre et du gaz, aide à diagnostiquer certaines pannes, donne accès aux notices, aux prochaines maintenances et aux passages déjà faits, et met en relation avec le service après-vente. Si le système n'est pas encore connecté, faire la démo via la webapp, sans toucher aux réglages ; l'accès est disponible sous 1 h à 72 h selon le réseau.</li></ul></div>
     <div class="card"><h4>6 · Suivi, contact et commandes</h4><ul class="small"><li><b>La fréquence des passages</b> — En général 12 mois en B2C, 6 mois en B2B et en HoReCa. Se référer aux règles locales, qui valent aussi pour ce que le service comprend.</li><li><b>Nous contacter et commander</b> — Une hotline est accessible par QR code dans tous les pays : elle met en relation avec un assistant WhatsApp qui répond à la plupart des questions et, si une intervention est nécessaire, ouvre automatiquement un ticket chez nous. Les commandes passent généralement par la même interface — le client peut commander son gaz directement —, mais vérifier les règles locales, en particulier pour le CO₂.</li></ul></div>
     `,
-    "s8.t":"Bibliothèque de tutos","s8.sub":"Tous les tutoriels existants, organisés et cherchables. Chaque tuto d'installation contient un schéma de raccordement, une vidéo et un tutoriel photo — disponibles en FR / EN / DE.",
+    "s8.t":"Bibliothèque de tutos","s8.sub":"Tous les tutoriels existants, organisés et cherchables. Chaque tuto d'installation contient un schéma de raccordement, une vidéo et un tutoriel photo — disponibles en FR / EN / DE. Chaque tuto s'emporte : ⤓ enregistre le tuto entier, photos comprises, lisible sans réseau ; ⎙ l'imprime ou l'enregistre en PDF.",
     "nav.glossary":"Glossaire & repères",
     "nav.schemas":"Documentation",
     "s11.t":"Schémas par produit — ligne d'eau & électrique",
@@ -1772,7 +1790,7 @@ const I18N = {
     <div class="card"><h4>5 · BE CONNECT</h4><ul class="small"><li><b>The QR code</b> — It opens the interface: a consumption counter for still and sparkling water, daily or monthly, upcoming service dates and the environmental impact of the system.</li><li><b>The LED switch</b> — No light: the system is on standby. Steady white: it is running. Flashing white: water is being dispensed. Yellow: scanning the QR code identifies the fault detected and gives the recommissioning procedure.</li><li><b>The interface</b> — Give the customer a short walkthrough. It tracks still and sparkling consumption, shows the environmental impact and carbon footprint, offers programmable standby — ECO Smart, night standby —, shows the remaining filter and gas capacity, helps diagnose certain faults, gives access to the manuals, to upcoming services and to visits already made, and puts the customer in touch with after-sales. If the system is not connected yet, demo it through the webapp without touching the settings; access comes through in 1 h to 72 h depending on the network.</li></ul></div>
     <div class="card"><h4>6 · Servicing, contact and orders</h4><ul class="small"><li><b>How often servicing takes place</b> — Generally every 12 months for B2C, every 6 months for B2B and HoReCa. Check the local rules, which also apply to what the service covers.</li><li><b>Getting in touch and ordering</b> — A hotline is reachable by QR code in every country: it connects to a WhatsApp assistant that answers most questions and, if a visit is needed, automatically opens a ticket on our side. Orders usually go through the same interface — the customer can order gas directly — but check the local rules, particularly for CO₂.</li></ul></div>
     `,
-    "s8.t":"Tutorial library","s8.sub":"Every existing tutorial, organised and searchable. Each install tutorial includes a connection schema, a video and a photo tutorial — available in FR / EN / DE.",
+    "s8.t":"Tutorial library","s8.sub":"Every existing tutorial, organised and searchable. Each install tutorial includes a connection schema, a video and a photo tutorial — available in FR / EN / DE. Every tutorial travels with you: ⤓ saves the whole tutorial, photos included, readable with no network; ⎙ prints it or saves it as a PDF.",
     "nav.glossary":"Glossary & reference",
     "nav.schemas":"Documentation",
     "s11.t":"Per-product schemas — water line & electrical",
@@ -1900,7 +1918,7 @@ const I18N = {
     <div class="card"><h4>5 · BE CONNECT</h4><ul class="small"><li><b>Der QR-Code</b> — Er öffnet die Oberfläche: Verbrauchszähler für stilles und Sprudelwasser, täglich oder monatlich, nächste Wartungstermine und Ökobilanz des Systems.</li><li><b>Der LED-Schalter</b> — Keine Anzeige: Standby. Weißes Dauerlicht: in Betrieb. Weißes Blinken: laufende Entnahme. Gelb: Das Scannen des QR-Codes identifiziert den erkannten Fehler und liefert die Anleitung zur Wiederinbetriebnahme.</li><li><b>Die Oberfläche</b> — Dem Kunden eine kurze Führung geben. Sie verfolgt den Verbrauch von stillem und Sprudelwasser, zeigt Ökobilanz und CO₂-Fußabdruck, bietet programmierbaren Standby — ECO Smart, Nachtabsenkung —, zeigt die Restkapazität von Filter und Gas, hilft bei der Diagnose bestimmter Störungen, gibt Zugang zu den Anleitungen, zu anstehenden Wartungen und bereits erfolgten Besuchen und stellt die Verbindung zum Kundendienst her. Ist das System noch nicht verbunden, die Demo über die Webapp machen, ohne Einstellungen zu ändern; der Zugang steht je nach Netz in 1 bis 72 Stunden bereit.</li></ul></div>
     <div class="card"><h4>6 · Wartung, Kontakt und Bestellungen</h4><ul class="small"><li><b>Die Wartungsintervalle</b> — In der Regel alle 12 Monate im B2C, alle 6 Monate im B2B und in der HoReCa. Die lokalen Regeln beachten, die auch für den Leistungsumfang gelten.</li><li><b>Kontakt aufnehmen und bestellen</b> — In jedem Land ist eine Hotline über QR-Code erreichbar: Sie verbindet mit einem WhatsApp-Assistenten, der die meisten Fragen beantwortet und bei Bedarf automatisch ein Ticket bei uns anlegt. Bestellungen laufen meist über dieselbe Oberfläche — der Kunde kann sein Gas direkt bestellen —, die lokalen Regeln sind jedoch zu prüfen, besonders bei CO₂.</li></ul></div>
     `,
-    "s8.t":"Tutorial-Bibliothek","s8.sub":"Alle vorhandenen Tutorials, organisiert und durchsuchbar. Jedes Installations-Tutorial enthält ein Anschlussschema, ein Video und ein Foto-Tutorial — verfügbar in FR / EN / DE.",
+    "s8.t":"Tutorial-Bibliothek","s8.sub":"Alle vorhandenen Tutorials, organisiert und durchsuchbar. Jedes Installations-Tutorial enthält ein Anschlussschema, ein Video und ein Foto-Tutorial — verfügbar in FR / EN / DE. Jede Anleitung lässt sich mitnehmen: ⤓ speichert die ganze Anleitung samt Fotos, auch ohne Netz lesbar; ⎙ druckt sie oder speichert sie als PDF.",
     "nav.glossary":"Glossar & Referenz",
     "nav.schemas":"Dokumentation",
     "s11.t":"Schemata je Produkt — Wasserlinie & Elektrik",
@@ -2055,11 +2073,26 @@ function renderLibrary(){
           + `<span class="ext">›</span>`;
         grid.appendChild(b);
       }else{
+        const href = t.url[lang] || t.url.fr;
         const a = document.createElement("a");
         a.className = "tut"; a.dataset.tut = t.t.fr;
-        a.href = (t.url[lang]||t.url.fr); a.target = "_blank"; a.rel = "noopener";
+        a.href = href; a.target = "_blank"; a.rel = "noopener";
         a.innerHTML = `<span class="ti ${typeCls[t.type]}">${typeIc[t.type]}</span><div><div class="tt">${title}</div><div class="ts2">${d["type."+t.type]}</div></div><span class="ext">↗</span>`;
-        grid.appendChild(a);
+        if(t.type === "pdf"){
+          /* Le lien SharePoint ouvre la visionneuse, qui ne sert à rien sans
+             réseau : « ⤓ » descend le fichier lui-même, à côté de la carte. */
+          const pair = document.createElement("div");
+          pair.className = "tut-pair";
+          const dl = document.createElement("a");
+          dl.className = "tut-dl";
+          dl.href = href + (href.indexOf("?") >= 0 ? "&" : "?") + "download=1";
+          dl.target = "_blank"; dl.rel = "noopener";
+          dl.title = d["tut.dlpdf"];
+          dl.setAttribute("aria-label", d["tut.dlpdf"] + " — " + title);
+          dl.textContent = "⤓";
+          pair.appendChild(a); pair.appendChild(dl);
+          grid.appendChild(pair);
+        }else grid.appendChild(a);
       }
     });
     lib.appendChild(wrap);
@@ -2188,7 +2221,22 @@ const ITUT_LABELS = {
   "view.top":     {fr:"Dessus", en:"Top", de:"Oben"},
   "view.bottom":  {fr:"Dessous", en:"Bottom", de:"Unten"},
   "view.left":    {fr:"Gauche", en:"Left", de:"Links"},
-  "view.right":   {fr:"Droite", en:"Right", de:"Rechts"}
+  "view.right":   {fr:"Droite", en:"Right", de:"Rechts"},
+  "tut.dl":       {fr:"Télécharger", en:"Download", de:"Herunterladen"},
+  "tut.pdf":      {fr:"PDF", en:"PDF", de:"PDF"},
+  "tut.dlTitle":  {fr:"Télécharger ce tuto — fichier complet, photos comprises, lisible hors ligne",
+                   en:"Download this tutorial — complete file, photos included, readable offline",
+                   de:"Diese Anleitung herunterladen — vollständige Datei mit Fotos, offline lesbar"},
+  "tut.pdfTitle": {fr:"Imprimer ce tuto ou l'enregistrer en PDF",
+                   en:"Print this tutorial or save it as PDF",
+                   de:"Diese Anleitung drucken oder als PDF speichern"},
+  "tut.dlpdf":    {fr:"Télécharger le PDF", en:"Download the PDF", de:"PDF herunterladen"},
+  "tut.prep":     {fr:"Préparation", en:"Preparing", de:"Vorbereitung"},
+  "tut.print":    {fr:"Imprimer / PDF", en:"Print / PDF", de:"Drucken / PDF"},
+  "tut.dlon":     {fr:"téléchargé le", en:"downloaded on", de:"heruntergeladen am"},
+  "tut.offline":  {fr:"Copie hors ligne du Guide Technicien BE WTR — la version à jour est sur le hub",
+                   en:"Offline copy of the BE WTR Technician Guide — the up-to-date version is on the hub",
+                   de:"Offline-Kopie des BE WTR Technikerhandbuchs — die aktuelle Fassung steht im Hub"}
 };
 Object.keys(ITUT_LABELS).forEach(function(k){
   for(var l in ITUT_LABELS[k]){ if(I18N[l]) I18N[l][k] = ITUT_LABELS[k][l]; }
@@ -2680,13 +2728,24 @@ function openFichePanel(key, title, cat, html, card){
   var wasOpen = card && card.classList.contains('on');
   closeFichePanel();
   if(wasOpen) return;
+  var d = I18N[lang];
   var panel = document.createElement('div');
   panel.className = 'gf-panel';
   panel.dataset.for = key;
+  /* Le titre et sa rubrique voyagent avec la fiche : ce sont eux qu'on
+     retrouve en tête du fichier téléchargé et dans son nom. */
+  panel.dataset.title = title || "";
+  panel.dataset.cat = cat || "";
   panel.innerHTML = '<div class="gf-head"><b>' + itutEsc(title) + '</b>'
     + (cat ? '<span class="gf-cat">' + itutEsc(cat) + '</span>' : '')
-    + '<button type="button" class="gf-close" aria-label="' + itutEsc(I18N[lang]["gf.close"]) + '">✕</button></div>' + html;
+    + '<button type="button" class="gf-dl gf-print" title="' + itutEsc(d["tut.pdfTitle"]) + '" aria-label="' + itutEsc(d["tut.pdfTitle"]) + '">'
+    +   '<span class="gf-bic">⎙</span><span class="gf-btxt">' + itutEsc(d["tut.pdf"]) + '</span></button>'
+    + '<button type="button" class="gf-dl gf-save" title="' + itutEsc(d["tut.dlTitle"]) + '" aria-label="' + itutEsc(d["tut.dlTitle"]) + '">'
+    +   '<span class="gf-bic">⤓</span><span class="gf-btxt">' + itutEsc(d["tut.dl"]) + '</span></button>'
+    + '<button type="button" class="gf-close" aria-label="' + itutEsc(d["gf.close"]) + '">✕</button></div>' + html;
   panel.querySelector('.gf-close').addEventListener('click', closeFichePanel);
+  panel.querySelector('.gf-print').addEventListener('click', function(){ tutExport(panel, "print", this); });
+  panel.querySelector('.gf-save').addEventListener('click', function(){ tutExport(panel, "file", this); });
   if(card){
     card.classList.add('on');
     /* la dernière carte de la rangée : dans une liste c'est la carte elle-même */
@@ -2739,6 +2798,190 @@ function itutZoom(src){
   z.querySelector('img').src = src;
   z.style.display = 'flex';
 }
+
+/* ============ EMPORTER UN TUTO ============
+   Un tuto s'arrête où le réseau s'arrête, et le local technique d'un
+   restaurant n'a ni 4G ni wifi. Chaque tuto pas à pas du hub part donc en
+   fichier : « Télécharger » écrit un document autonome — la mise en page du
+   hub, toutes ses photos à l'intérieur, aucun appel vers l'extérieur — et
+   « PDF » passe ce même document à la boîte d'impression du navigateur, qui
+   sait l'enregistrer en PDF. Les deux boutons vivent dans l'en-tête de la
+   fiche : ils suivent donc tous les tutos, ceux de la bibliothèque comme
+   ceux du dépannage.
+   La visionneuse de schémas, elle, ne bouge pas : un plan se consulte à
+   l'écran, il ne se remet pas. */
+
+/* Une photo ne se télécharge qu'une fois : la même image revient d'une étape
+   à l'autre et d'un tuto à l'autre. */
+var TUT_IMG_CACHE = {};
+function tutImgData(src){
+  if(!src) return Promise.resolve(null);
+  if(TUT_IMG_CACHE[src]) return TUT_IMG_CACHE[src];
+  /* Déjà une donnée intégrée (vignette du hub) : rien à aller chercher. */
+  if(src.slice(0, 5) === "data:") return (TUT_IMG_CACHE[src] = Promise.resolve(src));
+  TUT_IMG_CACHE[src] = fetch(src).then(function(r){
+    if(!r.ok) throw new Error(r.status);
+    return r.blob();
+  }).then(function(b){
+    return new Promise(function(done, fail){
+      var fr = new FileReader();
+      fr.onload = function(){ done(fr.result); };
+      fr.onerror = fail;
+      fr.readAsDataURL(b);
+    });
+  }).catch(function(){
+    /* Une photo manquante ne fait pas échouer le téléchargement : le fichier
+       part avec le chemin d'origine, les autres étapes restent lisibles. */
+    return null;
+  });
+  return TUT_IMG_CACHE[src];
+}
+
+/* Le corps du tuto, tel qu'il est à l'écran, moins ce qui n'a de sens que
+   dans le hub. */
+function tutExportBody(panel){
+  var src = panel.querySelector('.itut');
+  if(!src) return null;
+  var out = src.cloneNode(true);
+  out.querySelectorAll('.itut-hint').forEach(function(n){ n.remove(); });
+  /* Un renvoi vers une autre fiche n'a rien à ouvrir dans un fichier seul :
+     il reste lisible, sans faire semblant d'être un bouton. */
+  out.querySelectorAll('.itut-rel button').forEach(function(b){
+    var x = document.createElement('span');
+    x.className = 'itut-relx';
+    x.textContent = b.textContent.replace(/^[\s\u2192]+/, '');
+    b.parentNode.replaceChild(x, b);
+  });
+  return out;
+}
+
+/* Chaque photo devient une donnée intégrée au document : c'est ce qui fait
+   la différence entre un fichier qu'on emporte et une page de cadres vides. */
+function tutInlineImages(node, onStep){
+  var imgs = Array.prototype.slice.call(node.querySelectorAll('img')), done = 0;
+  if(onStep) onStep(0, imgs.length);
+  return Promise.all(imgs.map(function(el){
+    var url = el.src;
+    return tutImgData(url).then(function(data){
+      if(data) el.setAttribute('src', data);
+      el.removeAttribute('loading');
+      if(onStep) onStep(++done, imgs.length);
+    });
+  }));
+}
+
+/* Les réglages propres au fichier : il n'y a plus de panneau autour du tuto,
+   et une feuille A4 ne se coupe pas au milieu d'une étape. */
+const TUT_EXPORT_CSS = [
+  "body.tx-body{background:var(--bg)}",
+  ".tx-doc{max-width:980px;margin:0 auto;padding:18px 16px 40px}",
+  ".tx-head{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:16px}",
+  ".tx-brand{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--orange)}",
+  ".tx-brand span{color:var(--ink-soft);font-weight:600;letter-spacing:.02em}",
+  ".tx-head h1{font-size:21px;line-height:1.25;margin:6px 0 4px}",
+  ".tx-meta{font-size:12px;color:var(--ink-soft)}",
+  ".tx-print{margin-top:12px;border:0;background:var(--orange);color:#fff;border-radius:10px;padding:9px 14px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}",
+  ".tx-foot{margin-top:18px;font-size:11.5px;color:var(--ink-soft);text-align:center}",
+  ".itut-relx{font-size:12.5px;border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:#fff;color:var(--ink-soft)}",
+  ".itut .itut-ph img,.itut .itut-dg img,.itut .itut-mat img,.itut .mz-stage img{cursor:default}",
+  "@page{margin:12mm}",
+  "@media print{",
+  "  body.tx-body{background:#fff}",
+  "  .tx-print{display:none}",
+  "  .tx-doc{max-width:none;padding:0}",
+  "  .tx-head{border:0;border-bottom:2px solid var(--orange);border-radius:0;padding:0 0 10px;margin-bottom:14px}",
+  "  .itut-sec{box-shadow:none}",
+  "  .itut-sec>h4{break-after:avoid;page-break-after:avoid}",
+  "  .itut-step,.itut-mat,.itut-dg,.mz-fig{break-inside:avoid;page-break-inside:avoid}",
+  "  .itut .itut-ph img{max-height:52mm}",
+  "  .itut-video{background:#fff!important;color:var(--orange)!important;border:1px solid var(--line)}",
+  "}"
+].join("\n");
+
+/* Le document complet : la feuille de style du hub telle quelle — le tuto
+   doit se relire exactement comme il s'est lu — puis les réglages du
+   fichier. */
+function tutExportHtml(title, cat, bodyHtml){
+  var d = I18N[lang], css = "";
+  document.querySelectorAll('style').forEach(function(st){ css += st.textContent + "\n"; });
+  var loc = lang === "fr" ? "fr-FR" : (lang === "de" ? "de-DE" : "en-GB"), when;
+  try{ when = new Date().toLocaleDateString(loc); }catch(e){ when = new Date().toISOString().slice(0, 10); }
+  return '<!doctype html><html lang="' + lang + '"><head><meta charset="utf-8">'
+    + '<meta name="viewport" content="width=device-width,initial-scale=1">'
+    + '<title>BE WTR — ' + itutEsc(title) + '</title>'
+    + '<style>' + css + '</style><style>' + TUT_EXPORT_CSS + '</style>'
+    + '</head><body class="tx-body"><div class="tx-doc">'
+    + '<header class="tx-head"><div class="tx-brand">BE WTR <span>' + itutEsc(d["brand.sub"]) + '</span></div>'
+    + '<h1>' + itutEsc(title) + '</h1>'
+    + '<div class="tx-meta">' + (cat ? itutEsc(cat) + ' · ' : '') + itutEsc(d["tut.dlon"]) + ' ' + when + '</div>'
+    + '<button type="button" class="tx-print" onclick="window.print()">⎙ ' + itutEsc(d["tut.print"]) + '</button>'
+    + '</header>' + bodyHtml
+    + '<footer class="tx-foot">' + itutEsc(d["tut.offline"]) + ' — service.bewtr.com</footer>'
+    + '</div></body></html>';
+}
+
+/* Le nom du fichier reste en ASCII : un seul accent dans l'attribut
+   « download » et le navigateur enregistre tout sous « download ». Le titre
+   complet, accents compris, est en tête du document et dans son onglet. */
+function tutFileName(title){
+  var t = String(title || "tuto");
+  if(t.normalize) t = t.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  t = t.replace(/ß/g, "ss").replace(/œ/g, "oe").replace(/æ/g, "ae").replace(/ø/g, "o")
+       .replace(/[^\x20-\x7E]+/g, " ")
+       .replace(/[\\/:*?"<>|]+/g, "-")
+       .replace(/\s+/g, " ").trim().slice(0, 70).trim();
+  return "BE WTR - " + (t || "tuto") + ".html";
+}
+
+/* L'impression : une fenêtre ouverte au clic — donc jamais bloquée — et, si
+   le navigateur l'a refusée quand même, un cadre caché qui imprime sans
+   quitter le hub. */
+function tutPrintDoc(html, win){
+  if(win && !win.closed){
+    win.document.open(); win.document.write(html); win.document.close();
+    win.focus();
+    var go = function(){ try{ win.print(); }catch(e){} };
+    if(win.document.readyState === 'complete') setTimeout(go, 400);
+    else win.addEventListener('load', function(){ setTimeout(go, 400); });
+    return;
+  }
+  var fr = document.createElement('iframe');
+  fr.setAttribute('aria-hidden', 'true');
+  fr.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;opacity:0';
+  fr.onload = function(){
+    try{ fr.contentWindow.focus(); fr.contentWindow.print(); }catch(e){}
+    setTimeout(function(){ if(fr.parentNode) fr.parentNode.removeChild(fr); }, 60000);
+  };
+  document.body.appendChild(fr);
+  fr.srcdoc = html;
+}
+
+/* mode : "file" pour le fichier à emporter, "print" pour la boîte
+   d'impression. Un tuto de cinquante photos met quelques secondes à se
+   préparer : le bouton compte les photos pendant ce temps. */
+function tutExport(panel, mode, btn){
+  var d = I18N[lang], body = tutExportBody(panel);
+  if(!body) return Promise.resolve();
+  var title = panel.dataset.title || "", cat = panel.dataset.cat || "";
+  var win = null;
+  if(mode === "print"){ try{ win = window.open('', '_blank'); }catch(e){ win = null; } }
+  var label = btn.querySelector('.gf-btxt'), was = label ? label.textContent : "";
+  btn.disabled = true;
+  return tutInlineImages(body, function(n, total){
+    if(label) label.textContent = total ? d["tut.prep"] + " " + n + "/" + total : d["tut.prep"];
+  }).then(function(){
+    var html = tutExportHtml(title, cat, body.outerHTML);
+    if(mode === "print") tutPrintDoc(html, win);
+    else clDownload(new Blob([html], {type:"text/html;charset=utf-8"}), tutFileName(title));
+  }).catch(function(e){
+    if(win && !win.closed) win.close();
+    console.error(e);
+  }).then(function(){
+    btn.disabled = false;
+    if(label) label.textContent = was;
+  });
+}
+
 document.addEventListener('click', function(e){
   if(!e.target.closest) return;
   var all = e.target.closest('.gref-all');
