@@ -30,6 +30,27 @@ branche. Décommenter les deux lignes suffit à lui rendre la main.
 Rien ne part en ligne tout seul : c'est la fusion de la proposition qui met le
 hub à jour.
 
+## Ce que le hub reprend du guide
+
+Les catégories, les fiches, les procédures et leurs photos, bien sûr, mais
+aussi ce que le portail leur a ajouté depuis : la phrase d'ouverture d'une
+fiche, le conseil de terrain, la note qui ne vaut que pour un filtre donné, la
+question de diagnostic avec ses cas en photo, les encarts d'un chapitre, les
+flèches posées sur une photo d'étape, les liens d'une étape, les
+caractéristiques d'un produit avec son pays et son fournisseur, les points
+posés sur la photo d'un bloc éléments, et les fiches produit à imprimer avec
+leur PDF.
+
+Deux choses restent dehors, sciemment : les numéros de version que le portail
+tient pour lui (`solV`, `endV`, `preV`…), et la mécanique de son parcours guidé
+(`go`, `need`, `endBtns`). Le hub montre le contenu des questions, il ne rejoue
+pas le cheminement.
+
+Les valeurs d'une caractéristique — une contenance, une pression, une référence
+de gaz — sont reprises **du français seul**. Le portail les saisit trois fois,
+et ses versions anglaise et allemande ont pris du retard : douze valeurs y
+divergent aujourd'hui, dont deux qui sont franchement interverties.
+
 ## Ce qu'il ne regarde pas
 
 Le portail tient trois autres canaux sur `tec-data` : `planning` (les congés),
@@ -96,8 +117,13 @@ ouverte, seul le courrier est sauté.
 ```sh
 python3 tools/portal-sync/sync.py --check   # regarde et raconte, sans rien écrire
 python3 tools/portal-sync/sync.py           # met le dépôt à jour
+python3 tools/portal-sync/sync.py --rebuild # recompose le hub depuis l'instantané
 python3 tools/portal-sync/test_build.py     # le hub est-il refaisable à l'identique ?
 ```
+
+`--rebuild` sert quand c'est `build_guide.py` qui a appris à lire un champ de
+plus : le portail n'a pas bougé, mais le hub a quelque chose à gagner. Il
+recompose la constante et rapatrie les fichiers que le hub se met à citer.
 
 `test_build.py` est le filet : tant qu'il passe, la mise à jour automatique ne
 peut rien effacer. S'il échoue, c'est qu'`index.html` et l'instantané ont

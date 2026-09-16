@@ -45,6 +45,11 @@ def _img(value):
     return value if isinstance(value, str) and value.startswith("img/") else None
 
 
+def _file(value):
+    """Un document du dépôt — les fiches produit vivent sous `files/`."""
+    return value if isinstance(value, str) and value.startswith("files/") else None
+
+
 def _imgs(values):
     """La liste des fichiers que le dépôt possède, les autres écartés."""
     return [v for v in (values or []) if _img(v)]
@@ -56,9 +61,11 @@ def _image_rows(rows):
 
 
 def _steps(nodes):
-    """Les étapes d'un chapitre : le texte dans les trois langues, ses photos."""
+    """Les étapes d'un chapitre : le texte, ses photos, ses liens, ses flèches."""
     texts = [(n.get("steps") or []) for n in nodes]
     images = _image_rows(nodes[0].get("stepImages"))
+    links = nodes[0].get("stepLinks") or []
+    annots = nodes[0].get("stepAnnots") or []
     out = []
     for i in range(max(len(texts[0]), len(images))):
         step = {}
@@ -68,8 +75,41 @@ def _steps(nodes):
                 d[lang] = t[i]
         _put(step, "d", d)
         _put(step, "imgs", images[i] if i < len(images) else None)
+        _put(step, "links", [u for u in (links[i] if i < len(links) else []) or [] if u])
+        _put(step, "ann", [a for a in (annots[i] if i < len(annots) else []) or [] if a])
         if step:
             out.append(step)
+    return out
+
+
+def _notes(nodes):
+    """Les encarts d'un chapitre : un titre, une intro, des lignes, des photos.
+
+    Chaque ligne porte son genre dans `kinds`, au même rang : `h` pour un
+    intertitre, `t` pour un titre, `p` pour un paragraphe.
+    """
+    out = []
+    for notes in _aligned(nodes, "notes"):
+        note = {}
+        _put(note, "h", _tr(notes, "h"))
+        _put(note, "intro", _tr(notes, "intro"))
+        kinds = notes[0].get("kinds") or []
+        texts = [(n.get("lines") or []) for n in notes]
+        lines = []
+        for i in range(len(texts[0])):
+            d = {}
+            for lang, t in zip(LANGS, texts):
+                if i < len(t) and t[i]:
+                    d[lang] = t[i]
+            if not d:
+                continue
+            line = {"k": kinds[i] if i < len(kinds) else "p"}
+            line["d"] = d
+            lines.append(line)
+        _put(note, "lines", lines)
+        _put(note, "imgs", _imgs(notes[0].get("imgs")))
+        if note:
+            out.append(note)
     return out
 
 
@@ -107,6 +147,24 @@ def _measures(nodes):
         block = {}
         _put(block, "title", _tr(blocks, "title"))
         _put(block, "unit", blocks[0].get("unit"))
+        _put(block, "pays", blocks[0].get("pays"))
+        _put(block, "frn", blocks[0].get("fournisseur"))
+        _put(block, "lien", blocks[0].get("lien"))
+        carac = []
+        for cars in _aligned(blocks, "carac"):
+            if cars[0].get("off"):
+                continue
+            entry = {}
+            _put(entry, "id", cars[0].get("id"))
+            _put(entry, "k", _tr(cars, "k"))
+            # Une contenance, une pression, une référence de gaz n'ont pas de
+            # langue. Le portail les saisit pourtant trois fois, et ses versions
+            # anglaise et allemande ont pris du retard : on s'en tient au
+            # français, que l'équipe tient à jour.
+            _put(entry, "v", cars[0].get("v"))
+            if entry:
+                carac.append(entry)
+        _put(block, "carac", carac)
         images = []
         for imgs in _aligned(blocks, "images"):
             image = {}
@@ -140,9 +198,13 @@ def _diagrams(nodes):
         images = _imgs(diags[0].get("images"))
         if not images and _img(diags[0].get("image")):
             images = [diags[0]["image"]]
+        # Un schéma dont le dépôt n'a pas l'image ne laisse qu'un cadre vide
+        # dans la page : mieux vaut ne rien montrer. Le compte rendu, lui, dit
+        # que le portail en a un.
+        if not images:
+            continue
         _put(diagram, "images", images)
-        if diagram:
-            out.append(diagram)
+        out.append(diagram)
     return out
 
 
@@ -154,6 +216,7 @@ def _element_blocks(nodes):
         _put(block, "title", _tr(blocks, "title"))
         _put(block, "image", _img(blocks[0].get("image")))
         _put(block, "items", _tr(blocks, "items"))
+        _put(block, "pts", [p for p in (blocks[0].get("pts") or []) if p])
         if block:
             out.append(block)
     return out
@@ -181,6 +244,7 @@ def _item(nodes, tools):
     """Une fiche du guide."""
     item = {}
     _put(item, "t", _tr(nodes, "problem"))
+    _put(item, "intro", _tr(nodes, "intro"))
     _put(item, "cover", _img(nodes[0].get("coverImage")))
     _put(item, "video", nodes[0].get("link"))
     _put(item, "actor", nodes[0].get("actor"))
@@ -189,6 +253,9 @@ def _item(nodes, tools):
     if "completed" in nodes[0]:
         item["done"] = bool(nodes[0]["completed"])
     _put(item, "why", _tr(nodes, "consequence"))
+    _put(item, "tip", _tr(nodes, "tip"))
+    _put(item, "pnote", _keyed_notes(nodes))
+    _put(item, "ask", _ask(nodes))
     solution = _tr(nodes, "solution")
     if solution:
         solution = {l: (v if isinstance(v, list) else [v]) for l, v in solution.items()}
@@ -199,6 +266,7 @@ def _item(nodes, tools):
     for chaps in _aligned(nodes, "chapters"):
         chapter = {}
         _put(chapter, "h", _tr(chaps, "heading"))
+        _put(chapter, "notes", _notes(chaps))
         _put(chapter, "steps", _steps(chaps))
         if chapter:
             chapters.append(chapter)
@@ -208,6 +276,72 @@ def _item(nodes, tools):
     _put(item, "eblocks", _element_blocks(nodes))
     _put(item, "measures", _measures(nodes))
     return item
+
+
+def _keyed_notes(nodes):
+    """Les notes qui ne valent que pour un filtre donné : « avec un BE CONNECT… »."""
+    keys = [k for k in (nodes[0].get("preNote") or {})]
+    out = []
+    for key in keys:
+        d = {}
+        for lang, node in zip(LANGS, nodes):
+            text = (node.get("preNote") or {}).get(key)
+            if text:
+                d[lang] = text
+        if d:
+            out.append({"k": key, "d": d})
+    return out
+
+
+def _options(nodes, holder):
+    """Les réponses possibles d'une question, avec leur photo."""
+    out = []
+    lists = [(n.get(holder) or {}).get("opts") or [] for n in nodes]
+    for i in range(len(lists[0])):
+        opts = [(l[i] if i < len(l) else {}) for l in lists]
+        opt = {}
+        _put(opt, "id", opts[0].get("id"))
+        _put(opt, "e", opts[0].get("e"))
+        _put(opt, "l", _tr(opts, "l"))
+        _put(opt, "img", _img(opts[0].get("img")))
+        if opt:
+            out.append(opt)
+    return out
+
+
+def _question(nodes, holder):
+    """Une question posée au technicien : l'énoncé, l'aide, les réponses."""
+    asks = [n.get(holder) or {} for n in nodes]
+    if not asks[0]:
+        return None
+    out = {}
+    _put(out, "q", _tr(asks, "q"))
+    _put(out, "hint", _tr(asks, "hint"))
+    _put(out, "himg", _img(asks[0].get("himg")))
+    _put(out, "howL", _tr(asks, "howL"))
+    _put(out, "how", _tr(asks, "how"))
+    _put(out, "howImg", _img(asks[0].get("howImg")))
+    _put(out, "opts", _options(nodes, holder))
+    return out or None
+
+
+def _ask(nodes):
+    return _question(nodes, "ask")
+
+
+def _sheets(cats):
+    """Les fiches produit d'une catégorie : un PDF, sa vignette, son format."""
+    out = []
+    for sheet in cats[0].get("sheets") or []:
+        entry = {}
+        _put(entry, "id", sheet.get("id"))
+        _put(entry, "t", {l: sheet[l] for l in LANGS if sheet.get(l)})
+        _put(entry, "fmt", sheet.get("fmt"))
+        _put(entry, "thumb", _file(sheet.get("thumb")))
+        _put(entry, "pdf", _file(sheet.get("pdf")))
+        if entry.get("pdf"):
+            out.append(entry)
+    return out
 
 
 def _memo_blocks(nodes):
@@ -289,6 +423,7 @@ def build(snapshot):
         for grs in _aligned(cats, "groups"):
             group = {}
             _put(group, "h", _tr(grs, "heading"))
+            _put(group, "pre", _question(grs, "pre"))
             items = []
             for its in _aligned(grs, "problems"):
                 items.append(_item(its, tools))
@@ -321,6 +456,7 @@ def build(snapshot):
             _put(group, "items", items)
             ref_groups.append(group)
         _put(cat, "refGroups", ref_groups)
+        _put(cat, "sheets", _sheets(cats))
         out.append(cat)
     return out
 
@@ -338,12 +474,24 @@ CONSUMED = {
     "items", "ref", "name", "image", "images", "label", "url", "kind", "text",
     "thumb", "value", "note", "color", "unit", "viewKey", "annotations",
     "x1", "y1", "x2", "y2", "src", "targetCatId", "targetGi", "targetPi",
+    "notes", "lines", "kinds", "intro", "h", "imgs", "stepLinks", "stepAnnots",
+    "carac", "off", "pays", "fournisseur", "lien", "pts", "tip", "preNote",
+    "ask", "pre", "q", "opts", "hint", "himg", "how", "howL", "howImg",
+    "sheets", "fmt", "pdf", "fr", "en", "de", "e", "go", "i", "x", "y",
+    "img", "k", "l",
 }
 IGNORED = {
     "tone", "icon", "parent", "section", "home", "desc", "links", "dims",
     "width", "height", "depth", "diameter", "targetType", "glossary",
     "hideMaterialsTitle", "hideProcedureTitle", "linkToCheck",
+    # Le portail numérote ses versions et pilote son propre parcours guidé ;
+    # le hub montre le contenu, pas la mécanique.
+    "solV", "endV", "actorV", "preV", "v", "need", "soon", "endBtns", "arrows",
+    "diagram",
 }
+# Ces deux-là ont des clés qui sont des données, pas des noms de champs : la
+# référence d'un filtre, le nom d'un symptôme. Inutile d'y descendre.
+OPAQUE = {"preNote", "treeOverrides"}
 KNOWN = CONSUMED | IGNORED
 
 
@@ -356,6 +504,8 @@ def unknown_fields(categories):
     def walk(value, path):
         if isinstance(value, dict):
             for key, sub in value.items():
+                if key in OPAQUE:
+                    continue
                 if key not in KNOWN:
                     seen = found.setdefault(key, [path, 0])
                     seen[1] += 1

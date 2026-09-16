@@ -138,11 +138,11 @@ def orphan_kind(ref):
 
 
 def collect_images(data):
-    """Tous les fichiers photo cités par un arbre."""
+    """Tous les fichiers cités par un arbre : les photos, et les fiches PDF."""
     found = set()
     def walk(v):
         if isinstance(v, str):
-            if v.startswith("img/"):
+            if v.startswith("img/") or v.startswith("files/"):
                 found.add(v)
         elif isinstance(v, list):
             for x in v:
@@ -419,7 +419,7 @@ def report(changes, revisions, images, hub, hand, check=False):
         out += ["- %s" % c for c in changes]
         out.append("")
     if images:
-        out.append("## Photos rapatriées")
+        out.append("## Fichiers rapatriés")
         out.append("")
         out += ["- `%s`" % i for i in images]
         out.append("")
@@ -459,13 +459,54 @@ def report(changes, revisions, images, hub, hand, check=False):
     return "\n".join(out).rstrip() + "\n"
 
 
+def rebuild():
+    """Recompose `PORTAL_GUIDE` depuis l'instantané du dépôt, et rien d'autre.
+
+    Le portail n'a pas bougé : c'est `build_guide.py` qui sait lire quelque
+    chose de plus. On rapatrie au passage les fichiers que le hub se met à
+    citer et que le dépôt n'a pas encore.
+    """
+    guide = read_snapshot("guide")
+    if guide is None:
+        raise SystemExit("il n'y a pas d'instantané à recomposer")
+    built = build(guide)
+    literal = json.dumps(built, ensure_ascii=False, separators=(",", ":"))
+    lines = index_lines()
+    i = guide_line_number(lines)
+    current = lines[i].rstrip("\n")[len(GUIDE_PREFIX):-1]
+    louche = suspect(literal, current)
+    if louche:
+        raise SystemExit("la constante recomposée n'a pas l'air d'un guide : %s"
+                         % louche)
+    sources = {path: ("portal", path) for path in collect_images(built)}
+    added = download_images(collect_images(built), sources)
+    if literal == current:
+        print("le hub est déjà celui que l'instantané donne")
+    else:
+        lines[i] = GUIDE_PREFIX + literal + ";\n"
+        with open(INDEX, "w", encoding="utf-8") as f:
+            f.writelines(lines)
+        print("hub recomposé : %d caractères contre %d"
+              % (len(literal), len(current)))
+    for path in added:
+        print("  rapatrié : %s" % path)
+    return 0
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true",
                         help="regarde et raconte, sans rien écrire")
+    parser.add_argument("--rebuild", action="store_true",
+                        help="recompose le hub depuis l'instantané, sans aller"
+                             " voir le portail — quand c'est le compilateur qui"
+                             " a appris à lire un champ de plus")
     parser.add_argument("--report", help="où écrire le compte rendu (markdown)")
     parser.add_argument("--summary", help="où écrire le résumé (json)")
     args = parser.parse_args()
+
+    if args.rebuild:
+        return rebuild()
 
     refs = image_map()
     revisions, fresh, changes, hand = {}, {}, [], []
