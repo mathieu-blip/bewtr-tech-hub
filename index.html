@@ -10,6 +10,11 @@
     --line:#e7ebf0;--bg:#f6f8fa;--card:#ffffff;--blue:#1f6feb;--green:#1f9d55;
     --amber:#e39a17;--red:#d5432f;
     --shadow:0 1px 2px rgba(20,30,45,.05),0 8px 24px rgba(20,30,45,.06);--radius:16px;
+    /* Palette élargie pour le dépannage : chaque symptôme prend sa teinte,
+       comme les rubriques du portail technicien. */
+    --blue-soft:#e9f1fd;--green-soft:#e9f8ee;--amber-soft:#fdf3e3;--red-soft:#fbe9e6;
+    --teal:#0e8a86;--teal-soft:#e3f5f3;--indigo:#5a5fcf;--indigo-soft:#eceafb;
+    --slate:#5c6f73;--slate-soft:#eef1f2;
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -257,6 +262,8 @@
   .gf-sep:first-child{margin-top:0}
   .gcat .itut-dg img{max-width:100%;max-height:320px;width:auto;border-radius:10px}
   .gf-actor{font-size:11px;background:var(--orange-soft);color:var(--orange);font-weight:600;padding:3px 9px;border-radius:999px}
+  .gf-actor.user{background:var(--green-soft);color:var(--green)}
+  .gf-actor.tech{background:var(--blue-soft);color:var(--blue)}
   .itut-why{background:var(--orange-soft);border:1px solid #ffd9c7;border-radius:12px;padding:12px 15px;font-size:13.5px;color:#8a3d18;margin-bottom:14px}
   /* Ce que le portail ajoute autour d'une procédure : la phrase d'ouverture,
      le conseil de terrain, la note qui ne vaut que pour un filtre, et la
@@ -265,32 +272,61 @@
   .itut-tip{background:#f0f9f3;border:1px solid #cdebd9;border-radius:12px;padding:12px 15px;font-size:13.5px;color:#14663a;margin-bottom:14px}
   .itut-tip b,.itut-pnote b{display:block;font-size:11px;letter-spacing:.07em;text-transform:uppercase;margin-bottom:3px}
   .itut-pnote{background:#eef4ff;border:1px solid #d3e0fb;border-radius:12px;padding:12px 15px;font-size:13.5px;color:#1b3f7d;margin-bottom:14px}
-  .itut-ask{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:14px;background:#fff}
-  .itut-ask .aq{font-weight:700;font-size:14.5px;margin-bottom:6px}
+  .itut-ask{border:1px solid var(--line);border-top:3px solid var(--orange);border-radius:12px;padding:16px;margin-bottom:14px;background:#fff;box-shadow:var(--shadow)}
+  .itut-ask.pre-ask{border-top-color:var(--blue)}
+  .itut-ask .aq{font-weight:700;font-size:15.5px;margin-bottom:6px;line-height:1.35}
   .itut-ask .ah{font-size:13px;color:var(--ink-soft);margin-bottom:8px}
   .itut-ask .ahow{font-size:13px;color:var(--ink-soft);white-space:pre-line;margin-bottom:8px}
   .itut-ask .ahow b{display:block;color:var(--ink);white-space:normal}
-  .itut-ask img{max-width:180px;border-radius:8px;border:1px solid var(--line);cursor:zoom-in}
-  .itut-opts{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
-  .itut-opt{flex:0 1 150px;border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center;font-size:13px}
-  .itut-opt img{display:block;width:100%;max-width:none;margin-bottom:6px}
+  .itut-ask img{max-width:180px;border-radius:10px;border:1px solid var(--line);cursor:zoom-in}
+  .itut-opts{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+  .itut-opt{flex:1 1 150px;min-width:130px;max-width:220px;border:1.5px solid var(--line);border-radius:14px;padding:10px;text-align:center;font-size:13.5px;font-weight:600;color:var(--ink)}
+  .itut-opt img{display:block;width:100%;max-width:none;aspect-ratio:4/3;object-fit:cover;border-radius:9px;margin-bottom:8px;background:var(--bg)}
   /* ---- Assistant de dépannage pas à pas : les mêmes cartes, cliquables ---- */
-  .wiz-opt{font:inherit;background:#fff;cursor:pointer;transition:.15s}
-  .wiz-opt:hover{border-color:var(--orange);box-shadow:var(--shadow)}
+  .wiz-opt{font:inherit;background:#fff;cursor:pointer;transition:.15s;min-height:44px}
+  .wiz-opt:hover{border-color:var(--orange);box-shadow:var(--shadow);transform:translateY(-1px);background:var(--orange-soft)}
+  .wiz-opt:active{transform:translateY(0)}
   .wiz-opt:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
   .wiz-step{margin-top:14px}
-  .wiz-progress{font-size:11.5px;color:var(--ink-soft);margin-bottom:10px}
-  .wiz-nav{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
-  .wiz-nav-btn{border:1px solid var(--line);background:#fff;color:var(--ink-soft);border-radius:999px;padding:9px 16px;font:inherit;font-size:13px;cursor:pointer;transition:.15s}
-  .wiz-nav-btn:hover{border-color:var(--orange);color:var(--orange)}
-  .wiz-next,.wiz-resolved{display:inline-block;border:0;background:var(--orange);color:#fff;border-radius:10px;padding:10px 18px;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;margin-top:6px;transition:.15s}
+  .wiz-progress{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .wiz-progress-n{font-size:11.5px;font-weight:700;color:var(--ink-soft);white-space:nowrap}
+  .wiz-progress-bar{flex:1;height:7px;border-radius:99px;background:var(--line);overflow:hidden;max-width:220px}
+  .wiz-progress-bar span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--orange),#ff9a5c)}
+  .wiz-nav{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+  .wiz-nav-btn{border:1px solid var(--line);background:#fff;color:var(--ink-soft);border-radius:999px;padding:10px 18px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:.15s;min-height:44px}
+  .wiz-nav-btn:hover{border-color:var(--orange);color:var(--orange);box-shadow:var(--shadow)}
+  .wiz-next,.wiz-resolved{display:inline-flex;align-items:center;justify-content:center;border:0;background:var(--orange);color:#fff;border-radius:12px;padding:12px 20px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;transition:.15s;min-height:44px;box-shadow:var(--shadow)}
   .wiz-next:hover,.wiz-resolved:hover{filter:brightness(.94)}
-  .wiz-more{display:inline-block;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:10px 18px;font:inherit;font-size:13.5px;cursor:pointer;margin:6px 0 0 10px;transition:.15s}
+  .wiz-more{display:inline-flex;align-items:center;justify-content:center;border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:12px;padding:12px 20px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:.15s;min-height:44px}
   .wiz-more:hover{border-color:var(--orange);color:var(--orange)}
-  .wiz-fix-title{font-weight:700;color:var(--green);margin-bottom:4px;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
-  .wiz-fix-t{font-size:15px;font-weight:600;margin-bottom:12px}
-  .wiz-fix-actions{margin-top:16px}
-  .wiz-done-t{font-size:16px;font-weight:700;margin-bottom:4px}
+  .wiz-fix{border:1px solid var(--line);border-left:4px solid var(--green);border-radius:var(--radius);padding:18px 20px;background:linear-gradient(180deg,var(--green-soft),#fff 120px);box-shadow:var(--shadow)}
+  .wiz-fix-title{display:flex;align-items:center;gap:6px;font-weight:700;color:var(--green);margin-bottom:6px;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+  .wiz-fix-t{font-size:16px;font-weight:700;margin-bottom:14px}
+  .wiz-fix-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .wiz-done{border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:var(--radius);padding:20px 22px;background:linear-gradient(180deg,var(--teal-soft),#fff 120px);box-shadow:var(--shadow)}
+  .wiz-done-t{font-size:17px;font-weight:700;margin-bottom:4px;color:var(--teal)}
+  /* Chaque symptôme prend une teinte, comme les rubriques du portail
+     technicien : le cercle de l'icône, le contour au survol, la puce de
+     l'en-tête une fois le symptôme ouvert. */
+  .sym.tone-red .sy-ic,.gcat>h3 .gi.tone-red{background:var(--red-soft);color:var(--red)}
+  .sym.tone-blue .sy-ic,.gcat>h3 .gi.tone-blue{background:var(--blue-soft);color:var(--blue)}
+  .sym.tone-green .sy-ic,.gcat>h3 .gi.tone-green{background:var(--green-soft);color:var(--green)}
+  .sym.tone-amber .sy-ic,.gcat>h3 .gi.tone-amber{background:var(--amber-soft);color:var(--amber)}
+  .sym.tone-teal .sy-ic,.gcat>h3 .gi.tone-teal{background:var(--teal-soft);color:var(--teal)}
+  .sym.tone-indigo .sy-ic,.gcat>h3 .gi.tone-indigo{background:var(--indigo-soft);color:var(--indigo)}
+  .sym.tone-slate .sy-ic,.gcat>h3 .gi.tone-slate{background:var(--slate-soft);color:var(--slate)}
+  .sym.tone-red:hover{border-color:var(--red)}
+  .sym.tone-blue:hover{border-color:var(--blue)}
+  .sym.tone-green:hover{border-color:var(--green)}
+  .sym.tone-amber:hover{border-color:var(--amber)}
+  .sym.tone-teal:hover{border-color:var(--teal)}
+  .sym.tone-indigo:hover{border-color:var(--indigo)}
+  .sym.tone-slate:hover{border-color:var(--slate)}
+  @media(max-width:480px){
+    .wiz-fix-actions{flex-direction:column}
+    .wiz-fix-actions button{width:100%}
+    .wiz-progress-bar{max-width:none}
+  }
   .itut-note{border-left:3px solid var(--orange);background:#fffaf7;border-radius:0 10px 10px 0;padding:10px 14px;margin-bottom:12px;font-size:13.5px}
   .itut-note h5{margin:0 0 4px;font-size:13.5px}
   .itut-note .nt{font-weight:700;margin-top:8px}
@@ -2612,6 +2648,14 @@ var TROUBLE_CATS = ["no-water", "no-still", "no-sparkling", "low-flow", "taste-t
                     "noise", "leak", "restart", "system-hot", "reglage", "videos"];
 var troubleOpen = null;
 var troubleWiz = null;
+/* La teinte de chaque symptôme — sans donnée à faire venir du portail : un
+   repère visuel du hub seul, comme les rubriques colorées du portail
+   technicien. Absent de la table (« videos ») : la couleur de la marque. */
+var SYM_TONE = {
+  "no-water":"red", "no-still":"teal", "leak":"blue", "low-flow":"teal",
+  "taste-temp":"amber", "noise":"indigo", "no-sparkling":"amber",
+  "system-hot":"red", "restart":"indigo", "reglage":"slate"
+};
 
 function troubleCount(c){
   if(!c) return 0;
@@ -2642,8 +2686,8 @@ function renderTrouble(){
   renderTroubleBody();
 }
 function symTile(cat, label){
-  var c = guideCat(cat), n = troubleCount(c), d = I18N[lang];
-  return '<button type="button" class="sym' + (cat === troubleOpen ? ' on' : '') + '" data-sym="' + cat + '">'
+  var c = guideCat(cat), n = troubleCount(c), d = I18N[lang], tone = SYM_TONE[cat];
+  return '<button type="button" class="sym' + (tone ? ' tone-' + tone : '') + (cat === troubleOpen ? ' on' : '') + '" data-sym="' + cat + '">'
        + '<span class="sy-ic">' + (cat === "videos" ? "▶" : "⚠") + '</span>'
        + '<span><span class="sy-t">' + itutEsc(label) + '</span>'
        + '<span class="sy-n">' + (n ? n + ' ' + d[(c && c.type === "videos")
@@ -2675,13 +2719,13 @@ function renderTroubleBody(){
   var c = troubleOpen ? guideCat(troubleOpen) : null;
   if(sym) sym.hidden = !!c;
   if(!c){ box.innerHTML = ""; troubleWiz = null; return; }
-  var d = I18N[lang];
+  var d = I18N[lang], tone = SYM_TONE[troubleOpen];
   var body = c.type === "videos" ? guideVideosHtml(c)
            : c.type === "problems" ? wizHtml(troubleWiz)
            : guideCardsHtml(c);
   box.innerHTML = '<div class="gcat" id="gcat-' + c.id + '" style="margin-top:14px">'
     + '<button type="button" class="schema-back ts-back">← ' + d["ts.back"] + '</button>'
-    + '<h3 style="margin-top:8px"><span class="gi">⚠</span>' + itutEsc(itutTr(c.t)) + '</h3>'
+    + '<h3 style="margin-top:8px"><span class="gi' + (tone ? ' tone-' + tone : '') + '">⚠</span>' + itutEsc(itutTr(c.t)) + '</h3>'
     + (c.sub ? '<p class="sec-sub">' + itutEsc(itutTr(c.sub)) + '</p>' : '')
     + body + '</div>';
   box.querySelector('.ts-back').addEventListener('click', function(){ openTrouble(null); });
@@ -2770,7 +2814,10 @@ function wizJumpTo(catId, gi, pi){
   return w;
 }
 function wizProgress(w){
-  return w.filtered ? '<div class="wiz-progress">' + (w.pos + 1) + ' / ' + w.filtered.length + '</div>' : "";
+  if(!w.filtered) return "";
+  var pct = Math.round((w.pos + 1) / w.filtered.length * 100);
+  return '<div class="wiz-progress"><span class="wiz-progress-n">' + (w.pos + 1) + ' / ' + w.filtered.length + '</span>'
+       + '<span class="wiz-progress-bar"><span style="width:' + pct + '%"></span></span></div>';
 }
 function wizNavHtml(w){
   var d = I18N[lang], btns = "";
@@ -2779,7 +2826,7 @@ function wizNavHtml(w){
   return btns ? '<div class="wiz-nav">' + btns + '</div>' : "";
 }
 function wizAskHtml(a, kind){
-  var h = '<div class="itut-ask"><div class="aq">' + itutEsc(itutTr(a.q)) + '</div>';
+  var h = '<div class="itut-ask' + (kind === "pre" ? " pre-ask" : "") + '"><div class="aq">' + itutEsc(itutTr(a.q)) + '</div>';
   if(a.hint) h += '<div class="ah">' + itutEsc(itutTr(a.hint)) + '</div>';
   if(a.himg) h += '<img loading="lazy" alt="" src="' + a.himg + '">';
   if(a.how){
@@ -2815,11 +2862,11 @@ function wizSolBlock(p, d){
   return h;
 }
 function wizGroupsHtml(w){
-  var d = I18N[lang];
+  var d = I18N[lang], tone = SYM_TONE[w.cat];
   return '<div class="wiz-step"><h4 class="gcat-g">' + d["ts.groups.pick"] + '</h4><div class="sym-grid">'
     + w.groups.map(function(grp, i){
         var n = grp.items.length;
-        return '<button type="button" class="sym" data-wiz="group" data-wiz-v="' + i + '">'
+        return '<button type="button" class="sym' + (tone ? ' tone-' + tone : '') + '" data-wiz="group" data-wiz-v="' + i + '">'
              + '<span class="sy-ic">⚠</span><span><span class="sy-t">' + itutEsc(itutTr(grp.h)) + '</span>'
              + '<span class="sy-n">' + n + ' ' + d[n > 1 ? "itut.fiches" : "itut.fiche"] + '</span></span></button>';
       }).join("")
@@ -2828,7 +2875,7 @@ function wizGroupsHtml(w){
 function wizNodeHtml(w){
   var d = I18N[lang], grp = w.groups[w.groupIdx], pi = w.filtered[w.pos], p = grp.items[pi];
   var h = '<div class="wiz-step">' + wizProgress(w);
-  if(p.actor) h += '<span class="gf-actor">' + d[p.actor === "technicien" ? "itut.actorTech" : "itut.actorUser"] + '</span>';
+  if(p.actor) h += '<span class="gf-actor ' + (p.actor === "technicien" ? "tech" : "user") + '">' + d[p.actor === "technicien" ? "itut.actorTech" : "itut.actorUser"] + '</span>';
   if(p.why) h += '<div class="itut-why"><b>' + d["itut.why"] + '</b> ' + itutEsc(itutTr(p.why)) + '</div>';
   (p.pnote||[]).forEach(function(n){
     if(n.k !== w.pre) return;
@@ -3023,7 +3070,7 @@ function openGuideFiche(catId, gi, pi, card){
   var p = (g.items||[])[pi]; if(!p) return;
   var d = I18N[lang], h = '<div class="itut"><div class="itut-top">';
   if(p.video) h += '<a class="itut-video" href="' + p.video + '" target="_blank" rel="noopener">▶ ' + d["itut.video"] + '</a>';
-  if(p.actor) h += '<span class="gf-actor">' + d[p.actor === "technicien" ? "itut.actorTech" : "itut.actorUser"] + '</span>';
+  if(p.actor) h += '<span class="gf-actor ' + (p.actor === "technicien" ? "tech" : "user") + '">' + d[p.actor === "technicien" ? "itut.actorTech" : "itut.actorUser"] + '</span>';
   h += '<span class="itut-hint">' + d["itut.zoom"] + '</span></div>';
   if(p.intro) h += '<div class="itut-intro">' + itutEsc(itutTr(p.intro)) + '</div>';
   /* Ce qu'il faut avoir sous la main se lit avant de commencer, pas après la
