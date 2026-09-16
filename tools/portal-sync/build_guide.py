@@ -40,9 +40,19 @@ def _put(dst, key, value):
         dst[key] = value
 
 
+def _img(value):
+    """Un fichier du dépôt, ou rien : le hub n'affiche que ce qu'il possède."""
+    return value if isinstance(value, str) and value.startswith("img/") else None
+
+
+def _imgs(values):
+    """La liste des fichiers que le dépôt possède, les autres écartés."""
+    return [v for v in (values or []) if _img(v)]
+
+
 def _image_rows(rows):
     """Les photos rang par rang ; le portail laisse un trou là où il n'y en a pas."""
-    return [row or [] for row in rows or []]
+    return [_imgs(row) for row in rows or []]
 
 
 def _steps(nodes):
@@ -81,7 +91,7 @@ def _materials(nodes, tools):
                 image = its[0].get("image")
             item = {}
             _put(item, "n", name)
-            _put(item, "img", image)
+            _put(item, "img", _img(image))
             if item:
                 items.append(item)
         _put(sec, "items", items)
@@ -100,7 +110,7 @@ def _measures(nodes):
         images = []
         for imgs in _aligned(blocks, "images"):
             image = {}
-            _put(image, "src", imgs[0].get("src"))
+            _put(image, "src", _img(imgs[0].get("src")))
             _put(image, "view", imgs[0].get("viewKey"))
             _put(image, "title", _tr(imgs, "title"))
             annotations = []
@@ -127,8 +137,8 @@ def _diagrams(nodes):
     for diags in _aligned(nodes, "diagrams"):
         diagram = {}
         _put(diagram, "title", _tr(diags, "title"))
-        images = diags[0].get("images") or []
-        if not images and diags[0].get("image"):
+        images = _imgs(diags[0].get("images"))
+        if not images and _img(diags[0].get("image")):
             images = [diags[0]["image"]]
         _put(diagram, "images", images)
         if diagram:
@@ -142,7 +152,7 @@ def _element_blocks(nodes):
     for blocks in _aligned(nodes, "elementBlocks"):
         block = {}
         _put(block, "title", _tr(blocks, "title"))
-        _put(block, "image", blocks[0].get("image"))
+        _put(block, "image", _img(blocks[0].get("image")))
         _put(block, "items", _tr(blocks, "items"))
         if block:
             out.append(block)
@@ -171,7 +181,7 @@ def _item(nodes, tools):
     """Une fiche du guide."""
     item = {}
     _put(item, "t", _tr(nodes, "problem"))
-    _put(item, "cover", nodes[0].get("coverImage"))
+    _put(item, "cover", _img(nodes[0].get("coverImage")))
     _put(item, "video", nodes[0].get("link"))
     _put(item, "actor", nodes[0].get("actor"))
     # Le portail marque d'un « completed » les fiches déjà rédigées, à vrai ou à
@@ -206,8 +216,8 @@ def _memo_blocks(nodes):
     for blocks in _aligned(nodes, "blocks"):
         block = {"kind": blocks[0].get("kind")}
         _put(block, "h", _tr(blocks, "heading"))
-        _put(block, "img", blocks[0].get("image"))
-        _put(block, "thumb", blocks[0].get("thumb"))
+        _put(block, "img", _img(blocks[0].get("image")))
+        _put(block, "thumb", _img(blocks[0].get("thumb")))
         _put(block, "text", _tr(blocks, "text"))
         items = blocks[0].get("items") or []
         if items and isinstance(items[0], dict):
@@ -306,10 +316,53 @@ def build(snapshot):
                 item = {}
                 _put(item, "ref", its[0].get("ref"))
                 _put(item, "name", _tr(its, "name"))
-                _put(item, "img", its[0].get("image"))
+                _put(item, "img", _img(its[0].get("image")))
                 items.append(item)
             _put(group, "items", items)
             ref_groups.append(group)
         _put(cat, "refGroups", ref_groups)
         out.append(cat)
     return out
+
+
+# Tout ce que le portail écrit et que ce fichier sait lire, plus ce qu'il
+# laisse sciemment de côté. Ce qui n'est dans aucune des deux listes est du
+# contenu que le portail a inventé depuis : le hub ne le montrera pas, et
+# l'agent doit le dire plutôt que de le laisser tomber en silence.
+CONSUMED = {
+    "id", "type", "title", "subtitle", "groups", "heading", "problems",
+    "blocks", "treeOverrides", "videos", "refGroups", "tools", "ui",
+    "categories", "problem", "coverImage", "link", "actor", "completed",
+    "consequence", "solution", "stepImages", "materialSections", "chapters",
+    "diagrams", "relatedLinks", "elementBlocks", "measureBlocks", "steps",
+    "items", "ref", "name", "image", "images", "label", "url", "kind", "text",
+    "thumb", "value", "note", "color", "unit", "viewKey", "annotations",
+    "x1", "y1", "x2", "y2", "src", "targetCatId", "targetGi", "targetPi",
+}
+IGNORED = {
+    "tone", "icon", "parent", "section", "home", "desc", "links", "dims",
+    "width", "height", "depth", "diameter", "targetType", "glossary",
+    "hideMaterialsTitle", "hideProcedureTitle", "linkToCheck",
+}
+KNOWN = CONSUMED | IGNORED
+
+
+def unknown_fields(categories):
+    """Les champs du portail dont le hub n'a jamais entendu parler.
+
+    Rend, pour chaque nom de champ, le chemin où il apparaît et combien de fois.
+    """
+    found = {}
+    def walk(value, path):
+        if isinstance(value, dict):
+            for key, sub in value.items():
+                if key not in KNOWN:
+                    seen = found.setdefault(key, [path, 0])
+                    seen[1] += 1
+                else:
+                    walk(sub, path + "/" + key)
+        elif isinstance(value, list):
+            for item in value:
+                walk(item, path + "[]")
+    walk(categories, "")
+    return found

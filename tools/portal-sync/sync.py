@@ -50,7 +50,7 @@ INDEX = os.path.join(ROOT, "index.html")
 GUIDE_PREFIX = "const PORTAL_GUIDE = "
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from build_guide import LANGS, build  # noqa: E402
+from build_guide import LANGS, build, unknown_fields  # noqa: E402
 
 
 # --- Aller chercher --------------------------------------------------------
@@ -68,14 +68,31 @@ def fetch(url, tries=4):
             time.sleep(2 ** attempt)
 
 
+# Une empreinte du portail : sa longueur, puis le début et la fin du contenu.
+FINGERPRINT = re.compile(r"^##\d+\|")
+
+
 def image_map():
-    """L'empreinte de chaque photo du portail, et le fichier qui va avec."""
+    """L'empreinte de chaque photo du portail, et le fichier qui va avec.
+
+    La table du portail a ses trous : des empreintes vides en face de photos
+    qu'il garde en clair dans sa page, et quelques entrées qui ne sont pas des
+    fichiers du tout. On n'en retient que les paires franches — une vraie
+    empreinte en face d'un vrai fichier. Sans ce tri, une empreinte vide ferait
+    correspondre *toute* chaîne vide du guide à une photo, et le hub verrait
+    des images à la place de ses champs vides.
+    """
     page = fetch(PORTAL_URL).decode("utf-8", "replace")
     names = re.search(r"^const IMGS = (\[.*?\]);", page, re.M)
     refs = re.search(r"^const IMG_REFS = (\[.*?\]);", page, re.M)
     if not names or not refs:
         raise SystemExit("la page du portail ne contient plus IMGS / IMG_REFS")
-    return dict(zip(json.loads(refs.group(1)), json.loads(names.group(1))))
+    out = {}
+    for ref, name in zip(json.loads(refs.group(1)), json.loads(names.group(1))):
+        if isinstance(ref, str) and FINGERPRINT.match(ref) \
+                and isinstance(name, str) and name.startswith("img/"):
+            out[ref] = name
+    return out
 
 
 # --- Remettre les photos à leur place --------------------------------------
@@ -85,10 +102,14 @@ def inline_name(uri):
     return "img/inline-%s.jpg" % hashlib.sha1(uri.encode("utf-8")).hexdigest()[:10]
 
 
-def normalise(value, refs, sources):
+def normalise(value, refs, sources, orphans):
     """La copie du portail, empreintes de photos remplacées par leur fichier.
 
     `sources` se remplit au passage : pour chaque fichier cité, d'où le tirer.
+    `orphans` reçoit les empreintes dont le portail ne publie pas les octets —
+    un fichier déposé après la mise en ligne de sa page. On les garde telles
+    quelles dans l'instantané, pour garder trace de ce qui existe là-bas, et le
+    hub les laisse de côté plutôt que d'afficher un lien mort.
     """
     if isinstance(value, str):
         if value in refs:
@@ -99,15 +120,21 @@ def normalise(value, refs, sources):
             path = inline_name(value)
             sources.setdefault(path, ("inline", value))
             return path
-        if value.startswith("##") and "|" in value:
-            raise SystemExit(
-                "une photo du portail n'a pas de fichier : %s…" % value[:30])
+        if FINGERPRINT.match(value):
+            orphans.add(value)
         return value
     if isinstance(value, list):
-        return [normalise(v, refs, sources) for v in value]
+        return [normalise(v, refs, sources, orphans) for v in value]
     if isinstance(value, dict):
-        return {k: normalise(v, refs, sources) for k, v in value.items()}
+        return {k: normalise(v, refs, sources, orphans)
+                for k, v in value.items()}
     return value
+
+
+def orphan_kind(ref):
+    """Ce qu'était le fichier dont il ne reste que l'empreinte."""
+    kind = re.search(r"data:([a-z/+.-]+);", ref)
+    return kind.group(1) if kind else "fichier"
 
 
 def collect_images(data):
@@ -168,6 +195,24 @@ def write_snapshot(name, data):
 
 def guide_literal(guide):
     return json.dumps(build(guide), ensure_ascii=False, separators=(",", ":"))
+
+
+def suspect(literal, before):
+    """Ce qui, dans la constante recomposée, doit faire renoncer à l'écrire.
+
+    Le hub ne porte que du texte et des chemins de fichiers. Un contenu en
+    clair ou une empreinte qui s'y retrouve, ou un poids qui explose, ce n'est
+    pas le portail qui a beaucoup produit : c'est la recomposition qui a
+    déraillé. On préfère alors ne rien écrire et le dire.
+    """
+    if "data:" in literal:
+        return "elle contient des fichiers en clair au lieu de leurs chemins"
+    if FINGERPRINT.search(literal):
+        return "elle contient des empreintes du portail au lieu de fichiers"
+    if len(literal) > 3 * len(before):
+        return ("elle pèse %.1f fois la précédente (%d caractères contre %d)"
+                % (len(literal) / len(before), len(literal), len(before)))
+    return None
 
 
 def index_lines():
@@ -301,6 +346,24 @@ def describe_guide(old, new):
                     json.dumps(cat.get(key), sort_keys=True):
                 lines.append("%s : %s." % (title, what))
 
+    inconnus = unknown_fields(new_fr.get("categories"))
+    if inconnus:
+        noms = sorted(inconnus, key=lambda k: -inconnus[k][1])
+        lines.append("Le portail écrit %d champ(s) que le hub ne sait pas lire,"
+                     " et qu'il laisse donc de côté : %s%s."
+                     % (len(noms), ", ".join("« %s »" % n for n in noms[:12]),
+                        ", et %d autres" % (len(noms) - 12) if len(noms) > 12
+                        else ""))
+        hand.append("Le guide du portail porte maintenant %d champ(s) que le hub"
+                    " ignore : %s. Chacun est du contenu que les techniciens"
+                    " voient sur le portail et pas dans le hub — il faut décider"
+                    " lesquels reprendre, et écrire ce qu'il faut dans"
+                    " `build_guide.py` et dans la page."
+                    % (len(noms),
+                       ", ".join("« %s » (%d fois, sous %s)"
+                                 % (n, inconnus[n][1], inconnus[n][0] or "la racine")
+                                 for n in noms[:8])))
+
     old_tools = by_key(old_fr.get("tools"), ("name",))
     new_tools = by_key(new_fr.get("tools"), ("name",))
     for name, (_, tool) in new_tools.items():
@@ -368,6 +431,10 @@ def report(changes, revisions, images, hub, hand, check=False):
     elif hub == "updated":
         out.append("`PORTAL_GUIDE` d'`index.html` a été recomposé : le hub montre"
                    " le guide du portail tel qu'il est aujourd'hui.")
+    elif hub == "suspect":
+        out.append("**`index.html` n'a pas été touché.** La constante"
+                   " recomposée n'a pas l'air d'être un guide : voir plus bas."
+                   " L'instantané, lui, est bien la copie du portail.")
     elif hub == "same":
         out.append("Le guide que le hub affiche est le même qu'hier : la nouveauté"
                    " du portail est ailleurs — le glossaire, les textes"
@@ -402,10 +469,11 @@ def main():
 
     refs = image_map()
     revisions, fresh, changes, hand = {}, {}, [], []
+    orphans = set()
     for name in CHANNELS:
         payload = json.loads(fetch(DATA_URL % name).decode("utf-8"))
         sources = {}
-        data = normalise(payload.get("data"), refs, sources)
+        data = normalise(payload.get("data"), refs, sources, orphans)
         before = read_snapshot(name)
         fresh[name] = (data, sources, before)
         revisions[name] = {"rev": payload.get("rev"), "at": payload.get("at"),
@@ -416,6 +484,17 @@ def main():
         changes += notes
         hand += needs
 
+    if orphans:
+        kinds = sorted(set(orphan_kind(o) for o in orphans))
+        changes.append("%d fichier(s) du portail (%s) n'ont que leur empreinte :"
+                       " la page du portail ne les publie pas."
+                       % (len(orphans), ", ".join(kinds)))
+        hand.append("Le portail cite %d fichier(s) (%s) déposés après la mise en"
+                    " ligne de sa page : leurs octets ne sont nulle part, le hub"
+                    " les laisse de côté. Pour les avoir, il faut redéployer la"
+                    " page du portail, ou les reprendre depuis le poste qui les"
+                    " a déposés." % (len(orphans), ", ".join(kinds)))
+
     changed = [n for n in CHANNELS if revisions[n]["changed"]]
     guide_data, guide_sources, guide_before = fresh["guide"]
     images, hub = [], "unchanged"
@@ -423,8 +502,16 @@ def main():
     if revisions["guide"]["changed"]:
         lines = index_lines()
         i = guide_line_number(lines)
-        wanted = GUIDE_PREFIX + guide_literal(guide_data) + ";"
-        if lines[i].rstrip("\n") == wanted:
+        literal = guide_literal(guide_data)
+        wanted = GUIDE_PREFIX + literal + ";"
+        louche = suspect(literal, lines[i].rstrip("\n")[len(GUIDE_PREFIX):-1])
+        if louche:
+            hub = "suspect"
+            hand.append("La constante `PORTAL_GUIDE` recomposée n'a pas été"
+                        " écrite : %s. Le script a mal lu quelque chose du"
+                        " portail — à regarder avant de reporter quoi que ce"
+                        " soit." % louche)
+        elif lines[i].rstrip("\n") == wanted:
             # Le portail a bougé ailleurs que dans ce que le hub reprend :
             # le glossaire, les textes d'interface, une rubrique à lui.
             hub = "same"
