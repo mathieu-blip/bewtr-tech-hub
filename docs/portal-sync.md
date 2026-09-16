@@ -41,10 +41,12 @@ caractéristiques d'un produit avec son pays et son fournisseur, les points
 posés sur la photo d'un bloc éléments, et les fiches produit à imprimer avec
 leur PDF.
 
-Deux choses restent dehors, sciemment : les numéros de version que le portail
-tient pour lui (`solV`, `endV`, `preV`…), et la mécanique de son parcours guidé
-(`go`, `need`, `endBtns`). Le hub montre le contenu des questions, il ne rejoue
-pas le cheminement.
+Le hub rejoue aussi le cheminement du parcours guidé : la réponse à une
+question fait passer à la fiche suivante ou montrer sa solution (`go`), une
+fiche qui ne vaut que pour un filtre donné (`need`), et les boutons de
+confirmation d'une fiche sans question à choix (`endBtns`). Seuls les
+numéros de version que le portail tient pour lui restent dehors, sciemment
+(`solV`, `endV`, `preV`…).
 
 Les valeurs d'une caractéristique — une contenance, une pression, une référence
 de gaz — sont reprises **du français seul**. Le portail les saisit trois fois,

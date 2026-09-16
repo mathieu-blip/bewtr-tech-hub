@@ -256,6 +256,10 @@ def _item(nodes, tools):
     _put(item, "tip", _tr(nodes, "tip"))
     _put(item, "pnote", _keyed_notes(nodes))
     _put(item, "ask", _ask(nodes))
+    _put(item, "endBtns", _end_btns(nodes))
+    # Sur quelle réponse à la question `pre` du groupe cette fiche compte :
+    # sans elle, elle vaut pour tout le monde.
+    _put(item, "need", nodes[0].get("need"))
     solution = _tr(nodes, "solution")
     if solution:
         solution = {l: (v if isinstance(v, list) else [v]) for l, v in solution.items()}
@@ -294,7 +298,11 @@ def _keyed_notes(nodes):
 
 
 def _options(nodes, holder):
-    """Les réponses possibles d'une question, avec leur photo."""
+    """Les réponses possibles d'une question, avec leur photo.
+
+    `go` dit où la réponse mène : `next` passe à la fiche suivante de la
+    liste, `fix` arrête là et montre la solution de la fiche courante.
+    """
     out = []
     lists = [(n.get(holder) or {}).get("opts") or [] for n in nodes]
     for i in range(len(lists[0])):
@@ -304,6 +312,23 @@ def _options(nodes, holder):
         _put(opt, "e", opts[0].get("e"))
         _put(opt, "l", _tr(opts, "l"))
         _put(opt, "img", _img(opts[0].get("img")))
+        _put(opt, "go", opts[0].get("go"))
+        if opt:
+            out.append(opt)
+    return out
+
+
+def _end_btns(nodes):
+    """Les boutons de fin de fiche, quand il n'y a pas de vraie question posée :
+    une confirmation à faire, plutôt qu'un choix entre deux photos."""
+    out = []
+    lists = [n.get("endBtns") or [] for n in nodes]
+    for i in range(len(lists[0])):
+        opts = [(l[i] if i < len(l) else {}) for l in lists]
+        opt = {}
+        _put(opt, "e", opts[0].get("e"))
+        _put(opt, "l", _tr(opts, "l"))
+        _put(opt, "go", opts[0].get("go"))
         if opt:
             out.append(opt)
     return out
@@ -478,15 +503,15 @@ CONSUMED = {
     "carac", "off", "pays", "fournisseur", "lien", "pts", "tip", "preNote",
     "ask", "pre", "q", "opts", "hint", "himg", "how", "howL", "howImg",
     "sheets", "fmt", "pdf", "fr", "en", "de", "e", "go", "i", "x", "y",
-    "img", "k", "l",
+    "img", "k", "l", "need", "endBtns",
 }
 IGNORED = {
     "tone", "icon", "parent", "section", "home", "desc", "links", "dims",
     "width", "height", "depth", "diameter", "targetType", "glossary",
     "hideMaterialsTitle", "hideProcedureTitle", "linkToCheck",
-    # Le portail numérote ses versions et pilote son propre parcours guidé ;
-    # le hub montre le contenu, pas la mécanique.
-    "solV", "endV", "actorV", "preV", "v", "need", "soon", "endBtns", "arrows",
+    # Le portail numérote ses versions pour son propre usage d'édition ;
+    # le hub montre le contenu, pas ce compteur-là.
+    "solV", "endV", "actorV", "preV", "v", "soon", "arrows",
     "diagram",
 }
 # Ces deux-là ont des clés qui sont des données, pas des noms de champs : la
