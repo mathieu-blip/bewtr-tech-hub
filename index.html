@@ -347,6 +347,20 @@
   .ts-more>summary::before{content:"›";color:var(--orange);font-size:16px;transition:.15s}
   .ts-more[open]>summary::before{transform:rotate(90deg)}
   .ts-more>summary:hover{color:var(--orange)}
+
+  /* ---- Dépannage : mode guidé, une vérification à la fois ---- */
+  .ts-progress{font-size:12px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--orange)}
+  .ts-dots{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 4px}
+  .ts-dot{width:26px;height:26px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink-soft);font:inherit;font-size:12px;font-weight:700;cursor:pointer;transition:.15s}
+  .ts-dot:hover{border-color:var(--orange);color:var(--orange)}
+  .ts-dot.on{background:var(--orange);border-color:var(--orange);color:#fff}
+  .ts-qtitle{margin:14px 0 4px;font-size:16px}
+  .ts-nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+  .ts-nav button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 16px;font:inherit;font-weight:600;font-size:13.5px;color:var(--ink);cursor:pointer;transition:.15s}
+  .ts-nav button:hover:not(:disabled){border-color:var(--orange);color:var(--orange)}
+  .ts-nav button:disabled{opacity:.35;cursor:default}
+  .ts-nav .ts-next{background:var(--orange);border-color:var(--orange);color:#fff}
+  .ts-nav .ts-next:hover:not(:disabled){color:#fff;opacity:.9}
   .mz-figs{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start}
   .itut .mz-fig{margin:0}
   .itut .mz-stage img{max-height:280px}
@@ -2214,6 +2228,10 @@ const ITUT_LABELS = {
   "ts.pick":      {fr:"Quel est le problème\u00a0?", en:"What is the problem?", de:"Was ist das Problem?"},
   "ts.pick.sub":  {fr:"Cliquez sur le symptôme : vous n'aurez que les tutos qui le concernent.", en:"Click the symptom: you only get the tutorials that apply to it.", de:"Auf das Symptom klicken: Sie sehen nur die passenden Tutorials."},
   "ts.back":      {fr:"Tous les symptômes", en:"All symptoms", de:"Alle Symptome"},
+  "ts.stepLabel": {fr:"Vérification", en:"Check", de:"Prüfung"},
+  "ts.stepOf":    {fr:"sur", en:"of", de:"von"},
+  "ts.prev":      {fr:"◀ Précédente", en:"◀ Previous", de:"◀ Zurück"},
+  "ts.next":      {fr:"Suivante ▶", en:"Next ▶", de:"Weiter ▶"},
   "itut.refs":    {fr:"références", en:"references", de:"Referenzen"},
   "itut.measures":{fr:"Cotes", en:"Dimensions", de:"Maße"},
   "view.front":   {fr:"Face", en:"Front", de:"Vorne"},
@@ -2525,6 +2543,7 @@ function guideTreeHtml(c){
 var TROUBLE_CATS = ["no-water", "no-still", "no-sparkling", "low-flow", "taste-temp",
                     "noise", "leak", "restart", "system-hot", "reglage", "videos"];
 var troubleOpen = null;
+var troubleStep = 0;
 
 function troubleCount(c){
   if(!c) return 0;
@@ -2566,6 +2585,7 @@ function symTile(cat, label){
 function openTrouble(cat){
   if(cat && cat === troubleOpen) return;
   troubleOpen = cat || null;
+  troubleStep = 0;
   closeFichePanel();
   renderTroubleBody();
   troubleTop();
@@ -2581,19 +2601,51 @@ function troubleTop(){
   window.scrollTo(0, Math.max(0, y));
   setTimeout(function(){ he.style.scrollBehavior = prev || ''; }, 0);
 }
+/* Un symptôme du dépannage ne mène plus à une liste de fiches à parcourir
+   soi-même : on prend les vérifications une par une, dans l'ordre du
+   portail, avec de quoi revenir en arrière ou sauter directement à l'une
+   d'elles. Le contenu de chaque étape est celui d'une fiche normale — même
+   rendu que partout ailleurs (`ficheBodyHtml`), pour ne pas avoir deux
+   présentations différentes de la même donnée. */
+function troubleGuidedHtml(c){
+  var fiches = guideFiches(c);
+  if(!fiches.length) return '<p class="small muted">' + I18N[lang]["itut.empty"] + '</p>';
+  if(troubleStep >= fiches.length) troubleStep = fiches.length - 1;
+  if(troubleStep < 0) troubleStep = 0;
+  var d = I18N[lang], f = fiches[troubleStep], n = fiches.length;
+  return '<div class="ts-guided">'
+    + '<div class="ts-progress">' + d["ts.stepLabel"] + ' ' + (troubleStep + 1) + ' ' + d["ts.stepOf"] + ' ' + n + '</div>'
+    + '<div class="ts-dots">' + fiches.map(function(_, i){
+        return '<button type="button" class="ts-dot' + (i === troubleStep ? ' on' : '') + '" data-step="' + i + '">' + (i + 1) + '</button>';
+      }).join("") + '</div>'
+    + '<h4 class="ts-qtitle">' + itutEsc(itutTr(f.p.t)) + '</h4>'
+    + ficheBodyHtml(c, f.p)
+    + '<div class="ts-nav">'
+    + '<button type="button" class="ts-prev"' + (troubleStep === 0 ? ' disabled' : '') + '>' + d["ts.prev"] + '</button>'
+    + '<button type="button" class="ts-next"' + (troubleStep === n - 1 ? ' disabled' : '') + '>' + d["ts.next"] + '</button>'
+    + '</div></div>';
+}
 function renderTroubleBody(){
   var box = document.getElementById("troubleBody"), sym = document.getElementById("troubleSym");
   if(!box) return;
   var c = troubleOpen ? guideCat(troubleOpen) : null;
   if(sym) sym.hidden = !!c;
   if(!c){ box.innerHTML = ""; return; }
-  var d = I18N[lang];
+  var d = I18N[lang], guided = c.type !== "videos" && guideFiches(c).length > 0;
   box.innerHTML = '<div class="gcat" id="gcat-' + c.id + '" style="margin-top:14px">'
     + '<button type="button" class="schema-back ts-back">← ' + d["ts.back"] + '</button>'
     + '<h3 style="margin-top:8px"><span class="gi">⚠</span>' + itutEsc(itutTr(c.t)) + '</h3>'
     + (c.sub ? '<p class="sec-sub">' + itutEsc(itutTr(c.sub)) + '</p>' : '')
-    + (c.type === "videos" ? guideVideosHtml(c) : guideCardsHtml(c)) + '</div>';
+    + (c.type === "videos" ? guideVideosHtml(c) : troubleGuidedHtml(c)) + '</div>';
   box.querySelector('.ts-back').addEventListener('click', function(){ openTrouble(null); });
+  if(guided){
+    box.querySelectorAll('.ts-dot').forEach(function(btn){
+      btn.addEventListener('click', function(){ troubleStep = +btn.dataset.step; renderTroubleBody(); troubleTop(); });
+    });
+    var prev = box.querySelector('.ts-prev'), next = box.querySelector('.ts-next');
+    if(prev) prev.addEventListener('click', function(){ troubleStep--; renderTroubleBody(); troubleTop(); });
+    if(next) next.addEventListener('click', function(){ troubleStep++; renderTroubleBody(); troubleTop(); });
+  }
 }
 
 function renderGuideBlocks(){
@@ -2645,10 +2697,7 @@ function guideMeasureHtml(b){
     + '</div></div>';
 }
 
-function openGuideFiche(catId, gi, pi, card){
-  var c = guideCat(catId); if(!c) return;
-  var g = (c.groups||[])[gi]; if(!g) return;
-  var p = (g.items||[])[pi]; if(!p) return;
+function ficheBodyHtml(c, p){
   var d = I18N[lang], h = '<div class="itut"><div class="itut-top">';
   if(p.video) h += '<a class="itut-video" href="' + p.video + '" target="_blank" rel="noopener">▶ ' + d["itut.video"] + '</a>';
   if(p.actor) h += '<span class="gf-actor">' + d[p.actor === "technicien" ? "itut.actorTech" : "itut.actorUser"] + '</span>';
@@ -2713,7 +2762,13 @@ function openGuideFiche(catId, gi, pi, card){
        + '</div>';
   });
   h += '</div>';
-  openFichePanel(catId + "|" + gi + "|" + pi, itutTr(p.t), itutTr(c.t), h, card);
+  return h;
+}
+function openGuideFiche(catId, gi, pi, card){
+  var c = guideCat(catId); if(!c) return;
+  var g = (c.groups||[])[gi]; if(!g) return;
+  var p = (g.items||[])[pi]; if(!p) return;
+  openFichePanel(catId + "|" + gi + "|" + pi, itutTr(p.t), itutTr(c.t), ficheBodyHtml(c, p), card);
 }
 
 /* Le panneau se glisse dans la grille de la carte, après la dernière carte de
