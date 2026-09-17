@@ -278,10 +278,12 @@
   .itut-ask .ah{font-size:13px;color:var(--ink-soft);margin-bottom:8px}
   .itut-ask .ahow{font-size:13px;color:var(--ink-soft);white-space:pre-line;margin-bottom:8px}
   .itut-ask .ahow b{display:block;color:var(--ink);white-space:normal}
-  .itut-ask img{max-width:180px;border-radius:10px;border:1px solid var(--line);cursor:zoom-in}
-  .itut-opts{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-  .itut-opt{flex:1 1 150px;min-width:130px;max-width:220px;border:1.5px solid var(--line);border-radius:14px;padding:10px;text-align:center;font-size:13.5px;font-weight:600;color:var(--ink)}
-  .itut-opt img{display:block;width:100%;max-width:none;aspect-ratio:4/3;object-fit:cover;border-radius:9px;margin-bottom:8px;background:var(--bg)}
+  .itut-ask img{max-width:260px;border-radius:10px;border:1px solid var(--line);cursor:zoom-in}
+  .itut-opts{display:flex;flex-wrap:wrap;gap:16px;margin-top:14px}
+  /* Une photo par option, grande et entière : comme sur le portail
+     technicien, pas rognée dans une vignette carrée. */
+  .itut-opt{flex:1 1 260px;min-width:220px;max-width:400px;border:1.5px solid var(--line);border-radius:16px;padding:16px;text-align:center;font-size:15px;font-weight:700;color:var(--ink)}
+  .itut-opt img{display:block;width:100%;max-width:100%;height:auto;max-height:360px;object-fit:contain;border-radius:10px;margin-bottom:10px;background:var(--bg)}
   /* ---- Assistant de dépannage pas à pas : les mêmes cartes, cliquables ---- */
   .wiz-opt{font:inherit;background:#fff;cursor:pointer;transition:.15s;min-height:44px}
   .wiz-opt:hover{border-color:var(--orange);box-shadow:var(--shadow);transform:translateY(-1px);background:var(--orange-soft)}
