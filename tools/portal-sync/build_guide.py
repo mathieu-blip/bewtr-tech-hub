@@ -428,19 +428,26 @@ def _tree(uis):
                 if v:
                     label[lang] = v.rstrip() + (" ?" if lang == "fr" else "?")
             item = {"label": label}
-            _put(item, "cat", SYMPTOM_CATEGORIES.get(sym))
+            target = SYMPTOM_CATEGORIES.get(sym)
+            cat, gi = target if isinstance(target, tuple) else (target, None)
+            _put(item, "cat", cat)
+            _put(item, "gi", gi)
             items.append(item)
         out.append({"h": {l: ui.get(heading) for l, ui in zip(LANGS, uis)},
                     "items": items})
     return out
 
 
-# Vers quelle catégorie du guide chaque symptôme de l'arbre des pannes renvoie.
+# Vers quelle catégorie du guide chaque symptôme de l'arbre des pannes
+# renvoie — et, pour « goût » et « froid » qui pointent tous deux vers
+# `taste-temp` mais chacun vers son propre groupe (le portail ouvre chacun
+# directement, sans jamais demander de choisir entre les deux), le numéro
+# de ce groupe.
 SYMPTOM_CATEGORIES = {
     "symWaterNotFlowing": "no-water",
-    "symBadTaste": "taste-temp",
+    "symBadTaste": ("taste-temp", 0),
     "symLeak": "leak",
-    "symNotCold": "taste-temp",
+    "symNotCold": ("taste-temp", 1),
     "symLowFlow": "low-flow",
     "symNoise": "noise",
     "symCo2Consumption": "no-sparkling",
