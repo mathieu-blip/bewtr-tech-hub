@@ -397,7 +397,14 @@ def _memo_blocks(nodes):
 
 
 def _tree(uis):
-    """L'arbre des pannes : deux familles de symptômes, chacune vers sa fiche."""
+    """L'arbre des pannes : deux familles de symptômes, chacune vers sa fiche.
+
+    Le portail les affiche en question — « L'eau ne coule pas ? ». `ui[sym]`
+    ne porte que l'énoncé : on ajoute le point d'interrogation à la reprise,
+    plutôt que de lire `treeOverrides`, qui porte la même forme en français
+    mais des traductions anglaise et allemande fautives (« Escape from
+    water? » pour la fuite d'eau, le bruit resté en français).
+    """
     groups = [
         ("pannesGroupWater", ["symWaterNotFlowing", "symBadTaste", "symLeak",
                               "symNotCold", "symLowFlow"]),
@@ -408,7 +415,12 @@ def _tree(uis):
     for heading, symptoms in groups:
         items = []
         for sym in symptoms:
-            item = {"label": {l: ui[sym] for l, ui in zip(LANGS, uis) if ui.get(sym)}}
+            label = {}
+            for lang, ui in zip(LANGS, uis):
+                v = ui.get(sym)
+                if v:
+                    label[lang] = v.rstrip() + (" ?" if lang == "fr" else "?")
+            item = {"label": label}
             _put(item, "cat", SYMPTOM_CATEGORIES.get(sym))
             items.append(item)
         out.append({"h": {l: ui.get(heading) for l, ui in zip(LANGS, uis)},
@@ -444,6 +456,10 @@ def build(snapshot):
         cat = {"id": cats[0].get("id"), "type": cats[0].get("type")}
         _put(cat, "t", _tr(cats, "title"))
         _put(cat, "sub", _tr(cats, "subtitle"))
+        # La teinte et l'icône de la rubrique — celles que le portail met sur
+        # ses propres tuiles ; le français fait foi, ce n'est pas du texte.
+        _put(cat, "tone", cats[0].get("tone"))
+        _put(cat, "icon", cats[0].get("icon"))
         groups = []
         for grs in _aligned(cats, "groups"):
             group = {}
@@ -503,10 +519,10 @@ CONSUMED = {
     "carac", "off", "pays", "fournisseur", "lien", "pts", "tip", "preNote",
     "ask", "pre", "q", "opts", "hint", "himg", "how", "howL", "howImg",
     "sheets", "fmt", "pdf", "fr", "en", "de", "e", "go", "i", "x", "y",
-    "img", "k", "l", "need", "endBtns",
+    "img", "k", "l", "need", "endBtns", "tone", "icon",
 }
 IGNORED = {
-    "tone", "icon", "parent", "section", "home", "desc", "links", "dims",
+    "parent", "section", "home", "desc", "links", "dims",
     "width", "height", "depth", "diameter", "targetType", "glossary",
     "hideMaterialsTitle", "hideProcedureTitle", "linkToCheck",
     # Le portail numérote ses versions pour son propre usage d'édition ;
