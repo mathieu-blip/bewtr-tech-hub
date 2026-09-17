@@ -274,27 +274,33 @@
   .itut-pnote{background:#eef4ff;border:1px solid #d3e0fb;border-radius:12px;padding:12px 15px;font-size:13.5px;color:#1b3f7d;margin-bottom:14px}
   .itut-ask{border:1px solid var(--line);border-top:3px solid var(--orange);border-radius:12px;padding:16px;margin-bottom:14px;background:#fff;box-shadow:var(--shadow)}
   .itut-ask.pre-ask{border-top-color:var(--blue)}
-  .itut-ask .aq{font-weight:700;font-size:15.5px;margin-bottom:6px;line-height:1.35}
-  .itut-ask .ah{font-size:13px;color:var(--ink-soft);margin-bottom:8px}
-  .itut-ask .ahow{font-size:13px;color:var(--ink-soft);white-space:pre-line;margin-bottom:8px}
+  .itut-ask .aq{font-weight:700;font-size:15.5px;margin-bottom:6px;line-height:1.35;text-align:center}
+  .itut-ask .ah{font-size:13px;color:var(--ink-soft);margin-bottom:8px;text-align:center}
+  .itut-ask .ahow{font-size:13px;color:var(--ink-soft);white-space:pre-line;margin-bottom:8px;text-align:center}
   .itut-ask .ahow b{display:block;color:var(--ink);white-space:normal}
-  .itut-ask img{max-width:260px;border-radius:10px;border:1px solid var(--line);cursor:zoom-in}
-  .itut-opts{display:flex;flex-wrap:wrap;gap:16px;margin-top:14px}
+  .itut-ask img{display:block;max-width:260px;margin:0 auto 8px;border-radius:10px;border:1px solid var(--line);cursor:zoom-in}
+  .itut-opts{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin-top:14px}
   /* Une photo par option, grande et entière : comme sur le portail
      technicien, pas rognée dans une vignette carrée. */
   .itut-opt{flex:1 1 260px;min-width:220px;max-width:400px;border:1.5px solid var(--line);border-radius:16px;padding:16px;text-align:center;font-size:15px;font-weight:700;color:var(--ink)}
   .itut-opt img{display:block;width:100%;max-width:100%;height:auto;max-height:360px;object-fit:contain;border-radius:10px;margin-bottom:10px;background:var(--bg)}
+  /* Le repère (⚪/🟡/✅…) d'une option n'est pas un simple caractère posé là :
+     son propre cercle dit que c'est lui qu'on choisit, même sans photo. */
+  .wiz-opt-e{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);background:#fff;font-size:14px;line-height:1;vertical-align:middle;margin-right:4px}
+  .wiz-opt:hover .wiz-opt-e{border-color:var(--blue)}
   /* ---- Assistant de dépannage pas à pas : les mêmes cartes, cliquables ---- */
   .wiz-opt{font:inherit;background:#fff;cursor:pointer;transition:.15s;min-height:44px}
-  .wiz-opt:hover{border-color:var(--orange);box-shadow:var(--shadow);transform:translateY(-1px);background:var(--orange-soft)}
+  .wiz-opt:hover{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue),var(--shadow);transform:translateY(-1px)}
   .wiz-opt:active{transform:translateY(0)}
-  .wiz-opt:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
-  .wiz-step{margin-top:14px}
+  .wiz-opt:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+  /* Un seul cadre, bien visible sur le fond gris de la page : la question,
+     ses options et la navigation vivent dedans, rien ne flotte à part. */
+  .wiz-step{margin-top:14px;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow)}
   .wiz-progress{display:flex;align-items:center;gap:10px;margin-bottom:14px}
   .wiz-progress-n{font-size:11.5px;font-weight:700;color:var(--ink-soft);white-space:nowrap}
   .wiz-progress-bar{flex:1;height:7px;border-radius:99px;background:var(--line);overflow:hidden;max-width:220px}
   .wiz-progress-bar span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--orange),#ff9a5c)}
-  .wiz-nav{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+  .wiz-nav{display:flex;gap:10px;margin-top:18px;padding-top:18px;border-top:1px solid var(--line);flex-wrap:wrap}
   .wiz-nav-btn{border:1px solid var(--line);background:#fff;color:var(--ink-soft);border-radius:999px;padding:10px 18px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:.15s;min-height:44px}
   .wiz-nav-btn:hover{border-color:var(--orange);color:var(--orange);box-shadow:var(--shadow)}
   .wiz-next,.wiz-resolved{display:inline-flex;align-items:center;justify-content:center;border:0;background:var(--orange);color:#fff;border-radius:12px;padding:12px 20px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;transition:.15s;min-height:44px;box-shadow:var(--shadow)}
@@ -2840,7 +2846,7 @@ function wizAskHtml(a, kind){
     var val = kind === "pre" ? o.id : o.go;
     return '<button type="button" class="itut-opt wiz-opt" data-wiz="' + kind + '" data-wiz-v="' + itutEsc(val) + '">'
          + (o.img ? '<img loading="lazy" alt="" src="' + o.img + '">' : "")
-         + (o.e ? o.e + " " : "") + itutEsc(itutTr(o.l)) + '</button>';
+         + (o.e ? '<span class="wiz-opt-e">' + o.e + '</span> ' : "") + itutEsc(itutTr(o.l)) + '</button>';
   }).join("") + '</div></div>';
   return h;
 }
@@ -2865,18 +2871,18 @@ function wizSolBlock(p, d){
 }
 function wizGroupsHtml(w){
   var d = I18N[lang], tone = SYM_TONE[w.cat];
-  return '<div class="wiz-step"><h4 class="gcat-g">' + d["ts.groups.pick"] + '</h4><div class="sym-grid">'
+  return '<h4 class="gcat-g">' + d["ts.groups.pick"] + '</h4><div class="sym-grid">'
     + w.groups.map(function(grp, i){
         var n = grp.items.length;
         return '<button type="button" class="sym' + (tone ? ' tone-' + tone : '') + '" data-wiz="group" data-wiz-v="' + i + '">'
              + '<span class="sy-ic">⚠</span><span><span class="sy-t">' + itutEsc(itutTr(grp.h)) + '</span>'
              + '<span class="sy-n">' + n + ' ' + d[n > 1 ? "itut.fiches" : "itut.fiche"] + '</span></span></button>';
       }).join("")
-    + '</div></div>';
+    + '</div>';
 }
 function wizNodeHtml(w){
   var d = I18N[lang], grp = w.groups[w.groupIdx], pi = w.filtered[w.pos], p = grp.items[pi];
-  var h = '<div class="wiz-step">' + wizProgress(w);
+  var h = wizProgress(w);
   if(p.actor) h += '<span class="gf-actor ' + (p.actor === "technicien" ? "tech" : "user") + '">' + d[p.actor === "technicien" ? "itut.actorTech" : "itut.actorUser"] + '</span>';
   if(p.why) h += '<div class="itut-why"><b>' + d["itut.why"] + '</b> ' + itutEsc(itutTr(p.why)) + '</div>';
   (p.pnote||[]).forEach(function(n){
@@ -2891,40 +2897,43 @@ function wizNodeHtml(w){
        + wizSolBlock(p, d)
        + '<div class="itut-opts">' + p.endBtns.map(function(o){
            return '<button type="button" class="itut-opt wiz-opt" data-wiz="ask" data-wiz-v="' + itutEsc(o.go) + '">'
-                + (o.e ? o.e + " " : "") + itutEsc(itutTr(o.l)) + '</button>';
+                + (o.e ? '<span class="wiz-opt-e">' + o.e + '</span> ' : "") + itutEsc(itutTr(o.l)) + '</button>';
          }).join("") + '</div></div>';
   }else{
     h += '<div class="itut-ask"><div class="aq">' + itutEsc(itutTr(p.t)) + '</div>'
        + wizSolBlock(p, d)
        + '<button type="button" class="wiz-next" data-wiz="ask" data-wiz-v="next">' + d["ts.step.next"] + ' →</button></div>';
   }
-  return h + '</div>';
+  return h;
 }
 function wizFixHtml(w){
   var d = I18N[lang], grp = w.groups[w.groupIdx], pi = w.filtered[w.pos], p = grp.items[pi];
-  return '<div class="wiz-step wiz-fix">' + wizProgress(w)
+  return wizProgress(w)
     + '<div class="wiz-fix-title">✅ ' + d["ts.fix.title"] + '</div>'
     + '<div class="wiz-fix-t">' + itutEsc(itutTr(p.t)) + '</div>'
     + wizSolBlock(p, d)
     + '<div class="wiz-fix-actions">'
     + '<button type="button" class="wiz-resolved" data-wiz="resolved">' + d["ts.fix.resolved"] + '</button>'
     + '<button type="button" class="wiz-more" data-wiz="more">' + d["ts.fix.more"] + '</button>'
-    + '</div></div>';
+    + '</div>';
 }
 function wizDoneHtml(){
   var d = I18N[lang];
-  return '<div class="wiz-step wiz-done"><div class="wiz-done-t">' + d["ts.done.title"] + '</div>'
-       + '<p class="sec-sub">' + d["ts.done.sub"] + '</p></div>';
+  return '<div class="wiz-done-t">' + d["ts.done.title"] + '</div>'
+       + '<p class="sec-sub">' + d["ts.done.sub"] + '</p>';
 }
 function wizHtml(w){
   var d = I18N[lang];
   if(!w || w.stage === "empty") return '<p class="small muted">' + d["itut.empty"] + '</p>';
-  var body;
-  if(w.stage === "groups") body = wizGroupsHtml(w) + wizNavHtml(w);
-  else if(w.stage === "pre") body = '<div class="wiz-step">' + wizAskHtml(w.groups[w.groupIdx].pre, "pre") + '</div>' + wizNavHtml(w);
-  else if(w.stage === "done") body = wizDoneHtml() + wizNavHtml(w);
-  else if(w.stage === "fix") body = wizFixHtml(w) + wizNavHtml(w);
-  else body = wizNodeHtml(w) + wizNavHtml(w);
+  var cls = "wiz-step", inner;
+  if(w.stage === "groups"){ inner = wizGroupsHtml(w); }
+  else if(w.stage === "pre"){ inner = wizAskHtml(w.groups[w.groupIdx].pre, "pre"); }
+  else if(w.stage === "done"){ cls += " wiz-done"; inner = wizDoneHtml(); }
+  else if(w.stage === "fix"){ cls += " wiz-fix"; inner = wizFixHtml(w); }
+  else { inner = wizNodeHtml(w); }
+  /* Un seul cadre — la question, ses options, et la navigation dedans :
+     rien ne flotte seul dans le fond de la page une fois le pas ouvert. */
+  var body = '<div class="' + cls + '">' + inner + wizNavHtml(w) + '</div>';
   /* Le même cadre que la fiche « à plat » : la taille des photos (`.itut
      .itut-ph img`, etc.) est réglée pour lui, pas pour la pleine largeur. */
   return '<div class="itut">' + body + '</div>';
@@ -3010,7 +3019,7 @@ function guideAskHtml(a){
   if((a.opts||[]).length){
     h += '<div class="itut-opts">' + a.opts.map(function(o){
       return '<div class="itut-opt">' + (o.img ? '<img loading="lazy" alt="" src="' + o.img + '">' : "")
-           + (o.e ? o.e + " " : "") + itutEsc(itutTr(o.l)) + '</div>';
+           + (o.e ? '<span class="wiz-opt-e">' + o.e + '</span> ' : "") + itutEsc(itutTr(o.l)) + '</div>';
     }).join("") + '</div>';
   }
   return h + '</div>';
