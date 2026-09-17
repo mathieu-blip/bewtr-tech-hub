@@ -253,6 +253,7 @@ def _item(nodes, tools):
     if "completed" in nodes[0]:
         item["done"] = bool(nodes[0]["completed"])
     _put(item, "why", _tr(nodes, "consequence"))
+    _put(item, "warn", _tr(nodes, "warn"))
     _put(item, "tip", _tr(nodes, "tip"))
     _put(item, "pnote", _keyed_notes(nodes))
     _put(item, "ask", _ask(nodes))
@@ -311,6 +312,9 @@ def _options(nodes, holder):
         _put(opt, "id", opts[0].get("id"))
         _put(opt, "e", opts[0].get("e"))
         _put(opt, "l", _tr(opts, "l"))
+        # La légende d'une réponse — « Fonctionnement normal » sous « Blanc » —
+        # pas encore affichée par le portail lui-même, mais déjà écrite.
+        _put(opt, "sub", _tr(opts, "sub"))
         _put(opt, "img", _img(opts[0].get("img")))
         _put(opt, "go", opts[0].get("go"))
         if opt:
@@ -347,6 +351,9 @@ def _question(nodes, holder):
     _put(out, "how", _tr(asks, "how"))
     _put(out, "howImg", _img(asks[0].get("howImg")))
     _put(out, "opts", _options(nodes, holder))
+    # Sans elle, le portail ajoute d'office un bouton « Je n'en ai pas dans
+    # mon installation » ; certaines questions n'ont pas ce cas et l'éteignent.
+    _put(out, "noneOff", asks[0].get("noneOff"))
     return out or None
 
 
@@ -519,7 +526,8 @@ CONSUMED = {
     "carac", "off", "pays", "fournisseur", "lien", "pts", "tip", "preNote",
     "ask", "pre", "q", "opts", "hint", "himg", "how", "howL", "howImg",
     "sheets", "fmt", "pdf", "fr", "en", "de", "e", "go", "i", "x", "y",
-    "img", "k", "l", "need", "endBtns", "tone", "icon",
+    "img", "k", "l", "need", "endBtns", "tone", "icon", "sub", "warn",
+    "noneOff",
 }
 IGNORED = {
     "parent", "section", "home", "desc", "links", "dims",
@@ -527,8 +535,15 @@ IGNORED = {
     "hideMaterialsTitle", "hideProcedureTitle", "linkToCheck",
     # Le portail numérote ses versions pour son propre usage d'édition ;
     # le hub montre le contenu, pas ce compteur-là.
-    "solV", "endV", "actorV", "preV", "v", "soon", "arrows",
-    "diagram",
+    "solV", "endV", "actorV", "preV", "v", "soon", "arrows", "diagram",
+    "seed2V", "v2fix", "vidV", "tasteV", "badgeV", "tasteCo2V", "coldV",
+    "coldImgV", "coldV2", "coldV3", "coldV4", "coldV5", "coldV6", "leakV",
+    # Confirmé dans le contenu du 17/09/2026 : une fiche sans question n'en a
+    # jamais eu besoin, `askOff` ne fait que le confirmer une deuxième fois.
+    "askOff",
+    # Identique à `id` dans les trois langues (même valeur non traduite) :
+    # une clé technique du portail, pas un texte à afficher.
+    "badge",
 }
 # Ces deux-là ont des clés qui sont des données, pas des noms de champs : la
 # référence d'un filtre, le nom d'un symptôme. Inutile d'y descendre.
