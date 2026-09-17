@@ -7162,22 +7162,27 @@
            "e": "⚪",
            "go": "next",
            "l": "Blanc",
-           "img": "img/ask-bc-blanc.webp"
+           "img": "img/ask-bc-blanc.webp",
+           "sub": "Fonctionnement normal"
           },
           {
            "e": "🟡",
            "go": "fix",
            "l": "Jaune",
-           "img": "img/ask-bc-jaune.webp"
+           "img": "img/ask-bc-jaune.webp",
+           "sub": "Une anomalie a été détectée"
           }
          ],
          "hint": "Comment trouver le BE CONNECT : c’est le boîtier gris « BE WTR » fixé au mur, avec le filtre blanc en dessous. Le voyant se trouve sur le dessus du boîtier.",
-         "himg": "img/0460.webp"
+         "himg": "img/0460.webp",
+         "v2fix": 2
         },
         "need": [
          "bc"
         ],
-        "completed": true
+        "completed": true,
+        "seed2V": 1,
+        "warn": "Attention : si de l’eau a coulé sur le détecteur de fuite, il faut en comprendre la raison et chercher l’origine. Si le capteur a touché quelque chose de métallique, ou a été en contact avec de l’eau renversée par erreur ou avec un produit rangé dans le meuble, ce n’est pas très grave. En revanche, si une fuite a été détectée (sur un connecteur ou ailleurs), il faut faire intervenir un technicien pour la réparation."
        },
        {
         "problem": "Vérifier si le water-stop ancienne génération s'est déclenché",
@@ -7220,13 +7225,15 @@
          "v": 5,
          "howL": "Comment savoir s’il est déclenché ?",
          "how": "Regardez le petit levier noir sur le côté du water-stop (entouré en blanc sur la photo).\n✅ Levier rabattu contre le boîtier : il est normal, l’eau passe.\n⚠️ Levier relevé, écarté du boîtier (côté flèche rouge) : il est déclenché, l’eau est coupée.",
-         "howImg": "img/0682.webp"
+         "howImg": "img/0682.webp",
+         "v2fix": 2
         },
         "need": [],
         "preNote": {
          "bc": "⚠️ Avec un BE CONNECT, ce water-stop n’est normalement pas installé : le BE CONNECT le remplace. Mais sur certaines installations, il y a parfois les deux. Vérifiez s’il y en a un et, si oui, contrôlez son état."
         },
-        "completed": true
+        "completed": true,
+        "seed2V": 1
        },
        {
         "problem": "Vérifier si le robinet d'arrivée d'eau est bien ouvert",
@@ -7256,9 +7263,11 @@
            "img": "img/ask-vanne-fermee.webp"
           }
          ],
-         "v": 3
+         "v": 3,
+         "v2fix": 2
         },
-        "completed": true
+        "completed": true,
+        "seed2V": 1
        },
        {
         "problem": "Vérifier le sens de montage du réducteur de pression (flèche dans le sens de l'eau)",
@@ -7286,7 +7295,8 @@
          }
         ],
         "endV": 1,
-        "completed": true
+        "completed": true,
+        "seed2V": 1
        },
        {
         "problem": "Vérifier la date et l'état du filtre",
@@ -7303,7 +7313,30 @@
         "actor": "technicien",
         "consequence": "Un filtre saturé bloque le passage de l'eau.",
         "tip": "Vous pouvez aussi tester avec une cartouche de maintenance vide pour voir si le passage de l’eau fonctionne.",
-        "solV": 2
+        "solV": 2,
+        "completed": true,
+        "ask": {
+         "q": "Y a-t-il de l’eau en entrée du filtre mais pas en sortie ?",
+         "hint": "Vérifiez aussi sur le système (webapp BE CONNECT) si la date de maintenance est dépassée : un filtre trop ancien est souvent saturé.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Oui, ou la date de maintenance est dépassée",
+           "img": "img/0687.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Non, l’eau passe et la maintenance est à jour",
+           "img": ""
+          }
+         ],
+         "v2fix": 2,
+         "himg": "img/ask-app-beconnect.webp"
+        },
+        "seed2V": 1
        },
        {
         "problem": "Vérifier l'état du préfiltre (technicien uniquement, sur les systèmes concernés)",
@@ -7320,7 +7353,27 @@
          ]
         ],
         "actor": "technicien",
-        "consequence": "Un préfiltre saturé réduit puis coupe l'arrivée d'eau."
+        "consequence": "Un préfiltre saturé réduit puis coupe l'arrivée d'eau.",
+        "completed": true,
+        "ask": {
+         "q": "Le tamis du préfiltre est-il encrassé ?",
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Oui, il est encrassé",
+           "img": "img/0689.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Non, il est propre",
+           "img": "img/0688.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Vérifier si le BE CONNECT est bloqué (technicien uniquement, après diagnostic)",
@@ -7339,7 +7392,28 @@
          "bc"
         ],
         "tip": "Pour confirmer que c’est bien le BE CONNECT qui bloque, vous pouvez ponter son passage : si le système fonctionne à nouveau, c’est bien lui.",
-        "solV": 2
+        "solV": 2,
+        "completed": true,
+        "ask": {
+         "q": "Y a-t-il de l’eau en entrée du BE CONNECT mais pas en sortie ?",
+         "himg": "",
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Oui, l’eau ne ressort pas",
+           "img": "img/0690.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Non, l’eau ressort normalement",
+           "img": ""
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Vérifier que les tuyaux ne sont ni pincés ni écrasés",
@@ -7355,10 +7429,32 @@
         "actor": "technicien",
         "consequence": "Un tuyau pincé empêche l'eau d'arriver jusqu'au système.",
         "tip": "Attention : un tuyau qui a été pincé est fragilisé. Il est recommandé de remplacer le tuyau dans son intégralité. Si ce n’est pas possible, coupez la partie endommagée et remplacez-la par un morceau de tuyau avec deux raccords manchon.",
-        "solV": 2
+        "solV": 2,
+        "completed": true,
+        "ask": {
+         "q": "Voyez-vous un tuyau pincé, plié ou écrasé ?",
+         "hint": "Suivez toute la ligne d’eau, de l’arrivée jusqu’au robinet, en regardant derrière et sous le meuble.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Oui, un tuyau est abîmé",
+           "img": "img/0691.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Non, tous les tuyaux sont libres",
+           "img": ""
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
-        "problem": "Vérifier si le BOX est gelé (givre visible, eau bloquée)",
+        "problem": "Vérifier si la BOX est gelée (givre visible, eau bloquée)",
         "solution": [
          "A faire uniquement si toutes les autres solutions ont été testé et n'ont pas fonctionné !",
          "Éteindre la BOX pendant 12h et baisser le thermostat (une BOX gelée met très longtemps à se dégeler, donc ne pas rallumer tant que l'eau plate ne fonctionne pas à nouveau)"
@@ -7387,9 +7483,12 @@
            "img": "img/ask-box-gel.webp"
           }
          ],
-         "hint": "Comment le voir :\n• BOX 80 à 150 : regardez à l’intérieur du bac à glace, il suffit d’enlever le capot du dessus.\n• BOX 15 à 45 : impossible de le voir. Le seul moyen est de brancher la BOX en direct sur l’arrivée d’eau (sans tap), d’ouvrir l’eau et de vérifier si l’eau sort bien de la BOX par la sortie « OUT » eau plate."
+         "hint": "Comment le voir :\n• BOX 80 à 150 : regardez à l’intérieur du bac à glace, il suffit d’enlever le capot du dessus.\n• BOX 15 à 45 : impossible de le voir. Le seul moyen est de brancher la BOX en direct sur l’arrivée d’eau (sans tap), d’ouvrir l’eau et de vérifier si l’eau sort bien de la BOX par la sortie « OUT » eau plate.",
+         "v2fix": 2
         },
-        "actorV": 1
+        "actorV": 1,
+        "completed": true,
+        "seed2V": 1
        }
       ],
       "pre": {
@@ -7438,21 +7537,36 @@
            "e": "⚪",
            "go": "next",
            "l": "Blanc",
-           "img": "img/ask-bc-blanc.webp"
+           "img": "img/ask-bc-blanc.webp",
+           "sub": "Fonctionnement normal"
           },
           {
            "e": "🟡",
            "go": "fix",
            "l": "Jaune",
-           "img": "img/ask-bc-jaune.webp"
+           "img": "img/ask-bc-jaune.webp",
+           "sub": "Une anomalie a été détectée"
           }
          ],
          "hint": "Comment trouver le BE CONNECT : c’est le boîtier gris « BE WTR » fixé au mur, avec le filtre blanc en dessous. Le voyant se trouve sur le dessus du boîtier.",
-         "himg": "img/0460.webp"
+         "himg": "img/0460.webp",
+         "v2fix": 2
         },
         "need": [
          "bc"
-        ]
+        ],
+        "stepImages": [
+         [
+          "img/0675.webp",
+          "img/0676.webp",
+          "img/0677.webp"
+         ],
+         [
+          "img/0678.webp"
+         ]
+        ],
+        "seed2V": 1,
+        "warn": "Attention : si de l’eau a coulé sur le détecteur de fuite, il faut en comprendre la raison et chercher l’origine. Si le capteur a touché quelque chose de métallique, ou a été en contact avec de l’eau renversée par erreur ou avec un produit rangé dans le meuble, ce n’est pas très grave. En revanche, si une fuite a été détectée (sur un connecteur ou ailleurs), il faut faire intervenir un technicien pour la réparation."
        },
        {
         "problem": "Vérifier si le water-stop ancienne génération s'est déclenché",
@@ -7481,12 +7595,25 @@
          "v": 5,
          "howL": "Comment savoir s’il est déclenché ?",
          "how": "Regardez le petit levier noir sur le côté du water-stop (entouré en blanc sur la photo).\n✅ Levier rabattu contre le boîtier : il est normal, l’eau passe.\n⚠️ Levier relevé, écarté du boîtier (côté flèche rouge) : il est déclenché, l’eau est coupée.",
-         "howImg": "img/0682.webp"
+         "howImg": "img/0682.webp",
+         "v2fix": 2
         },
         "need": [],
         "preNote": {
          "bc": "⚠️ Avec un BE CONNECT, ce water-stop n’est normalement pas installé : le BE CONNECT le remplace. Mais sur certaines installations, il y a parfois les deux. Vérifiez s’il y en a un et, si oui, contrôlez son état."
-        }
+        },
+        "stepImages": [
+         [
+          "img/0679.webp",
+          "img/0680.webp"
+         ],
+         [
+          "img/0681.webp",
+          "img/0682.webp",
+          "img/0683.webp"
+         ]
+        ],
+        "seed2V": 1
        },
        {
         "problem": "Vérifier si le robinet d'arrivée d'eau est bien ouvert",
@@ -7510,8 +7637,15 @@
            "img": "img/ask-vanne-fermee.webp"
           }
          ],
-         "v": 3
-        }
+         "v": 3,
+         "v2fix": 2
+        },
+        "stepImages": [
+         [
+          "img/0684.webp"
+         ]
+        ],
+        "seed2V": 1
        },
        {
         "problem": "Vérifier le sens de montage du réducteur de pression (flèche dans le sens de l'eau)",
@@ -7531,7 +7665,13 @@
           "l": "Je n’en ai pas trouvé sur mon installation"
          }
         ],
-        "endV": 1
+        "endV": 1,
+        "stepImages": [
+         [
+          "img/0686.webp"
+         ]
+        ],
+        "seed2V": 1
        },
        {
         "problem": "Vérifier la date et l'état du filtre",
@@ -7541,7 +7681,34 @@
         ],
         "consequence": "Un filtre saturé bloque le passage de l'eau.",
         "tip": "Vous pouvez aussi tester avec une cartouche de maintenance vide pour voir si le passage de l’eau fonctionne.",
-        "solV": 2
+        "solV": 2,
+        "stepImages": [
+         [
+          "img/0687.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Y a-t-il de l’eau en entrée du filtre mais pas en sortie ?",
+         "hint": "Vérifiez aussi sur le système (webapp BE CONNECT) si la date de maintenance est dépassée : un filtre trop ancien est souvent saturé.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Oui, ou la date de maintenance est dépassée",
+           "img": "img/0687.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Non, l’eau passe et la maintenance est à jour",
+           "img": ""
+          }
+         ],
+         "v2fix": 2,
+         "himg": "img/ask-app-beconnect.webp"
+        },
+        "seed2V": 1
        },
        {
         "problem": "Vérifier l'état du préfiltre (technicien uniquement, sur les systèmes concernés)",
@@ -7549,27 +7716,111 @@
          "Nettoyer le préfiltre",
          "Remplacer le joint du filtre"
         ],
-        "consequence": "Un préfiltre saturé réduit puis coupe l'arrivée d'eau."
+        "consequence": "Un préfiltre saturé réduit puis coupe l'arrivée d'eau.",
+        "stepImages": [
+         [
+          "img/0688.webp"
+         ],
+         [
+          "img/0689.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Le tamis du préfiltre est-il encrassé ?",
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Oui, il est encrassé",
+           "img": "img/0689.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Non, il est propre",
+           "img": "img/0688.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Vérifier si le BE CONNECT est bloqué (technicien uniquement, après diagnostic)",
-        "solution": null,
+        "solution": [
+         "Remplacement du BE CONNECT",
+         "*Si le BE CONNECT est bouché, il doit y avoir de l'eau en entrée de filtre mais pas en sortie"
+        ],
         "consequence": "Le BE CONNECT ne commande plus l'ouverture de l'eau vers le système.",
         "need": [
          "bc"
         ],
         "tip": "Pour confirmer que c’est bien le BE CONNECT qui bloque, vous pouvez ponter son passage : si le système fonctionne à nouveau, c’est bien lui.",
-        "solV": 2
+        "solV": 2,
+        "stepImages": [
+         [
+          "img/0690.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Y a-t-il de l’eau en entrée du BE CONNECT mais pas en sortie ?",
+         "himg": "",
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Oui, l’eau ne ressort pas",
+           "img": "img/0690.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Non, l’eau ressort normalement",
+           "img": ""
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Vérifier que les tuyaux ne sont ni pincés ni écrasés",
-        "solution": null,
+        "solution": [
+         "Vérifier toute la ligne d'arrivée d'eau et s'assurer qu'aucun tuyau n'est pincé ou bloqué",
+         "Remplacement du tuyau si nécessaire"
+        ],
         "consequence": "Un tuyau pincé empêche l'eau d'arriver jusqu'au système.",
         "tip": "Attention : un tuyau qui a été pincé est fragilisé. Il est recommandé de remplacer le tuyau dans son intégralité. Si ce n’est pas possible, coupez la partie endommagée et remplacez-la par un morceau de tuyau avec deux raccords manchon.",
-        "solV": 2
+        "solV": 2,
+        "stepImages": [
+         [
+          "img/0691.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Voyez-vous un tuyau pincé, plié ou écrasé ?",
+         "hint": "Suivez toute la ligne d’eau, de l’arrivée jusqu’au robinet, en regardant derrière et sous le meuble.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Oui, un tuyau est abîmé",
+           "img": "img/0691.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Non, tous les tuyaux sont libres",
+           "img": ""
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
-        "problem": "Vérifier si le BOX est gelé (givre visible, eau bloquée)",
+        "problem": "Vérifier si la BOX est gelée (givre visible, eau bloquée)",
         "solution": [
          "BOX 15 / 20",
          "BOX 30",
@@ -7592,10 +7843,24 @@
            "img": "img/ask-box-gel.webp"
           }
          ],
-         "hint": "Comment le voir :\n• BOX 80 à 150 : regardez à l’intérieur du bac à glace, il suffit d’enlever le capot du dessus.\n• BOX 15 à 45 : impossible de le voir. Le seul moyen est de brancher la BOX en direct sur l’arrivée d’eau (sans tap), d’ouvrir l’eau et de vérifier si l’eau sort bien de la BOX par la sortie « OUT » eau plate."
+         "hint": "Comment le voir :\n• BOX 80 à 150 : regardez à l’intérieur du bac à glace, il suffit d’enlever le capot du dessus.\n• BOX 15 à 45 : impossible de le voir. Le seul moyen est de brancher la BOX en direct sur l’arrivée d’eau (sans tap), d’ouvrir l’eau et de vérifier si l’eau sort bien de la BOX par la sortie « OUT » eau plate.",
+         "v2fix": 2
         },
         "actor": "technicien",
-        "actorV": 1
+        "actorV": 1,
+        "stepImages": [
+         [
+          "img/0501.webp"
+         ],
+         [
+          "img/0508.webp"
+         ],
+         [
+          "img/0685.webp",
+          "img/0333.webp"
+         ]
+        ],
+        "seed2V": 1
        }
       ],
       "pre": {
@@ -7638,7 +7903,42 @@
          "Tester de brancher la box directement sur une prise",
          "Si le problème persiste après ces 3 étapes, remplacer la box"
         ],
-        "consequence": "Sans alimentation, la pompe ne tourne pas : seul le CO2 sort du robinet."
+        "consequence": "Sans alimentation, la pompe ne tourne pas : seul le CO2 sort du robinet.",
+        "stepImages": [
+         [
+          "img/0199.webp"
+         ],
+         [
+          "img/0189.webp",
+          "img/0267.webp"
+         ],
+         [
+          "img/0198.webp",
+          "img/0563.webp"
+         ]
+        ],
+        "ask": {
+         "q": "La BOX est-elle allumée ?",
+         "hint": "Regardez l’interrupteur à l’arrière de la BOX et écoutez si la ventilation tourne.",
+         "himg": "img/0237.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Oui, elle est allumée et le voyant du BE CONNECT est blanc",
+           "img": "img/0199.webp"
+          },
+          {
+           "e": "🔌",
+           "go": "fix",
+           "l": "Non, elle semble éteinte",
+           "img": "img/0198.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Écouter si la pompe d'eau gazeuse démarre au moment du tirage",
@@ -7647,21 +7947,103 @@
          "Si elle ne se réenclenche pas, vérifier que le moteur de la pompe fonctionne",
          "Vérifier que la pompe n'est pas bloquée"
         ],
-        "consequence": "Sans pompe, l'eau n'est plus envoyée dans le saturateur : seul le CO2 sort."
+        "consequence": "Sans pompe, l'eau n'est plus envoyée dans le saturateur : seul le CO2 sort.",
+        "stepImages": [
+         [
+          "img/0237.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Entendez-vous la pompe démarrer quand vous tirez de l’eau gazeuse ?",
+         "hint": "Tirez de l’eau gazeuse et écoutez la BOX : la pompe fait un bruit de moteur pendant quelques secondes.",
+         "himg": "img/0480.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "🔊",
+           "go": "next",
+           "l": "Oui, la pompe démarre"
+          },
+          {
+           "e": "🔇",
+           "go": "fix",
+           "l": "Non, aucun bruit"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Vérifier si le BE CONNECT est bloqué (technicien uniquement, après diagnostic)",
-        "solution": null,
+        "solution": [
+         "Remplacement du BE CONNECT",
+         "*Si le BE CONNECT est bouché, il doit y avoir de l'eau en entrée de filtre mais pas en sortie"
+        ],
         "consequence": "Le BE CONNECT ne commande plus l'ouverture de l'eau vers le système.",
         "tip": "Pour confirmer que c’est bien le BE CONNECT qui bloque, vous pouvez ponter son passage : si le système fonctionne à nouveau, c’est bien lui.",
-        "solV": 2
+        "solV": 2,
+        "stepImages": [
+         [
+          "img/0690.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Y a-t-il de l’eau en entrée du BE CONNECT mais pas en sortie ?",
+         "himg": "",
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Oui, l’eau ne ressort pas",
+           "img": "img/0690.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Non, l’eau ressort normalement",
+           "img": ""
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Vérifier que les tuyaux ne sont ni pincés ni écrasés",
-        "solution": null,
+        "solution": [
+         "Vérifier toute la ligne d'arrivée d'eau et s'assurer qu'aucun tuyau n'est pincé ou bloqué",
+         "Remplacement du tuyau si nécessaire"
+        ],
         "consequence": "Un tuyau pincé empêche l'eau d'arriver jusqu'au système.",
         "tip": "Attention : un tuyau qui a été pincé est fragilisé. Il est recommandé de remplacer le tuyau dans son intégralité. Si ce n’est pas possible, coupez la partie endommagée et remplacez-la par un morceau de tuyau avec deux raccords manchon.",
-        "solV": 2
+        "solV": 2,
+        "stepImages": [
+         [
+          "img/0691.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Voyez-vous un tuyau pincé, plié ou écrasé ?",
+         "hint": "Suivez toute la ligne d’eau, de l’arrivée jusqu’au robinet, en regardant derrière et sous le meuble.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Oui, un tuyau est abîmé",
+           "img": "img/0691.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Non, tous les tuyaux sont libres",
+           "img": ""
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        }
       ]
      },
@@ -7674,14 +8056,73 @@
          "Vérifier la pression de la bouteille de CO2 (environ 3,8 bar)",
          "Remplacer la bouteille de CO2"
         ],
-        "consequence": "Une bouteille vide ne permet plus de gazéifier l'eau."
+        "consequence": "Une bouteille vide ne permet plus de gazéifier l'eau.",
+        "stepImages": [
+         [
+          "img/0092.webp"
+         ],
+         [
+          "img/0229.webp",
+          "img/0230.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Où se trouve l’aiguille du manomètre de CO2 ?",
+         "hint": "Le manomètre est monté sur la bouteille de CO2. Bouteille ouverte, il doit indiquer environ 3,8 bar.",
+         "himg": "img/0092.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Dans le vert (≈ 3,8 bar)",
+           "img": "img/ask-mano-co2-ok.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Proche de 0 : bouteille vide",
+           "img": "img/ask-mano-co2-bas.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Vérifier la pression affichée sur le manomètre de CO2",
         "solution": [
          "Régler la pression de la bouteille de CO2 (environ 3,8 bar)"
         ],
-        "consequence": "Une pression trop basse donne une eau peu pétillante."
+        "consequence": "Une pression trop basse donne une eau peu pétillante.",
+        "stepImages": [
+         [
+          "img/0281.webp",
+          "img/0235.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Où se trouve l’aiguille du manomètre de CO2 ?",
+         "hint": "Réglage conseillé : environ 0,8 bar au-dessus de la pression d’eau, sans jamais dépasser 4 bar.",
+         "himg": "img/0281.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Dans le vert (≈ 3,8 bar)",
+           "img": "img/ask-mano-co2-ok.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Trop basse",
+           "img": "img/ask-mano-co2-bas.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Vérifier que la bouteille de CO2 est bien d'un type compatible",
@@ -7690,21 +8131,104 @@
          "Compatible uniquement avec Aligal 2",
          "Incompatible avec Aligal 3 et Aligal 13"
         ],
-        "consequence": "Une bouteille non compatible ne délivre pas la bonne pression."
+        "consequence": "Une bouteille non compatible ne délivre pas la bonne pression.",
+        "stepImages": [
+         [
+          "img/0818.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Quelle inscription voyez-vous sur la bouteille de CO2 ?",
+         "himg": "img/0818.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Aligal 2",
+           "img": "img/0818.webp"
+          },
+          {
+           "e": "❌",
+           "go": "fix",
+           "l": "Aligal 3 ou Aligal 13"
+          },
+          {
+           "e": "🤔",
+           "go": "fix",
+           "l": "Une autre inscription"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Vérifier si une restauration de l'eau gazeuse a été lancée",
         "solution": [
          "Vider le carbonateur puis purger l'eau gazeuse"
         ],
-        "consequence": "Après un manque de CO2, le circuit doit être réamorcé pour retrouver le pétillant."
+        "consequence": "Après un manque de CO2, le circuit doit être réamorcé pour retrouver le pétillant.",
+        "stepImages": [
+         [
+          "img/0469.webp",
+          "img/0486.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Le carbonateur a-t-il été vidé et l’eau gazeuse purgée depuis le dernier manque de CO2 ?",
+         "himg": "img/0469.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Oui, c’est déjà fait",
+           "img": "img/0486.webp"
+          },
+          {
+           "e": "🔁",
+           "go": "fix",
+           "l": "Non, pas encore",
+           "img": "img/0469.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Vérifier la température de l'eau au tirage",
         "solution": [
          "Vérifier que la box refroidit correctement et que le thermostat est bien réglé"
         ],
-        "consequence": "Une eau trop chaude retient mal le CO2 : elle paraît plate."
+        "consequence": "Une eau trop chaude retient mal le CO2 : elle paraît plate.",
+        "stepImages": [
+         [
+          "img/0231.webp",
+          "img/0490.webp"
+         ]
+        ],
+        "ask": {
+         "q": "L’eau qui sort est-elle bien froide ?",
+         "hint": "Si possible, mesurez la température de l’eau avec un thermomètre.",
+         "himg": "img/0580.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "❄️",
+           "go": "next",
+           "l": "Oui, elle est froide"
+          },
+          {
+           "e": "🌡️",
+           "go": "fix",
+           "l": "Non, elle est tiède"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        }
       ]
      },
@@ -7717,7 +8241,37 @@
          "Remplacer la bouteille de CO2",
          "Régler la pression à environ 3,8 bar"
         ],
-        "consequence": "Sans CO2, plus aucune eau gazeuse ne peut être produite."
+        "consequence": "Sans CO2, plus aucune eau gazeuse ne peut être produite.",
+        "stepImages": [
+         [
+          "img/0229.webp",
+          "img/0230.webp"
+         ],
+         [
+          "img/0281.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Où se trouve l’aiguille du manomètre de CO2 ?",
+         "himg": "img/0092.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Dans le vert : il reste du CO2",
+           "img": "img/ask-mano-co2-ok.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Proche de 0 : bouteille vide",
+           "img": "img/ask-mano-co2-bas.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        }
       ]
      }
@@ -7743,7 +8297,37 @@
         ],
         "consequence": "Un filtre saturé bloque le passage de l'eau.",
         "tip": "Vous pouvez aussi tester avec une cartouche de maintenance vide pour voir si le passage de l’eau fonctionne.",
-        "solV": 2
+        "solV": 2,
+        "stepImages": [
+         [
+          "img/0687.webp"
+         ],
+         [
+          "img/0467.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Y a-t-il de l’eau en entrée du filtre mais pas en sortie ?",
+         "hint": "Vérifiez aussi sur le système (webapp BE CONNECT) si la date de maintenance est dépassée : un filtre trop ancien est souvent saturé.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Oui, ou la date de maintenance est dépassée",
+           "img": "img/0687.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Non, l’eau passe et la maintenance est à jour",
+           "img": ""
+          }
+         ],
+         "v2fix": 2,
+         "himg": "img/ask-app-beconnect.webp"
+        },
+        "seed2V": 1
        },
        {
         "problem": "Vérifier l'état du préfiltre (technicien uniquement, sur les systèmes concernés)",
@@ -7751,14 +8335,69 @@
          "Nettoyer le préfiltre",
          "Remplacer le joint du filtre"
         ],
-        "consequence": "Un préfiltre saturé réduit puis coupe l'arrivée d'eau."
+        "consequence": "Un préfiltre saturé réduit puis coupe l'arrivée d'eau.",
+        "stepImages": [
+         [
+          "img/0688.webp"
+         ],
+         [
+          "img/0689.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Le tamis du préfiltre est-il encrassé ?",
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Oui, il est encrassé",
+           "img": "img/0689.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Non, il est propre",
+           "img": "img/0688.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Vérifier la pression de l'arrivée d'eau du bâtiment",
         "solution": [
          "Contrôler la pression en statique et en dynamique à l'aide du réducteur de pression ou d'un manomètre"
         ],
-        "consequence": "Une pression insuffisante limite le débit de tout le système."
+        "consequence": "Une pression insuffisante limite le débit de tout le système.",
+        "stepImages": [
+         [
+          "img/0279.webp",
+          "img/0234.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Quelle pression indique le manomètre d’eau ?",
+         "hint": "Le manomètre se trouve sur le réducteur de pression. Réglage conseillé : entre 2,5 et 3 bar.",
+         "himg": "img/0279.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Entre 2,5 et 3 bar",
+           "img": "img/ask-mano-eau-ok.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Moins de 2,5 bar",
+           "img": "img/ask-mano-eau-bas.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        }
       ]
      },
@@ -7771,21 +8410,107 @@
          "Vérifier la pression (environ 3,8 bar)",
          "Remplacer la bouteille de CO2"
         ],
-        "consequence": "Une bouteille vide ne permet plus de gazéifier l'eau."
+        "consequence": "Une bouteille vide ne permet plus de gazéifier l'eau.",
+        "stepImages": [
+         [
+          "img/0092.webp"
+         ],
+         [
+          "img/0229.webp",
+          "img/0230.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Où se trouve l’aiguille du manomètre de CO2 ?",
+         "hint": "Le manomètre est monté sur la bouteille de CO2. Bouteille ouverte, il doit indiquer environ 3,8 bar.",
+         "himg": "img/0092.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Dans le vert (≈ 3,8 bar)",
+           "img": "img/ask-mano-co2-ok.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Proche de 0 : bouteille vide",
+           "img": "img/ask-mano-co2-bas.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Vérifier la pression affichée sur le manomètre de CO2",
         "solution": [
          "Régler la pression de la bouteille de CO2 (environ 3,8 bar)"
         ],
-        "consequence": "Une pression trop basse donne une eau peu pétillante."
+        "consequence": "Une pression trop basse donne une eau peu pétillante.",
+        "stepImages": [
+         [
+          "img/0281.webp",
+          "img/0235.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Où se trouve l’aiguille du manomètre de CO2 ?",
+         "hint": "Réglage conseillé : environ 0,8 bar au-dessus de la pression d’eau, sans jamais dépasser 4 bar.",
+         "himg": "img/0281.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Dans le vert (≈ 3,8 bar)",
+           "img": "img/ask-mano-co2-ok.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Trop basse",
+           "img": "img/ask-mano-co2-bas.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Vérifier le réglage du réducteur de débit",
         "solution": [
          "Régler le réducteur de débit sur l'eau gazeuse"
         ],
-        "consequence": "Trop fermé, il bride volontairement le débit d'eau gazeuse."
+        "consequence": "Trop fermé, il bride volontairement le débit d'eau gazeuse.",
+        "stepImages": [
+         [
+          "img/0341.webp",
+          "img/0238.webp",
+          "img/0239.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Combien de temps faut-il pour remplir une bouteille de 75 cl d’eau gazeuse ?",
+         "hint": "Chronométrez le remplissage : il doit prendre environ 20 secondes.",
+         "opts": [
+          {
+           "e": "⏱️",
+           "go": "next",
+           "l": "Environ 20 secondes",
+           "img": "img/0239.webp"
+          },
+          {
+           "e": "🐢",
+           "go": "fix",
+           "l": "Beaucoup plus longtemps",
+           "img": "img/0238.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        }
       ]
      }
@@ -7804,32 +8529,444 @@
       "heading": "Problème de goût",
       "problems": [
        {
-        "problem": "Vérifier si le goût n'apparaît que sur l'eau gazeuse",
+        "problem": "Vider le carbonateur",
+        "consequence": "Si le système a peu servi ou n’a pas été utilisé depuis quelques heures, le CO2 peut prendre le dessus sur le goût de l’eau.",
         "solution": [
-         "Vider le carbonateur puis vider 10 litres d'eau gazeuse",
-         "Si le problème persiste, remplacer la bouteille de CO2 et refaire la même étape"
+         "Éteindre la BOX (ou fermer l’arrivée d’eau)",
+         "Tirer de l’eau gazeuse jusqu’à ce qu’il ne sorte plus que du CO2",
+         "Rallumer la BOX (ou rouvrir l’arrivée d’eau)",
+         "Attendre quelques secondes que la pompe remplisse à nouveau le carbonateur, puis purger l’eau gazeuse",
+         "Goûter à nouveau l’eau gazeuse"
         ],
-        "consequence": "Si c'est le cas, le problème vient du circuit CO2 ou du saturateur, pas du filtre."
+        "stepImages": [
+         [
+          "img/0237.webp",
+          "img/0469.webp"
+         ],
+         [
+          "img/0486.webp"
+         ],
+         [
+          "img/0237.webp",
+          "img/0469.webp"
+         ],
+         [
+          "img/0480.webp"
+         ],
+         [
+          "img/0485.webp"
+         ]
+        ],
+        "actor": "utilisateur",
+        "need": [
+         "gaz"
+        ],
+        "askOff": true,
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "tip": "Attention : les 15 à 20 premiers cl ne sont pas refroidis, ils stagnent entre le système de refroidissement et le robinet. Il est donc tout à fait normal que cette eau soit tiède et ait un léger goût. Elle n’a aucun impact sur la santé : il suffit de laisser couler ces premiers centilitres.",
+        "link": "https://www.youtube.com/watch?v=qyeLBhbruhQ",
+        "vidV": 1,
+        "completed": true
        },
        {
-        "problem": "Vérifier si le goût est aussi présent sur l'eau plate",
+        "problem": "Vérifier la pression de la bouteille de CO2",
+        "consequence": "Une bouteille de CO2 vide ou presque vide peut donner du goût à l’eau gazeuse.",
         "solution": [
-         "Faire couler 10 litres d'eau plate",
-         "Si le problème persiste, remplacer le filtre"
+         "Vérifier la pression sur le manomètre de la bouteille de CO2 (bouteille ouverte)",
+         "Si la pression est en dessous de 3 bar, la bouteille est vide : remplacer la bouteille de CO2",
+         "Faire couler quelques litres d’eau gazeuse",
+         "Goûter à nouveau l’eau gazeuse"
         ],
-        "consequence": "Si c'est le cas, le problème vient du filtre ou du circuit d'eau."
+        "stepImages": [
+         [
+          "img/0092.webp"
+         ],
+         [
+          "img/ask-mano-co2-bas.webp",
+          "img/0468.webp"
+         ],
+         [
+          "img/0486.webp"
+         ],
+         [
+          "img/0485.webp"
+         ]
+        ],
+        "actor": "utilisateur",
+        "need": [
+         "gaz"
+        ],
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "ask": {
+         "q": "Quelle pression indique le manomètre de la bouteille de CO2 ?",
+         "hint": "Le manomètre est monté sur la bouteille de CO2. Regardez-le bouteille ouverte.",
+         "himg": "img/0092.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "3 bar ou plus",
+           "img": "img/ask-mano-co2-ok.webp",
+           "sub": "Pression correcte"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "En dessous de 3 bar",
+           "img": "img/ask-mano-co2-bas.webp",
+           "sub": "La bouteille est vide"
+          }
+         ],
+         "v2fix": 2
+        },
+        "link": "https://www.youtube.com/watch?v=e9AK0rLpnu4",
+        "vidV": 1,
+        "completed": true
+       },
+       {
+        "problem": "Remplacer la bouteille de CO2",
+        "consequence": "La bouteille de CO2 peut donner du goût à l’eau gazeuse : date de validité dépassée ou problème de remplissage chez le fournisseur.",
+        "solution": [
+         "Fermer la bouteille de CO2",
+         "Dévisser le régulateur de CO2 de la bouteille",
+         "Mettre le joint dans le régulateur de CO2, puis serrer l’écrou sur la nouvelle bouteille",
+         "Ouvrir la bouteille de CO2 et vérifier la pression (environ 3,8 bar)",
+         "Faire couler 10 l d’eau gazeuse pour vider complètement le carbonateur",
+         "Goûter à nouveau l’eau gazeuse"
+        ],
+        "stepImages": [
+         [
+          "img/0468.webp"
+         ],
+         [
+          "img/0230.webp"
+         ],
+         [
+          "img/0274.webp",
+          "img/0275.webp"
+         ],
+         [
+          "img/0280.webp",
+          "img/0281.webp"
+         ],
+         [
+          "img/0480.webp"
+         ],
+         [
+          "img/0485.webp"
+         ]
+        ],
+        "actor": "utilisateur",
+        "need": [
+         "gaz"
+        ],
+        "askOff": true,
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "tip": "Ce goût n’a aucun impact sur la santé, seulement sur le goût de l’eau gazeuse.",
+        "completed": true
+       },
+       {
+        "problem": "Faire couler 10 l d’eau gazeuse et 3 l d’eau plate",
+        "consequence": "De l’eau restée longtemps dans le circuit peut prendre un goût : la renouveler suffit souvent.",
+        "solution": [
+         "Faire couler 10 l d’eau gazeuse",
+         "Faire couler 3 l d’eau plate",
+         "Goûter à nouveau l’eau plate et l’eau gazeuse"
+        ],
+        "stepImages": [
+         [
+          "img/0480.webp"
+         ],
+         [
+          "img/0479.webp"
+         ],
+         [
+          "img/0485.webp"
+         ]
+        ],
+        "actor": "utilisateur",
+        "need": [
+         "both"
+        ],
+        "askOff": true,
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "tip": "Attention : les 15 à 20 premiers cl ne sont pas refroidis, ils stagnent entre le système de refroidissement et le robinet. Il est donc tout à fait normal que cette eau soit tiède et ait un léger goût. Elle n’a aucun impact sur la santé : il suffit de laisser couler ces premiers centilitres.",
+        "completed": true
+       },
+       {
+        "problem": "Remplacer le filtre",
+        "consequence": "Un filtre en fin de vie peut donner du goût à l’eau.",
+        "solution": [
+         "Vérifier sur le système (webapp BE CONNECT) si la date de maintenance est dépassée : si oui, faire la maintenance complète en même temps (désinfection avec la cartouche de maintenance) avant de remplacer le filtre",
+         "Si la date de maintenance n’est pas dépassée : contrôler que les étapes précédentes ont bien été effectuées, puis remplacer uniquement le filtre (sans maintenance) et faire couler l’eau",
+         "Après remplacement, faire couler 10 l d’eau gazeuse (et 3 l d’eau plate si le goût était aussi sur l’eau plate)",
+         "Tester à nouveau le goût de l’eau"
+        ],
+        "stepImages": [
+         [
+          "img/ask-app-beconnect.webp",
+          "img/0467.webp"
+         ],
+         [
+          "img/0687.webp"
+         ],
+         [
+          "img/0480.webp",
+          "img/0479.webp"
+         ],
+         [
+          "img/0485.webp"
+         ]
+        ],
+        "actor": "technicien",
+        "need": [],
+        "askOff": true,
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "preNote": {
+         "gaz": "Si seule l’eau gazeuse a du goût, c’est rarement le filtre : il y aurait aussi du goût sur l’eau plate. Contrôlez d’abord que les étapes précédentes ont bien été faites."
+        },
+        "completed": true
        }
-      ]
+      ],
+      "pre": {
+       "q": "Où sentez-vous le goût ?",
+       "hint": "Attention : les 15 à 20 premiers cl ne sont pas refroidis, ils stagnent entre le système de refroidissement et le robinet. Il est donc tout à fait normal que cette eau soit tiède et ait un léger goût. Elle n’a aucun impact sur la santé : il suffit de laisser couler ces premiers centilitres.",
+       "opts": [
+        {
+         "id": "gaz",
+         "img": "img/0483.webp",
+         "l": "Uniquement sur l’eau gazeuse",
+         "badge": "gaz"
+        },
+        {
+         "id": "both",
+         "img": "img/0485.webp",
+         "l": "Sur l’eau plate et l’eau gazeuse",
+         "badge": "both"
+        }
+       ]
+      },
+      "preV": 99,
+      "tasteV": 1,
+      "badgeV": 1,
+      "tasteCo2V": 1
      },
      {
       "heading": "Eau pas froide",
       "problems": [
        {
+        "problem": "Vérifier que le système est bien allumé",
+        "consequence": "Si le système est éteint, le groupe froid ne fonctionne pas et l’eau sort tiède.",
+        "solution": [
+         "Vérifier que la BOX est bien branchée et que son interrupteur (à l’arrière) est sur marche",
+         "Tirer de l’eau gazeuse et écouter : on doit entendre la ventilation ou la pompe",
+         "Si la BOX est allumée mais que le ventilateur ne tourne pas : ne rien démonter, prévoir l’intervention d’un technicien pour la réparation (remplacement du ventilateur ou de la BOX)"
+        ],
+        "stepImages": [
+         [
+          "img/0237.webp"
+         ],
+         [
+          "img/0483.webp"
+         ],
+         [
+          "img/ask-ventil-off.webp"
+         ]
+        ],
+        "actor": "utilisateur",
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "ask": {
+         "q": "Entendez-vous la ventilation ou la pompe quand vous tirez de l’eau gazeuse ?",
+         "hint": "Tirez un verre d’eau gazeuse et écoutez la BOX : on doit entendre un bruit de ventilation ou de pompe.",
+         "himg": "img/0483.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Oui, j’entends la ventilation ou la pompe",
+           "img": "img/0491.webp",
+           "badge": "fanon"
+          },
+          {
+           "e": "❌",
+           "go": "fix",
+           "l": "Non, je n’entends aucun bruit",
+           "img": "img/ask-ventil-off.webp",
+           "badge": "fanoff"
+          }
+         ],
+         "v2fix": 2
+        },
+        "completed": true
+       },
+       {
         "problem": "Vérifier la température de l'eau et le réglage du thermostat",
-        "solution": null,
-        "consequence": "Le groupe froid ne descend pas à la bonne température."
+        "consequence": "Le groupe froid ne descend pas à la bonne température.",
+        "solution": [
+         "Régler le thermostat de la BOX entre 5 et 6 (ne jamais dépasser 6)"
+        ],
+        "stepImages": [
+         [
+          "img/0231.webp",
+          "img/0322.webp"
+         ]
+        ],
+        "actor": "utilisateur",
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "ask": {
+         "q": "Sur quel chiffre est réglé le thermostat de la BOX ?",
+         "hint": "Réglage conseillé : entre 5 et 6, sans jamais dépasser 6.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Entre 5 et 6",
+           "img": "img/0231.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "En dessous de 5, ou sur OFF",
+           "img": "img/0322.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "completed": true
+       },
+       {
+        "problem": "Contrôler que le ventilateur fonctionne et que la ventilation n’est pas obstruée",
+        "consequence": "Si l’air chaud ne peut pas s’évacuer, le groupe froid ne refroidit plus correctement.",
+        "solution": [
+         "Contrôler que le ventilateur tourne",
+         "Si la BOX est allumée mais que le ventilateur ne tourne pas : remplacer le ventilateur (si vous en avez un sous la main ou si vous pouvez le récupérer en pièce détachée) ou remplacer le système",
+         "Contrôler que le ventilateur et la grille ne sont pas obstrués par la poussière, et les dépoussiérer si besoin",
+         "Contrôler qu’aucun obstacle devant la ventilation n’empêche l’évacuation de l’air. S’il y a un kit de ventilation, s’assurer que le conduit n’est pas obstrué et que la découpe dans le meuble a bien été faite et est assez grande"
+        ],
+        "stepImages": [
+         [
+          "img/ask-fan.webp",
+          "img/0491.webp"
+         ],
+         [
+          "img/ask-ventil-off.webp"
+         ],
+         [
+          "img/ask-fan-sale.webp",
+          "img/0490.webp"
+         ],
+         [
+          "img/0242.webp",
+          "img/0243.webp",
+          "img/0211.webp"
+         ]
+        ],
+        "actor": "technicien",
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "askOff": true,
+        "tip": "Avant de commencer, contrôlez que les étapes précédentes ont bien été faites (système allumé, thermostat réglé entre 5 et 6).",
+        "completed": true
+       },
+       {
+        "problem": "Contrôler que le compresseur est chaud",
+        "consequence": "Si le compresseur est froid alors que l’eau est tiède, il ne s’enclenche pas ou ne fonctionne plus.",
+        "solution": [
+         "Toucher le compresseur de la BOX : il doit être chaud quand le système refroidit",
+         "S’il est froid : vérifier que le compresseur est bien branché et qu’aucune connectique ne s’est débranchée",
+         "S’il reste froid alors que l’eau est tiède et que tout est bien branché, le compresseur ne s’enclenche pas ou ne fonctionne plus : remplacer le système"
+        ],
+        "stepImages": [
+         [
+          "img/ask-comp-chaud.webp"
+         ],
+         [
+          "img/ask-comp-cablage.webp"
+         ],
+         [
+          "img/0258.webp"
+         ]
+        ],
+        "actor": "technicien",
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "tip": "Attention : le compresseur peut être très chaud. Touchez-le brièvement.",
+        "ask": {
+         "q": "Le compresseur est-il chaud ?",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Oui, il est chaud",
+           "img": "img/ask-comp-chaud.webp"
+          },
+          {
+           "e": "❄️",
+           "go": "fix",
+           "l": "Non, il est froid alors que l’eau est tiède",
+           "img": "img/ask-comp-froid.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "completed": true
+       },
+       {
+        "problem": "Remplacer le système",
+        "consequence": "Si aucune de ces vérifications n’a réglé le problème, le système doit être remplacé.",
+        "solution": [
+         "Si aucune des étapes précédentes n’a fonctionné, remplacer le système"
+        ],
+        "stepImages": [
+         [
+          "img/0258.webp"
+         ]
+        ],
+        "actor": "technicien",
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "askOff": true,
+        "completed": true
        }
-      ]
+      ],
+      "coldV": 1,
+      "coldImgV": 1,
+      "coldV2": 1,
+      "coldV3": 1,
+      "coldV4": 1,
+      "coldV5": 1,
+      "coldV6": 1
      }
     ],
     "parent": "pannes"
@@ -7849,7 +8986,32 @@
         "solution": [
          "Vérifier s'il n'y a pas de manque d'eau ou si la box est gelée (contrôler l'arrivée d'eau)"
         ],
-        "consequence": "La pompe n'arrive pas à monter en pression : fuite interne ou manque d'eau."
+        "consequence": "La pompe n'arrive pas à monter en pression : fuite interne ou manque d'eau.",
+        "stepImages": [
+         [
+          "img/0684.webp",
+          "img/0279.webp"
+         ]
+        ],
+        "ask": {
+         "q": "La pompe tourne-t-elle sans jamais s’arrêter ?",
+         "hint": "Écoutez la BOX pendant une minute, sans tirer d’eau.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "🔊",
+           "go": "fix",
+           "l": "Oui, elle tourne en continu"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Non, elle s’arrête"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        }
       ]
      }
@@ -7867,21 +9029,246 @@
      {
       "problems": [
        {
+        "problem": "Vérifier que l’eau vient bien du système",
+        "consequence": "La fuite peut venir d’ailleurs que du système : siphon, évier, machine à laver, lave-vaisselle ou machine à café à proximité.",
+        "solution": [
+         "La fuite ne vient pas du système BE WTR : la réparation ne concerne pas notre installation. Faire appel à un plombier ou au service de l’appareil concerné."
+        ],
+        "stepImages": [
+         [
+          "img/ask-fuite-ailleurs.webp"
+         ]
+        ],
+        "actor": "utilisateur",
+        "ask": {
+         "q": "Après avoir regardé partout autour, l’eau vient-elle bien du système BE WTR ?",
+         "hint": "Essuyez la zone, puis vérifiez partout autour : siphon, évier, écoulement, et les appareils à proximité (machine à laver, lave-vaisselle, machine à café…).",
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "img": "img/ask-raccord-fuite.webp",
+           "l": "Oui, ça vient bien du système"
+          },
+          {
+           "e": "❌",
+           "go": "fix",
+           "img": "img/ask-fuite-ailleurs.webp",
+           "l": "Non, ça vient d’ailleurs (siphon, évier, machine…)"
+          }
+         ],
+         "v2fix": 2,
+         "noneOff": true,
+         "himg": "img/ask-fuite-ailleurs.webp"
+        },
+        "endBtns": [
+         {
+          "e": "↩️",
+          "go": "next",
+          "l": "En fait, ça vient bien du système : continuer"
+         },
+         {
+          "e": "🚪",
+          "go": "quit",
+          "l": "Quitter"
+         }
+        ],
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "completed": true
+       },
+       {
+        "problem": "Vérifier si le bidon de récupération des eaux usées est plein",
+        "consequence": "Un bidon de récupération plein déborde et l’eau coule sous le meuble.",
+        "solution": [
+         "Vider le bidon de récupération des eaux usées dans un évier ou des toilettes",
+         "Remettre le bidon en place et vérifier que le tuyau d’évacuation est bien enfoncé dedans",
+         "Essuyer l’eau sous le meuble et vérifier après quelques heures qu’il n’y a plus de fuite"
+        ],
+        "stepImages": [
+         [
+          "img/ask-bidon-plein.webp",
+          "img/0843.webp"
+         ],
+         [
+          "img/0079.webp"
+         ],
+         []
+        ],
+        "actor": "utilisateur",
+        "ask": {
+         "q": "Le bidon de récupération des eaux usées est-il plein ?",
+         "hint": "Sur certaines installations, l’eau usée part dans un bidon placé sous le système ou dans le meuble. Selon le modèle, le bidon peut avoir une alarme sonore qui retentit quand il est plein.",
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "img": "img/ask-bidon-ok.webp",
+           "l": "Non, il n’est pas plein"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "img": "img/ask-bidon-plein.webp",
+           "l": "Oui, il est plein ou déborde"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "completed": true
+       },
+       {
         "problem": "Vérifier le niveau du bac à glace et du réservoir d'eau usée",
         "solution": [
-         "Sur les BOX 80 / 120 / 150, vider le bac à glace jusqu'au niveau minimum"
+         "Déclipser le tuyau de niveau du bac à glace (à côté de l’étiquette « FILL ICE-BANK »)",
+         "Abaisser le tuyau au-dessus d’une bassine et vider l’eau petit à petit, 50 cl par 50 cl",
+         "Remettre le tuyau en place après chaque vidange pour vérifier le niveau, sans en vider trop",
+         "S’arrêter exactement au niveau MIN",
+         "Vérifier aussi que le réservoir d’eau usée n’est pas plein, et le vider si besoin"
         ],
-        "consequence": "Le trop-plein déborde et de l'eau coule sous le meuble."
+        "consequence": "Le trop-plein déborde et de l'eau coule sous le meuble.",
+        "stepImages": [
+         [
+          "img/ask-bac-haut.webp"
+         ],
+         [
+          "img/ask-vidange-bac.webp"
+         ],
+         [],
+         [
+          "img/0333.webp"
+         ],
+         [
+          "img/0843.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Où se trouve le niveau d’eau du bac à glace ?",
+         "hint": "Sur les BOX 80 / 120 / 150, le niveau se lit sur le tube à côté de l’étiquette « FILL ICE-BANK ». Vérifiez aussi que le réservoir d’eau usée n’est pas plein.",
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Au niveau MIN",
+           "img": "img/0333.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Au-dessus du MIN, ou ça déborde",
+           "img": "img/ask-bac-haut.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1,
+        "actor": "utilisateur",
+        "actorV": 99,
+        "tip": "Attention : il faut absolument être au niveau MIN. Si on vide en dessous, la BOX va geler ; si on laisse au-dessus, le bac se remplira à nouveau trop vite, avant la prochaine maintenance.",
+        "solV": 99,
+        "completed": true
        },
        {
         "problem": "Vérifier les connecteurs et les raccords un par un",
         "solution": [
+         "Vérifier qu’aucun tuyau n’est sous tension (un appareil a pu être tiré) : bouger un peu chaque tuyau pour voir si le raccord fuit",
+         "Si c’est le cas, retirer cette tension au maximum et enfoncer le tuyau à fond dans le connecteur",
          "Recouper le tuyau et reconnecter le connecteur",
          "Si la fuite persiste, remplacer le connecteur"
         ],
-        "consequence": "Un raccord mal enfoncé ou abîmé laisse échapper de l'eau."
+        "consequence": "Un raccord mal enfoncé ou abîmé laisse échapper de l'eau.",
+        "stepImages": [
+         [
+          "img/ask-tuyau-tension.webp"
+         ],
+         [
+          "img/0272.webp"
+         ],
+         [
+          "img/0022.webp"
+         ],
+         [
+          "img/0774.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Voyez-vous de l’eau qui goutte sur un raccord ?",
+         "hint": "Essuyez les raccords avec un papier sec, puis regardez lequel se mouille en premier.\nAttention aux tuyaux sous tension : si un appareil a été tiré, un tuyau peut forcer sur son raccord. Bougez un peu chaque tuyau pour voir si le raccord fuit.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "💧",
+           "go": "fix",
+           "l": "Oui, un raccord fuit",
+           "img": "img/ask-raccord-fuite.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Non, tout est sec",
+           "img": "img/0022.webp"
+          }
+         ],
+         "v2fix": 2,
+         "himg": "img/ask-tuyau-tension.webp"
+        },
+        "seed2V": 1,
+        "actor": "utilisateur",
+        "actorV": 99,
+        "completed": true
+       },
+       {
+        "problem": "Déplacement d’un technicien : trouver d’où vient la fuite et la réparer",
+        "consequence": "Si la fuite continue après ces vérifications, il faut en trouver l’origine sur place.",
+        "solution": [
+         "Suivre tous les tuyaux un par un pour trouver d’où vient la fuite : essuyer les raccords, système en marche, puis observer lequel se mouille en premier",
+         "Vérifier à l’intérieur de la BOX qu’aucun connecteur n’a une légère fuite",
+         "Si le bac à glace se remplit tout seul, c’est qu’il y a une fuite juste au-dessus, sur un connecteur : elle peut être très légère et mettre plusieurs jours à le remplir",
+         "Contrôler le bac à glace, le trop-plein et le réservoir d’eau usée",
+         "Sur les BOX avec réducteur de pression intégré, la fuite vient souvent de ce réducteur : il est possible de le supprimer et d’installer un réducteur de pression externe",
+         "Réparer : recouper et reconnecter le tuyau, ou remplacer le raccord, le tuyau ou la pièce qui fuit",
+         "Remettre en eau et contrôler après quelques minutes qu’il n’y a plus de fuite"
+        ],
+        "stepImages": [
+         [
+          "img/ask-raccord-fuite.webp",
+          "img/0022.webp"
+         ],
+         [
+          "img/ask-fan.webp"
+         ],
+         [
+          "img/ask-bac-haut.webp"
+         ],
+         [
+          "img/0333.webp",
+          "img/0321.webp"
+         ],
+         [
+          "img/0761.webp"
+         ],
+         [
+          "img/0774.webp"
+         ],
+         []
+        ],
+        "actor": "technicien",
+        "askOff": true,
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "tip": "Attention : la fuite peut aussi venir d’ailleurs que de notre installation (siphon, eau qui coule de l’évier, etc.).",
+        "completed": true
        }
-      ]
+      ],
+      "leakV": 7
      }
     ],
     "parent": "pannes"
@@ -7898,8 +9285,43 @@
       "problems": [
        {
         "problem": "Vérifier la fréquence des redémarrages et les conditions d'aération",
-        "solution": null,
-        "consequence": "Des redémarrages répétés signalent une sécurité qui se déclenche : surchauffe, alimentation ou manque d'eau."
+        "solution": [
+         "Contrôler que la ventilation de la BOX n’est pas obstruée et la dépoussiérer",
+         "Mesurer la tension de la prise électrique (elle doit correspondre au standard du pays)",
+         "Vérifier que le robinet d’arrivée d’eau est bien ouvert (un manque d’eau met la BOX en sécurité)"
+        ],
+        "consequence": "Des redémarrages répétés signalent une sécurité qui se déclenche : surchauffe, alimentation ou manque d'eau.",
+        "stepImages": [
+         [
+          "img/0490.webp",
+          "img/0491.webp"
+         ],
+         [
+          "img/0563.webp",
+          "img/0564.webp"
+         ]
+        ],
+        "ask": {
+         "q": "La grille de ventilation de la BOX est-elle dégagée et propre ?",
+         "hint": "Une BOX qui chauffe se met en sécurité et redémarre. Laissez de l’espace autour de la grille.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Oui, elle est dégagée et propre",
+           "img": "img/0491.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Non, poussiéreuse ou encombrée",
+           "img": "img/0490.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        }
       ]
      }
@@ -17200,22 +18622,27 @@
            "e": "⚪",
            "go": "next",
            "l": "White",
-           "img": "img/ask-bc-blanc.webp"
+           "img": "img/ask-bc-blanc.webp",
+           "sub": "Normal operation"
           },
           {
            "e": "🟡",
            "go": "fix",
            "l": "Yellow",
-           "img": "img/ask-bc-jaune.webp"
+           "img": "img/ask-bc-jaune.webp",
+           "sub": "A fault has been detected"
           }
          ],
          "hint": "How to find the BE CONNECT: it is the grey “BE WTR” unit fixed to the wall, with the white filter underneath. The light is on top of the unit.",
-         "himg": "img/0460.webp"
+         "himg": "img/0460.webp",
+         "v2fix": 2
         },
         "need": [
          "bc"
         ],
-        "completed": true
+        "completed": true,
+        "seed2V": 1,
+        "warn": "Caution: if water has run onto the leak detector, you must understand why and find the source. If the sensor touched something metallic, or came into contact with water spilled by mistake or with a product stored in the cabinet, it is not serious. However, if a leak has been detected (on a connector or elsewhere), a technician must come to carry out the repair."
        },
        {
         "problem": "Check whether the previous-generation water-stop has tripped",
@@ -17258,13 +18685,15 @@
          "v": 5,
          "howL": "How can I tell if it has been triggered?",
          "how": "Look at the small black lever on the side of the water-stop (outlined in white in the photo).\n✅ Lever folded against the unit: it is normal, water flows.\n⚠️ Lever raised, away from the unit (red arrow side): it has been triggered, the water is cut off.",
-         "howImg": "img/0682.webp"
+         "howImg": "img/0682.webp",
+         "v2fix": 2
         },
         "need": [],
         "preNote": {
          "bc": "⚠️ With a BE CONNECT, this water-stop is normally not fitted: the BE CONNECT replaces it. But some installations have both. Check whether there is one and, if so, check its condition."
         },
-        "completed": true
+        "completed": true,
+        "seed2V": 1
        },
        {
         "problem": "Check that the water inlet valve is fully open",
@@ -17294,9 +18723,11 @@
            "img": "img/ask-vanne-fermee.webp"
           }
          ],
-         "v": 3
+         "v": 3,
+         "v2fix": 2
         },
-        "completed": true
+        "completed": true,
+        "seed2V": 1
        },
        {
         "problem": "Check the pressure reducer is fitted the right way round (arrow with the flow)",
@@ -17323,7 +18754,8 @@
          }
         ],
         "endV": 1,
-        "completed": true
+        "completed": true,
+        "seed2V": 1
        },
        {
         "problem": "Check the filter's date and condition",
@@ -17340,7 +18772,30 @@
         "actor": "technicien",
         "consequence": "A clogged filter blocks the water flow.",
         "tip": "You can also test with an empty maintenance cartridge to check whether the water flows through.",
-        "solV": 2
+        "solV": 2,
+        "completed": true,
+        "ask": {
+         "q": "Is there water at the filter inlet but not at the outlet?",
+         "hint": "Also check on the system (BE CONNECT web app) whether the maintenance date has passed: an old filter is often saturated.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Yes, or the maintenance date has passed",
+           "img": "img/0687.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "No, water flows and maintenance is up to date",
+           "img": ""
+          }
+         ],
+         "v2fix": 2,
+         "himg": "img/ask-app-beconnect.webp"
+        },
+        "seed2V": 1
        },
        {
         "problem": "Check the pre-filter (technician only, on the systems concerned)",
@@ -17357,7 +18812,27 @@
          ]
         ],
         "actor": "technicien",
-        "consequence": "A saturated pre-filter reduces then cuts off the water supply."
+        "consequence": "A saturated pre-filter reduces then cuts off the water supply.",
+        "completed": true,
+        "ask": {
+         "q": "Is the pre-filter mesh clogged?",
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Yes, it is clogged",
+           "img": "img/0689.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "No, it is clean",
+           "img": "img/0688.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Check whether the BE CONNECT is blocked (technician only, after diagnosis)",
@@ -17376,7 +18851,28 @@
          "bc"
         ],
         "tip": "To confirm that the BE CONNECT is the blockage, you can bypass it: if the system works again, it is the culprit.",
-        "solV": 2
+        "solV": 2,
+        "completed": true,
+        "ask": {
+         "q": "Is there water at the BE CONNECT inlet but not at the outlet?",
+         "himg": "",
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Yes, no water comes out",
+           "img": "img/0690.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "No, water comes out normally",
+           "img": ""
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Check that no hose is pinched or crushed",
@@ -17392,7 +18888,29 @@
         "actor": "technicien",
         "consequence": "A pinched hose stops the water reaching the system.",
         "tip": "Caution: a pipe that has been pinched is weakened. It is recommended to replace the whole pipe. If that is not possible, cut out the damaged section and replace it with a piece of pipe and two union connectors.",
-        "solV": 2
+        "solV": 2,
+        "completed": true,
+        "ask": {
+         "q": "Can you see a pinched, kinked or crushed pipe?",
+         "hint": "Follow the whole water line, from the supply to the tap, looking behind and under the cabinet.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Yes, a pipe is damaged",
+           "img": "img/0691.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "No, all pipes are clear",
+           "img": ""
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Check whether the BOX is frozen (visible frost, water blocked)",
@@ -17424,9 +18942,12 @@
            "img": "img/ask-box-gel.webp"
           }
          ],
-         "hint": "How to see it:\n• BOX 80 to 150: look inside the ice bank, just remove the top cover.\n• BOX 15 to 45: it cannot be seen. The only way is to connect the BOX directly to the water supply (without the tap), open the water and check whether water comes out of the BOX through the still water “OUT” outlet."
+         "hint": "How to see it:\n• BOX 80 to 150: look inside the ice bank, just remove the top cover.\n• BOX 15 to 45: it cannot be seen. The only way is to connect the BOX directly to the water supply (without the tap), open the water and check whether water comes out of the BOX through the still water “OUT” outlet.",
+         "v2fix": 2
         },
-        "actorV": 1
+        "actorV": 1,
+        "completed": true,
+        "seed2V": 1
        }
       ],
       "pre": {
@@ -17475,21 +18996,36 @@
            "e": "⚪",
            "go": "next",
            "l": "White",
-           "img": "img/ask-bc-blanc.webp"
+           "img": "img/ask-bc-blanc.webp",
+           "sub": "Normal operation"
           },
           {
            "e": "🟡",
            "go": "fix",
            "l": "Yellow",
-           "img": "img/ask-bc-jaune.webp"
+           "img": "img/ask-bc-jaune.webp",
+           "sub": "A fault has been detected"
           }
          ],
          "hint": "How to find the BE CONNECT: it is the grey “BE WTR” unit fixed to the wall, with the white filter underneath. The light is on top of the unit.",
-         "himg": "img/0460.webp"
+         "himg": "img/0460.webp",
+         "v2fix": 2
         },
         "need": [
          "bc"
-        ]
+        ],
+        "stepImages": [
+         [
+          "img/0675.webp",
+          "img/0676.webp",
+          "img/0677.webp"
+         ],
+         [
+          "img/0678.webp"
+         ]
+        ],
+        "seed2V": 1,
+        "warn": "Caution: if water has run onto the leak detector, you must understand why and find the source. If the sensor touched something metallic, or came into contact with water spilled by mistake or with a product stored in the cabinet, it is not serious. However, if a leak has been detected (on a connector or elsewhere), a technician must come to carry out the repair."
        },
        {
         "problem": "Check whether the previous-generation water-stop has tripped",
@@ -17518,12 +19054,25 @@
          "v": 5,
          "howL": "How can I tell if it has been triggered?",
          "how": "Look at the small black lever on the side of the water-stop (outlined in white in the photo).\n✅ Lever folded against the unit: it is normal, water flows.\n⚠️ Lever raised, away from the unit (red arrow side): it has been triggered, the water is cut off.",
-         "howImg": "img/0682.webp"
+         "howImg": "img/0682.webp",
+         "v2fix": 2
         },
         "need": [],
         "preNote": {
          "bc": "⚠️ With a BE CONNECT, this water-stop is normally not fitted: the BE CONNECT replaces it. But some installations have both. Check whether there is one and, if so, check its condition."
-        }
+        },
+        "stepImages": [
+         [
+          "img/0679.webp",
+          "img/0680.webp"
+         ],
+         [
+          "img/0681.webp",
+          "img/0682.webp",
+          "img/0683.webp"
+         ]
+        ],
+        "seed2V": 1
        },
        {
         "problem": "Check that the water inlet valve is fully open",
@@ -17547,8 +19096,15 @@
            "img": "img/ask-vanne-fermee.webp"
           }
          ],
-         "v": 3
-        }
+         "v": 3,
+         "v2fix": 2
+        },
+        "stepImages": [
+         [
+          "img/0684.webp"
+         ]
+        ],
+        "seed2V": 1
        },
        {
         "problem": "Check the pressure reducer is fitted the right way round (arrow with the flow)",
@@ -17568,7 +19124,13 @@
           "l": "I couldn’t find one on my installation"
          }
         ],
-        "endV": 1
+        "endV": 1,
+        "stepImages": [
+         [
+          "img/0686.webp"
+         ]
+        ],
+        "seed2V": 1
        },
        {
         "problem": "Check the filter's date and condition",
@@ -17578,7 +19140,34 @@
         ],
         "consequence": "A clogged filter blocks the water flow.",
         "tip": "You can also test with an empty maintenance cartridge to check whether the water flows through.",
-        "solV": 2
+        "solV": 2,
+        "stepImages": [
+         [
+          "img/0687.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Is there water at the filter inlet but not at the outlet?",
+         "hint": "Also check on the system (BE CONNECT web app) whether the maintenance date has passed: an old filter is often saturated.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Yes, or the maintenance date has passed",
+           "img": "img/0687.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "No, water flows and maintenance is up to date",
+           "img": ""
+          }
+         ],
+         "v2fix": 2,
+         "himg": "img/ask-app-beconnect.webp"
+        },
+        "seed2V": 1
        },
        {
         "problem": "Check the pre-filter (technician only, on the systems concerned)",
@@ -17586,24 +19175,108 @@
          "Clean the pre-filter",
          "Replace the filter seal"
         ],
-        "consequence": "A saturated pre-filter reduces then cuts off the water supply."
+        "consequence": "A saturated pre-filter reduces then cuts off the water supply.",
+        "stepImages": [
+         [
+          "img/0688.webp"
+         ],
+         [
+          "img/0689.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Is the pre-filter mesh clogged?",
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Yes, it is clogged",
+           "img": "img/0689.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "No, it is clean",
+           "img": "img/0688.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Check whether the BE CONNECT is blocked (technician only, after diagnosis)",
-        "solution": null,
+        "solution": [
+         "Replace the BE CONNECT",
+         "*If the BE CONNECT is blocked, there should be water at the filter inlet but not at the outlet"
+        ],
         "consequence": "The BE CONNECT no longer opens the water supply to the system.",
         "need": [
          "bc"
         ],
         "tip": "To confirm that the BE CONNECT is the blockage, you can bypass it: if the system works again, it is the culprit.",
-        "solV": 2
+        "solV": 2,
+        "stepImages": [
+         [
+          "img/0690.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Is there water at the BE CONNECT inlet but not at the outlet?",
+         "himg": "",
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Yes, no water comes out",
+           "img": "img/0690.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "No, water comes out normally",
+           "img": ""
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Check that no hose is pinched or crushed",
-        "solution": null,
+        "solution": [
+         "Check the entire water supply line and make sure no hose is pinched or blocked",
+         "Replace the hose if needed"
+        ],
         "consequence": "A pinched hose stops the water reaching the system.",
         "tip": "Caution: a pipe that has been pinched is weakened. It is recommended to replace the whole pipe. If that is not possible, cut out the damaged section and replace it with a piece of pipe and two union connectors.",
-        "solV": 2
+        "solV": 2,
+        "stepImages": [
+         [
+          "img/0691.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Can you see a pinched, kinked or crushed pipe?",
+         "hint": "Follow the whole water line, from the supply to the tap, looking behind and under the cabinet.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Yes, a pipe is damaged",
+           "img": "img/0691.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "No, all pipes are clear",
+           "img": ""
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Check whether the BOX is frozen (visible frost, water blocked)",
@@ -17629,10 +19302,24 @@
            "img": "img/ask-box-gel.webp"
           }
          ],
-         "hint": "How to see it:\n• BOX 80 to 150: look inside the ice bank, just remove the top cover.\n• BOX 15 to 45: it cannot be seen. The only way is to connect the BOX directly to the water supply (without the tap), open the water and check whether water comes out of the BOX through the still water “OUT” outlet."
+         "hint": "How to see it:\n• BOX 80 to 150: look inside the ice bank, just remove the top cover.\n• BOX 15 to 45: it cannot be seen. The only way is to connect the BOX directly to the water supply (without the tap), open the water and check whether water comes out of the BOX through the still water “OUT” outlet.",
+         "v2fix": 2
         },
         "actor": "technicien",
-        "actorV": 1
+        "actorV": 1,
+        "stepImages": [
+         [
+          "img/0501.webp"
+         ],
+         [
+          "img/0508.webp"
+         ],
+         [
+          "img/0685.webp",
+          "img/0333.webp"
+         ]
+        ],
+        "seed2V": 1
        }
       ],
       "pre": {
@@ -17675,7 +19362,42 @@
          "Try plugging the box directly into an outlet",
          "If the issue persists after these 3 steps, replace the box"
         ],
-        "consequence": "Without power the pump does not run: only CO2 comes out of the tap."
+        "consequence": "Without power the pump does not run: only CO2 comes out of the tap.",
+        "stepImages": [
+         [
+          "img/0199.webp"
+         ],
+         [
+          "img/0189.webp",
+          "img/0267.webp"
+         ],
+         [
+          "img/0198.webp",
+          "img/0563.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Is the BOX switched on?",
+         "hint": "Look at the switch at the back of the BOX and listen whether the fan is running.",
+         "himg": "img/0237.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Yes, it is on and the BE CONNECT light is white",
+           "img": "img/0199.webp"
+          },
+          {
+           "e": "🔌",
+           "go": "fix",
+           "l": "No, it seems to be off",
+           "img": "img/0198.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Listen whether the sparkling water pump starts when pouring",
@@ -17684,21 +19406,103 @@
          "If it doesn't restart, check that the pump motor is working",
          "Check that the pump isn't jammed"
         ],
-        "consequence": "Without the pump, water no longer reaches the carbonator: only CO2 comes out."
+        "consequence": "Without the pump, water no longer reaches the carbonator: only CO2 comes out.",
+        "stepImages": [
+         [
+          "img/0237.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Do you hear the pump start when you draw sparkling water?",
+         "hint": "Draw sparkling water and listen to the BOX: the pump makes a motor noise for a few seconds.",
+         "himg": "img/0480.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "🔊",
+           "go": "next",
+           "l": "Yes, the pump starts"
+          },
+          {
+           "e": "🔇",
+           "go": "fix",
+           "l": "No, no noise"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Check whether the BE CONNECT is blocked (technician only, after diagnosis)",
-        "solution": null,
+        "solution": [
+         "Replace the BE CONNECT",
+         "*If the BE CONNECT is blocked, there should be water at the filter inlet but not at the outlet"
+        ],
         "consequence": "The BE CONNECT no longer opens the water supply to the system.",
         "tip": "To confirm that the BE CONNECT is the blockage, you can bypass it: if the system works again, it is the culprit.",
-        "solV": 2
+        "solV": 2,
+        "stepImages": [
+         [
+          "img/0690.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Is there water at the BE CONNECT inlet but not at the outlet?",
+         "himg": "",
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Yes, no water comes out",
+           "img": "img/0690.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "No, water comes out normally",
+           "img": ""
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Check that no hose is pinched or crushed",
-        "solution": null,
+        "solution": [
+         "Check the entire water supply line and make sure no hose is pinched or blocked",
+         "Replace the hose if needed"
+        ],
         "consequence": "A pinched hose stops the water reaching the system.",
         "tip": "Caution: a pipe that has been pinched is weakened. It is recommended to replace the whole pipe. If that is not possible, cut out the damaged section and replace it with a piece of pipe and two union connectors.",
-        "solV": 2
+        "solV": 2,
+        "stepImages": [
+         [
+          "img/0691.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Can you see a pinched, kinked or crushed pipe?",
+         "hint": "Follow the whole water line, from the supply to the tap, looking behind and under the cabinet.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Yes, a pipe is damaged",
+           "img": "img/0691.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "No, all pipes are clear",
+           "img": ""
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        }
       ]
      },
@@ -17711,14 +19515,73 @@
          "Check the CO2 bottle pressure (about 3.8 bar)",
          "Replace the CO2 bottle"
         ],
-        "consequence": "An empty bottle can no longer carbonate the water."
+        "consequence": "An empty bottle can no longer carbonate the water.",
+        "stepImages": [
+         [
+          "img/0092.webp"
+         ],
+         [
+          "img/0229.webp",
+          "img/0230.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Where is the CO2 gauge needle?",
+         "hint": "The gauge is fitted on the CO2 cylinder. With the cylinder open, it should read about 3.8 bar.",
+         "himg": "img/0092.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "In the green (≈ 3.8 bar)",
+           "img": "img/ask-mano-co2-ok.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Near 0: empty cylinder",
+           "img": "img/ask-mano-co2-bas.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Check the pressure shown on the CO2 regulator",
         "solution": [
          "Set the CO2 bottle pressure (about 3.8 bar)"
         ],
-        "consequence": "Too low a pressure gives flat-tasting sparkling water."
+        "consequence": "Too low a pressure gives flat-tasting sparkling water.",
+        "stepImages": [
+         [
+          "img/0281.webp",
+          "img/0235.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Where is the CO2 gauge needle?",
+         "hint": "Recommended setting: about 0.8 bar above the water pressure, never above 4 bar.",
+         "himg": "img/0281.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "In the green (≈ 3.8 bar)",
+           "img": "img/ask-mano-co2-ok.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Too low",
+           "img": "img/ask-mano-co2-bas.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Check that the CO2 bottle is a compatible type",
@@ -17727,21 +19590,104 @@
          "Only compatible with Aligal 2",
          "Not compatible with Aligal 3 or Aligal 13"
         ],
-        "consequence": "A non-compatible bottle does not deliver the right pressure."
+        "consequence": "A non-compatible bottle does not deliver the right pressure.",
+        "stepImages": [
+         [
+          "img/0818.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Which marking can you see on the CO2 cylinder?",
+         "himg": "img/0818.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Aligal 2",
+           "img": "img/0818.webp"
+          },
+          {
+           "e": "❌",
+           "go": "fix",
+           "l": "Aligal 3 or Aligal 13"
+          },
+          {
+           "e": "🤔",
+           "go": "fix",
+           "l": "Another marking"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Check whether a sparkling water restore has been run",
         "solution": [
          "Empty the carbonator then purge the sparkling water"
         ],
-        "consequence": "After running out of CO2 the circuit must be primed again to get the fizz back."
+        "consequence": "After running out of CO2 the circuit must be primed again to get the fizz back.",
+        "stepImages": [
+         [
+          "img/0469.webp",
+          "img/0486.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Has the carbonator been emptied and the sparkling water purged since the last CO2 shortage?",
+         "himg": "img/0469.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Yes, already done",
+           "img": "img/0486.webp"
+          },
+          {
+           "e": "🔁",
+           "go": "fix",
+           "l": "No, not yet",
+           "img": "img/0469.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Check the temperature of the water when pouring",
         "solution": [
          "Check that the box is cooling properly and that the thermostat is set correctly"
         ],
-        "consequence": "Water that is too warm holds CO2 poorly: it tastes flat."
+        "consequence": "Water that is too warm holds CO2 poorly: it tastes flat.",
+        "stepImages": [
+         [
+          "img/0231.webp",
+          "img/0490.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Is the water coming out cold?",
+         "hint": "If possible, measure the water temperature with a thermometer.",
+         "himg": "img/0580.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "❄️",
+           "go": "next",
+           "l": "Yes, it is cold"
+          },
+          {
+           "e": "🌡️",
+           "go": "fix",
+           "l": "No, it is lukewarm"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        }
       ]
      },
@@ -17754,7 +19700,37 @@
          "Replace the CO2 bottle",
          "Set the pressure to about 3.8 bar"
         ],
-        "consequence": "With no CO2, no sparkling water can be produced at all."
+        "consequence": "With no CO2, no sparkling water can be produced at all.",
+        "stepImages": [
+         [
+          "img/0229.webp",
+          "img/0230.webp"
+         ],
+         [
+          "img/0281.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Where is the CO2 gauge needle?",
+         "himg": "img/0092.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "In the green: CO2 is left",
+           "img": "img/ask-mano-co2-ok.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Near 0: empty cylinder",
+           "img": "img/ask-mano-co2-bas.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        }
       ]
      }
@@ -17780,7 +19756,37 @@
         ],
         "consequence": "A clogged filter blocks the water flow.",
         "tip": "You can also test with an empty maintenance cartridge to check whether the water flows through.",
-        "solV": 2
+        "solV": 2,
+        "stepImages": [
+         [
+          "img/0687.webp"
+         ],
+         [
+          "img/0467.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Is there water at the filter inlet but not at the outlet?",
+         "hint": "Also check on the system (BE CONNECT web app) whether the maintenance date has passed: an old filter is often saturated.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Yes, or the maintenance date has passed",
+           "img": "img/0687.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "No, water flows and maintenance is up to date",
+           "img": ""
+          }
+         ],
+         "v2fix": 2,
+         "himg": "img/ask-app-beconnect.webp"
+        },
+        "seed2V": 1
        },
        {
         "problem": "Check the pre-filter (technician only, on the systems concerned)",
@@ -17788,14 +19794,69 @@
          "Clean the pre-filter",
          "Replace the filter seal"
         ],
-        "consequence": "A saturated pre-filter reduces then cuts off the water supply."
+        "consequence": "A saturated pre-filter reduces then cuts off the water supply.",
+        "stepImages": [
+         [
+          "img/0688.webp"
+         ],
+         [
+          "img/0689.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Is the pre-filter mesh clogged?",
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Yes, it is clogged",
+           "img": "img/0689.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "No, it is clean",
+           "img": "img/0688.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Check the incoming water pressure of the building",
         "solution": [
          "Check static and dynamic pressure using the pressure reducer or a gauge"
         ],
-        "consequence": "Insufficient pressure limits the flow of the whole system."
+        "consequence": "Insufficient pressure limits the flow of the whole system.",
+        "stepImages": [
+         [
+          "img/0279.webp",
+          "img/0234.webp"
+         ]
+        ],
+        "ask": {
+         "q": "What pressure does the water gauge show?",
+         "hint": "The gauge is on the pressure reducer. Recommended setting: between 2.5 and 3 bar.",
+         "himg": "img/0279.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Between 2.5 and 3 bar",
+           "img": "img/ask-mano-eau-ok.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Less than 2.5 bar",
+           "img": "img/ask-mano-eau-bas.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        }
       ]
      },
@@ -17808,21 +19869,107 @@
          "Check the pressure (about 3.8 bar)",
          "Replace the CO2 bottle"
         ],
-        "consequence": "An empty bottle can no longer carbonate the water."
+        "consequence": "An empty bottle can no longer carbonate the water.",
+        "stepImages": [
+         [
+          "img/0092.webp"
+         ],
+         [
+          "img/0229.webp",
+          "img/0230.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Where is the CO2 gauge needle?",
+         "hint": "The gauge is fitted on the CO2 cylinder. With the cylinder open, it should read about 3.8 bar.",
+         "himg": "img/0092.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "In the green (≈ 3.8 bar)",
+           "img": "img/ask-mano-co2-ok.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Near 0: empty cylinder",
+           "img": "img/ask-mano-co2-bas.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Check the pressure shown on the CO2 regulator",
         "solution": [
          "Set the CO2 bottle pressure (about 3.8 bar)"
         ],
-        "consequence": "Too low a pressure gives flat-tasting sparkling water."
+        "consequence": "Too low a pressure gives flat-tasting sparkling water.",
+        "stepImages": [
+         [
+          "img/0281.webp",
+          "img/0235.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Where is the CO2 gauge needle?",
+         "hint": "Recommended setting: about 0.8 bar above the water pressure, never above 4 bar.",
+         "himg": "img/0281.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "In the green (≈ 3.8 bar)",
+           "img": "img/ask-mano-co2-ok.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Too low",
+           "img": "img/ask-mano-co2-bas.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Check the setting of the flow reducer",
         "solution": [
          "Adjust the flow reducer on the sparkling water side"
         ],
-        "consequence": "Closed too far, it deliberately restricts the sparkling water flow."
+        "consequence": "Closed too far, it deliberately restricts the sparkling water flow.",
+        "stepImages": [
+         [
+          "img/0341.webp",
+          "img/0238.webp",
+          "img/0239.webp"
+         ]
+        ],
+        "ask": {
+         "q": "How long does it take to fill a 75 cl bottle of sparkling water?",
+         "hint": "Time the filling: it should take about 20 seconds.",
+         "opts": [
+          {
+           "e": "⏱️",
+           "go": "next",
+           "l": "About 20 seconds",
+           "img": "img/0239.webp"
+          },
+          {
+           "e": "🐢",
+           "go": "fix",
+           "l": "Much longer",
+           "img": "img/0238.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        }
       ]
      }
@@ -17841,32 +19988,444 @@
       "heading": "Taste issue",
       "problems": [
        {
-        "problem": "Check whether the taste only appears on sparkling water",
+        "problem": "Empty the carbonator",
+        "consequence": "If the system has been used little or not for a few hours, the CO2 can overpower the taste of the water.",
         "solution": [
-         "Empty the carbonator then drain 10 litres of sparkling water",
-         "If the issue persists, replace the CO2 bottle and repeat the step"
+         "Switch off the BOX (or close the water supply)",
+         "Draw sparkling water until only CO2 comes out",
+         "Switch the BOX back on (or reopen the water supply)",
+         "Wait a few seconds for the pump to refill the carbonator, then purge the sparkling water",
+         "Taste the sparkling water again"
         ],
-        "consequence": "If so, the problem comes from the CO2 circuit or the carbonator, not the filter."
+        "stepImages": [
+         [
+          "img/0237.webp",
+          "img/0469.webp"
+         ],
+         [
+          "img/0486.webp"
+         ],
+         [
+          "img/0237.webp",
+          "img/0469.webp"
+         ],
+         [
+          "img/0480.webp"
+         ],
+         [
+          "img/0485.webp"
+         ]
+        ],
+        "actor": "utilisateur",
+        "need": [
+         "gaz"
+        ],
+        "askOff": true,
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "tip": "Caution: the first 15 to 20 cl are not chilled, they sit between the cooling system and the tap. It is therefore quite normal for this water to be lukewarm and to have a slight taste. It has no impact on health: simply let these first centilitres run off.",
+        "link": "https://youtu.be/AEuIg5ShqeQ?si=8Ab_ctfG0WBKs_aL",
+        "vidV": 1,
+        "completed": true
        },
        {
-        "problem": "Check whether the taste is also present on still water",
+        "problem": "Check the CO2 cylinder pressure",
+        "consequence": "An empty or nearly empty CO2 cylinder can give the sparkling water a taste.",
         "solution": [
-         "Run 10 litres of still water through",
-         "If the issue persists, replace the filter"
+         "Check the pressure on the CO2 cylinder gauge (cylinder open)",
+         "If the pressure is below 3 bar, the cylinder is empty: replace the CO2 cylinder",
+         "Run a few litres of sparkling water",
+         "Taste the sparkling water again"
         ],
-        "consequence": "If so, the problem comes from the filter or the water circuit."
+        "stepImages": [
+         [
+          "img/0092.webp"
+         ],
+         [
+          "img/ask-mano-co2-bas.webp",
+          "img/0468.webp"
+         ],
+         [
+          "img/0486.webp"
+         ],
+         [
+          "img/0485.webp"
+         ]
+        ],
+        "actor": "utilisateur",
+        "need": [
+         "gaz"
+        ],
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "ask": {
+         "q": "What pressure does the CO2 cylinder gauge show?",
+         "hint": "The gauge is fitted on the CO2 cylinder. Read it with the cylinder open.",
+         "himg": "img/0092.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "3 bar or more",
+           "img": "img/ask-mano-co2-ok.webp",
+           "sub": "Pressure is fine"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Below 3 bar",
+           "img": "img/ask-mano-co2-bas.webp",
+           "sub": "The cylinder is empty"
+          }
+         ],
+         "v2fix": 2
+        },
+        "link": "https://youtu.be/GjSiaw5fobs?si=aIMuySpGGoSDYJ-7",
+        "vidV": 1,
+        "completed": true
+       },
+       {
+        "problem": "Replace the CO2 cylinder",
+        "consequence": "The CO2 cylinder can give the sparkling water a taste: expired date or a filling problem at the supplier.",
+        "solution": [
+         "Close the CO2 cylinder",
+         "Unscrew the CO2 regulator from the cylinder",
+         "Fit the seal in the CO2 regulator, then tighten the nut on the new cylinder",
+         "Open the CO2 cylinder and check the pressure (about 3.8 bar)",
+         "Run 10 l of sparkling water to empty the carbonator completely",
+         "Taste the sparkling water again"
+        ],
+        "stepImages": [
+         [
+          "img/0468.webp"
+         ],
+         [
+          "img/0230.webp"
+         ],
+         [
+          "img/0274.webp",
+          "img/0275.webp"
+         ],
+         [
+          "img/0280.webp",
+          "img/0281.webp"
+         ],
+         [
+          "img/0480.webp"
+         ],
+         [
+          "img/0485.webp"
+         ]
+        ],
+        "actor": "utilisateur",
+        "need": [
+         "gaz"
+        ],
+        "askOff": true,
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "tip": "This taste has no impact on health, only on the taste of the sparkling water.",
+        "completed": true
+       },
+       {
+        "problem": "Run 10 l of sparkling water and 3 l of still water",
+        "consequence": "Water left in the circuit for a long time can take on a taste: renewing it is often enough.",
+        "solution": [
+         "Run 10 l of sparkling water",
+         "Run 3 l of still water",
+         "Taste the still and sparkling water again"
+        ],
+        "stepImages": [
+         [
+          "img/0480.webp"
+         ],
+         [
+          "img/0479.webp"
+         ],
+         [
+          "img/0485.webp"
+         ]
+        ],
+        "actor": "utilisateur",
+        "need": [
+         "both"
+        ],
+        "askOff": true,
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "tip": "Caution: the first 15 to 20 cl are not chilled, they sit between the cooling system and the tap. It is therefore quite normal for this water to be lukewarm and to have a slight taste. It has no impact on health: simply let these first centilitres run off.",
+        "completed": true
+       },
+       {
+        "problem": "Replace the filter",
+        "consequence": "A filter at the end of its life can give the water a taste.",
+        "solution": [
+         "Check on the system (BE CONNECT web app) whether the maintenance date has passed: if so, carry out the full maintenance at the same time (disinfection with the maintenance cartridge) before replacing the filter",
+         "If the maintenance date has not passed: check that the previous steps have been done, then replace the filter only (no maintenance) and run the water",
+         "After replacing it, run 10 l of sparkling water (and 3 l of still water if the still water also tasted)",
+         "Test the taste of the water again"
+        ],
+        "stepImages": [
+         [
+          "img/ask-app-beconnect.webp",
+          "img/0467.webp"
+         ],
+         [
+          "img/0687.webp"
+         ],
+         [
+          "img/0480.webp",
+          "img/0479.webp"
+         ],
+         [
+          "img/0485.webp"
+         ]
+        ],
+        "actor": "technicien",
+        "need": [],
+        "askOff": true,
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "preNote": {
+         "gaz": "If only the sparkling water has a taste, it is rarely the filter: the still water would taste too. First check that the previous steps have been done."
+        },
+        "completed": true
        }
-      ]
+      ],
+      "pre": {
+       "q": "Where do you notice the taste?",
+       "hint": "Caution: the first 15 to 20 cl are not chilled, they sit between the cooling system and the tap. It is therefore quite normal for this water to be lukewarm and to have a slight taste. It has no impact on health: simply let these first centilitres run off.",
+       "opts": [
+        {
+         "id": "gaz",
+         "img": "img/0483.webp",
+         "l": "Only in the sparkling water",
+         "badge": "gaz"
+        },
+        {
+         "id": "both",
+         "img": "img/0485.webp",
+         "l": "In both still and sparkling water",
+         "badge": "both"
+        }
+       ]
+      },
+      "preV": 99,
+      "tasteV": 1,
+      "badgeV": 1,
+      "tasteCo2V": 1
      },
      {
       "heading": "Water not cold",
       "problems": [
        {
+        "problem": "Check that the system is switched on",
+        "consequence": "If the system is off, the cooling unit does not work and the water comes out lukewarm.",
+        "solution": [
+         "Check that the BOX is plugged in and that its switch (at the back) is on",
+         "Draw sparkling water and listen: you should hear the fan or the pump",
+         "If the BOX is on but the fan is not turning: do not take anything apart, arrange for a technician to carry out the repair (replacing the fan or the BOX)"
+        ],
+        "stepImages": [
+         [
+          "img/0237.webp"
+         ],
+         [
+          "img/0483.webp"
+         ],
+         [
+          "img/ask-ventil-off.webp"
+         ]
+        ],
+        "actor": "utilisateur",
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "ask": {
+         "q": "Can you hear the fan or the pump when you draw sparkling water?",
+         "hint": "Draw a glass of sparkling water and listen to the BOX: you should hear the fan or the pump.",
+         "himg": "img/0483.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Yes, I can hear the fan or the pump",
+           "img": "img/0491.webp",
+           "badge": "fanon"
+          },
+          {
+           "e": "❌",
+           "go": "fix",
+           "l": "No, I cannot hear anything",
+           "img": "img/ask-ventil-off.webp",
+           "badge": "fanoff"
+          }
+         ],
+         "v2fix": 2
+        },
+        "completed": true
+       },
+       {
         "problem": "Check the water temperature and the thermostat setting",
-        "solution": null,
-        "consequence": "The cooling unit is not reaching the right temperature."
+        "consequence": "The cooling unit is not reaching the right temperature.",
+        "solution": [
+         "Set the BOX thermostat between 5 and 6 (never above 6)"
+        ],
+        "stepImages": [
+         [
+          "img/0231.webp",
+          "img/0322.webp"
+         ]
+        ],
+        "actor": "utilisateur",
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "ask": {
+         "q": "Which number is the BOX thermostat set to?",
+         "hint": "Recommended setting: between 5 and 6, never above 6.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Between 5 and 6",
+           "img": "img/0231.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Below 5, or on OFF",
+           "img": "img/0322.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "completed": true
+       },
+       {
+        "problem": "Check that the fan works and that the ventilation is not blocked",
+        "consequence": "If the hot air cannot escape, the cooling unit no longer cools properly.",
+        "solution": [
+         "Check that the fan is turning",
+         "If the BOX is on but the fan is not turning: replace the fan (if you have one to hand or can get one as a spare part) or replace the system",
+         "Check that the fan and the grille are not clogged with dust, and dust them if needed",
+         "Check that nothing in front of the ventilation prevents the air from escaping. If there is a ventilation kit, make sure the duct is not blocked and that the cut-out in the cabinet has been made and is large enough"
+        ],
+        "stepImages": [
+         [
+          "img/ask-fan.webp",
+          "img/0491.webp"
+         ],
+         [
+          "img/ask-ventil-off.webp"
+         ],
+         [
+          "img/ask-fan-sale.webp",
+          "img/0490.webp"
+         ],
+         [
+          "img/0242.webp",
+          "img/0243.webp",
+          "img/0211.webp"
+         ]
+        ],
+        "actor": "technicien",
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "askOff": true,
+        "tip": "Before you start, check that the previous steps have been done (system switched on, thermostat set between 5 and 6).",
+        "completed": true
+       },
+       {
+        "problem": "Check that the compressor is hot",
+        "consequence": "If the compressor is cold while the water is lukewarm, it is not switching on or no longer works.",
+        "solution": [
+         "Touch the BOX compressor: it should be hot while the system is cooling",
+         "If it is cold: check that the compressor is properly connected and that no connector has come loose",
+         "If it stays cold while the water is lukewarm and everything is properly connected, the compressor is not switching on or no longer works: replace the system"
+        ],
+        "stepImages": [
+         [
+          "img/ask-comp-chaud.webp"
+         ],
+         [
+          "img/ask-comp-cablage.webp"
+         ],
+         [
+          "img/0258.webp"
+         ]
+        ],
+        "actor": "technicien",
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "tip": "Caution: the compressor can be very hot. Touch it only briefly.",
+        "ask": {
+         "q": "Is the compressor hot?",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Yes, it is hot",
+           "img": "img/ask-comp-chaud.webp"
+          },
+          {
+           "e": "❄️",
+           "go": "fix",
+           "l": "No, it is cold while the water is lukewarm",
+           "img": "img/ask-comp-froid.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "completed": true
+       },
+       {
+        "problem": "Replace the system",
+        "consequence": "If none of these checks solved the problem, the system must be replaced.",
+        "solution": [
+         "If none of the previous steps worked, replace the system"
+        ],
+        "stepImages": [
+         [
+          "img/0258.webp"
+         ]
+        ],
+        "actor": "technicien",
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "askOff": true,
+        "completed": true
        }
-      ]
+      ],
+      "coldV": 1,
+      "coldImgV": 1,
+      "coldV2": 1,
+      "coldV3": 1,
+      "coldV4": 1,
+      "coldV5": 1,
+      "coldV6": 1
      }
     ],
     "parent": "pannes"
@@ -17886,7 +20445,32 @@
         "solution": [
          "Check for a lack of water or a frozen box (check the water supply)"
         ],
-        "consequence": "The pump cannot build up pressure: internal leak or lack of water."
+        "consequence": "The pump cannot build up pressure: internal leak or lack of water.",
+        "stepImages": [
+         [
+          "img/0684.webp",
+          "img/0279.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Does the pump run without ever stopping?",
+         "hint": "Listen to the BOX for one minute without drawing water.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "🔊",
+           "go": "fix",
+           "l": "Yes, it runs continuously"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "No, it stops"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        }
       ]
      }
@@ -17904,21 +20488,246 @@
      {
       "problems": [
        {
+        "problem": "Check that the water really comes from the system",
+        "consequence": "The leak may come from something other than the system: drain trap, sink, washing machine, dishwasher or coffee machine nearby.",
+        "solution": [
+         "The leak does not come from the BE WTR system: the repair does not concern our installation. Call a plumber or the service for the appliance concerned."
+        ],
+        "stepImages": [
+         [
+          "img/ask-fuite-ailleurs.webp"
+         ]
+        ],
+        "actor": "utilisateur",
+        "ask": {
+         "q": "After looking all around, does the water really come from the BE WTR system?",
+         "hint": "Wipe the area, then check all around: drain trap, sink, drain, and nearby appliances (washing machine, dishwasher, coffee machine…).",
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "img": "img/ask-raccord-fuite.webp",
+           "l": "Yes, it comes from the system"
+          },
+          {
+           "e": "❌",
+           "go": "fix",
+           "img": "img/ask-fuite-ailleurs.webp",
+           "l": "No, it comes from elsewhere (trap, sink, appliance…)"
+          }
+         ],
+         "v2fix": 2,
+         "noneOff": true,
+         "himg": "img/ask-fuite-ailleurs.webp"
+        },
+        "endBtns": [
+         {
+          "e": "↩️",
+          "go": "next",
+          "l": "Actually it does come from the system: continue"
+         },
+         {
+          "e": "🚪",
+          "go": "quit",
+          "l": "Exit"
+         }
+        ],
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "completed": true
+       },
+       {
+        "problem": "Check whether the waste water container is full",
+        "consequence": "A full waste water container overflows and water runs under the cabinet.",
+        "solution": [
+         "Empty the waste water container into a sink or toilet",
+         "Put the container back and check that the drain hose is pushed well into it",
+         "Wipe up the water under the cabinet and check after a few hours that there is no more leak"
+        ],
+        "stepImages": [
+         [
+          "img/ask-bidon-plein.webp",
+          "img/0843.webp"
+         ],
+         [
+          "img/0079.webp"
+         ],
+         []
+        ],
+        "actor": "utilisateur",
+        "ask": {
+         "q": "Is the waste water container full?",
+         "hint": "On some installations, waste water goes into a container placed under the system or in the cabinet. Depending on the model, the container may have an audible alarm that sounds when it is full.",
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "img": "img/ask-bidon-ok.webp",
+           "l": "No, it is not full"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "img": "img/ask-bidon-plein.webp",
+           "l": "Yes, it is full or overflowing"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "completed": true
+       },
+       {
         "problem": "Check the level of the ice bank and the waste water tank",
         "solution": [
-         "On BOX 80 / 120 / 150, empty the ice tray down to the minimum level"
+         "Unclip the ice bank level tube (next to the “FILL ICE-BANK” label)",
+         "Lower the tube over a bowl and drain the water little by little, 50 cl at a time",
+         "Put the tube back after each draining to check the level, without draining too much",
+         "Stop exactly at the MIN level",
+         "Also check that the waste water tank is not full, and empty it if needed"
         ],
-        "consequence": "The overflow spills and water runs under the cabinet."
+        "consequence": "The overflow spills and water runs under the cabinet.",
+        "stepImages": [
+         [
+          "img/ask-bac-haut.webp"
+         ],
+         [
+          "img/ask-vidange-bac.webp"
+         ],
+         [],
+         [
+          "img/0333.webp"
+         ],
+         [
+          "img/0843.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Where is the ice bank water level?",
+         "hint": "On BOX 80 / 120 / 150, read the level on the tube next to the “FILL ICE-BANK” label. Also check that the waste water tank is not full.",
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "At the MIN level",
+           "img": "img/0333.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Above MIN, or overflowing",
+           "img": "img/ask-bac-haut.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1,
+        "actor": "utilisateur",
+        "actorV": 99,
+        "tip": "Caution: the level must be exactly at MIN. If you drain below it, the BOX will freeze; if you leave it above, the tank will fill up again too quickly, before the next maintenance.",
+        "solV": 99,
+        "completed": true
        },
        {
         "problem": "Check the connectors and fittings one by one",
         "solution": [
+         "Check that no pipe is under tension (an appliance may have been pulled): move each pipe slightly to see whether the fitting leaks",
+         "If so, relieve that tension as much as possible and push the pipe fully into the connector",
          "Trim the hose and reconnect the connector",
          "If it still leaks, replace the connector"
         ],
-        "consequence": "A fitting that is not pushed in fully, or damaged, lets water escape."
+        "consequence": "A fitting that is not pushed in fully, or damaged, lets water escape.",
+        "stepImages": [
+         [
+          "img/ask-tuyau-tension.webp"
+         ],
+         [
+          "img/0272.webp"
+         ],
+         [
+          "img/0022.webp"
+         ],
+         [
+          "img/0774.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Can you see water dripping from a fitting?",
+         "hint": "Wipe the fittings with dry paper, then see which one gets wet first.\nWatch out for pipes under tension: if an appliance has been pulled, a pipe may strain its fitting. Move each pipe slightly to see whether the fitting leaks.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "💧",
+           "go": "fix",
+           "l": "Yes, a fitting leaks",
+           "img": "img/ask-raccord-fuite.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "No, everything is dry",
+           "img": "img/0022.webp"
+          }
+         ],
+         "v2fix": 2,
+         "himg": "img/ask-tuyau-tension.webp"
+        },
+        "seed2V": 1,
+        "actor": "utilisateur",
+        "actorV": 99,
+        "completed": true
+       },
+       {
+        "problem": "Technician visit: find where the leak comes from and repair it",
+        "consequence": "If the leak continues after these checks, its source must be found on site.",
+        "solution": [
+         "Follow every pipe one by one to find where the leak comes from: wipe the fittings with the system running, then watch which one gets wet first",
+         "Check inside the BOX that no connector has a slight leak",
+         "If the ice bank fills up by itself, there is a leak just above it on a connector: it can be very slight and take several days to fill it",
+         "Check the ice bank, the overflow and the waste water tank",
+         "On BOXes with a built-in pressure reducer, the leak often comes from that reducer: it can be removed and an external pressure reducer fitted instead",
+         "Repair: recut and reconnect the pipe, or replace the leaking fitting, pipe or part",
+         "Turn the water back on and check after a few minutes that there is no more leak"
+        ],
+        "stepImages": [
+         [
+          "img/ask-raccord-fuite.webp",
+          "img/0022.webp"
+         ],
+         [
+          "img/ask-fan.webp"
+         ],
+         [
+          "img/ask-bac-haut.webp"
+         ],
+         [
+          "img/0333.webp",
+          "img/0321.webp"
+         ],
+         [
+          "img/0761.webp"
+         ],
+         [
+          "img/0774.webp"
+         ],
+         []
+        ],
+        "actor": "technicien",
+        "askOff": true,
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "tip": "Caution: the leak may also come from something other than our installation (drain trap, water running from the sink, etc.).",
+        "completed": true
        }
-      ]
+      ],
+      "leakV": 7
      }
     ],
     "parent": "pannes"
@@ -17935,8 +20744,43 @@
       "problems": [
        {
         "problem": "Check how often it restarts and the ventilation conditions",
-        "solution": null,
-        "consequence": "Repeated restarts point to a safety cut-out: overheating, power supply or lack of water."
+        "solution": [
+         "Check that the BOX ventilation is not blocked and dust it",
+         "Measure the socket voltage (it must match the country standard)",
+         "Check that the water inlet valve is open (a lack of water puts the BOX in safety mode)"
+        ],
+        "consequence": "Repeated restarts point to a safety cut-out: overheating, power supply or lack of water.",
+        "stepImages": [
+         [
+          "img/0490.webp",
+          "img/0491.webp"
+         ],
+         [
+          "img/0563.webp",
+          "img/0564.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Is the BOX ventilation grille clear and clean?",
+         "hint": "An overheating BOX goes into safety mode and restarts. Leave space around the grille.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Yes, it is clear and clean",
+           "img": "img/0491.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "No, dusty or blocked",
+           "img": "img/0490.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        }
       ]
      }
@@ -27073,22 +29917,27 @@
            "e": "⚪",
            "go": "next",
            "l": "Weiss",
-           "img": "img/ask-bc-blanc.webp"
+           "img": "img/ask-bc-blanc.webp",
+           "sub": "Normaler Betrieb"
           },
           {
            "e": "🟡",
            "go": "fix",
            "l": "Gelb",
-           "img": "img/ask-bc-jaune.webp"
+           "img": "img/ask-bc-jaune.webp",
+           "sub": "Eine Störung wurde erkannt"
           }
          ],
          "hint": "So finden Sie den BE CONNECT: Es ist das graue „BE WTR“-Gehäuse an der Wand, mit dem weissen Filter darunter. Die Anzeige befindet sich oben auf dem Gehäuse.",
-         "himg": "img/0460.webp"
+         "himg": "img/0460.webp",
+         "v2fix": 2
         },
         "need": [
          "bc"
         ],
-        "completed": true
+        "completed": true,
+        "seed2V": 1,
+        "warn": "Achtung: Ist Wasser auf den Leckagesensor gelaufen, muss man den Grund verstehen und die Ursache suchen. Hat der Sensor etwas Metallisches berührt oder war er mit versehentlich verschüttetem Wasser oder einem im Schrank gelagerten Produkt in Kontakt, ist das nicht schlimm. Wurde dagegen ein Leck festgestellt (an einem Anschluss oder anderswo), muss ein Techniker die Reparatur durchführen."
        },
        {
         "problem": "Prüfen, ob der Wasserstopp der älteren Generation ausgelöst hat",
@@ -27131,13 +29980,15 @@
          "v": 5,
          "howL": "Wie erkenne ich, ob er ausgelöst hat?",
          "how": "Schauen Sie sich den kleinen schwarzen Hebel seitlich am Water-Stop an (auf dem Foto weiss umrandet).\n✅ Hebel am Gehäuse angelegt: alles normal, das Wasser fliesst.\n⚠️ Hebel angehoben, vom Gehäuse abgespreizt (Seite roter Pfeil): ausgelöst, das Wasser ist abgesperrt.",
-         "howImg": "img/0682.webp"
+         "howImg": "img/0682.webp",
+         "v2fix": 2
         },
         "need": [],
         "preNote": {
          "bc": "⚠️ Mit einem BE CONNECT ist dieser Water-Stop normalerweise nicht eingebaut: der BE CONNECT ersetzt ihn. Manche Installationen haben jedoch beide. Prüfen Sie, ob einer vorhanden ist, und kontrollieren Sie gegebenenfalls seinen Zustand."
         },
-        "completed": true
+        "completed": true,
+        "seed2V": 1
        },
        {
         "problem": "Prüfen, ob der Wasserzulaufhahn ganz geöffnet ist",
@@ -27167,9 +30018,11 @@
            "img": "img/ask-vanne-fermee.webp"
           }
          ],
-         "v": 3
+         "v": 3,
+         "v2fix": 2
         },
-        "completed": true
+        "completed": true,
+        "seed2V": 1
        },
        {
         "problem": "Einbaurichtung des Druckminderers prüfen (Pfeil in Fliessrichtung)",
@@ -27196,7 +30049,8 @@
          }
         ],
         "endV": 1,
-        "completed": true
+        "completed": true,
+        "seed2V": 1
        },
        {
         "problem": "Datum und Zustand des Filters prüfen",
@@ -27213,7 +30067,30 @@
         "actor": "technicien",
         "consequence": "Ein gesättigter Filter blockiert den Wasserdurchfluss.",
         "tip": "Sie können auch mit einer leeren Wartungskartusche testen, ob das Wasser durchfliesst.",
-        "solV": 2
+        "solV": 2,
+        "completed": true,
+        "ask": {
+         "q": "Kommt Wasser am Filtereingang an, aber nicht am Ausgang?",
+         "hint": "Prüfen Sie auch am System (BE CONNECT Web-App), ob das Wartungsdatum überschritten ist: ein alter Filter ist oft gesättigt.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Ja, oder das Wartungsdatum ist überschritten",
+           "img": "img/0687.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Nein, das Wasser fliesst und die Wartung ist aktuell",
+           "img": ""
+          }
+         ],
+         "v2fix": 2,
+         "himg": "img/ask-app-beconnect.webp"
+        },
+        "seed2V": 1
        },
        {
         "problem": "Zustand des Vorfilters prüfen (nur Techniker, bei den betroffenen Systemen)",
@@ -27230,7 +30107,27 @@
          ]
         ],
         "actor": "technicien",
-        "consequence": "Ein gesättigter Vorfilter reduziert und sperrt schliesslich die Wasserzufuhr."
+        "consequence": "Ein gesättigter Vorfilter reduziert und sperrt schliesslich die Wasserzufuhr.",
+        "completed": true,
+        "ask": {
+         "q": "Ist das Sieb des Vorfilters verschmutzt?",
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Ja, es ist verschmutzt",
+           "img": "img/0689.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Nein, es ist sauber",
+           "img": "img/0688.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Prüfen, ob der BE CONNECT blockiert ist (nur Techniker, nach Diagnose)",
@@ -27249,7 +30146,28 @@
          "bc"
         ],
         "tip": "Um zu bestätigen, dass der BE CONNECT blockiert, können Sie ihn überbrücken: funktioniert das System wieder, liegt es an ihm.",
-        "solV": 2
+        "solV": 2,
+        "completed": true,
+        "ask": {
+         "q": "Kommt Wasser am Eingang des BE CONNECT an, aber nicht am Ausgang?",
+         "himg": "",
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Ja, es kommt kein Wasser heraus",
+           "img": "img/0690.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Nein, das Wasser kommt normal heraus",
+           "img": ""
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Prüfen, ob ein Schlauch geknickt oder eingeklemmt ist",
@@ -27265,7 +30183,29 @@
         "actor": "technicien",
         "consequence": "Ein geknickter Schlauch verhindert, dass Wasser zum System gelangt.",
         "tip": "Achtung: Ein eingeklemmter Schlauch ist geschwächt. Es wird empfohlen, den Schlauch vollständig zu ersetzen. Ist das nicht möglich, schneiden Sie den beschädigten Teil heraus und ersetzen Sie ihn durch ein Schlauchstück mit zwei Verbindungsmuffen.",
-        "solV": 2
+        "solV": 2,
+        "completed": true,
+        "ask": {
+         "q": "Sehen Sie einen eingeklemmten, geknickten oder gequetschten Schlauch?",
+         "hint": "Verfolgen Sie die ganze Wasserleitung von der Zufuhr bis zum Hahn, auch hinter und unter dem Schrank.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Ja, ein Schlauch ist beschädigt",
+           "img": "img/0691.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Nein, alle Schläuche sind frei",
+           "img": ""
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Prüfen, ob die BOX vereist ist (sichtbarer Reif, Wasser blockiert)",
@@ -27297,9 +30237,12 @@
            "img": "img/ask-box-gel.webp"
           }
          ],
-         "hint": "So sehen Sie es:\n• BOX 80 bis 150: Schauen Sie in die Eisbank, dazu einfach die obere Abdeckung abnehmen.\n• BOX 15 bis 45: nicht sichtbar. Die einzige Möglichkeit: die BOX direkt an die Wasserzufuhr anschliessen (ohne Tap), das Wasser öffnen und prüfen, ob am Ausgang „OUT“ für stilles Wasser Wasser aus der BOX kommt."
+         "hint": "So sehen Sie es:\n• BOX 80 bis 150: Schauen Sie in die Eisbank, dazu einfach die obere Abdeckung abnehmen.\n• BOX 15 bis 45: nicht sichtbar. Die einzige Möglichkeit: die BOX direkt an die Wasserzufuhr anschliessen (ohne Tap), das Wasser öffnen und prüfen, ob am Ausgang „OUT“ für stilles Wasser Wasser aus der BOX kommt.",
+         "v2fix": 2
         },
-        "actorV": 1
+        "actorV": 1,
+        "completed": true,
+        "seed2V": 1
        }
       ],
       "pre": {
@@ -27348,21 +30291,36 @@
            "e": "⚪",
            "go": "next",
            "l": "Weiss",
-           "img": "img/ask-bc-blanc.webp"
+           "img": "img/ask-bc-blanc.webp",
+           "sub": "Normaler Betrieb"
           },
           {
            "e": "🟡",
            "go": "fix",
            "l": "Gelb",
-           "img": "img/ask-bc-jaune.webp"
+           "img": "img/ask-bc-jaune.webp",
+           "sub": "Eine Störung wurde erkannt"
           }
          ],
          "hint": "So finden Sie den BE CONNECT: Es ist das graue „BE WTR“-Gehäuse an der Wand, mit dem weissen Filter darunter. Die Anzeige befindet sich oben auf dem Gehäuse.",
-         "himg": "img/0460.webp"
+         "himg": "img/0460.webp",
+         "v2fix": 2
         },
         "need": [
          "bc"
-        ]
+        ],
+        "stepImages": [
+         [
+          "img/0675.webp",
+          "img/0676.webp",
+          "img/0677.webp"
+         ],
+         [
+          "img/0678.webp"
+         ]
+        ],
+        "seed2V": 1,
+        "warn": "Achtung: Ist Wasser auf den Leckagesensor gelaufen, muss man den Grund verstehen und die Ursache suchen. Hat der Sensor etwas Metallisches berührt oder war er mit versehentlich verschüttetem Wasser oder einem im Schrank gelagerten Produkt in Kontakt, ist das nicht schlimm. Wurde dagegen ein Leck festgestellt (an einem Anschluss oder anderswo), muss ein Techniker die Reparatur durchführen."
        },
        {
         "problem": "Prüfen, ob der Wasserstopp der älteren Generation ausgelöst hat",
@@ -27391,12 +30349,25 @@
          "v": 5,
          "howL": "Wie erkenne ich, ob er ausgelöst hat?",
          "how": "Schauen Sie sich den kleinen schwarzen Hebel seitlich am Water-Stop an (auf dem Foto weiss umrandet).\n✅ Hebel am Gehäuse angelegt: alles normal, das Wasser fliesst.\n⚠️ Hebel angehoben, vom Gehäuse abgespreizt (Seite roter Pfeil): ausgelöst, das Wasser ist abgesperrt.",
-         "howImg": "img/0682.webp"
+         "howImg": "img/0682.webp",
+         "v2fix": 2
         },
         "need": [],
         "preNote": {
          "bc": "⚠️ Mit einem BE CONNECT ist dieser Water-Stop normalerweise nicht eingebaut: der BE CONNECT ersetzt ihn. Manche Installationen haben jedoch beide. Prüfen Sie, ob einer vorhanden ist, und kontrollieren Sie gegebenenfalls seinen Zustand."
-        }
+        },
+        "stepImages": [
+         [
+          "img/0679.webp",
+          "img/0680.webp"
+         ],
+         [
+          "img/0681.webp",
+          "img/0682.webp",
+          "img/0683.webp"
+         ]
+        ],
+        "seed2V": 1
        },
        {
         "problem": "Prüfen, ob der Wasserzulaufhahn ganz geöffnet ist",
@@ -27420,8 +30391,15 @@
            "img": "img/ask-vanne-fermee.webp"
           }
          ],
-         "v": 3
-        }
+         "v": 3,
+         "v2fix": 2
+        },
+        "stepImages": [
+         [
+          "img/0684.webp"
+         ]
+        ],
+        "seed2V": 1
        },
        {
         "problem": "Einbaurichtung des Druckminderers prüfen (Pfeil in Fliessrichtung)",
@@ -27441,7 +30419,13 @@
           "l": "Ich habe in meiner Installation keinen gefunden"
          }
         ],
-        "endV": 1
+        "endV": 1,
+        "stepImages": [
+         [
+          "img/0686.webp"
+         ]
+        ],
+        "seed2V": 1
        },
        {
         "problem": "Datum und Zustand des Filters prüfen",
@@ -27451,7 +30435,34 @@
         ],
         "consequence": "Ein gesättigter Filter blockiert den Wasserdurchfluss.",
         "tip": "Sie können auch mit einer leeren Wartungskartusche testen, ob das Wasser durchfliesst.",
-        "solV": 2
+        "solV": 2,
+        "stepImages": [
+         [
+          "img/0687.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Kommt Wasser am Filtereingang an, aber nicht am Ausgang?",
+         "hint": "Prüfen Sie auch am System (BE CONNECT Web-App), ob das Wartungsdatum überschritten ist: ein alter Filter ist oft gesättigt.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Ja, oder das Wartungsdatum ist überschritten",
+           "img": "img/0687.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Nein, das Wasser fliesst und die Wartung ist aktuell",
+           "img": ""
+          }
+         ],
+         "v2fix": 2,
+         "himg": "img/ask-app-beconnect.webp"
+        },
+        "seed2V": 1
        },
        {
         "problem": "Zustand des Vorfilters prüfen (nur Techniker, bei den betroffenen Systemen)",
@@ -27459,24 +30470,108 @@
          "Vorfilter reinigen",
          "Filterdichtung austauschen"
         ],
-        "consequence": "Ein gesättigter Vorfilter reduziert und sperrt schliesslich die Wasserzufuhr."
+        "consequence": "Ein gesättigter Vorfilter reduziert und sperrt schliesslich die Wasserzufuhr.",
+        "stepImages": [
+         [
+          "img/0688.webp"
+         ],
+         [
+          "img/0689.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Ist das Sieb des Vorfilters verschmutzt?",
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Ja, es ist verschmutzt",
+           "img": "img/0689.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Nein, es ist sauber",
+           "img": "img/0688.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Prüfen, ob der BE CONNECT blockiert ist (nur Techniker, nach Diagnose)",
-        "solution": null,
+        "solution": [
+         "BE CONNECT ersetzen",
+         "*Wenn der BE CONNECT verstopft ist, sollte Wasser am Filtereingang, aber nicht am Ausgang ankommen"
+        ],
         "consequence": "Der BE CONNECT gibt das Wasser zum System nicht mehr frei.",
         "need": [
          "bc"
         ],
         "tip": "Um zu bestätigen, dass der BE CONNECT blockiert, können Sie ihn überbrücken: funktioniert das System wieder, liegt es an ihm.",
-        "solV": 2
+        "solV": 2,
+        "stepImages": [
+         [
+          "img/0690.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Kommt Wasser am Eingang des BE CONNECT an, aber nicht am Ausgang?",
+         "himg": "",
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Ja, es kommt kein Wasser heraus",
+           "img": "img/0690.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Nein, das Wasser kommt normal heraus",
+           "img": ""
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Prüfen, ob ein Schlauch geknickt oder eingeklemmt ist",
-        "solution": null,
+        "solution": [
+         "Die gesamte Wasserzulaufleitung prüfen und sicherstellen, dass kein Schlauch abgeknickt oder blockiert ist",
+         "Den Schlauch bei Bedarf austauschen"
+        ],
         "consequence": "Ein geknickter Schlauch verhindert, dass Wasser zum System gelangt.",
         "tip": "Achtung: Ein eingeklemmter Schlauch ist geschwächt. Es wird empfohlen, den Schlauch vollständig zu ersetzen. Ist das nicht möglich, schneiden Sie den beschädigten Teil heraus und ersetzen Sie ihn durch ein Schlauchstück mit zwei Verbindungsmuffen.",
-        "solV": 2
+        "solV": 2,
+        "stepImages": [
+         [
+          "img/0691.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Sehen Sie einen eingeklemmten, geknickten oder gequetschten Schlauch?",
+         "hint": "Verfolgen Sie die ganze Wasserleitung von der Zufuhr bis zum Hahn, auch hinter und unter dem Schrank.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Ja, ein Schlauch ist beschädigt",
+           "img": "img/0691.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Nein, alle Schläuche sind frei",
+           "img": ""
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Prüfen, ob die BOX vereist ist (sichtbarer Reif, Wasser blockiert)",
@@ -27502,10 +30597,24 @@
            "img": "img/ask-box-gel.webp"
           }
          ],
-         "hint": "So sehen Sie es:\n• BOX 80 bis 150: Schauen Sie in die Eisbank, dazu einfach die obere Abdeckung abnehmen.\n• BOX 15 bis 45: nicht sichtbar. Die einzige Möglichkeit: die BOX direkt an die Wasserzufuhr anschliessen (ohne Tap), das Wasser öffnen und prüfen, ob am Ausgang „OUT“ für stilles Wasser Wasser aus der BOX kommt."
+         "hint": "So sehen Sie es:\n• BOX 80 bis 150: Schauen Sie in die Eisbank, dazu einfach die obere Abdeckung abnehmen.\n• BOX 15 bis 45: nicht sichtbar. Die einzige Möglichkeit: die BOX direkt an die Wasserzufuhr anschliessen (ohne Tap), das Wasser öffnen und prüfen, ob am Ausgang „OUT“ für stilles Wasser Wasser aus der BOX kommt.",
+         "v2fix": 2
         },
         "actor": "technicien",
-        "actorV": 1
+        "actorV": 1,
+        "stepImages": [
+         [
+          "img/0501.webp"
+         ],
+         [
+          "img/0508.webp"
+         ],
+         [
+          "img/0685.webp",
+          "img/0333.webp"
+         ]
+        ],
+        "seed2V": 1
        }
       ],
       "pre": {
@@ -27548,7 +30657,42 @@
          "Die Box testweise direkt an eine Steckdose anschließen",
          "Wenn das Problem nach diesen 3 Schritten weiter besteht, die Box austauschen"
         ],
-        "consequence": "Ohne Strom läuft die Pumpe nicht: Aus dem Hahn kommt nur CO2."
+        "consequence": "Ohne Strom läuft die Pumpe nicht: Aus dem Hahn kommt nur CO2.",
+        "stepImages": [
+         [
+          "img/0199.webp"
+         ],
+         [
+          "img/0189.webp",
+          "img/0267.webp"
+         ],
+         [
+          "img/0198.webp",
+          "img/0563.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Ist die BOX eingeschaltet?",
+         "hint": "Schauen Sie auf den Schalter hinten an der BOX und hören Sie, ob der Lüfter läuft.",
+         "himg": "img/0237.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Ja, sie ist an und die BE CONNECT-Anzeige ist weiss",
+           "img": "img/0199.webp"
+          },
+          {
+           "e": "🔌",
+           "go": "fix",
+           "l": "Nein, sie scheint aus zu sein",
+           "img": "img/0198.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Hören, ob die Sprudelwasserpumpe beim Zapfen anläuft",
@@ -27557,21 +30701,103 @@
          "Springt sie nicht an, prüfen, ob der Pumpenmotor funktioniert",
          "Prüfen, ob die Pumpe blockiert ist"
         ],
-        "consequence": "Ohne Pumpe gelangt kein Wasser in den Karbonisierer: Es kommt nur CO2."
+        "consequence": "Ohne Pumpe gelangt kein Wasser in den Karbonisierer: Es kommt nur CO2.",
+        "stepImages": [
+         [
+          "img/0237.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Hören Sie die Pumpe anlaufen, wenn Sie Sprudelwasser zapfen?",
+         "hint": "Zapfen Sie Sprudelwasser und hören Sie auf die BOX: die Pumpe macht einige Sekunden lang ein Motorgeräusch.",
+         "himg": "img/0480.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "🔊",
+           "go": "next",
+           "l": "Ja, die Pumpe läuft an"
+          },
+          {
+           "e": "🔇",
+           "go": "fix",
+           "l": "Nein, kein Geräusch"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Prüfen, ob der BE CONNECT blockiert ist (nur Techniker, nach Diagnose)",
-        "solution": null,
+        "solution": [
+         "BE CONNECT ersetzen",
+         "*Wenn der BE CONNECT verstopft ist, sollte Wasser am Filtereingang, aber nicht am Ausgang ankommen"
+        ],
         "consequence": "Der BE CONNECT gibt das Wasser zum System nicht mehr frei.",
         "tip": "Um zu bestätigen, dass der BE CONNECT blockiert, können Sie ihn überbrücken: funktioniert das System wieder, liegt es an ihm.",
-        "solV": 2
+        "solV": 2,
+        "stepImages": [
+         [
+          "img/0690.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Kommt Wasser am Eingang des BE CONNECT an, aber nicht am Ausgang?",
+         "himg": "",
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Ja, es kommt kein Wasser heraus",
+           "img": "img/0690.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Nein, das Wasser kommt normal heraus",
+           "img": ""
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Prüfen, ob ein Schlauch geknickt oder eingeklemmt ist",
-        "solution": null,
+        "solution": [
+         "Die gesamte Wasserzulaufleitung prüfen und sicherstellen, dass kein Schlauch abgeknickt oder blockiert ist",
+         "Den Schlauch bei Bedarf austauschen"
+        ],
         "consequence": "Ein geknickter Schlauch verhindert, dass Wasser zum System gelangt.",
         "tip": "Achtung: Ein eingeklemmter Schlauch ist geschwächt. Es wird empfohlen, den Schlauch vollständig zu ersetzen. Ist das nicht möglich, schneiden Sie den beschädigten Teil heraus und ersetzen Sie ihn durch ein Schlauchstück mit zwei Verbindungsmuffen.",
-        "solV": 2
+        "solV": 2,
+        "stepImages": [
+         [
+          "img/0691.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Sehen Sie einen eingeklemmten, geknickten oder gequetschten Schlauch?",
+         "hint": "Verfolgen Sie die ganze Wasserleitung von der Zufuhr bis zum Hahn, auch hinter und unter dem Schrank.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Ja, ein Schlauch ist beschädigt",
+           "img": "img/0691.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Nein, alle Schläuche sind frei",
+           "img": ""
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        }
       ]
      },
@@ -27584,14 +30810,73 @@
          "Druck der CO2-Flasche prüfen (ca. 3,8 bar)",
          "CO2-Flasche austauschen"
         ],
-        "consequence": "Eine leere Flasche kann das Wasser nicht mehr karbonisieren."
+        "consequence": "Eine leere Flasche kann das Wasser nicht mehr karbonisieren.",
+        "stepImages": [
+         [
+          "img/0092.webp"
+         ],
+         [
+          "img/0229.webp",
+          "img/0230.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Wo steht die Nadel des CO2-Manometers?",
+         "hint": "Das Manometer sitzt auf der CO2-Flasche. Bei offener Flasche sollte es etwa 3,8 bar anzeigen.",
+         "himg": "img/0092.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Im grünen Bereich (≈ 3,8 bar)",
+           "img": "img/ask-mano-co2-ok.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Nahe 0: Flasche leer",
+           "img": "img/ask-mano-co2-bas.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Den am CO2-Manometer angezeigten Druck prüfen",
         "solution": [
          "Druck der CO2-Flasche einstellen (ca. 3,8 bar)"
         ],
-        "consequence": "Ein zu niedriger Druck ergibt wenig sprudelndes Wasser."
+        "consequence": "Ein zu niedriger Druck ergibt wenig sprudelndes Wasser.",
+        "stepImages": [
+         [
+          "img/0281.webp",
+          "img/0235.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Wo steht die Nadel des CO2-Manometers?",
+         "hint": "Empfohlene Einstellung: etwa 0,8 bar über dem Wasserdruck, nie über 4 bar.",
+         "himg": "img/0281.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Im grünen Bereich (≈ 3,8 bar)",
+           "img": "img/ask-mano-co2-ok.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Zu niedrig",
+           "img": "img/ask-mano-co2-bas.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Prüfen, ob die CO2-Flasche vom kompatiblen Typ ist",
@@ -27600,21 +30885,104 @@
          "Nur kompatibel mit Aligal 2",
          "Nicht kompatibel mit Aligal 3 oder Aligal 13"
         ],
-        "consequence": "Eine nicht kompatible Flasche liefert nicht den richtigen Druck."
+        "consequence": "Eine nicht kompatible Flasche liefert nicht den richtigen Druck.",
+        "stepImages": [
+         [
+          "img/0818.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Welche Aufschrift sehen Sie auf der CO2-Flasche?",
+         "himg": "img/0818.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Aligal 2",
+           "img": "img/0818.webp"
+          },
+          {
+           "e": "❌",
+           "go": "fix",
+           "l": "Aligal 3 oder Aligal 13"
+          },
+          {
+           "e": "🤔",
+           "go": "fix",
+           "l": "Eine andere Aufschrift"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Prüfen, ob eine Wiederherstellung des Sprudelwassers gestartet wurde",
         "solution": [
          "Karbonator entleeren und das Sprudelwasser ablassen"
         ],
-        "consequence": "Nach CO2-Mangel muss der Kreislauf neu befüllt werden, damit das Wasser wieder sprudelt."
+        "consequence": "Nach CO2-Mangel muss der Kreislauf neu befüllt werden, damit das Wasser wieder sprudelt.",
+        "stepImages": [
+         [
+          "img/0469.webp",
+          "img/0486.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Wurde der Karbonisator seit dem letzten CO2-Mangel geleert und das Sprudelwasser gespült?",
+         "himg": "img/0469.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Ja, bereits erledigt",
+           "img": "img/0486.webp"
+          },
+          {
+           "e": "🔁",
+           "go": "fix",
+           "l": "Nein, noch nicht",
+           "img": "img/0469.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Wassertemperatur beim Zapfen prüfen",
         "solution": [
          "Prüfen, ob die Box richtig kühlt und der Thermostat korrekt eingestellt ist"
         ],
-        "consequence": "Zu warmes Wasser bindet CO2 schlecht: Es wirkt still."
+        "consequence": "Zu warmes Wasser bindet CO2 schlecht: Es wirkt still.",
+        "stepImages": [
+         [
+          "img/0231.webp",
+          "img/0490.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Ist das Wasser, das herauskommt, kalt?",
+         "hint": "Messen Sie wenn möglich die Wassertemperatur mit einem Thermometer.",
+         "himg": "img/0580.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "❄️",
+           "go": "next",
+           "l": "Ja, es ist kalt"
+          },
+          {
+           "e": "🌡️",
+           "go": "fix",
+           "l": "Nein, es ist lauwarm"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        }
       ]
      },
@@ -27627,7 +30995,37 @@
          "CO2-Flasche austauschen",
          "Druck auf ca. 3,8 bar einstellen"
         ],
-        "consequence": "Ohne CO2 kann überhaupt kein Sprudelwasser erzeugt werden."
+        "consequence": "Ohne CO2 kann überhaupt kein Sprudelwasser erzeugt werden.",
+        "stepImages": [
+         [
+          "img/0229.webp",
+          "img/0230.webp"
+         ],
+         [
+          "img/0281.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Wo steht die Nadel des CO2-Manometers?",
+         "himg": "img/0092.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Im grünen Bereich: CO2 vorhanden",
+           "img": "img/ask-mano-co2-ok.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Nahe 0: Flasche leer",
+           "img": "img/ask-mano-co2-bas.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        }
       ]
      }
@@ -27653,7 +31051,37 @@
         ],
         "consequence": "Ein gesättigter Filter blockiert den Wasserdurchfluss.",
         "tip": "Sie können auch mit einer leeren Wartungskartusche testen, ob das Wasser durchfliesst.",
-        "solV": 2
+        "solV": 2,
+        "stepImages": [
+         [
+          "img/0687.webp"
+         ],
+         [
+          "img/0467.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Kommt Wasser am Filtereingang an, aber nicht am Ausgang?",
+         "hint": "Prüfen Sie auch am System (BE CONNECT Web-App), ob das Wartungsdatum überschritten ist: ein alter Filter ist oft gesättigt.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Ja, oder das Wartungsdatum ist überschritten",
+           "img": "img/0687.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Nein, das Wasser fliesst und die Wartung ist aktuell",
+           "img": ""
+          }
+         ],
+         "v2fix": 2,
+         "himg": "img/ask-app-beconnect.webp"
+        },
+        "seed2V": 1
        },
        {
         "problem": "Zustand des Vorfilters prüfen (nur Techniker, bei den betroffenen Systemen)",
@@ -27661,14 +31089,69 @@
          "Vorfilter reinigen",
          "Filterdichtung austauschen"
         ],
-        "consequence": "Ein gesättigter Vorfilter reduziert und sperrt schliesslich die Wasserzufuhr."
+        "consequence": "Ein gesättigter Vorfilter reduziert und sperrt schliesslich die Wasserzufuhr.",
+        "stepImages": [
+         [
+          "img/0688.webp"
+         ],
+         [
+          "img/0689.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Ist das Sieb des Vorfilters verschmutzt?",
+         "opts": [
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Ja, es ist verschmutzt",
+           "img": "img/0689.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Nein, es ist sauber",
+           "img": "img/0688.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Den Wasserdruck des Gebäudes prüfen",
         "solution": [
          "Statischen und dynamischen Druck mit dem Druckminderer oder einem Manometer prüfen"
         ],
-        "consequence": "Zu geringer Druck begrenzt den Durchfluss des ganzen Systems."
+        "consequence": "Zu geringer Druck begrenzt den Durchfluss des ganzen Systems.",
+        "stepImages": [
+         [
+          "img/0279.webp",
+          "img/0234.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Welchen Druck zeigt das Wassermanometer?",
+         "hint": "Das Manometer sitzt am Druckminderer. Empfohlene Einstellung: zwischen 2,5 und 3 bar.",
+         "himg": "img/0279.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Zwischen 2,5 und 3 bar",
+           "img": "img/ask-mano-eau-ok.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Weniger als 2,5 bar",
+           "img": "img/ask-mano-eau-bas.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        }
       ]
      },
@@ -27681,21 +31164,107 @@
          "Druck prüfen (ca. 3,8 bar)",
          "CO2-Flasche austauschen"
         ],
-        "consequence": "Eine leere Flasche kann das Wasser nicht mehr karbonisieren."
+        "consequence": "Eine leere Flasche kann das Wasser nicht mehr karbonisieren.",
+        "stepImages": [
+         [
+          "img/0092.webp"
+         ],
+         [
+          "img/0229.webp",
+          "img/0230.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Wo steht die Nadel des CO2-Manometers?",
+         "hint": "Das Manometer sitzt auf der CO2-Flasche. Bei offener Flasche sollte es etwa 3,8 bar anzeigen.",
+         "himg": "img/0092.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Im grünen Bereich (≈ 3,8 bar)",
+           "img": "img/ask-mano-co2-ok.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Nahe 0: Flasche leer",
+           "img": "img/ask-mano-co2-bas.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Den am CO2-Manometer angezeigten Druck prüfen",
         "solution": [
          "Druck der CO2-Flasche einstellen (ca. 3,8 bar)"
         ],
-        "consequence": "Ein zu niedriger Druck ergibt wenig sprudelndes Wasser."
+        "consequence": "Ein zu niedriger Druck ergibt wenig sprudelndes Wasser.",
+        "stepImages": [
+         [
+          "img/0281.webp",
+          "img/0235.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Wo steht die Nadel des CO2-Manometers?",
+         "hint": "Empfohlene Einstellung: etwa 0,8 bar über dem Wasserdruck, nie über 4 bar.",
+         "himg": "img/0281.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Im grünen Bereich (≈ 3,8 bar)",
+           "img": "img/ask-mano-co2-ok.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Zu niedrig",
+           "img": "img/ask-mano-co2-bas.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        },
        {
         "problem": "Einstellung des Durchflussreduzierers prüfen",
         "solution": [
          "Durchflussregler auf der Sprudelwasserseite einstellen"
         ],
-        "consequence": "Zu weit geschlossen drosselt er den Sprudelwasserdurchfluss."
+        "consequence": "Zu weit geschlossen drosselt er den Sprudelwasserdurchfluss.",
+        "stepImages": [
+         [
+          "img/0341.webp",
+          "img/0238.webp",
+          "img/0239.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Wie lange dauert es, eine 75-cl-Flasche mit Sprudelwasser zu füllen?",
+         "hint": "Stoppen Sie die Füllzeit: sie sollte etwa 20 Sekunden betragen.",
+         "opts": [
+          {
+           "e": "⏱️",
+           "go": "next",
+           "l": "Etwa 20 Sekunden",
+           "img": "img/0239.webp"
+          },
+          {
+           "e": "🐢",
+           "go": "fix",
+           "l": "Viel länger",
+           "img": "img/0238.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        }
       ]
      }
@@ -27714,32 +31283,444 @@
       "heading": "Geschmacksproblem",
       "problems": [
        {
-        "problem": "Prüfen, ob der Geschmack nur beim Sprudelwasser auftritt",
+        "problem": "Den Karbonisator entleeren",
+        "consequence": "Wurde das System wenig oder seit einigen Stunden nicht benutzt, kann das CO2 den Geschmack des Wassers überdecken.",
         "solution": [
-         "Karbonator entleeren, dann 10 Liter Sprudelwasser ablassen",
-         "Besteht das Problem weiter, CO2-Flasche austauschen und den Schritt wiederholen"
+         "Die BOX ausschalten (oder die Wasserzufuhr schliessen)",
+         "Sprudelwasser zapfen, bis nur noch CO2 herauskommt",
+         "Die BOX wieder einschalten (oder die Wasserzufuhr wieder öffnen)",
+         "Einige Sekunden warten, bis die Pumpe den Karbonisator wieder gefüllt hat, dann das Sprudelwasser spülen",
+         "Das Sprudelwasser erneut probieren"
         ],
-        "consequence": "Wenn ja, liegt es am CO2-Kreislauf oder Karbonisierer, nicht am Filter."
+        "stepImages": [
+         [
+          "img/0237.webp",
+          "img/0469.webp"
+         ],
+         [
+          "img/0486.webp"
+         ],
+         [
+          "img/0237.webp",
+          "img/0469.webp"
+         ],
+         [
+          "img/0480.webp"
+         ],
+         [
+          "img/0485.webp"
+         ]
+        ],
+        "actor": "utilisateur",
+        "need": [
+         "gaz"
+        ],
+        "askOff": true,
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "tip": "Achtung: Die ersten 15 bis 20 cl sind nicht gekühlt, sie stehen zwischen Kühlsystem und Hahn. Es ist daher völlig normal, dass dieses Wasser lauwarm ist und leicht schmeckt. Es hat keinen Einfluss auf die Gesundheit: Lassen Sie diese ersten Zentiliter einfach ablaufen.",
+        "link": "https://youtu.be/fZwAIBzgORk?si=87uzK42eovDg73Hk",
+        "vidV": 1,
+        "completed": true
        },
        {
-        "problem": "Prüfen, ob der Geschmack auch beim stillen Wasser auftritt",
+        "problem": "Den Druck der CO2-Flasche prüfen",
+        "consequence": "Eine leere oder fast leere CO2-Flasche kann dem Sprudelwasser Geschmack geben.",
         "solution": [
-         "10 Liter stilles Wasser durchlaufen lassen",
-         "Besteht das Problem weiter, den Filter austauschen"
+         "Den Druck am Manometer der CO2-Flasche prüfen (Flasche offen)",
+         "Liegt der Druck unter 3 bar, ist die Flasche leer: die CO2-Flasche ersetzen",
+         "Einige Liter Sprudelwasser laufen lassen",
+         "Das Sprudelwasser erneut probieren"
         ],
-        "consequence": "Wenn ja, liegt es am Filter oder am Wasserkreislauf."
+        "stepImages": [
+         [
+          "img/0092.webp"
+         ],
+         [
+          "img/ask-mano-co2-bas.webp",
+          "img/0468.webp"
+         ],
+         [
+          "img/0486.webp"
+         ],
+         [
+          "img/0485.webp"
+         ]
+        ],
+        "actor": "utilisateur",
+        "need": [
+         "gaz"
+        ],
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "ask": {
+         "q": "Welchen Druck zeigt das Manometer der CO2-Flasche?",
+         "hint": "Das Manometer sitzt auf der CO2-Flasche. Bei offener Flasche ablesen.",
+         "himg": "img/0092.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "3 bar oder mehr",
+           "img": "img/ask-mano-co2-ok.webp",
+           "sub": "Druck in Ordnung"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Unter 3 bar",
+           "img": "img/ask-mano-co2-bas.webp",
+           "sub": "Die Flasche ist leer"
+          }
+         ],
+         "v2fix": 2
+        },
+        "link": "https://youtu.be/J4cJ49B88fw?si=IjTWAgVehSdX4kFk",
+        "vidV": 1,
+        "completed": true
+       },
+       {
+        "problem": "Die CO2-Flasche ersetzen",
+        "consequence": "Die CO2-Flasche kann dem Sprudelwasser Geschmack geben: abgelaufenes Datum oder ein Füllproblem beim Lieferanten.",
+        "solution": [
+         "Die CO2-Flasche schliessen",
+         "Den CO2-Regler von der Flasche abschrauben",
+         "Die Dichtung in den CO2-Regler legen und die Mutter auf der neuen Flasche festziehen",
+         "Die CO2-Flasche öffnen und den Druck prüfen (etwa 3,8 bar)",
+         "10 l Sprudelwasser laufen lassen, um den Karbonisator vollständig zu leeren",
+         "Das Sprudelwasser erneut probieren"
+        ],
+        "stepImages": [
+         [
+          "img/0468.webp"
+         ],
+         [
+          "img/0230.webp"
+         ],
+         [
+          "img/0274.webp",
+          "img/0275.webp"
+         ],
+         [
+          "img/0280.webp",
+          "img/0281.webp"
+         ],
+         [
+          "img/0480.webp"
+         ],
+         [
+          "img/0485.webp"
+         ]
+        ],
+        "actor": "utilisateur",
+        "need": [
+         "gaz"
+        ],
+        "askOff": true,
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "tip": "Dieser Geschmack hat keinen Einfluss auf die Gesundheit, nur auf den Geschmack des Sprudelwassers.",
+        "completed": true
+       },
+       {
+        "problem": "10 l Sprudelwasser und 3 l stilles Wasser laufen lassen",
+        "consequence": "Wasser, das lange im Kreislauf stand, kann Geschmack annehmen: es zu erneuern genügt oft.",
+        "solution": [
+         "10 l Sprudelwasser laufen lassen",
+         "3 l stilles Wasser laufen lassen",
+         "Das stille Wasser und das Sprudelwasser erneut probieren"
+        ],
+        "stepImages": [
+         [
+          "img/0480.webp"
+         ],
+         [
+          "img/0479.webp"
+         ],
+         [
+          "img/0485.webp"
+         ]
+        ],
+        "actor": "utilisateur",
+        "need": [
+         "both"
+        ],
+        "askOff": true,
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "tip": "Achtung: Die ersten 15 bis 20 cl sind nicht gekühlt, sie stehen zwischen Kühlsystem und Hahn. Es ist daher völlig normal, dass dieses Wasser lauwarm ist und leicht schmeckt. Es hat keinen Einfluss auf die Gesundheit: Lassen Sie diese ersten Zentiliter einfach ablaufen.",
+        "completed": true
+       },
+       {
+        "problem": "Den Filter ersetzen",
+        "consequence": "Ein verbrauchter Filter kann dem Wasser Geschmack geben.",
+        "solution": [
+         "Am System (BE CONNECT Web-App) prüfen, ob das Wartungsdatum überschritten ist: wenn ja, gleichzeitig die komplette Wartung durchführen (Desinfektion mit der Wartungskartusche), bevor der Filter ersetzt wird",
+         "Ist das Wartungsdatum nicht überschritten: prüfen, ob die vorherigen Schritte erledigt wurden, dann nur den Filter ersetzen (ohne Wartung) und das Wasser laufen lassen",
+         "Nach dem Ersetzen 10 l Sprudelwasser laufen lassen (und 3 l stilles Wasser, wenn auch das stille Wasser schmeckte)",
+         "Den Geschmack des Wassers erneut prüfen"
+        ],
+        "stepImages": [
+         [
+          "img/ask-app-beconnect.webp",
+          "img/0467.webp"
+         ],
+         [
+          "img/0687.webp"
+         ],
+         [
+          "img/0480.webp",
+          "img/0479.webp"
+         ],
+         [
+          "img/0485.webp"
+         ]
+        ],
+        "actor": "technicien",
+        "need": [],
+        "askOff": true,
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "preNote": {
+         "gaz": "Wenn nur das Sprudelwasser Geschmack hat, liegt es selten am Filter: auch das stille Wasser würde schmecken. Prüfen Sie zuerst, ob die vorherigen Schritte erledigt wurden."
+        },
+        "completed": true
        }
-      ]
+      ],
+      "pre": {
+       "q": "Wo schmecken Sie den Geschmack?",
+       "hint": "Achtung: Die ersten 15 bis 20 cl sind nicht gekühlt, sie stehen zwischen Kühlsystem und Hahn. Es ist daher völlig normal, dass dieses Wasser lauwarm ist und leicht schmeckt. Es hat keinen Einfluss auf die Gesundheit: Lassen Sie diese ersten Zentiliter einfach ablaufen.",
+       "opts": [
+        {
+         "id": "gaz",
+         "img": "img/0483.webp",
+         "l": "Nur im Sprudelwasser",
+         "badge": "gaz"
+        },
+        {
+         "id": "both",
+         "img": "img/0485.webp",
+         "l": "Im stillen und im Sprudelwasser",
+         "badge": "both"
+        }
+       ]
+      },
+      "preV": 99,
+      "tasteV": 1,
+      "badgeV": 1,
+      "tasteCo2V": 1
      },
      {
       "heading": "Wasser nicht kalt",
       "problems": [
        {
+        "problem": "Prüfen, ob das System eingeschaltet ist",
+        "consequence": "Ist das System aus, arbeitet das Kühlaggregat nicht und das Wasser kommt lauwarm heraus.",
+        "solution": [
+         "Prüfen, ob die BOX eingesteckt ist und ihr Schalter (hinten) eingeschaltet ist",
+         "Sprudelwasser zapfen und horchen: Lüfter oder Pumpe müssen zu hören sein",
+         "Ist die BOX eingeschaltet, dreht sich der Lüfter aber nicht: nichts zerlegen, einen Techniker für die Reparatur einplanen (Austausch des Lüfters oder der BOX)"
+        ],
+        "stepImages": [
+         [
+          "img/0237.webp"
+         ],
+         [
+          "img/0483.webp"
+         ],
+         [
+          "img/ask-ventil-off.webp"
+         ]
+        ],
+        "actor": "utilisateur",
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "ask": {
+         "q": "Hören Sie den Lüfter oder die Pumpe, wenn Sie Sprudelwasser zapfen?",
+         "hint": "Zapfen Sie ein Glas Sprudelwasser und horchen Sie an der BOX: Lüfter oder Pumpe müssen zu hören sein.",
+         "himg": "img/0483.webp",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Ja, ich höre den Lüfter oder die Pumpe",
+           "img": "img/0491.webp",
+           "badge": "fanon"
+          },
+          {
+           "e": "❌",
+           "go": "fix",
+           "l": "Nein, ich höre nichts",
+           "img": "img/ask-ventil-off.webp",
+           "badge": "fanoff"
+          }
+         ],
+         "v2fix": 2
+        },
+        "completed": true
+       },
+       {
         "problem": "Wassertemperatur und Thermostateinstellung prüfen",
-        "solution": null,
-        "consequence": "Die Kühleinheit erreicht die richtige Temperatur nicht."
+        "consequence": "Das Kühlaggregat erreicht nicht die richtige Temperatur.",
+        "solution": [
+         "Den Thermostat der BOX zwischen 5 und 6 einstellen (nie über 6)"
+        ],
+        "stepImages": [
+         [
+          "img/0231.webp",
+          "img/0322.webp"
+         ]
+        ],
+        "actor": "utilisateur",
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "ask": {
+         "q": "Auf welche Zahl ist der Thermostat der BOX eingestellt?",
+         "hint": "Empfohlene Einstellung: zwischen 5 und 6, nie über 6.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Zwischen 5 und 6",
+           "img": "img/0231.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Unter 5 oder auf OFF",
+           "img": "img/0322.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "completed": true
+       },
+       {
+        "problem": "Prüfen, ob der Lüfter läuft und die Lüftung nicht blockiert ist",
+        "consequence": "Kann die warme Luft nicht entweichen, kühlt das Kühlaggregat nicht mehr richtig.",
+        "solution": [
+         "Prüfen, ob sich der Lüfter dreht",
+         "Ist die BOX eingeschaltet, dreht sich der Lüfter aber nicht: den Lüfter ersetzen (wenn Sie einen zur Hand haben oder ihn als Ersatzteil bekommen können) oder das System ersetzen",
+         "Prüfen, ob Lüfter und Gitter nicht verstaubt sind, und sie bei Bedarf entstauben",
+         "Prüfen, ob kein Hindernis vor der Lüftung das Entweichen der Luft verhindert. Ist ein Lüftungskit vorhanden, sicherstellen, dass der Kanal nicht blockiert ist und der Ausschnitt im Möbel gemacht wurde und gross genug ist"
+        ],
+        "stepImages": [
+         [
+          "img/ask-fan.webp",
+          "img/0491.webp"
+         ],
+         [
+          "img/ask-ventil-off.webp"
+         ],
+         [
+          "img/ask-fan-sale.webp",
+          "img/0490.webp"
+         ],
+         [
+          "img/0242.webp",
+          "img/0243.webp",
+          "img/0211.webp"
+         ]
+        ],
+        "actor": "technicien",
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "askOff": true,
+        "tip": "Prüfen Sie vor Beginn, ob die vorherigen Schritte erledigt wurden (System eingeschaltet, Thermostat zwischen 5 und 6).",
+        "completed": true
+       },
+       {
+        "problem": "Prüfen, ob der Kompressor warm ist",
+        "consequence": "Ist der Kompressor kalt, obwohl das Wasser lauwarm ist, schaltet er nicht ein oder funktioniert nicht mehr.",
+        "solution": [
+         "Den Kompressor der BOX berühren: er muss warm sein, wenn das System kühlt",
+         "Ist er kalt: prüfen, ob der Kompressor richtig angeschlossen ist und sich kein Stecker gelöst hat",
+         "Bleibt er kalt, obwohl das Wasser lauwarm ist und alles richtig angeschlossen ist, schaltet der Kompressor nicht ein oder funktioniert nicht mehr: das System ersetzen"
+        ],
+        "stepImages": [
+         [
+          "img/ask-comp-chaud.webp"
+         ],
+         [
+          "img/ask-comp-cablage.webp"
+         ],
+         [
+          "img/0258.webp"
+         ]
+        ],
+        "actor": "technicien",
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "tip": "Achtung: Der Kompressor kann sehr heiss sein. Nur kurz berühren.",
+        "ask": {
+         "q": "Ist der Kompressor warm?",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Ja, er ist warm",
+           "img": "img/ask-comp-chaud.webp"
+          },
+          {
+           "e": "❄️",
+           "go": "fix",
+           "l": "Nein, er ist kalt, obwohl das Wasser lauwarm ist",
+           "img": "img/ask-comp-froid.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "completed": true
+       },
+       {
+        "problem": "Das System ersetzen",
+        "consequence": "Hat keine dieser Prüfungen das Problem gelöst, muss das System ersetzt werden.",
+        "solution": [
+         "Hat keiner der vorherigen Schritte geholfen, das System ersetzen"
+        ],
+        "stepImages": [
+         [
+          "img/0258.webp"
+         ]
+        ],
+        "actor": "technicien",
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "askOff": true,
+        "completed": true
        }
-      ]
+      ],
+      "coldV": 1,
+      "coldImgV": 1,
+      "coldV2": 1,
+      "coldV3": 1,
+      "coldV4": 1,
+      "coldV5": 1,
+      "coldV6": 1
      }
     ],
     "parent": "pannes"
@@ -27759,7 +31740,32 @@
         "solution": [
          "Prüfen, ob Wassermangel besteht oder die Box eingefroren ist (Wasserzulauf prüfen)"
         ],
-        "consequence": "Die Pumpe baut keinen Druck auf: interne Leckage oder Wassermangel."
+        "consequence": "Die Pumpe baut keinen Druck auf: interne Leckage oder Wassermangel.",
+        "stepImages": [
+         [
+          "img/0684.webp",
+          "img/0279.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Läuft die Pumpe, ohne je anzuhalten?",
+         "hint": "Hören Sie eine Minute lang auf die BOX, ohne Wasser zu zapfen.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "🔊",
+           "go": "fix",
+           "l": "Ja, sie läuft ununterbrochen"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Nein, sie hält an"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        }
       ]
      }
@@ -27777,21 +31783,246 @@
      {
       "problems": [
        {
+        "problem": "Prüfen, ob das Wasser wirklich vom System kommt",
+        "consequence": "Das Leck kann von etwas anderem als dem System kommen: Siphon, Spüle, Waschmaschine, Geschirrspüler oder Kaffeemaschine in der Nähe.",
+        "solution": [
+         "Das Leck kommt nicht vom BE WTR System: die Reparatur betrifft nicht unsere Installation. Einen Sanitär oder den Service des betreffenden Geräts rufen."
+        ],
+        "stepImages": [
+         [
+          "img/ask-fuite-ailleurs.webp"
+         ]
+        ],
+        "actor": "utilisateur",
+        "ask": {
+         "q": "Kommt das Wasser nach Prüfung der Umgebung wirklich vom BE WTR System?",
+         "hint": "Wischen Sie die Stelle trocken und prüfen Sie die Umgebung: Siphon, Spüle, Abfluss und Geräte in der Nähe (Waschmaschine, Geschirrspüler, Kaffeemaschine…).",
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "img": "img/ask-raccord-fuite.webp",
+           "l": "Ja, es kommt vom System"
+          },
+          {
+           "e": "❌",
+           "go": "fix",
+           "img": "img/ask-fuite-ailleurs.webp",
+           "l": "Nein, es kommt von woanders (Siphon, Spüle, Gerät…)"
+          }
+         ],
+         "v2fix": 2,
+         "noneOff": true,
+         "himg": "img/ask-fuite-ailleurs.webp"
+        },
+        "endBtns": [
+         {
+          "e": "↩️",
+          "go": "next",
+          "l": "Doch vom System: weiter"
+         },
+         {
+          "e": "🚪",
+          "go": "quit",
+          "l": "Beenden"
+         }
+        ],
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "completed": true
+       },
+       {
+        "problem": "Prüfen, ob der Abwasserkanister voll ist",
+        "consequence": "Ein voller Abwasserkanister läuft über und das Wasser fliesst unter den Schrank.",
+        "solution": [
+         "Den Abwasserkanister in eine Spüle oder Toilette leeren",
+         "Den Kanister wieder hinstellen und prüfen, dass der Ablaufschlauch gut darin steckt",
+         "Das Wasser unter dem Schrank aufwischen und nach einigen Stunden prüfen, dass kein Leck mehr besteht"
+        ],
+        "stepImages": [
+         [
+          "img/ask-bidon-plein.webp",
+          "img/0843.webp"
+         ],
+         [
+          "img/0079.webp"
+         ],
+         []
+        ],
+        "actor": "utilisateur",
+        "ask": {
+         "q": "Ist der Abwasserkanister voll?",
+         "hint": "Bei manchen Installationen läuft das Abwasser in einen Kanister unter dem System oder im Schrank. Je nach Modell hat der Kanister einen akustischen Alarm, der ertönt, wenn er voll ist.",
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "img": "img/ask-bidon-ok.webp",
+           "l": "Nein, er ist nicht voll"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "img": "img/ask-bidon-plein.webp",
+           "l": "Ja, er ist voll oder läuft über"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "completed": true
+       },
+       {
         "problem": "Überprüfen Sie das Niveau des Eisbehälters und des Abwasserbehälters",
         "solution": [
-         "Bei BOX 80 / 120 / 150 den Eisbehälter bis zum Mindeststand leeren"
+         "Den Standschlauch der Eisbank ausclipsen (neben dem Etikett „FILL ICE-BANK“)",
+         "Den Schlauch über eine Schüssel senken und das Wasser nach und nach ablassen, jeweils 50 cl",
+         "Den Schlauch nach jedem Ablassen wieder einsetzen, um den Stand zu prüfen, ohne zu viel abzulassen",
+         "Genau beim MIN-Stand aufhören",
+         "Auch prüfen, dass der Abwasserbehälter nicht voll ist, und ihn bei Bedarf leeren"
         ],
-        "consequence": "Der Überlauf läuft über und Wasser fliesst unter das Möbel."
+        "consequence": "Der Überlauf läuft über und Wasser fliesst unter das Möbel.",
+        "stepImages": [
+         [
+          "img/ask-bac-haut.webp"
+         ],
+         [
+          "img/ask-vidange-bac.webp"
+         ],
+         [],
+         [
+          "img/0333.webp"
+         ],
+         [
+          "img/0843.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Wo steht der Wasserstand der Eisbank?",
+         "hint": "Bei BOX 80 / 120 / 150 lesen Sie den Stand am Röhrchen neben dem Etikett „FILL ICE-BANK“ ab. Prüfen Sie auch, ob der Abwasserbehälter nicht voll ist.",
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Auf MIN-Stand",
+           "img": "img/0333.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Über MIN oder überlaufend",
+           "img": "img/ask-bac-haut.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1,
+        "actor": "utilisateur",
+        "actorV": 99,
+        "tip": "Achtung: Der Stand muss genau auf MIN sein. Wird darunter entleert, friert die BOX ein; bleibt er darüber, füllt sich der Behälter vor der nächsten Wartung zu schnell wieder.",
+        "solV": 99,
+        "completed": true
        },
        {
         "problem": "Steckverbinder und Anschlüsse einzeln prüfen",
         "solution": [
+         "Prüfen, dass kein Schlauch unter Spannung steht (ein Gerät könnte verschoben worden sein): jeden Schlauch leicht bewegen, um zu sehen, ob der Anschluss leckt",
+         "Falls ja, die Spannung so weit wie möglich lösen und den Schlauch vollständig in den Anschluss drücken",
          "Den Schlauch nachschneiden und den Anschluss neu verbinden",
          "Bleibt das Leck bestehen, den Anschluss austauschen"
         ],
-        "consequence": "Ein nicht ganz eingesteckter oder beschädigter Anschluss lässt Wasser austreten."
+        "consequence": "Ein nicht ganz eingesteckter oder beschädigter Anschluss lässt Wasser austreten.",
+        "stepImages": [
+         [
+          "img/ask-tuyau-tension.webp"
+         ],
+         [
+          "img/0272.webp"
+         ],
+         [
+          "img/0022.webp"
+         ],
+         [
+          "img/0774.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Sehen Sie Wasser an einer Verbindung tropfen?",
+         "hint": "Wischen Sie die Verbindungen mit trockenem Papier ab und schauen Sie, welche zuerst nass wird.\nAchtung bei Schläuchen unter Spannung: Wurde ein Gerät verschoben, kann ein Schlauch an seinem Anschluss ziehen. Bewegen Sie jeden Schlauch leicht, um zu sehen, ob der Anschluss leckt.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "💧",
+           "go": "fix",
+           "l": "Ja, eine Verbindung leckt",
+           "img": "img/ask-raccord-fuite.webp"
+          },
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Nein, alles ist trocken",
+           "img": "img/0022.webp"
+          }
+         ],
+         "v2fix": 2,
+         "himg": "img/ask-tuyau-tension.webp"
+        },
+        "seed2V": 1,
+        "actor": "utilisateur",
+        "actorV": 99,
+        "completed": true
+       },
+       {
+        "problem": "Technikereinsatz: die Ursache des Lecks finden und reparieren",
+        "consequence": "Besteht das Leck nach diesen Prüfungen weiter, muss die Ursache vor Ort gefunden werden.",
+        "solution": [
+         "Jeden Schlauch einzeln verfolgen, um die Ursache zu finden: die Anschlüsse bei laufendem System abwischen und beobachten, welcher zuerst nass wird",
+         "Im Inneren der BOX prüfen, dass kein Anschluss leicht undicht ist",
+         "Füllt sich die Eisbank von selbst, gibt es direkt darüber ein Leck an einem Anschluss: es kann sehr gering sein und mehrere Tage zum Füllen brauchen",
+         "Eisbank, Überlauf und Abwasserbehälter prüfen",
+         "Bei BOXen mit eingebautem Druckminderer kommt das Leck oft von diesem: er kann entfernt und durch einen externen Druckminderer ersetzt werden",
+         "Reparieren: den Schlauch nachschneiden und neu anschliessen, oder den undichten Anschluss, Schlauch oder das Teil ersetzen",
+         "Wasser wieder aufdrehen und nach einigen Minuten prüfen, dass kein Leck mehr besteht"
+        ],
+        "stepImages": [
+         [
+          "img/ask-raccord-fuite.webp",
+          "img/0022.webp"
+         ],
+         [
+          "img/ask-fan.webp"
+         ],
+         [
+          "img/ask-bac-haut.webp"
+         ],
+         [
+          "img/0333.webp",
+          "img/0321.webp"
+         ],
+         [
+          "img/0761.webp"
+         ],
+         [
+          "img/0774.webp"
+         ],
+         []
+        ],
+        "actor": "technicien",
+        "askOff": true,
+        "seed2V": 99,
+        "solV": 99,
+        "endV": 99,
+        "actorV": 99,
+        "tip": "Achtung: Das Leck kann auch von etwas anderem als unserer Installation kommen (Siphon, Wasser aus der Spüle usw.).",
+        "completed": true
        }
-      ]
+      ],
+      "leakV": 7
      }
     ],
     "parent": "pannes"
@@ -27808,8 +32039,43 @@
       "problems": [
        {
         "problem": "Häufigkeit der Neustarts und die Belüftung prüfen",
-        "solution": null,
-        "consequence": "Wiederholte Neustarts deuten auf eine Schutzabschaltung hin: Überhitzung, Stromversorgung oder Wassermangel."
+        "solution": [
+         "Prüfen, dass die Lüftung der BOX nicht verdeckt ist, und sie entstauben",
+         "Die Spannung der Steckdose messen (sie muss dem Landesstandard entsprechen)",
+         "Prüfen, dass der Wasserzulaufhahn offen ist (Wassermangel versetzt die BOX in den Sicherheitsmodus)"
+        ],
+        "consequence": "Wiederholte Neustarts deuten auf eine Schutzabschaltung hin: Überhitzung, Stromversorgung oder Wassermangel.",
+        "stepImages": [
+         [
+          "img/0490.webp",
+          "img/0491.webp"
+         ],
+         [
+          "img/0563.webp",
+          "img/0564.webp"
+         ]
+        ],
+        "ask": {
+         "q": "Ist das Lüftungsgitter der BOX frei und sauber?",
+         "hint": "Eine überhitzte BOX schaltet in den Sicherheitsmodus und startet neu. Lassen Sie Platz um das Gitter.",
+         "noneOff": true,
+         "opts": [
+          {
+           "e": "✅",
+           "go": "next",
+           "l": "Ja, frei und sauber",
+           "img": "img/0491.webp"
+          },
+          {
+           "e": "⚠️",
+           "go": "fix",
+           "l": "Nein, staubig oder verstellt",
+           "img": "img/0490.webp"
+          }
+         ],
+         "v2fix": 2
+        },
+        "seed2V": 1
        }
       ]
      }
