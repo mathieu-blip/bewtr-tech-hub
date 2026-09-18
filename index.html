@@ -4555,7 +4555,8 @@ const CL_I18N = {
     "d.repairedby.new":"＋ Ajouter un nom…","d.repairedby.ph":"Nom du réparateur",
     "d.edit":"Modifier","d.editcancel":"Annuler",
     "d.editparts":"Ajouter ou retirer une pièce enregistre d'abord la fiche.",
-    "d.restock":"Lieu de restockage","d.save":"Enregistrer","d.saved":"Enregistré.","d.parts":"Pièces demandées",
+    "d.restock":"Lieu de restockage","d.restock.new":"＋ Ajouter un lieu…",
+    "d.restock.ph":"Nom du lieu de stockage","d.save":"Enregistrer","d.saved":"Enregistré.","d.parts":"Pièces demandées",
     "d.addpart":"Ajouter une pièce","d.ordered":"commandée","d.none":"Aucune pièce demandée.",
     "parts.sub":"Toutes les pièces demandées et pas encore commandées, avec leur référence interne BE WTR. Une pièce quitte cette liste dès que le bon de commande est enregistré. Les références fournisseur et les prix sont dans le bulletin de commande.",
     "parts.none":"Aucune pièce en attente de commande.",
@@ -4611,7 +4612,8 @@ const CL_I18N = {
     "d.repairedby.new":"＋ Add a name…","d.repairedby.ph":"Repairer name",
     "d.edit":"Edit","d.editcancel":"Cancel",
     "d.editparts":"Adding or removing a part saves the form first.",
-    "d.restock":"Restocking location","d.save":"Save","d.saved":"Saved.","d.parts":"Parts requested",
+    "d.restock":"Restocking location","d.restock.new":"＋ Add a location…",
+    "d.restock.ph":"Storage location name","d.save":"Save","d.saved":"Saved.","d.parts":"Parts requested",
     "d.addpart":"Add a part","d.ordered":"ordered","d.none":"No parts requested.",
     "parts.sub":"Every part requested and not yet ordered, with its BE WTR internal reference. A part leaves this list as soon as the order is saved. Supplier references and prices live in the order form.",
     "parts.none":"No parts waiting to be ordered.",
@@ -4667,7 +4669,8 @@ const CL_I18N = {
     "d.repairedby.new":"＋ Namen hinzufügen…","d.repairedby.ph":"Name des Reparateurs",
     "d.edit":"Bearbeiten","d.editcancel":"Abbrechen",
     "d.editparts":"Ein Teil hinzuzufügen oder zu entfernen speichert zuerst das Formular.",
-    "d.restock":"Einlagerungsort","d.save":"Speichern","d.saved":"Gespeichert.","d.parts":"Angeforderte Teile",
+    "d.restock":"Einlagerungsort","d.restock.new":"＋ Ort hinzufügen…",
+    "d.restock.ph":"Name des Lagerorts","d.save":"Speichern","d.saved":"Gespeichert.","d.parts":"Angeforderte Teile",
     "d.addpart":"Teil hinzufügen","d.ordered":"bestellt","d.none":"Keine Teile angefordert.",
     "parts.sub":"Alle angeforderten und noch nicht bestellten Teile mit ihrer internen BE-WTR-Nummer. Ein Teil verlässt diese Liste, sobald die Bestellung gespeichert ist. Lieferantennummern und Preise stehen im Bestellbeleg.",
     "parts.none":"Keine Teile zur Bestellung offen.",
@@ -5626,6 +5629,82 @@ function clBindRepairedBy(){
   inp.onchange = function(){ clRepairerRemember(inp.value); };
 }
 
+/* « Lieu de restockage » — les cinq lieux d'origine, plus ceux qu'on ajoute.
+
+   Un stock qui n'existait pas encore — un dépôt neuf, une caisse chez un
+   client — s'écrit à la main : il entre dans la liste tout de suite, sur ce
+   ticket comme sur les suivants. Rien à changer en base : la colonne est du
+   texte libre, et un lieu une fois enregistré revient du serveur pour tout
+   le monde. La mémoire locale ne sert qu'à tenir jusque-là, sur l'appareil
+   de celui qui l'a saisi. */
+const CL_RESTOCK_KEY = "bewtr_claims_restocks";
+
+function clRestocksLocal(){
+  try { return JSON.parse(localStorage.getItem(CL_RESTOCK_KEY) || "[]") || []; }
+  catch(e){ return []; }
+}
+
+/** Tous les lieux connus : les cinq d'origine dans leur ordre, puis les
+    ajouts — ceux des tickets et ceux de l'appareil — triés. */
+function clRestocks(){
+  const seen = {}, base = [], extra = [];
+  const add = (v, into) => {
+    const t = String(v || "").trim(); if(!t) return;
+    const k = t.toLowerCase(); if(seen[k]) return;
+    seen[k] = true; into.push(t);
+  };
+  CL_RESTOCK.forEach(v => add(v, base));
+  clState.claims.forEach(c => add(c.restock_location, extra));
+  clRestocksLocal().forEach(v => add(v, extra));
+  return base.concat(extra.sort((a, b) => a.localeCompare(b)));
+}
+
+/** Retient un lieu saisi à la main, pour qu'il soit dans la liste ensuite. */
+function clRestockRemember(name){
+  const v = String(name || "").trim();
+  if(!v) return;
+  if(CL_RESTOCK.some(x => x.toLowerCase() === v.toLowerCase())) return;
+  const list = clRestocksLocal();
+  if(list.some(x => String(x || "").trim().toLowerCase() === v.toLowerCase())) return;
+  list.push(v);
+  try { localStorage.setItem(CL_RESTOCK_KEY, JSON.stringify(list.slice(-40))); } catch(e){}
+}
+
+/** La liste déroulante, plus l'entrée qui ouvre la saisie d'un lieu neuf. */
+function clRestockSelect(cur, dis){
+  const list = clRestocks();
+  if(cur && !list.some(v => v.toLowerCase() === cur.toLowerCase())) list.unshift(cur);
+  return '<select class="cl-in" name="restock_location" id="clRsSel"' + dis + '>'
+    + '<option value=""></option>'
+    + list.map(v => '<option value="' + clEsc(v) + '"'
+        + (v === cur ? " selected" : "") + '>' + clEsc(v) + '</option>').join("")
+    + '<option value="__new">' + clT("d.restock.new") + '</option></select>'
+    + '<input class="cl-in" id="clRsNew" maxlength="120" hidden'
+    + ' placeholder="' + clEsc(clT("d.restock.ph")) + '"' + dis + '>';
+}
+
+/** Le lieu retenu : celui de la liste, ou celui qu'on vient de taper. */
+function clRestockValue(){
+  const sel = document.getElementById("clRsSel");
+  if(!sel) return "";
+  if(sel.value !== "__new") return sel.value.trim();
+  const inp = document.getElementById("clRsNew");
+  return inp ? inp.value.trim() : "";
+}
+
+/** Choisir « nouveau lieu » ouvre le champ ; le lieu saisi rejoint la liste. */
+function clBindRestock(){
+  const sel = document.getElementById("clRsSel"), inp = document.getElementById("clRsNew");
+  if(!sel || !inp) return;
+  sel.onchange = function(){
+    inp.hidden = sel.value !== "__new";
+    if(!inp.hidden){ inp.value = ""; inp.focus(); }
+  };
+  // mémorisé dès qu'il est écrit : il sera dans la liste du ticket suivant
+  // même si celui-ci n'est finalement pas enregistré
+  inp.onchange = function(){ clRestockRemember(inp.value); };
+}
+
 /** Statuts proposés à la saisie, plus celui du claim s'il n'y est plus. */
 function clStatusChoices(cur){
   const list = CL_STATUS.map(s => s.k);
@@ -5807,8 +5886,7 @@ function clOpenDetail(id, edit){
     +     '<div><label class="cl-lbl">'+clT("d.repairedby")+'</label>'
     +       clRepairedBySelect((c.repaired_by || "").trim(), dis)+'</div>'
     +     '<div><label class="cl-lbl">'+clT("d.restock")+'</label>'
-    +       '<select class="cl-in" name="restock_location"'+dis+'><option value=""></option>'
-    +       opt(CL_RESTOCK, c.restock_location)+'</select></div>'
+    +       clRestockSelect((c.restock_location || "").trim(), dis)+'</div>'
     +   '</div>'
     +   '<div><label class="cl-lbl">'+clT("d.repair")+'</label>'
     +     '<textarea class="cl-in" name="repair_notes" rows="3"'+dis+'>'+clEsc(c.repair_notes || "")+'</textarea></div>'
@@ -5829,6 +5907,7 @@ function clOpenDetail(id, edit){
   if(edit){ clBindEditForm(c); return; }
 
   clBindRepairedBy();
+  clBindRestock();
 
   // les vignettes arrivent après le panneau : on ne fait pas attendre la fiche
   clLoadPhotos(c.id, !ro);
@@ -5923,9 +6002,13 @@ function clOpenDetail(id, edit){
     if(ro) return;                     // le formulaire est là pour être lu
     const f = e.target, msg = document.getElementById("clDetailMsg");
     const payload = {};
-    ["status","repair_date","restock_location","repair_notes"].forEach(k => {
+    ["status","repair_date","repair_notes"].forEach(k => {
       const v = f.elements[k].value.trim(); if(v) payload[k] = v;
     });
+    // le lieu peut être neuf : sa valeur est dans la liste ou dans le champ
+    // qui vient de s'ouvrir — vide, il laisse en place celui déjà enregistré
+    const rs = clRestockValue();
+    if(rs){ payload.restock_location = rs; clRestockRemember(rs); }
     // envoyé même vide : c'est le seul champ du suivi qu'on efface en le vidant
     payload.repaired_by = clRepairedByValue();
     clRepairerRemember(payload.repaired_by);
