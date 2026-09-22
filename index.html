@@ -946,6 +946,10 @@
 
   .cl-table{width:100%;border-collapse:collapse;font-size:13.5px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
   .cl-table th{font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-soft);background:#fafbfc;padding:9px 11px;text-align:left;font-weight:700;white-space:nowrap}
+  .cl-table th.srt{cursor:pointer;user-select:none;-webkit-user-select:none}
+  .cl-table th.srt:hover,.cl-table th.srt.on{color:var(--ink)}
+  .cl-table th .ar{margin-left:5px;font-size:8.5px;opacity:.28}
+  .cl-table th.srt:hover .ar,.cl-table th.srt.on .ar{opacity:.85}
   .cl-table td{padding:9px 11px;border-top:1px solid var(--line);vertical-align:top}
   .cl-table tbody tr{cursor:pointer}
   .cl-table tbody tr:hover{background:var(--orange-soft)}
@@ -4551,6 +4555,7 @@ const CL_I18N = {
     "war.hint":"Garantie = moins de 730 jours entre l'installation et le ticket.",
     "col.code":"Réf.","col.product":"Produit","col.serial":"N° série","col.country":"Pays",
     "col.tech":"Technicien","col.date":"Date ticket","col.warranty":"Garantie","col.parts":"Pièces",
+    "sort.hint":"Cliquez pour trier",
     "d.status":"Statut","d.repair":"Note de réparation","d.repairdate":"Date de réparation","d.repairedby":"Réparé par",
     "d.repairedby.new":"＋ Ajouter un nom…","d.repairedby.ph":"Nom du réparateur",
     "d.edit":"Modifier","d.editcancel":"Annuler",
@@ -4607,6 +4612,7 @@ const CL_I18N = {
     "war.hint":"Warranty = less than 730 days between installation and claim.",
     "col.code":"Ref.","col.product":"Product","col.serial":"Serial","col.country":"Country",
     "col.tech":"Technician","col.date":"Claim date","col.warranty":"Warranty","col.parts":"Parts",
+    "sort.hint":"Click to sort",
     "d.status":"Status","d.repair":"Repair note","d.repairdate":"Repair date","d.repairedby":"Repaired by",
     "d.repairedby.new":"＋ Add a name…","d.repairedby.ph":"Repairer name",
     "d.edit":"Edit","d.editcancel":"Cancel",
@@ -4663,6 +4669,7 @@ const CL_I18N = {
     "war.hint":"Garantie = weniger als 730 Tage zwischen Installation und Claim.",
     "col.code":"Nr.","col.product":"Produkt","col.serial":"Seriennr.","col.country":"Land",
     "col.tech":"Techniker","col.date":"Claim-Datum","col.warranty":"Garantie","col.parts":"Teile",
+    "sort.hint":"Zum Sortieren klicken",
     "d.status":"Status","d.repair":"Reparaturnotiz","d.repairdate":"Reparaturdatum","d.repairedby":"Repariert von",
     "d.repairedby.new":"＋ Namen hinzufügen…","d.repairedby.ph":"Name des Reparateurs",
     "d.edit":"Bearbeiten","d.editcancel":"Abbrechen",
@@ -4702,6 +4709,7 @@ const clState = {
   country:"", spareTarget:null, anon:false,   // périmètre commun à tous les onglets
   repair:false, detailId:null,               // écriture ouverte, ticket affiché
   repProduct:null,                           // produit déplié dans le rapport
+  sort:{ key:"date", dir:"desc" },           // colonne et sens du tri du tableau
   newParts:[], newPhotos:[], photos:{}, loaded:false
 };
 
@@ -5501,8 +5509,65 @@ function clFiltered(){
   });
 }
 
+/* ---------------------------------------------------------------- tri
+   Le serveur rend les tickets du plus récent au plus ancien : c'est
+   l'ordre d'ouverture de l'écran, et celui qu'on retrouve en rechargeant.
+
+   Trois colonnes se trient — la référence et les deux dates. Les autres
+   n'ont pas d'ordre qui dise quelque chose, et un en-tête qui se clique
+   pour rien vaut moins qu'un en-tête qui ne se clique pas.
+
+   Le tri passe avant le groupement par statut : chaque groupe le reçoit
+   tel quel, et l'ordre des groupes, lui, ne bouge pas. */
+const CL_SORTS = {
+  code:       c => String(c.code || ""),
+  date:       c => String(c.claim_date || ""),
+  repairdate: c => String(c.repair_date || "")
+};
+
+function clSortRows(rows){
+  const s = clState.sort, get = CL_SORTS[s.key] || CL_SORTS.date;
+  const dir = s.dir === "asc" ? 1 : -1;
+  return rows.slice().sort((a, b) => {
+    const va = get(a), vb = get(b);
+    // un ticket sans date reste en bas dans les deux sens : il n'est ni le
+    // plus ancien ni le plus récent, il est sans réponse
+    if(!va !== !vb) return va ? -1 : 1;
+    const c = va.localeCompare(vb);
+    if(c) return c * dir;
+    // À égalité, l'ordre d'origine reprend la main — le ticket le plus
+    // récent d'abord. C'est ce qui laisse les groupes que la colonne ne
+    // concerne pas, un ticket ouvert n'ayant pas de date de réparation,
+    // exactement dans l'ordre où on les avait laissés.
+    return String(b.claim_date || "").localeCompare(String(a.claim_date || ""))
+        || (b.id - a.id);
+  });
+}
+
+/** Un en-tête. Avec une clé de tri il se clique et porte sa flèche. */
+function clTh(k, sort){
+  const label = clEsc(clT(k));
+  if(!sort) return '<th>'+label+'</th>';
+  const on = clState.sort.key === sort, asc = clState.sort.dir === "asc";
+  return '<th class="srt'+(on ? " on" : "")+'" data-sort="'+sort+'"'
+    + ' title="'+clEsc(clT("sort.hint"))+'"'
+    + ' aria-sort="'+(on ? (asc ? "ascending" : "descending") : "none")+'">'
+    + label+'<span class="ar">'+(on ? (asc ? "▲" : "▼") : "▾")+'</span></th>';
+}
+
+/** Un clic d'en-tête : la même colonne se retourne, une colonne neuve
+    s'ouvre dans le sens utile — la date la plus récente d'abord, la plus
+    petite référence d'abord. */
+function clSortBy(key){
+  if(!CL_SORTS[key]) return;
+  const s = clState.sort;
+  if(s.key === key) s.dir = s.dir === "asc" ? "desc" : "asc";
+  else { s.key = key; s.dir = key === "code" ? "asc" : "desc"; }
+  clRenderBoard();
+}
+
 function clRenderBoard(){
-  const rows = clFiltered();
+  const rows = clSortRows(clFiltered());
   const host = document.getElementById("clBoard");
   if(!rows.length){
     host.innerHTML = '<div class="cl-empty">'
@@ -5524,6 +5589,10 @@ function clRenderBoard(){
   });
   host.innerHTML = keys.map(k => {
     const list = groups[k];
+    // La date de réparation ne s'affiche que dans les groupes qui closent un
+    // ticket — réparé, ou démonté pour pièces. Partout ailleurs la machine
+    // est encore à l'atelier : la colonne serait vide sur toute la hauteur.
+    const done = CL_DONE.includes(k);
     const body = list.map(c => {
       const waiting = (c.parts || []).filter(p => !p.ordered).length;
       const war = c.under_warranty === true
@@ -5539,6 +5608,7 @@ function clRenderBoard(){
         + '<td>'+clEsc(c.country || "—")+'</td>'
         + '<td>'+clEsc(c.technician_name || "—")+'</td>'
         + '<td class="code">'+clDate(c.claim_date)+'</td>'
+        + (done ? '<td class="code">'+clDate(c.repair_date)+'</td>' : '')
         + '<td>'+war+'</td>'
         + '<td>'+(waiting ? '<span class="cl-badge parts">'+waiting+'</span>' : '<span class="muted small">—</span>')+'</td>'
         + '</tr>';
@@ -5547,8 +5617,11 @@ function clRenderBoard(){
       + '<h4><span class="sw" style="background:'+clStatusColor(k)+'"></span>'+clEsc(clStatusLabel(k))
       + ' <span class="c">· '+list.length+'</span></h4>'
       + '<div class="cl-wrap-x"><table class="cl-table"><thead><tr>'
-      + ['col.code','f.desc','col.product','col.serial','col.country','col.tech','col.date','col.warranty','col.parts']
-          .map(x => '<th>'+clEsc(clT(x))+'</th>').join("")
+      + [['col.code','code'], ['f.desc'], ['col.product'], ['col.serial'],
+         ['col.country'], ['col.tech'], ['col.date','date']]
+          .concat(done ? [['d.repairdate','repairdate']] : [])
+          .concat([['col.warranty'], ['col.parts']])
+          .map(x => clTh(x[0], x[1])).join("")
       + '</tr></thead><tbody>'+body+'</tbody></table></div></div>';
   }).join("");
 }
@@ -7213,6 +7286,8 @@ function clInit(){
   exBtn.addEventListener("click", function(){ clOpenSpareFor(prodSel.value, { form: true }); });
 
   document.getElementById("clBoard").addEventListener("click", e => {
+    const th = e.target.closest("th[data-sort]");
+    if(th){ clSortBy(th.dataset.sort); return; }
     const tr = e.target.closest("tr[data-id]"); if(tr) clOpenDetail(Number(tr.dataset.id));
   });
   document.getElementById("clDetail").addEventListener("click", e => {
