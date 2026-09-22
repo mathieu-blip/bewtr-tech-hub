@@ -962,6 +962,9 @@
      le detail du ticket porte le texte entier */
   .cl-table .ttl .clamp{max-width:44ch;white-space:pre-wrap;display:-webkit-box;
     -webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  /* cinq numéros de série sur un même ticket tenaient sur une seule ligne :
+     la colonne mangeait alors la moitié du tableau. Ils s'empilent. */
+  .cl-table .sn{max-width:16ch;white-space:normal;overflow-wrap:break-word}
   .cl-wrap-x{overflow-x:auto;border-radius:12px}
 
   .cl-badge{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
@@ -5398,6 +5401,19 @@ function clEsc(v){
     .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
 }
 /**
+ * Les numéros de série, prêts à revenir à la ligne. Un ticket en porte parfois
+ * cinq d'affilée — « 23041633/23041643/… » — et d'un seul tenant ils étiraient
+ * leur colonne sur la moitié du tableau. La coupe se pose après le séparateur,
+ * qui reste en fin de ligne ; un préfixe d'une seule lettre n'en est pas un :
+ * « S/N 000200 » et « B/27700 » restent entiers.
+ */
+function clSerial(v){
+  const s = String(v == null ? "" : v).trim();
+  if(!s) return "—";
+  return s.split(/([0-9A-Za-z]{2,}\s*[\/,;+&]\s*)/)
+    .map((x, i) => clEsc(x) + (i % 2 ? "<wbr>" : "")).join("");
+}
+/**
  * Le texte d'un ticket. Le formulaire ne demande plus qu'une description ;
  * les 321 tickets repris de Monday, eux, portent parfois un objet et rien
  * d'autre — sans ce repli, leur ligne serait vide à l'écran. Le script SQL 18
@@ -5604,7 +5620,7 @@ function clRenderBoard(){
         + '<td class="code">'+clEsc(c.code)+'</td>'
         + '<td class="ttl"><div class="clamp">'+clEsc(clSubject(c))+'</div></td>'
         + '<td>'+clEsc(c.product || "—")+'</td>'
-        + '<td class="code">'+clEsc(c.serial_number || "—")+'</td>'
+        + '<td class="code"><div class="sn">'+clSerial(c.serial_number)+'</div></td>'
         + '<td>'+clEsc(c.country || "—")+'</td>'
         + '<td>'+clEsc(c.technician_name || "—")+'</td>'
         + '<td class="code">'+clDate(c.claim_date)+'</td>'
@@ -5724,7 +5740,7 @@ function clDetailHead(c){
 function clDetailIdentity(c){
   return '<dl class="cl-kv">'
     + '<dt>'+clT("f.product")+'</dt><dd>'+clEsc(c.product || "—")+'</dd>'
-    + '<dt>'+clT("f.serial")+'</dt><dd>'+clEsc(c.serial_number || "—")+'</dd>'
+    + '<dt>'+clT("f.serial")+'</dt><dd>'+clSerial(c.serial_number)+'</dd>'
     + '<dt>'+clT("f.country")+'</dt><dd>'+clEsc(c.country || "—")+'</dd>'
     + '<dt>'+clT("f.tech")+'</dt><dd>'+clEsc(c.technician_name || "—")
         + (c.technician_email ? ' · <a href="mailto:'+clEsc(c.technician_email)+'">'+clEsc(c.technician_email)+'</a>' : '')+'</dd>'
