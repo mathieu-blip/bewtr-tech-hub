@@ -954,8 +954,12 @@
   .cl-table tbody tr{cursor:pointer}
   .cl-table tbody tr:hover{background:var(--orange-soft)}
   /* les tickets dépliés d'un produit se lisent, ne se cliquent pas :
-     un survol orange y promettrait une action qui n'existe pas */
+     un survol orange y promettrait une action qui n'existe pas. En mode
+     réparateur ils s'ouvrent, eux : la promesse est alors tenue, et le
+     survol la rend visible. */
   .cl-table.cl-sub tbody tr:hover{background:transparent}
+  .cl-table.cl-sub tbody tr[data-id]{cursor:pointer}
+  .cl-table.cl-sub tbody tr[data-id]:hover{background:var(--orange-soft)}
   .cl-table .code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--ink-soft);white-space:nowrap}
   .cl-table .ttl{font-weight:600}
   /* une description peut faire dix lignes : la cellule en montre trois,
@@ -4537,7 +4541,8 @@ const CL_I18N = {
     "rep.open":"Tickets ouverts","rep.closed":"Tickets fermés","rep.parts":"Pièces posées",
     "rep.byStatus":"Les tickets ouverts, par statut","rep.byProduct":"Tickets fermés, par produit",
     "rep.byPart":"Pièces utilisées sur les tickets fermés","rep.repaired":"Réparés","rep.binned":"Démontés",
-    "rep.tickets":"Tickets","rep.click":"— cliquez une ligne pour voir ses tickets","rep.none.open":"Aucun ticket ouvert.","rep.none.closed":"Aucun ticket fermé.",
+    "rep.tickets":"Tickets","rep.click":"— cliquez une ligne pour voir ses tickets",
+    "rep.clickTicket":"· et un ticket pour le modifier","rep.none.open":"Aucun ticket ouvert.","rep.none.closed":"Aucun ticket fermé.",
     "rep.none.parts":"Aucune pièce enregistrée sur les tickets fermés de ce périmètre.",
     "kpi.total":"Tickets ouverts","kpi.new":"À réparer","kpi.order":"Pièces à commander","kpi.supplier":"Chez le fournisseur","kpi.warranty":"Sous garantie",
     "filter.search":"Rechercher — description, n° série, technicien, société…","filter.refresh":"Actualiser",
@@ -4594,7 +4599,8 @@ const CL_I18N = {
     "rep.open":"Open tickets","rep.closed":"Closed tickets","rep.parts":"Parts fitted",
     "rep.byStatus":"Open tickets, by status","rep.byProduct":"Closed tickets, by product",
     "rep.byPart":"Parts used on closed tickets","rep.repaired":"Repaired","rep.binned":"Stripped",
-    "rep.tickets":"Tickets","rep.click":"— click a row to see its tickets","rep.none.open":"No open ticket.","rep.none.closed":"No closed ticket.",
+    "rep.tickets":"Tickets","rep.click":"— click a row to see its tickets",
+    "rep.clickTicket":"· and a ticket to edit it","rep.none.open":"No open ticket.","rep.none.closed":"No closed ticket.",
     "rep.none.parts":"No part recorded on the closed tickets in this scope.",
     "kpi.total":"Open claims","kpi.new":"To repair","kpi.order":"Parts to order","kpi.supplier":"At supplier","kpi.warranty":"Under warranty",
     "filter.search":"Search — description, serial, technician, company…","filter.refresh":"Refresh",
@@ -4651,7 +4657,8 @@ const CL_I18N = {
     "rep.open":"Offene Tickets","rep.closed":"Geschlossene Tickets","rep.parts":"Verbaute Teile",
     "rep.byStatus":"Offene Tickets nach Status","rep.byProduct":"Geschlossene Tickets nach Produkt",
     "rep.byPart":"Teile in geschlossenen Tickets","rep.repaired":"Repariert","rep.binned":"Ausgeschlachtet",
-    "rep.tickets":"Tickets","rep.click":"— eine Zeile anklicken, um ihre Tickets zu sehen","rep.none.open":"Kein offenes Ticket.","rep.none.closed":"Kein geschlossenes Ticket.",
+    "rep.tickets":"Tickets","rep.click":"— eine Zeile anklicken, um ihre Tickets zu sehen",
+    "rep.clickTicket":"· und ein Ticket, um es zu bearbeiten","rep.none.open":"Kein offenes Ticket.","rep.none.closed":"Kein geschlossenes Ticket.",
     "rep.none.parts":"Kein Teil auf den geschlossenen Tickets dieses Umfangs erfasst.",
     "kpi.total":"Offene Claims","kpi.new":"Zu reparieren","kpi.order":"Teile zu bestellen","kpi.supplier":"Beim Lieferanten","kpi.warranty":"In Garantie",
     "filter.search":"Suchen — Beschreibung, Seriennummer, Techniker, Firma…","filter.refresh":"Aktualisieren",
@@ -6292,7 +6299,8 @@ function clRenderReport(){
 
     + '<h4 style="margin:26px 0 8px">'+clT("rep.byProduct")
     +   ' <span class="muted small" style="font-weight:400;text-transform:none;letter-spacing:0">'
-    +   clT("rep.click")+'</span></h4>'
+    +   clT("rep.click")
+    +   (clCanEdit() ? " "+clT("rep.clickTicket") : "")+'</span></h4>'
     + (products.length
         ? '<div class="cl-wrap-x"><table class="cl-table"><thead><tr>'
           + '<th>'+clT("f.product")+'</th><th>'+clT("rep.closed")+'</th>'
@@ -6330,6 +6338,13 @@ function clRenderReport(){
       clRenderReport();
     };
   });
+
+  // Un ticket du rapport s'ouvre comme un ticket du tableau : même fiche,
+  // même panneau, mêmes enregistrements. Corriger une note de réparation vue
+  // dans le rapport ne doit pas obliger à retrouver le ticket ailleurs.
+  host.querySelectorAll("tr[data-id]").forEach(function(tr){
+    tr.onclick = function(){ clOpenDetail(Number(tr.dataset.id)); };
+  });
 }
 
 /**
@@ -6339,6 +6354,9 @@ function clRenderReport(){
  * comme les autres.
  */
 function clReportTickets(list){
+  // Hors mode réparateur la fiche ne s'écrit pas : la ligne reste du texte,
+  // et rien ne laisse croire qu'on peut la corriger depuis le rapport.
+  const edit = clCanEdit();
   if(!list.length) return '<p class="muted small" style="padding:11px 14px">'
                         + clT("rep.none.closed")+'</p>';
   // les plus récemment réparés d'abord ; à défaut, le claim le plus récent
@@ -6353,7 +6371,7 @@ function clReportTickets(list){
     +   '<th>'+clT("f.desc")+'</th><th>'+clT("d.repair")+'</th>'
     +   '<th>'+clT("f.claimdate")+'</th><th>'+clT("d.repairdate")+'</th>'
     +   '<th>'+clT("d.repairedby")+'</th></tr></thead><tbody>'
-    + sorted.map(c => '<tr style="cursor:default">'
+    + sorted.map(c => '<tr'+(edit ? ' data-id="'+c.id+'"' : ' style="cursor:default"')+'>'
         + '<td class="code">'+clEsc(c.code)+'</td>'
         + '<td>'+cell(clSubject(c))+'</td>'
         + '<td>'+cell(c.repair_notes)+'</td>'
@@ -6961,6 +6979,9 @@ function clRenderHistory(){
 async function clRefreshAll(){
   await clLoad();
   clRenderKpis(); clRenderBoard(); clRenderParts();
+  // Le rapport est désormais un point d'entrée sur les tickets : laissé tel
+  // quel, il afficherait encore la note qu'on vient de corriger.
+  if(clState.view === "report") clRenderReport();
   clFillFilters();
 }
 function clFillFilters(){
@@ -7045,6 +7066,8 @@ function clSetRepair(on){
   const box = document.getElementById("clDetail");
   if(box && box.classList.contains("open") && clState.detailId)
     clOpenDetail(clState.detailId);
+  // et les lignes du rapport, qui ne s'ouvrent qu'en mode réparateur
+  if(clState.view === "report") clRenderReport();
 }
 
 function clShowView(v){
