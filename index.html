@@ -688,10 +688,19 @@
     .gf-head .gf-cat{display:none}
     .gf-head .gf-close{order:-1}
     /* Le titre passe avant les libellés : les deux boutons se réduisent à
-       leur pictogramme. */
-    .gf-head .gf-btxt{display:none}
+       leur pictogramme. Le « Télécharger » de la visionneuse en fait autant :
+       la barre n'a pas la place du mot et du titre de la fiche. */
+    .gf-head .gf-btxt, #imgbox .img-dl .gf-btxt{display:none}
     .gf-dl{padding:0 9px}
   }
+  /* Le bouton « Télécharger » de la visionneuse reprend celui des tutos
+     (.gf-dl) : même cadre, même pictogramme, et sur téléphone il se réduit
+     tout seul à sa flèche. Il ne s'affiche que pour un document qui se
+     télécharge — les fiches techniques et produits — et il ne dépend d'aucun
+     rôle : le distributeur enregistre la même fiche que l'interne BE WTR.
+     .gf-dl pose « display:inline-flex », qui gagnerait contre l'attribut
+     « hidden » : la règle ci-dessous le lui rend. */
+  #imgbox .img-dl[hidden]{display:none}
   #imgbox .img-close{margin-left:auto;border:none;background:var(--orange-soft);color:var(--orange);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:15px}
   #imgbox .img-scroll{flex:1;overflow:auto;background:#f6f8fa;text-align:center;padding:10px}
   #imgbox .img-scroll img{width:100%;max-width:1100px;height:auto;display:block;margin:0 auto;border-radius:4px}
@@ -1843,13 +1852,16 @@ const I18N = {
     "nav.glossary":"Glossaire & repères",
     "nav.schemas":"Documentation",
     "s11.t":"Schémas par produit — ligne d'eau & électrique",
-    "s11.sub":"Choisissez une catégorie, puis un produit — l'aperçu s'ouvre au clic, à consulter à l'écran (sans téléchargement).",
+    "s11.sub":"Choisissez une catégorie, puis un produit — l'aperçu s'ouvre au clic. Les schémas restent à consulter à l'écran ; les fiches techniques et produits se téléchargent.",
     "schema.water":"Ligne d'eau",
     "schema.elec":"Schéma électrique",
     "schema.none":"Non disponible pour ce produit",
     "schema.back":"Catégories",
     "schema.previewonly":"Aper\u00e7u \u00e0 l'\u00e9cran \u2014 sans t\u00e9l\u00e9chargement",
     "tech.fronly":"Document en fran\u00e7ais \u2014 traduction \u00e0 venir",
+    "tech.doc.tech":"Fiche technique",
+    "tech.doc.prod":"Fiche produit",
+    "tech.dlTitle":"T\u00e9l\u00e9charger cette fiche \u2014 le document tel qu'il s'affiche, \u00e0 garder hors ligne ou \u00e0 transmettre",
     "schema.exploded":"Pièces détachées",
     "schema.measures":"Mesures produits",
     "schema.tech":"Fiches techniques",
@@ -1971,13 +1983,16 @@ const I18N = {
     "nav.glossary":"Glossary & reference",
     "nav.schemas":"Documentation",
     "s11.t":"Per-product schemas — water line & electrical",
-    "s11.sub":"Choose a category, then a product — the preview opens on click, on screen only (no download).",
+    "s11.sub":"Choose a category, then a product — the preview opens on click. Schemas stay on screen; technical and product sheets can be downloaded.",
     "schema.water":"Water line",
     "schema.elec":"Electrical schema",
     "schema.none":"Not available for this product",
     "schema.back":"Categories",
     "schema.previewonly":"On-screen preview \u2014 no download",
     "tech.fronly":"French document \u2014 translation pending",
+    "tech.doc.tech":"Technical sheet",
+    "tech.doc.prod":"Product sheet",
+    "tech.dlTitle":"Download this sheet \u2014 the document as shown, to keep offline or to pass on",
     "schema.exploded":"Spare parts",
     "schema.measures":"Product measurements",
     "schema.tech":"Technical sheets",
@@ -2099,13 +2114,16 @@ const I18N = {
     "nav.glossary":"Glossar & Referenz",
     "nav.schemas":"Dokumentation",
     "s11.t":"Schemata je Produkt — Wasserlinie & Elektrik",
-    "s11.sub":"Kategorie wählen, dann ein Produkt — die Vorschau öffnet sich per Klick, nur am Bildschirm (kein Download).",
+    "s11.sub":"Kategorie wählen, dann ein Produkt — die Vorschau öffnet sich per Klick. Schemata bleiben am Bildschirm; technische Datenblätter und Produktblätter lassen sich herunterladen.",
     "schema.water":"Wasserlinie",
     "schema.elec":"Elektroschema",
     "schema.none":"Für dieses Produkt nicht verfügbar",
     "schema.back":"Kategorien",
     "schema.previewonly":"Bildschirm-Vorschau \u2014 kein Download",
     "tech.fronly":"Dokument auf Franz\u00f6sisch \u2014 \u00dcbersetzung folgt",
+    "tech.doc.tech":"Technisches Datenblatt",
+    "tech.doc.prod":"Produktblatt",
+    "tech.dlTitle":"Dieses Datenblatt herunterladen \u2014 das Dokument wie angezeigt, offline oder zum Weitergeben",
     "schema.exploded":"Ersatzteile",
     "schema.measures":"Produktmessungen",
     "schema.tech":"Technische Datenblätter",
@@ -3592,17 +3610,22 @@ function tutExportHtml(title, cat, bodyHtml){
     + '</div></body></html>';
 }
 
-/* Le nom du fichier reste en ASCII : un seul accent dans l'attribut
-   « download » et le navigateur enregistre tout sous « download ». Le titre
-   complet, accents compris, est en tête du document et dans son onglet. */
-function tutFileName(title){
-  var t = String(title || "tuto");
+/* Le nom d'un fichier enregistré reste en ASCII : un seul accent dans
+   l'attribut « download » et le navigateur enregistre tout sous
+   « download ». Sert au tuto à emporter comme à la fiche téléchargée. */
+function asciiFileName(title, fallback){
+  var t = String(title || "");
   if(t.normalize) t = t.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   t = t.replace(/ß/g, "ss").replace(/œ/g, "oe").replace(/æ/g, "ae").replace(/ø/g, "o")
        .replace(/[^\x20-\x7E]+/g, " ")
        .replace(/[\\/:*?"<>|]+/g, "-")
        .replace(/\s+/g, " ").trim().slice(0, 70).trim();
-  return "BE WTR - " + (t || "tuto") + ".html";
+  return t || fallback;
+}
+/* Le titre complet du tuto, accents compris, est en tête du document et dans
+   son onglet : c'est le nom du fichier seul qui se plie à l'ASCII. */
+function tutFileName(title){
+  return "BE WTR - " + asciiFileName(title, "tuto") + ".html";
 }
 
 /* L'impression : une fenêtre ouverte au clic — donc jamais bloquée — et, si
@@ -3755,9 +3778,29 @@ function techSheet(k){
   if(e[lang]) return {src:e[lang],lang:lang};
   return e.fr?{src:e.fr,lang:'fr'}:null;
 }
+/* Une entrée de TECHSHEETS est une fiche technique, sauf l'AQTiV One dont le
+   document est la fiche produit — deux pages, sans cote d'installation. La
+   distinction ne change que le nom du fichier enregistré : celui qui le
+   retrouve dans ses téléchargements sait lequel des deux il a. */
+var TECHSHEET_PROD={'AQTiV One':1};
+function techDocLabel(k,l){
+  var d=I18N[l]||I18N[lang]||{};
+  return d[TECHSHEET_PROD[k]?'tech.doc.prod':'tech.doc.tech']||'';
+}
+
+/* Le nom du fichier dit le produit, la nature du document et la langue
+   réellement servie : une fiche française ouverte depuis l'interface anglaise
+   s'enregistre en « (FR) », pas en « (EN) ». */
+function techFileName(k,t){
+  return 'BE WTR - '
+    + asciiFileName(productLabel(k)+' - '+techDocLabel(k,t.lang)+' ('+String(t.lang).toUpperCase()+')','fiche')
+    + '.' + dataUriExt(t.src);
+}
+
 function openTechSheet(k,title){
   var t=techSheet(k); if(!t) return;
-  openImg(t.src,title,t.lang===lang?'':(I18N[lang]['tech.fronly']||''));
+  openImg(t.src,title,t.lang===lang?'':(I18N[lang]['tech.fronly']||''),
+          {src:t.src, name:techFileName(k,t), tip:I18N[lang]['tech.dlTitle']||''});
 }
 function schemaTitle(p){ return productLabel(SCHEMA_ALIAS[p]||p); }
 const schemaOrder=["BOX 20", "BOX 30", "BOX 30B", "BOX 30E", "BOX 45", "BOX 15", "BOX 80", "BOX 80 ITBD", "BOX 150", "BAR1", "BAR2 Touchless", "BAR2 Double", "PRO2", "PRO2 V2"];
@@ -3908,8 +3951,11 @@ function unlockScroll(){ if(!document.body.dataset.locked) return; delete docume
 function ensureImgbox(){
   let lb=document.getElementById('imgbox');
   if(!lb){lb=document.createElement('div');lb.id='imgbox';
-    lb.innerHTML='<div class="img-wrap"><div class="img-bar"><span class="img-title"></span><span class="img-note"></span><button class="img-close">✕</button></div><div class="img-scroll"></div></div>';
+    lb.innerHTML='<div class="img-wrap"><div class="img-bar"><span class="img-title"></span><span class="img-note"></span>'
+      + '<button type="button" class="gf-dl img-dl" hidden><span class="gf-bic">⤓</span><span class="gf-btxt"></span></button>'
+      + '<button class="img-close">✕</button></div><div class="img-scroll"></div></div>';
     document.body.appendChild(lb);
+    lb.querySelector('.img-dl').addEventListener('click',function(e){ e.stopPropagation(); imgDownload(); });
     lb.addEventListener('click',e=>{if(e.target===lb){lb.style.display='none';unlockScroll();waterSplash(e.clientX,e.clientY);
       try{ clState.spareTarget=null; }catch(err){} lb.classList.remove('cl-over');}});
     lb.querySelector('.img-close').addEventListener('click',(e)=>{lb.style.display='none';unlockScroll();waterSplash(e.clientX,e.clientY);
@@ -3917,11 +3963,68 @@ function ensureImgbox(){
   }
   return lb;
 }
-function openImg(src,title,note){
+/* L'extension du fichier se lit dans le document lui-même : les fiches sont
+   embarquées en JPEG, en WebP — et le jour où l'une arrive en PDF, elle
+   s'enregistrera en .pdf sans qu'on y revienne. */
+var DL_EXT={'image/jpeg':'jpg','image/jpg':'jpg','image/png':'png','image/webp':'webp',
+            'image/gif':'gif','image/svg+xml':'svg','application/pdf':'pdf'};
+function dataUriExt(uri){
+  var m=/^data:([^;,]+)/.exec(String(uri||'')), t=m?m[1].toLowerCase():'';
+  if(DL_EXT[t]) return DL_EXT[t];
+  var tail=t.indexOf('/')>0?t.split('/')[1].replace(/[^a-z0-9]+/g,''):'';
+  return tail||'bin';
+}
+
+/* Le document est embarqué dans la page en base64 : on le rend au navigateur
+   comme un vrai fichier. L'attribut « download » d'un lien « data: » n'est pas
+   suivi partout — un Blob l'est, et clDownload sert déjà aux exports de la
+   plateforme de tickets. */
+function dataUriToBlob(uri){
+  var m=/^data:([^;,]*?)(;base64)?,([\s\S]*)$/.exec(String(uri||''));
+  if(!m) return null;
+  var type=m[1]||'application/octet-stream', body=m[3];
+  if(!m[2]){
+    try{ return new Blob([decodeURIComponent(body)],{type:type}); }catch(e){ return null; }
+  }
+  try{
+    var bin=atob(body), n=bin.length, buf=new Uint8Array(n);
+    for(var i=0;i<n;i++) buf[i]=bin.charCodeAt(i);
+    return new Blob([buf],{type:type});
+  }catch(e){ return null; }
+}
+
+/* La visionneuse sert deux choses : un document qui se télécharge — les fiches
+   techniques et produits — et des aperçus qui n'ont rien à donner, la liste
+   d'outillage ou une vue éclatée. Le bouton suit donc l'ouverture en cours, et
+   chaque ouverture le repose : sans cela, la fiche précédente resterait
+   accrochée au bouton d'un aperçu.
+   Aucun rôle n'intervient ici : le hub s'ouvre avec le mot de passe interne
+   BE WTR comme avec celui du distributeur, et la fiche s'enregistre dans les
+   deux cas. */
+var _imgDl=null;
+function imgSetDownload(lb,dl,title){
+  _imgDl=(dl&&dl.src&&dl.name)?dl:null;
+  var b=lb.querySelector('.img-dl'); if(!b) return;
+  b.hidden=!_imgDl;
+  if(!_imgDl) return;
+  var d=I18N[lang]||{}, tip=dl.tip||d['tut.dl']||'';
+  var t=b.querySelector('.gf-btxt'); if(t) t.textContent=d['tut.dl']||'';
+  b.title=tip;
+  b.setAttribute('aria-label',tip+(title?' \u2014 '+title:''));
+}
+function imgDownload(){
+  if(!_imgDl) return;
+  var blob=dataUriToBlob(_imgDl.src);
+  if(!blob) return;
+  clDownload(blob,_imgDl.name);
+}
+
+function openImg(src,title,note,dl){
   const lb=ensureImgbox();
   lb.querySelector('.img-title').textContent=title||'';
   const nt=lb.querySelector('.img-note');
   if(nt){ nt.textContent=note||''; nt.style.display=note?'':'none'; }
+  imgSetDownload(lb,dl,title);
   lb.querySelector('.img-scroll').innerHTML='<img src="'+src+'" style="width:100%;max-width:1100px;height:auto;display:block;margin:0 auto;border-radius:4px">';
   lockScroll();lb.style.display='flex';
 }
@@ -3937,6 +4040,7 @@ function openSpare(p){
   const table=parts.length?'<table class="spare-table"><thead><tr><th></th><th>'+d['spare.ref']+'</th><th>'+d['spare.name']+'</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>':'<p class="small muted" style="padding:10px">'+d['spare.none']+'</p>';
   const view=(typeof EXPLODED!=='undefined'&&EXPLODED[p])||null;
   lb.querySelector('.img-title').textContent=productLabel(p)+' — '+d['schema.exploded'];
+  imgSetDownload(lb,null);
   lb.querySelector('.img-scroll').innerHTML=(view?'<img src="'+view+'" style="width:100%;max-width:1000px;height:auto;display:block;margin:0 auto 16px;border-radius:4px">':'')+table;
   lockScroll();lb.style.display='flex';
 }

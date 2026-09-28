@@ -6,6 +6,24 @@ langue courante et retombe sur le français quand la traduction manque — avec,
 dans ce cas, une mention visible dans la visionneuse (« Document en français —
 traduction à venir »), pour que le technicien sache ce qu'il lit.
 
+## Téléchargement
+
+La visionneuse d'une fiche porte un bouton « Télécharger » : le document part
+tel quel, octet pour octet, sous un nom qui dit le produit, la nature de la
+fiche et la langue **réellement servie** — `BE WTR - AQTiV One Home - Fiche
+technique (FR).webp`, même si l'interface est en anglais. Une fiche produit
+s'annonce comme telle (`Fiche produit`), une fiche technique aussi.
+
+Le bouton ne dépend pas du rôle : le hub ouvert avec le mot de passe interne
+BE WTR et celui ouvert avec le mot de passe distributeur donnent la même
+fiche. Les schémas de ligne d'eau et d'électricité, eux, restent en lecture à
+l'écran — leur visionneuse est une autre, et elle n'a pas de bouton.
+
+Les fiches sont embarquées dans la page en images (WebP ou JPEG) : c'est donc
+une image qui s'enregistre, pas un PDF. Le jour où une fiche entrerait dans
+`TECHSHEETS` en `data:application/pdf`, l'extension du fichier suivrait toute
+seule.
+
 ## Couverture
 
 | Fiche | FR | EN | DE |
