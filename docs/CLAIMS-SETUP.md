@@ -675,10 +675,15 @@ pas de texte libre par cette porte. C'est ce plafond qui rend le lien
 
 Le catalogue est stocké en anglais — c'est la valeur des exports et des bons
 de commande. À l'écran, les désignations passent par `PARTTR` et s'affichent
-en français ou en allemand : propositions, recherche, pièces d'un ticket,
-pièces à commander, bulletin, historique. La recherche accepte les deux, on
-peut taper « ventilateur » comme « fan ». Une pièce absente du dictionnaire
-garde son nom anglais plutôt qu'une traduction inventée.
+en français ou en allemand : vues éclatées, propositions, recherche, pièces
+d'un ticket, pièces à commander, bulletin, historique. La recherche accepte
+les deux, on peut taper « ventilateur » comme « fan ». Une pièce absente du
+dictionnaire garde son nom anglais plutôt qu'une traduction inventée.
+
+Le dictionnaire couvre tout le catalogue : chaque désignation de
+`SPAREPARTS` et de `public.parts` y a son entrée FR et DE. Une pièce ajoutée
+au catalogue doit y entrer aussi, sous sa désignation anglaise exacte —
+sinon elle reste en anglais à l'écran.
 
 Le **classeur Excel** reste en anglais : c'est le fournisseur qui le lit.
 
