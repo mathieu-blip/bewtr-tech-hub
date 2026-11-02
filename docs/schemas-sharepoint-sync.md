@@ -94,7 +94,7 @@ du catalogue fournisseur et sont laissées telles quelles.
 | `BW-0067 BOX 30B` | `BOX 30 45 Fizz Schema Elettrico.pdf` | 154 377 | BOX 30B |
 | `BW-0072E BOX 30E` | `BW-0072E BOX 30E electrical schema.pdf` | 305 208 | BOX 30E |
 | `BW-0004 BOX 15` | `BW-0004 BOX 15 electrical schema.pdf` | 115 079 | BOX 15 |
-| `BW-0001 BOX 80` | `BW-0001 BOX 80 electrical schema.pdf` | 115 493 | BOX 80 |
+| `BW-0001 BOX 80` | `BW-0001 BOX 80 electrical schema.pdf` | 382 107 † | BOX 80 |
 | `BW-0352 BOX80 ITBD` | `Schema JET20 ICE40 ICE80 ICE120.pdf` | 54 402 | BOX 80 ITBD |
 | `BW-0006 BOX 150` | `BW-0006 BOX 150 electrical schema.pdf` | 121 901 | BOX 150 |
 | `601516 BOX BAR1` | `601516 BOX BAR1 electrical schema.pdf` | 69 833 | BAR1 |
@@ -107,6 +107,13 @@ du catalogue fournisseur et sont laissées telles quelles.
 `BW-0552 BOX 45` est vide côté SharePoint, mais le schéma du BOX 30B
 (`BOX 30 45 Fizz Schema Elettrico.pdf`) couvre les deux machines : il est donc
 servi pour le BOX 45 aussi.
+
+† Le schéma électrique du BOX 80 a été remplacé le 02/11/2026 par une version
+corrigée (une page, repères E1 à E11 ; sha256 `2e7b6c87…6055fc86`) : celui
+qui provenait de SharePoint (115 493 octets) était faux. La taille indiquée est
+celle du nouveau PDF ; tant que le dossier `BW-0001 BOX 80` de SharePoint n'a
+pas reçu ce fichier, il ne correspond plus au hub — ne pas régénérer le BOX 80
+à partir de SharePoint.
 
 ## Publication dans le hub : aperçu seul
 
